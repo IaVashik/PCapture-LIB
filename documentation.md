@@ -1,0 +1,185 @@
+# PCapture VScripts Library documentation
+This library consists of several modules that can be extremely useful for you
+
+Here is the markdown documentation for pcapture-lib.nut:
+
+## 1. [`PCapture-Lib`](pcapture-lib.nut)
+
+The main file in the library. It currently contains various rubbish that will need to be broken down into files in the future.
+
+| Name | Usage | Description |
+|-|-|-|  
+| RunScriptCode.delay | void RunScriptCode::delay(script, delay, activator, caller) | Creates a delay before executing the specified script. |
+| RunScriptCode.loopy | void RunScriptCode::loopy(func, delay, loop, outputs) | Executes a function repeatedly with a specified delay for a given number of loops. |
+| RunScriptCode.fromStr | void RunScriptCode::fromStr(string value) | Executes a script from a string. |
+| DrawEntityBBox | void dev::DrawEntityBBox(entity, time) | Draws the bounding box of an entity. |
+| drawbox | void dev::drawbox(vector, color, time) | Draws a box at the specified position. |
+| log | void dev::log(string msg) | Logs a message if developer mode is enabled. |
+| warning | void dev::warning(string msg) | Displays a warning message if developer mode is enabled. |
+| error | void dev::error(string msg) | Displays an error message if developer mode is enabled. |
+| StrToVec | Vector StrToVec(string value) | Converts a string to a Vector. Example: "255 31 10" -> Vector(255, 31, 10) |
+| GetPrefix | void GetPrefix(string|CBaseEntity name) | Gets the prefix of an entity name. |
+| GetPostfix | void GetPostfix(string|CBaseEntity name) | Gets the postfix of an entity name. |
+| Precache | void Precache(string sound_path) | Precaches a sound |
+| fprint | void fprint(string msg, any vargs...) | Prints a formatted message to the console. |
+
+Here is the markdown documentation for PCapture-entities.nut:
+
+## 2. [`PCapture-Entities`](PCapture-entities.nut)
+
+Improved Entities Module. Contains A VERY LARGE number of different functions that you just missed later!
+
+| Name | Usage | Description |
+|-|-|-|
+| CreateByClassname | pcapEntities entLib::CreateByClassname(string classname, table keyvalues) | Creates an entity of the specified classname with provided keyvalues |
+| FindByClassname | pcapEntities entLib::FindByClassname(string classname, CBaseEntity start_ent) | Finds an entity by classname starting search from given entity |  
+| FindByClassnameWithin | pcapEntities entLib::FindByClassnameWithin(string classname, Vector origin, int radius, CBaseEntity start_ent) | Finds an entity by classname within given radius of a point |
+| FindByName | pcapEntities entLib::FindByName(string targetname, CBaseEntity start_ent) | Finds an entity by targetname starting search from given entity |
+| FindByNameWithin | pcapEntities entLib::FindByNameWithin(string targetname, Vector origin, int radius, CBaseEntity start_ent) | Finds an entity by targetname within given radius of a point |
+| FindByModel | pcapEntities entLib::FindByModel(string model, CBaseEntity start_ent) | Finds an entity by model starting search from given entity |
+| FindByModelWithin | pcapEntities entLib::FindByModelWithin(string model, Vector origin, int radius, CBaseEntity start_ent) | Finds an entity by model within given radius of a point |  
+| FindInSphere | pcapEntities entLib::FindInSphere(Vector origin, int radius, CBaseEntity start_ent) | Finds entities within sphere of given radius from point |
+| FromEntity | pcapEntities entLib::FromEntity(CBaseEntity entity) | Creates pcapEntities object from given entity |
+| SetAbsAngles | void pcapEntities::SetAbsAngles(Vector vector) | Sets absolute rotation angles of the entity |
+| Destroy | void pcapEntities::Destroy() | Destroys the entity |
+| Kill | void pcapEntities::Kill(int fireDelay) | Kills the entity with delay |
+| IsValid | bool pcapEntities::IsValid() | Checks if the entity is valid |
+| IsPlayer | bool pcapEntities::IsPlayer() | Checks if the entity is the player |
+| SetKeyValue | void pcapEntities::SetKeyValue(string key, any value) | Sets a keyvalue of the entity |
+| addOutput | void pcapEntities::addOutput(string output, string target, string input, string param, int delay, int fires) | Sets a outputs of the entity |
+| SetName | void pcapEntities::SetName(string name) | Sets name (targetname) of the entity |  
+| SetParent | void pcapEntities::SetParent(string name, string|CBaseEntity|pcapEntities parent, int fireDelay) | Sets parent entity |
+| SetCollision | void pcapEntities::SetCollision(int solid, int fireDelay) | Sets collision type of the entity |
+| SetCollisionGroup | void pcapEntities::SetCollisionGroup(int collisionGroup) | Sets collision group of the entity |
+| SetAnimation | void pcapEntities::SetAnimation(string animationName, int fireDelay) | Start playing animation of the entity |
+| SetAlpha | void pcapEntities::SetAlpha(int opacity, int fireDelay) | Sets opacity of the entity |
+| SetColor | void pcapEntities::SetColor(Vector|string colorValue, int fireDelay) | Sets color of the entity |
+| SetColor | void pcapEntities::SetSkin(int skin, int fireDelay) | Sets the skin of the entity |
+| SetDrawEnabled | void pcapEntities::SetDrawEnabled(bool isEnabled, int fireDelay) | Enables/Disables rendering of the entity |
+| SetSpawnflags | void pcapEntities::SetSpawnflags(int flag) | Sets spawnflags of the entity |
+| SetModelScale | void pcapEntities::SetModelScale(int scaleValue, int fireDelay) | Sets model scale of the entity |
+| SetCenter | void pcapEntities::SetCenter(Vector vector) | Sets center of the entity |
+| SetBBox | void pcapEntities::SetBBox(Vector|string min, Vector|string max) | Sets bounding box of the entity |
+| SetUserData | void pcapEntities::SetUserData(string name, any value) | Stores arbitrary value associated with the entity |
+| GetUserData | any pcapEntities::GetUserData(string name) | Gets stored value by name |
+| GetBBox | table pcapEntities::GetBBox() | Returns bounding box of the entity |
+| GetAABB | table pcapEntities::GetAABB() | Returns oriented bounding box of the entity |
+| GetIndex | int pcapEntities::GetIndex() | Returns index of the entity |
+| GetKeyValue | any pcapEntities::GetKeyValue(string key) | Returns keyvalue of the entity |
+| GetSpawnflags | int|null pcapEntities::GetSpawnflags() | Returns spawnflags of the entity |
+| GetAlpha | int|null pcapEntities::GetAlpha() | Returns opacity of the entity |
+| GetColor | string|null pcapEntities::GetColor() | Returns color of the entity |
+| GetNamePrefix | string pcapEntities::GetNamePrefix() | Returns name prefix of the entity |
+| GetNamePostfix | string pcapEntities::GetNamePostfix() | Returns name postfix of the entity |
+| CreateAABB | Vector pcapEntities::CreateAABB(int stat) | Returns AABB face of the entity |
+| getBBoxPoints | Array<Vector> pcapEntities::getBBoxPoints() | Returns AABB vertices of the entity |
+
+Here is the markdown documentation for PCapture-math.nut split into 3 tables:
+
+## 3. [`PCapture-Math`](PCapture-math.nut)  
+
+Mathematical module. Contains many different functions including lerp functions, quaternions and more
+
+### Quaternions object
+
+| Name | Usage | Description |
+|-|-|-|
+| new | Quaternion math::Quaternion::new(Vector angles) | Creates quaternion from Euler angles |
+| rotate | Vector math::Quaternion::rotate(Vector angle) | Rotates vector by quaternion |
+| unrotate | Vector math::Quaternion::unrotate(Vector angle) | Un-rotates vector by quaternion |
+| slerp | Quaternion math::Quaternion::slerp(Quaternion target, float t) | Spherical linear interpolation between quaternions |
+| Norm | Quaternion math::Quaternion::Norm() | Returns normalized quaternion |
+| toVector | Vector math::Quaternion::toVector() | Converts quaternion to Euler angles |
+| IsValid | bool math::Quaternion::IsValid() | Check if quaternion is valid |
+| get_table | table math::Quaternion::get_table() | Get quaternion as table |
+
+### lerp functions
+
+| Name | Usage | Description |
+|-|-|-|
+| lerp.int | int math::lerp::int(int start, int end, float t) | Integer linear interpolation |
+| lerp.vector | Vector math::lerp::vector(Vector start, Vector end, float t) | Vector linear interpolation |
+| lerp.color | string math::lerp::color(Vector/string start, Vector/string end, float t) | Color linear interpolation |  
+| lerp.sVector | Vector math::lerp::sVector(Vector start, Vector end, float t) | Vector spherical interpolation |
+
+### Others math functions
+
+| Name | Usage | Description |
+|-|-|-|
+| min | int&#124;float math::min(int&#124;float vargs) | Returns the minimum value |
+| max | int&#124;float math::max(int&#124;float vargs) | Returns the maximum value |
+| clamp | int&#124;float math::clamp(int&#124;float int, int&#124;float min, int&#124;float max) | Clamp integer within range |
+| roundVector | Vector math::roundVector(Vector vec, int precision) | Round vector to precision |
+| Sign | int math::Sign(int&#124;float x) | Get sign of number |
+| copysign | int&#124;float math::copysign(int&#124;float value, int&#124;float sign) | Copy sign of value |
+| RemapVal | Vector math::RemapVal(float value, float low1, float high1, float low2, float high2) |  
+| rotateVector | Vector math::rotateVector(Vector vector, Vector angle) | Rotate vector by quaternion |
+| unrotateVector | Vector math::unrotateVector(Vector vector, Vector angle) | Un-rotate vector by quaternion |
+| RandomVector | Vector math::RandomVector(int min, int max) | Returns a randomized vector in the min to max range |
+
+
+## 4. [`PCapture-EventHandler`](PCapture-EventHandler.nut)  
+
+Improved EntFire/logic_relay/loop module. Allows you to create whole events from many different events and cancel them at any time, unlike EntFireByHandler. Able to take not only string, but also full-fledged functions:
+
+| Name | Usage | Description |
+|-|-|-|
+| CreateScheduleEvent | void CreateScheduleEvent(string eventName, string&#124;function action, float timeDelay, string note) | Creates a scheduled event |
+| ExecuteScheduledEvents | void ExecuteScheduledEvents() | Executes scheduled events when time is up |
+| cancelScheduledEvent | void cancelScheduledEvent(string eventName, float delay) | Cancels a scheduled event |
+| getEventInfo | table&#124;null getEventInfo(string eventName) | Gets info for scheduled event |
+| eventIsValid | bool eventIsValid(string eventName) | Checks if event is valid |
+| getEventNote | any getEventNote(string eventName) | Returns the nearest note of the event if it exists |
+
+Here is the markdown documentation for PCapture-array.nut:
+
+## 5. [`PCapture-Array`](PCapture-array.nut ) 
+
+Improved arrays module. Contains easy output in the console and additional features to simplify life:
+
+| Name | Usage | Description |
+|-|-|-|
+| arrayLib | class arrayLib | Enhanced arrays module |
+| constructor | void constructor(array = []) | Constructor. Initializes the array with the provided initial array. |
+| new | arrayLib new(...vargc) | Create a new arrayLib instance from arguments. Returns the new arrayLib instance. |
+| append | int append(any val) | Append a value to the array. Returns the new array length. |
+| apply | void apply(Function func) | Apply a function to each element of the array. |
+| clear | void clear() | Clear the array and table. |
+| extend | void extend(array other) | Extend the array with another array. |
+| filter | arrayLib filter(Function func) | Filter the array by a predicate function. Returns the filtered array. |
+| find | boolean find(any match) | Check if the array contains a value. Returns whether the value is found. |
+| search | int&#124;null search(any&#124;Function match) | Search for a value in the array. Returns the index of the match or null. |
+| insert | any insert(int idx, any val) | Insert a value into the array at the specified index. |
+| len | int len() | Get the length of the array. |
+| map | arrayLib map(Function func) | Map the array to a new array using a mapping function. Returns the mapped array. |
+| pop | any pop() | Pop a value off the end of the array. Returns the popped value. |
+| push | void push(any val) | Append a value to the array. |
+| remove | void remove(int idx) | Remove an element from the array at the specified index. |
+| resize | void resize(int size, [any fill]) | Resize the array to the specified size. Optionally fill new slots with a fill value. |
+| reverse | arrayLib reverse() | Reverse the array in-place. Returns the reversed array. |
+| slice | arrayLib slice(int start, [int end]) | Slice a portion of the array. Returns the sliced array. |
+| sort | arrayLib sort([Function func]) | Sort the array. Optionally accepts a compare function. Returns the sorted array. |
+| top | any top() | Get the last element of the array. |
+| join | string join([string joinstr]) | Join the array into a string using the specified separator string. Returns the joined string. |
+| totable | table totable([boolean recreate]) | Convert the array to a table representation. Optionally recreate the table if it already exists. Returns the table representation. |
+| ToString | string _tostring() | Convert the array to a string representation. |
+| TypeOf | arrayLib _typeof() | Get the type name of the array. |
+| Get | any _get(int idx) | Get the element at the specified index. |
+| Set | void _set(int idx, any val) | Set the element at the specified index to a new value. |
+
+## 6. [`PCapture-BBoxCast`](PCapture-BBoxCast.nut)  
+
+TODO. At the moment you can find information here: https://github.com/IaVashik/portal2-BBoxCast
+
+
+## 7. [`PCapture-Anims`](PCapture-anims.nut) 
+
+Animation module, used to quickly create animation events related to alpha, color, object moving
+
+| Name | Usage | Description |
+|-|-|-|
+| AlphaTransition | void animate::AlphaTransition(PCapLib-Entities&#124;CBaseEntity&#124;string entities, int startOpacity, int endOpacity, int&#124;float time, {eventName = null, globalDelay = 0, note = null, outputs = null} EventSetting) | Smoothly changes the alpha value of entities from the initial value to the final value over a specified time. |
+| ColorTransition | void animate::ColorTransition(PCapLib-Entities&#124;CBaseEntity&#124;string entities, string&#124;Vector startColor, string&#124;Vector endColor, int&#124;float time, {eventName = null, globalDelay = 0, note = null, outputs = null} EventSetting) | Smoothly changes the color of entities from the start color to the end color over a specified time. |
+| PositionTransitionByTime | void animate::PositionTransitionByTime(PCapLib-Entities&#124;CBaseEntity&#124;string entities, Vector startPos, Vector endPos, int&#124;float time, {eventName = null, globalDelay = 0, note = null, outputs = null} EventSetting) | Moves entities from the start position to the end position over a specified time based on increments of time. |
+| PositionTransitionBySpeed | number animate::PositionTransitionBySpeed(PCapLib-Entities&#124;CBaseEntity&#124;string entity, Vector startPos, Vector endPos, int&#124;float speed, {eventName = null, globalDelay = 0, note = null, outputs = null} EventSetting) | Moves entities from the start position to the end position over a specified time based on speed. |
+| AnglesTransitionByTime | void animate::AnglesTransitionByTime(PCapLib-Entities&#124;CBaseEntity&#124;string entity, Vector startAngles, Vector endAngles, int&#124;float time, {eventName = null, globalDelay = 0, note = null, outputs = null} EventSetting) | Changes angles of entities from the start angles to the end angles over a specified time. |
