@@ -17,7 +17,7 @@ The main file in the library. It currently contains various rubbish that will ne
 | log | void dev::log(string msg) | Logs a message if developer mode is enabled. |
 | warning | void dev::warning(string msg) | Displays a warning message if developer mode is enabled. |
 | error | void dev::error(string msg) | Displays an error message if developer mode is enabled. |
-| StrToVec | Vector StrToVec(string value) | Converts a string to a Vector. Example: "255 31 10" -> Vector(255, 31, 10) |
+| StrToVec | Vector StrToVec(string value) | Converts a string to a Vector. *Example: "255 31 10" -> Vector(255, 31, 10)* |
 | GetPrefix | void GetPrefix(string|CBaseEntity name) | Gets the prefix of an entity name. |
 | GetPostfix | void GetPostfix(string|CBaseEntity name) | Gets the postfix of an entity name. |
 | Precache | void Precache(string sound_path) | Precaches a sound |
@@ -48,12 +48,12 @@ Improved Entities Module. Contains A VERY LARGE number of different functions th
 | SetKeyValue | void pcapEntities::SetKeyValue(string key, any value) | Sets a keyvalue of the entity |
 | addOutput | void pcapEntities::addOutput(string output, string target, string input, string param, int delay, int fires) | Sets a outputs of the entity |
 | SetName | void pcapEntities::SetName(string name) | Sets name (targetname) of the entity |  
-| SetParent | void pcapEntities::SetParent(string name, string|CBaseEntity|pcapEntities parent, int fireDelay) | Sets parent entity |
+| SetParent | void pcapEntities::SetParent(string name, string&#124;CBaseEntity&#124;pcapEntities parent, int fireDelay) | Sets parent entity |
 | SetCollision | void pcapEntities::SetCollision(int solid, int fireDelay) | Sets collision type of the entity |
 | SetCollisionGroup | void pcapEntities::SetCollisionGroup(int collisionGroup) | Sets collision group of the entity |
 | SetAnimation | void pcapEntities::SetAnimation(string animationName, int fireDelay) | Start playing animation of the entity |
 | SetAlpha | void pcapEntities::SetAlpha(int opacity, int fireDelay) | Sets opacity of the entity |
-| SetColor | void pcapEntities::SetColor(Vector|string colorValue, int fireDelay) | Sets color of the entity |
+| SetColor | void pcapEntities::SetColor(Vector&#124;string colorValue, int fireDelay) | Sets color of the entity |
 | SetColor | void pcapEntities::SetSkin(int skin, int fireDelay) | Sets the skin of the entity |
 | SetDrawEnabled | void pcapEntities::SetDrawEnabled(bool isEnabled, int fireDelay) | Enables/Disables rendering of the entity |
 | SetSpawnflags | void pcapEntities::SetSpawnflags(int flag) | Sets spawnflags of the entity |
@@ -66,9 +66,9 @@ Improved Entities Module. Contains A VERY LARGE number of different functions th
 | GetAABB | table pcapEntities::GetAABB() | Returns oriented bounding box of the entity |
 | GetIndex | int pcapEntities::GetIndex() | Returns index of the entity |
 | GetKeyValue | any pcapEntities::GetKeyValue(string key) | Returns keyvalue of the entity |
-| GetSpawnflags | int|null pcapEntities::GetSpawnflags() | Returns spawnflags of the entity |
-| GetAlpha | int|null pcapEntities::GetAlpha() | Returns opacity of the entity |
-| GetColor | string|null pcapEntities::GetColor() | Returns color of the entity |
+| GetSpawnflags | int&#124;null pcapEntities::GetSpawnflags() | Returns spawnflags of the entity |
+| GetAlpha | int&#124;null pcapEntities::GetAlpha() | Returns opacity of the entity |
+| GetColor | string&#124;null pcapEntities::GetColor() | Returns color of the entity |
 | GetNamePrefix | string pcapEntities::GetNamePrefix() | Returns name prefix of the entity |
 | GetNamePostfix | string pcapEntities::GetNamePostfix() | Returns name postfix of the entity |
 | CreateAABB | Vector pcapEntities::CreateAABB(int stat) | Returns AABB face of the entity |
@@ -112,7 +112,7 @@ Mathematical module. Contains many different functions including lerp functions,
 | roundVector | Vector math::roundVector(Vector vec, int precision) | Round vector to precision |
 | Sign | int math::Sign(int&#124;float x) | Get sign of number |
 | copysign | int&#124;float math::copysign(int&#124;float value, int&#124;float sign) | Copy sign of value |
-| RemapVal | Vector math::RemapVal(float value, float low1, float high1, float low2, float high2) |  
+| RemapVal | Vector math::RemapVal(float value, float low1, float high1, float low2, float high2) | Remaps a value from the range [A, B] to the range [C, D].
 | rotateVector | Vector math::rotateVector(Vector vector, Vector angle) | Rotate vector by quaternion |
 | unrotateVector | Vector math::unrotateVector(Vector vector, Vector angle) | Un-rotate vector by quaternion |
 | RandomVector | Vector math::RandomVector(int min, int max) | Returns a randomized vector in the min to max range |
