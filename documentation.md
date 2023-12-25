@@ -1,8 +1,6 @@
 # PCapture VScripts Library documentation
 This library consists of several modules that can be extremely useful for you
 
-Here is the markdown documentation for pcapture-lib.nut:
-
 ## 1. [`PCapture-Lib`](pcapture-lib.nut)
 
 The main file in the library. It currently contains various rubbish that will need to be broken down into files in the future.
@@ -18,12 +16,10 @@ The main file in the library. It currently contains various rubbish that will ne
 | warning | void dev::warning(string msg) | Displays a warning message if developer mode is enabled. |
 | error | void dev::error(string msg) | Displays an error message if developer mode is enabled. |
 | StrToVec | Vector StrToVec(string value) | Converts a string to a Vector. *Example: "255 31 10" -> Vector(255, 31, 10)* |
-| GetPrefix | void GetPrefix(string|CBaseEntity name) | Gets the prefix of an entity name. |
-| GetPostfix | void GetPostfix(string|CBaseEntity name) | Gets the postfix of an entity name. |
+| GetPrefix | void GetPrefix(string&#124;CBaseEntity name) | Gets the prefix of an entity name. |
+| GetPostfix | void GetPostfix(string&#124;CBaseEntity name) | Gets the postfix of an entity name. |
 | Precache | void Precache(string sound_path) | Precaches a sound |
 | fprint | void fprint(string msg, any vargs...) | Prints a formatted message to the console. |
-
-Here is the markdown documentation for PCapture-entities.nut:
 
 ## 2. [`PCapture-Entities`](PCapture-entities.nut)
 
@@ -73,8 +69,6 @@ Improved Entities Module. Contains A VERY LARGE number of different functions th
 | GetNamePostfix | string pcapEntities::GetNamePostfix() | Returns name postfix of the entity |
 | CreateAABB | Vector pcapEntities::CreateAABB(int stat) | Returns AABB face of the entity |
 | getBBoxPoints | Array<Vector> pcapEntities::getBBoxPoints() | Returns AABB vertices of the entity |
-
-Here is the markdown documentation for PCapture-math.nut split into 3 tables:
 
 ## 3. [`PCapture-Math`](PCapture-math.nut)  
 
@@ -130,8 +124,6 @@ Improved EntFire/logic_relay/loop module. Allows you to create whole events from
 | getEventInfo | table&#124;null getEventInfo(string eventName) | Gets info for scheduled event |
 | eventIsValid | bool eventIsValid(string eventName) | Checks if event is valid |
 | getEventNote | any getEventNote(string eventName) | Returns the nearest note of the event if it exists |
-
-Here is the markdown documentation for PCapture-array.nut:
 
 ## 5. [`PCapture-Array`](PCapture-array.nut ) 
 

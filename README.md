@@ -52,7 +52,7 @@ Contributions to PCapture-LIB are welcome! Feel free to open issues for any bugs
 
 ## License
 
-This project is licensed under the BSD 3-Clause License - see the [LICENSE](LICENSE) file for details.
+This library was created by [laVashik](https://www.youtube.com/@laVashikProductions). Please give credit to laVashik when using this library in your projects! Licensed under the BSD 3-Clause License - see the [LICENSE](LICENSE) file for details.
 
 --------
 
