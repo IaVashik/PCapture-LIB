@@ -1,5 +1,5 @@
 <div align="center">
-<img src="other\logo.png" alt="Logo" width="660" height="350">
+<img src="other\logo.png" alt="Logo"> <!-- width="660" height="350" -->
 
 <h2 align="center">
     PCapture-Lib - The library that you need!

@@ -178,9 +178,6 @@ The PCapture-bboxcast library allows rays to hit entities by using their boundin
 | GetFraction | float bboxcast::GetFraction() | Get the fraction of the path traversed. |
 | GetImpactNormal | Vector bboxcast::GetImpactNormal() | Get the surface normal at the impact point. |
 
-
-Let me know if you would like me to modify or add anything to this PCapture-bboxcast documentation.
-
 ## 7. [`PCapture-Anims`](PCapture-anims.nut) 
 
 Animation module, used to quickly create animation events related to alpha, color, object moving
