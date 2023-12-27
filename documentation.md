@@ -161,8 +161,25 @@ Improved arrays module. Contains easy output in the console and additional featu
 
 ## 6. [`PCapture-BBoxCast`](PCapture-bboxcast.nut)  
 
-TODO. At the moment you can find information here: https://github.com/IaVashik/portal2-BBoxCast
+Improved [BBoxCast](https://github.com/IaVashik/portal2-BBoxCast) for BBox-based ray tracing in Portal 2, more optimized.
 
+The PCapture-bboxcast library allows rays to hit entities by using their bounding boxes (BBox), unlike the regular traceline() function that only hits world geometry. It provides enhanced trace capabilities for custom gameplay mechanics or any vscripts involving ray interactions.
+
+| Name | Usage | Description |
+|-|-|-|
+| bboxcast | bboxcast(Vector startpos, Vector endpos, CBaseEntity&#124;array ignoreEnt, table settings) | Create bboxcast instance. |
+| GetStartPos | Vector bboxcast::GetStartPos() | Get the starting position. |
+| GetEndPos | Vector bboxcast::GetEndPos() | Get the ending position. |
+| GetHitpos | Vector bboxcast::GetHitpos() | Get the hit position. | 
+| GetEntity | pcapEntities bboxcast::GetEntity() | Get the hit entity. |
+| GetIngoreEntities | bboxcast::Entity&#124;array GetIngoreEntities() | Get entities to ignore. |
+| DidHit | bool bboxcast::DidHit() | Check if the trace hit anything. |
+| DidHitWorld | bool bboxcast::DidHitWorld() | Check if the trace hit the world. |
+| GetFraction | float bboxcast::GetFraction() | Get the fraction of the path traversed. |
+| GetImpactNormal | Vector bboxcast::GetImpactNormal() | Get the surface normal at the impact point. |
+
+
+Let me know if you would like me to modify or add anything to this PCapture-bboxcast documentation.
 
 ## 7. [`PCapture-Anims`](PCapture-anims.nut) 
 

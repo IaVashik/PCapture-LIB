@@ -44,7 +44,7 @@ class bboxcast {
     *
     * @param {Vector} startpos - Start position.
     * @param {Vector} endpos - End position.
-    * @param {Entity} ignoreEnt - Entity to ignore. 
+    * @param {CBaseEntity|array} ignoreEnt - Entity to ignore. 
     * @param {object} settings - Trace settings.
     */
     constructor(startpos, endpos, ignoreEnt = null, settings = ::defaultSettings) {
