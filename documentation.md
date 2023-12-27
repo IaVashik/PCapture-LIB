@@ -145,6 +145,7 @@ Improved arrays module. Contains easy output in the console and additional featu
 | len | int len() | Get the length of the array. |
 | map | arrayLib map(Function func) | Map the array to a new array using a mapping function. Returns the mapped array. |
 | pop | any pop() | Pop a value off the end of the array. Returns the popped value. |
+| get | any get(int idx, any default) | Retrieve the element at the specified index in the array. Default value to return if the index is out of bounds |
 | push | void push(any val) | Append a value to the array. |
 | remove | void remove(int idx) | Remove an element from the array at the specified index. |
 | resize | void resize(int size, [any fill]) | Resize the array to the specified size. Optionally fill new slots with a fill value. |
@@ -154,10 +155,6 @@ Improved arrays module. Contains easy output in the console and additional featu
 | top | any top() | Get the last element of the array. |
 | join | string join([string joinstr]) | Join the array into a string using the specified separator string. Returns the joined string. |
 | totable | table totable([boolean recreate]) | Convert the array to a table representation. Optionally recreate the table if it already exists. Returns the table representation. |
-| ToString | string _tostring() | Convert the array to a string representation. |
-| TypeOf | arrayLib _typeof() | Get the type name of the array. |
-| Get | any _get(int idx) | Get the element at the specified index. |
-| Set | void _set(int idx, any val) | Set the element at the specified index to a new value. |
 
 ## 6. [`PCapture-BBoxCast`](PCapture-bboxcast.nut)  
 

@@ -60,7 +60,8 @@ class arrayLib {
     */
     function append(val) {
         this._pushToTable(val)
-        return arr.append(val);
+        arr.append(val);
+        return this
     }
 
     /*
@@ -73,6 +74,7 @@ class arrayLib {
             arr[idx] = func(value)
         }
         this.totable(true)
+        return this
     }
 
     /*
@@ -82,6 +84,7 @@ class arrayLib {
         this.arr.clear()
         this.table.clear()
         this.tableIsValid = false
+        return this
     }
 
     /*
@@ -90,23 +93,27 @@ class arrayLib {
     * @param {array} other - The array to extend from.
     */
     function extend(other) {
+        if(typeof other == "arrayLib") {
+            other = other.arr
+        }
         arr.extend(other);
         this.totable(true)
+        return this
     }
 
     /*
     * Filter the array by a predicate function.
     *
-    * @param {Function} func - The predicate function. 
+    * @param {Function} func(inx, val, newArr) - The predicate function. 
     * @returns {arrayLib} - The filtered array.
     */
     function filter(func) {
-        local newArray = []
+        local newArray = arrayLib([])
         foreach(idx, val in arr) {
-            if(func(idx, val))
+            if(func(idx, val, newArray))
                 newArray.append(val)
         }
-        return arrayLib(newArray)
+        return newArray
     }
 
     /*
@@ -249,7 +256,8 @@ class arrayLib {
     * @returns {arrayLib} - The sorted array.
     */
     function sort(func = null) {
-        return func ? arr.sort(func) : arr.sort()
+        func ? arr.sort(func) : arr.sort()
+        return this
     }
 
     /*
@@ -258,7 +266,8 @@ class arrayLib {
     * @returns {any} - The last element.
     */
     function top() {
-        return arr.top();
+        arr.top();
+        return this
     }
 
     /*
@@ -277,8 +286,15 @@ class arrayLib {
         return joinstr.len() != 0 ? string.slice(0, joinstr.len() * -1) : string
     }
 
-    function get(idx, defaultVal) {
-        if(this.len() >= idx)
+    /*
+    * Retrieve the element at the specified index in the array.
+    *
+    * @param {integer} idx - The index of the element to retrieve.
+    * @param {any} defaultVal - Optional default value to return if the index is out of bounds. Defaults to null.
+    * @returns {any} - The element at the specified index or the default value if the index is out of bounds.
+    */
+    function get(idx, defaultVal = null) {
+        if(this.len() > idx)
             return this.arr[idx]
         return defaultVal
     }
