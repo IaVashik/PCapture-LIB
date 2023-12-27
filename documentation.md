@@ -21,7 +21,7 @@ The main file in the library. It currently contains various rubbish that will ne
 | Precache | void Precache(string sound_path) | Precaches a sound |
 | fprint | void fprint(string msg, any vargs...) | Prints a formatted message to the console. |
 
-## 2. [`PCapture-Entities`](PCapture-entities.nut)
+## 2. [`PCapture-Entities`](PCapture-Entities.nut)
 
 Improved Entities Module. Contains A VERY LARGE number of different functions that you just missed later!
 
@@ -159,7 +159,7 @@ Improved arrays module. Contains easy output in the console and additional featu
 | Get | any _get(int idx) | Get the element at the specified index. |
 | Set | void _set(int idx, any val) | Set the element at the specified index to a new value. |
 
-## 6. [`PCapture-BBoxCast`](PCapture-BBoxCast.nut)  
+## 6. [`PCapture-BBoxCast`](PCapture-bboxcast.nut)  
 
 TODO. At the moment you can find information here: https://github.com/IaVashik/portal2-BBoxCast
 
