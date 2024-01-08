@@ -31,8 +31,8 @@ RunScriptCode <- {
     * 
     * @param {string|function} script - The script to execute. Can be a function or a string.
     * @param {int|float} delay - The delay in seconds.
-    * @param {CBaseEntity|PCapLib-Entities} activator - The activator entity. (optional)
-    * @param {CBaseEntity|PCapLib-Entities} caller - The caller entity. (optional)
+    * @param {CBaseEntity|pcapEntity} activator - The activator entity. (optional)
+    * @param {CBaseEntity|pcapEntity} caller - The caller entity. (optional)
     */
     delay = function(script, delay, activator = null, caller = null) {
         if (typeof script == "function")
@@ -69,7 +69,7 @@ RunScriptCode <- {
 dev <- {
     /* Draws the bounding box of an entity for the specified time.
     * 
-    * @param {CBaseEntity|PCapLib-Entities} ent - The entity to draw the bounding box for.
+    * @param {CBaseEntity|pcapEntity} ent - The entity to draw the bounding box for.
     * @param {int|float} time - The duration of the display in seconds.
     */
     DrawEntityBBox = function(ent, time) {
@@ -254,21 +254,21 @@ function FrameTime() {
 /*
 * Wrapper for EntFireByHandle to handle PCapLib objects.
 *
-* @param {CBaseEntity|PCapLib-Entities} target - Target entity.
+* @param {CBaseEntity|pcapEntity} target - Target entity.
 * @param {string} action - Action.
 * @param {string} value - Action value. (optional)
 * @param {number} delay - Delay in seconds. (optional)
-* @param {CBaseEntity|PCapLib-Entities} activator - Activator entity. (optional)
-* @param {CBaseEntity|PCapLib-Entities} caller - Caller entity. (optional)
+* @param {CBaseEntity|pcapEntity} activator - Activator entity. (optional)
+* @param {CBaseEntity|pcapEntity} caller - Caller entity. (optional)
 */
 _EntFireByHandle <- EntFireByHandle
 function EntFireByHandle(target, action, value = "", delay = 0, activator = null, caller = null) {
-    /* Extract the underlying entity from the PCapLib-Entities wrapper */
-    if (typeof target == "PCapLib-Entities")
+    /* Extract the underlying entity from the pcapEntity wrapper */
+    if (typeof target == "pcapEntity")
         target = target.CBaseEntity 
-    if (typeof activator == "PCapLib-Entities")
+    if (typeof activator == "pcapEntity")
         activator = activator.CBaseEntity 
-    if (typeof caller == "PCapLib-Entities")
+    if (typeof caller == "pcapEntity")
         caller = target.CBaseEntity 
 
     _EntFireByHandle(target, action, value, delay, activator, caller)

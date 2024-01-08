@@ -27,48 +27,48 @@ Improved Entities Module. Contains A VERY LARGE number of different functions th
 
 | Name | Usage | Description |
 |-|-|-|
-| CreateByClassname | pcapEntities entLib::CreateByClassname(string classname, table keyvalues) | Creates an entity of the specified classname with provided keyvalues |
-| FindByClassname | pcapEntities entLib::FindByClassname(string classname, CBaseEntity start_ent) | Finds an entity by classname starting search from given entity |  
-| FindByClassnameWithin | pcapEntities entLib::FindByClassnameWithin(string classname, Vector origin, int radius, CBaseEntity start_ent) | Finds an entity by classname within given radius of a point |
-| FindByName | pcapEntities entLib::FindByName(string targetname, CBaseEntity start_ent) | Finds an entity by targetname starting search from given entity |
-| FindByNameWithin | pcapEntities entLib::FindByNameWithin(string targetname, Vector origin, int radius, CBaseEntity start_ent) | Finds an entity by targetname within given radius of a point |
-| FindByModel | pcapEntities entLib::FindByModel(string model, CBaseEntity start_ent) | Finds an entity by model starting search from given entity |
-| FindByModelWithin | pcapEntities entLib::FindByModelWithin(string model, Vector origin, int radius, CBaseEntity start_ent) | Finds an entity by model within given radius of a point |  
-| FindInSphere | pcapEntities entLib::FindInSphere(Vector origin, int radius, CBaseEntity start_ent) | Finds entities within sphere of given radius from point |
-| FromEntity | pcapEntities entLib::FromEntity(CBaseEntity entity) | Creates pcapEntities object from given entity |
-| SetAbsAngles | void pcapEntities::SetAbsAngles(Vector vector) | Sets absolute rotation angles of the entity |
-| Destroy | void pcapEntities::Destroy() | Destroys the entity |
-| Kill | void pcapEntities::Kill(int fireDelay) | Kills the entity with delay |
-| IsValid | bool pcapEntities::IsValid() | Checks if the entity is valid |
-| IsPlayer | bool pcapEntities::IsPlayer() | Checks if the entity is the player |
-| SetKeyValue | void pcapEntities::SetKeyValue(string key, any value) | Sets a keyvalue of the entity |
-| addOutput | void pcapEntities::addOutput(string output, string target, string input, string param, int delay, int fires) | Sets a outputs of the entity |
-| SetName | void pcapEntities::SetName(string name) | Sets name (targetname) of the entity |  
-| SetParent | void pcapEntities::SetParent(string name, string&#124;CBaseEntity&#124;pcapEntities parent, int fireDelay) | Sets parent entity |
-| SetCollision | void pcapEntities::SetCollision(int solid, int fireDelay) | Sets collision type of the entity |
-| SetCollisionGroup | void pcapEntities::SetCollisionGroup(int collisionGroup) | Sets collision group of the entity |
-| SetAnimation | void pcapEntities::SetAnimation(string animationName, int fireDelay) | Start playing animation of the entity |
-| SetAlpha | void pcapEntities::SetAlpha(int opacity, int fireDelay) | Sets opacity of the entity |
-| SetColor | void pcapEntities::SetColor(Vector&#124;string colorValue, int fireDelay) | Sets color of the entity |
-| SetColor | void pcapEntities::SetSkin(int skin, int fireDelay) | Sets the skin of the entity |
-| SetDrawEnabled | void pcapEntities::SetDrawEnabled(bool isEnabled, int fireDelay) | Enables/Disables rendering of the entity |
-| SetSpawnflags | void pcapEntities::SetSpawnflags(int flag) | Sets spawnflags of the entity |
-| SetModelScale | void pcapEntities::SetModelScale(int scaleValue, int fireDelay) | Sets model scale of the entity |
-| SetCenter | void pcapEntities::SetCenter(Vector vector) | Sets center of the entity |
-| SetBBox | void pcapEntities::SetBBox(Vector|string min, Vector|string max) | Sets bounding box of the entity |
-| SetUserData | void pcapEntities::SetUserData(string name, any value) | Stores arbitrary value associated with the entity |
-| GetUserData | any pcapEntities::GetUserData(string name) | Gets stored value by name |
-| GetBBox | table pcapEntities::GetBBox() | Returns bounding box of the entity |
-| GetAABB | table pcapEntities::GetAABB() | Returns oriented bounding box of the entity |
-| GetIndex | int pcapEntities::GetIndex() | Returns index of the entity |
-| GetKeyValue | any pcapEntities::GetKeyValue(string key) | Returns keyvalue of the entity |
-| GetSpawnflags | int&#124;null pcapEntities::GetSpawnflags() | Returns spawnflags of the entity |
-| GetAlpha | int&#124;null pcapEntities::GetAlpha() | Returns opacity of the entity |
-| GetColor | string&#124;null pcapEntities::GetColor() | Returns color of the entity |
-| GetNamePrefix | string pcapEntities::GetNamePrefix() | Returns name prefix of the entity |
-| GetNamePostfix | string pcapEntities::GetNamePostfix() | Returns name postfix of the entity |
-| CreateAABB | Vector pcapEntities::CreateAABB(int stat) | Returns AABB face of the entity |
-| getBBoxPoints | Array<Vector> pcapEntities::getBBoxPoints() | Returns AABB vertices of the entity |
+| CreateByClassname | pcapEntity entLib::CreateByClassname(string classname, table keyvalues) | Creates an entity of the specified classname with provided keyvalues |
+| FindByClassname | pcapEntity entLib::FindByClassname(string classname, CBaseEntity start_ent) | Finds an entity by classname starting search from given entity |  
+| FindByClassnameWithin | pcapEntity entLib::FindByClassnameWithin(string classname, Vector origin, int radius, CBaseEntity start_ent) | Finds an entity by classname within given radius of a point |
+| FindByName | pcapEntity entLib::FindByName(string targetname, CBaseEntity start_ent) | Finds an entity by targetname starting search from given entity |
+| FindByNameWithin | pcapEntity entLib::FindByNameWithin(string targetname, Vector origin, int radius, CBaseEntity start_ent) | Finds an entity by targetname within given radius of a point |
+| FindByModel | pcapEntity entLib::FindByModel(string model, CBaseEntity start_ent) | Finds an entity by model starting search from given entity |
+| FindByModelWithin | pcapEntity entLib::FindByModelWithin(string model, Vector origin, int radius, CBaseEntity start_ent) | Finds an entity by model within given radius of a point |  
+| FindInSphere | pcapEntity entLib::FindInSphere(Vector origin, int radius, CBaseEntity start_ent) | Finds entities within sphere of given radius from point |
+| FromEntity | pcapEntity entLib::FromEntity(CBaseEntity entity) | Creates pcapEntity object from given entity |
+| SetAbsAngles | void pcapEntity::SetAbsAngles(Vector vector) | Sets absolute rotation angles of the entity |
+| Destroy | void pcapEntity::Destroy() | Destroys the entity |
+| Kill | void pcapEntity::Kill(int fireDelay) | Kills the entity with delay |
+| IsValid | bool pcapEntity::IsValid() | Checks if the entity is valid |
+| IsPlayer | bool pcapEntity::IsPlayer() | Checks if the entity is the player |
+| SetKeyValue | void pcapEntity::SetKeyValue(string key, any value) | Sets a keyvalue of the entity |
+| addOutput | void pcapEntity::addOutput(string output, string target, string input, string param, int delay, int fires) | Sets a outputs of the entity |
+| SetName | void pcapEntity::SetName(string name) | Sets name (targetname) of the entity |  
+| SetParent | void pcapEntity::SetParent(string name, string&#124;CBaseEntity&#124;pcapEntity parent, int fireDelay) | Sets parent entity |
+| SetCollision | void pcapEntity::SetCollision(int solid, int fireDelay) | Sets collision type of the entity |
+| SetCollisionGroup | void pcapEntity::SetCollisionGroup(int collisionGroup) | Sets collision group of the entity |
+| SetAnimation | void pcapEntity::SetAnimation(string animationName, int fireDelay) | Start playing animation of the entity |
+| SetAlpha | void pcapEntity::SetAlpha(int opacity, int fireDelay) | Sets opacity of the entity |
+| SetColor | void pcapEntity::SetColor(Vector&#124;string colorValue, int fireDelay) | Sets color of the entity |
+| SetColor | void pcapEntity::SetSkin(int skin, int fireDelay) | Sets the skin of the entity |
+| SetDrawEnabled | void pcapEntity::SetDrawEnabled(bool isEnabled, int fireDelay) | Enables/Disables rendering of the entity |
+| SetSpawnflags | void pcapEntity::SetSpawnflags(int flag) | Sets spawnflags of the entity |
+| SetModelScale | void pcapEntity::SetModelScale(int scaleValue, int fireDelay) | Sets model scale of the entity |
+| SetCenter | void pcapEntity::SetCenter(Vector vector) | Sets center of the entity |
+| SetBBox | void pcapEntity::SetBBox(Vector|string min, Vector|string max) | Sets bounding box of the entity |
+| SetUserData | void pcapEntity::SetUserData(string name, any value) | Stores arbitrary value associated with the entity |
+| GetUserData | any pcapEntity::GetUserData(string name) | Gets stored value by name |
+| GetBBox | table pcapEntity::GetBBox() | Returns bounding box of the entity |
+| GetAABB | table pcapEntity::GetAABB() | Returns oriented bounding box of the entity |
+| GetIndex | int pcapEntity::GetIndex() | Returns index of the entity |
+| GetKeyValue | any pcapEntity::GetKeyValue(string key) | Returns keyvalue of the entity |
+| GetSpawnflags | int&#124;null pcapEntity::GetSpawnflags() | Returns spawnflags of the entity |
+| GetAlpha | int&#124;null pcapEntity::GetAlpha() | Returns opacity of the entity |
+| GetColor | string&#124;null pcapEntity::GetColor() | Returns color of the entity |
+| GetNamePrefix | string pcapEntity::GetNamePrefix() | Returns name prefix of the entity |
+| GetNamePostfix | string pcapEntity::GetNamePostfix() | Returns name postfix of the entity |
+| CreateAABB | Vector pcapEntity::CreateAABB(int stat) | Returns AABB face of the entity |
+| getBBoxPoints | Array<Vector> pcapEntity::getBBoxPoints() | Returns AABB vertices of the entity |
 
 ## 3. [`PCapture-Math`](PCapture-math.nut)  
 
@@ -168,7 +168,7 @@ The PCapture-bboxcast library allows rays to hit entities by using their boundin
 | GetStartPos | Vector bboxcast::GetStartPos() | Get the starting position. |
 | GetEndPos | Vector bboxcast::GetEndPos() | Get the ending position. |
 | GetHitpos | Vector bboxcast::GetHitpos() | Get the hit position. | 
-| GetEntity | pcapEntities bboxcast::GetEntity() | Get the hit entity. |
+| GetEntity | pcapEntity bboxcast::GetEntity() | Get the hit entity. |
 | GetIngoreEntities | bboxcast::Entity&#124;array GetIngoreEntities() | Get entities to ignore. |
 | DidHit | bool bboxcast::DidHit() | Check if the trace hit anything. |
 | DidHitWorld | bool bboxcast::DidHitWorld() | Check if the trace hit the world. |
@@ -181,8 +181,8 @@ Animation module, used to quickly create animation events related to alpha, colo
 
 | Name | Usage | Description |
 |-|-|-|
-| AlphaTransition | void animate::AlphaTransition(PCapLib-Entities&#124;CBaseEntity&#124;string entities, int startOpacity, int endOpacity, int&#124;float time, {eventName = null, globalDelay = 0, note = null, outputs = null} EventSetting) | Smoothly changes the alpha value of entities from the initial value to the final value over a specified time. |
-| ColorTransition | void animate::ColorTransition(PCapLib-Entities&#124;CBaseEntity&#124;string entities, string&#124;Vector startColor, string&#124;Vector endColor, int&#124;float time, {eventName = null, globalDelay = 0, note = null, outputs = null} EventSetting) | Smoothly changes the color of entities from the start color to the end color over a specified time. |
-| PositionTransitionByTime | void animate::PositionTransitionByTime(PCapLib-Entities&#124;CBaseEntity&#124;string entities, Vector startPos, Vector endPos, int&#124;float time, {eventName = null, globalDelay = 0, note = null, outputs = null} EventSetting) | Moves entities from the start position to the end position over a specified time based on increments of time. |
-| PositionTransitionBySpeed | number animate::PositionTransitionBySpeed(PCapLib-Entities&#124;CBaseEntity&#124;string entity, Vector startPos, Vector endPos, int&#124;float speed, {eventName = null, globalDelay = 0, note = null, outputs = null} EventSetting) | Moves entities from the start position to the end position over a specified time based on speed. |
-| AnglesTransitionByTime | void animate::AnglesTransitionByTime(PCapLib-Entities&#124;CBaseEntity&#124;string entity, Vector startAngles, Vector endAngles, int&#124;float time, {eventName = null, globalDelay = 0, note = null, outputs = null} EventSetting) | Changes angles of entities from the start angles to the end angles over a specified time. |
+| AlphaTransition | void animate::AlphaTransition(pcapEntity&#124;CBaseEntity&#124;string entities, int startOpacity, int endOpacity, int&#124;float time, {eventName = null, globalDelay = 0, note = null, outputs = null} EventSetting) | Smoothly changes the alpha value of entities from the initial value to the final value over a specified time. |
+| ColorTransition | void animate::ColorTransition(pcapEntity&#124;CBaseEntity&#124;string entities, string&#124;Vector startColor, string&#124;Vector endColor, int&#124;float time, {eventName = null, globalDelay = 0, note = null, outputs = null} EventSetting) | Smoothly changes the color of entities from the start color to the end color over a specified time. |
+| PositionTransitionByTime | void animate::PositionTransitionByTime(pcapEntity&#124;CBaseEntity&#124;string entities, Vector startPos, Vector endPos, int&#124;float time, {eventName = null, globalDelay = 0, note = null, outputs = null} EventSetting) | Moves entities from the start position to the end position over a specified time based on increments of time. |
+| PositionTransitionBySpeed | number animate::PositionTransitionBySpeed(pcapEntity&#124;CBaseEntity&#124;string entity, Vector startPos, Vector endPos, int&#124;float speed, {eventName = null, globalDelay = 0, note = null, outputs = null} EventSetting) | Moves entities from the start position to the end position over a specified time based on speed. |
+| AnglesTransitionByTime | void animate::AnglesTransitionByTime(pcapEntity&#124;CBaseEntity&#124;string entity, Vector startAngles, Vector endAngles, int&#124;float time, {eventName = null, globalDelay = 0, note = null, outputs = null} EventSetting) | Changes angles of entities from the start angles to the end angles over a specified time. |

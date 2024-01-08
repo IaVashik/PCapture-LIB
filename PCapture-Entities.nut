@@ -19,12 +19,12 @@ if("entLib" in getroottable()) {
 *
 * @param {CBaseEntity} entity - The entity object.
 * @param {string} type - The type of entity.
-* @returns {PCapLib-Entities} - A new entity object.
+* @returns {pcapEntity} - A new entity object.
 */
 function init(CBaseEntity) {
     if(!CBaseEntity)
         return null
-    return pcapEntities(CBaseEntity)
+    return pcapEntity(CBaseEntity)
 }
 
 class entLib {
@@ -32,10 +32,10 @@ class entLib {
     *
     * @param {string} classname - The classname of the entity.
     * @param {table} keyvalues - The key-value pairs for the entity.
-    * @returns {PCapLib-Entities} - The created entity object.
+    * @returns {pcapEntity} - The created entity object.
     */
     function CreateByClassname(classname, keyvalues = {}) {
-        local new_entity = pcapEntities(Entities.CreateByClassname(classname))
+        local new_entity = pcapEntity(Entities.CreateByClassname(classname))
         foreach(key, value in keyvalues) {
             new_entity.SetKeyValue(key, value)
         }
@@ -43,7 +43,7 @@ class entLib {
     }
 
     function CreateProp(classname, origin, modelname, activity = 1, keyvalues = {}) {
-        local new_entity = pcapEntities(CreateProp(classname, origin, modelname, activity))
+        local new_entity = pcapEntity(CreateProp(classname, origin, modelname, activity))
         foreach(key, value in keyvalues) {
             new_entity.SetKeyValue(key, value)
         }
@@ -56,10 +56,10 @@ class entLib {
     *
     * @param {string} classname - The classname to search for.
     * @param {CBaseEntity} start_ent - The starting entity to search within.
-    * @returns {PCapLib-Entities} - The found entity object.
+    * @returns {pcapEntity} - The found entity object.
     */
     function FindByClassname(classname, start_ent = null) {
-        if(start_ent && typeof start_ent == "PCapLib-Entities")
+        if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
         local new_entity = Entities.FindByClassname(start_ent, classname)
         return init(new_entity)
@@ -72,10 +72,10 @@ class entLib {
     * @param {Vector} origin - The origin position.
     * @param {int} radius - The search radius.
     * @param {CBaseEntity} start_ent - The starting entity to search within.
-    * @returns {PCapLib-Entities} - The found entity object.
+    * @returns {pcapEntity} - The found entity object.
     */
     function FindByClassnameWithin(classname, origin, radius, start_ent = null) {
-        if(start_ent && typeof start_ent == "PCapLib-Entities")
+        if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
         local new_entity = Entities.FindByClassnameWithin(start_ent, classname, origin, radius)
         return init(new_entity)
@@ -86,10 +86,10 @@ class entLib {
     *
     * @param {string} targetname - The targetname to search for.
     * @param {CBaseEntity} start_ent - The starting entity to search within.
-    * @returns {PCapLib-Entities} - The found entity object.
+    * @returns {pcapEntity} - The found entity object.
     */
     function FindByName(targetname, start_ent = null) {
-        if(start_ent && typeof start_ent == "PCapLib-Entities")
+        if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
         local new_entity = Entities.FindByName(start_ent, targetname)
         return init(new_entity)
@@ -102,10 +102,10 @@ class entLib {
     * @param {Vector} origin - The origin position.
     * @param {int} radius - The search radius.
     * @param {CBaseEntity} start_ent - The starting entity to search within.
-    * @returns {PCapLib-Entities} - The found entity object.
+    * @returns {pcapEntity} - The found entity object.
     */
     function FindByNameWithin(targetname, origin, radius, start_ent = null) {
-        if(start_ent && typeof start_ent == "PCapLib-Entities")
+        if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
         local new_entity = Entities.FindByNameWithin(start_ent, targetname, origin, radius)
         return init(new_entity)
@@ -116,10 +116,10 @@ class entLib {
     *
     * @param {string} model - The model to search for.
     * @param {CBaseEntity} start_ent - The starting entity to search within.
-    * @returns {PCapLib-Entities} - The found entity object.
+    * @returns {pcapEntity} - The found entity object.
     */
     function FindByModel(model, start_ent = null) {
-        if(start_ent && typeof start_ent == "PCapLib-Entities")
+        if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
         local new_entity = Entities.FindByModel(start_ent, model)
         return init(new_entity)
@@ -132,10 +132,10 @@ class entLib {
     * @param {Vector} origin - The origin position.
     * @param {int} radius - The search radius.
     * @param {CBaseEntity} start_ent - The starting entity to search within.
-    * @returns {PCapLib-Entities} - The found entity object.
+    * @returns {pcapEntity} - The found entity object.
     */
     function FindByModelWithin(model, origin, radius, start_ent = null) {
-        if(start_ent && typeof start_ent == "PCapLib-Entities")
+        if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
         local new_entity = null
         for(local ent; ent = FindByClassnameWithin("*", origin, radius, start_ent);) {
@@ -154,10 +154,10 @@ class entLib {
     * @param {Vector} origin - The origin position of the sphere.
     * @param {int} radius - The radius of the sphere.
     * @param {CBaseEntity} start_ent - The starting entity to search within.
-    * @returns {PCapLib-Entities} - The found entity object.
+    * @returns {pcapEntity} - The found entity object.
     */
     function FindInSphere(origin, radius, start_ent = null) {
-        if(start_ent && typeof start_ent == "PCapLib-Entities")
+        if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
         local new_entity = Entities.FindInSphere(start_ent, origin, radius)
         return init(new_entity)
@@ -165,7 +165,7 @@ class entLib {
 
 
     function FromEntity(CBaseEntity) {
-        if(typeof CBaseEntity == "PCapLib-Entities")
+        if(typeof CBaseEntity == "pcapEntity")
             return CBaseEntity
         return init(CBaseEntity)
     }
@@ -174,7 +174,7 @@ class entLib {
 
 
 
-class pcapEntities {
+class pcapEntity {
     CBaseEntity = null;
     Scope = {}
 
@@ -183,7 +183,7 @@ class pcapEntities {
     * @param {CBaseEntity} entity - The entity object.
     */
     constructor(entity = null) {
-        if(typeof entity == "PCapLib-Entities")
+        if(typeof entity == "pcapEntity")
             entity = entity.CBaseEntity
             
         if(entity == null) return null
@@ -299,12 +299,12 @@ class pcapEntities {
 
     /* Sets the parent of the entity.
     *
-    * @param {string|CBaseEntity|PCapLib-Entities} parent - The parent entity object.
+    * @param {string|CBaseEntity|pcapEntity} parent - The parent entity object.
     * @param {int|float} fireDelay - Delay in seconds before applying.
     */
     function SetParent(parentEnt, fireDelay = 0) {
         this.SetUserData("parent", parentEnt)
-        if(typeof parentEnt == "PCapLib-Entities" || typeof parentEnt == "instance") {
+        if(typeof parentEnt == "pcapEntity" || typeof parentEnt == "instance") {
             if(parentEnt.GetName() == "") {
                 parentEnt.SetName(UniqueString("parent"))
             }
@@ -590,7 +590,7 @@ class pcapEntities {
     * @returns {string} - The string representation of the entity.
     */
     function _tostring() {
-        return "PCapLib-Entities: " + this.CBaseEntity + ""
+        return "pcapEntity: " + this.CBaseEntity + ""
     }
 
 
@@ -599,7 +599,7 @@ class pcapEntities {
     * @returns {string} - The type of the entity object.
     */
     function _typeof() {
-        return "PCapLib-Entities"
+        return "pcapEntity"
     }
 
 
@@ -668,40 +668,40 @@ class pcapEntities {
     }
 }
 
-function pcapEntities::ConnectOutput(output, func_name) this.CBaseEntity.ConnectOutput(output, func_name)
-function pcapEntities::DisconnectOutput(output, func_name) this.CBaseEntity.DisconnectOutput(output, func_name)
-function pcapEntities::EmitSound(sound_name) this.CBaseEntity.EmitSound(sound_name)
-function pcapEntities::PrecacheSoundScript(sound_name) this.CBaseEntity.PrecacheSoundScript(sound_name)
-function pcapEntities::IsSequenceFinished() return this.CBaseEntity.IsSequenceFinished()
-function pcapEntities::SpawnEntity() this.CBaseEntity.SpawnEntity()
+function pcapEntity::ConnectOutput(output, func_name) this.CBaseEntity.ConnectOutput(output, func_name)
+function pcapEntity::DisconnectOutput(output, func_name) this.CBaseEntity.DisconnectOutput(output, func_name)
+function pcapEntity::EmitSound(sound_name) this.CBaseEntity.EmitSound(sound_name)
+function pcapEntity::PrecacheSoundScript(sound_name) this.CBaseEntity.PrecacheSoundScript(sound_name)
+function pcapEntity::IsSequenceFinished() return this.CBaseEntity.IsSequenceFinished()
+function pcapEntity::SpawnEntity() this.CBaseEntity.SpawnEntity()
 
-function pcapEntities::GetAngles() return this.CBaseEntity.GetAngles()
-function pcapEntities::GetAngularVelocity() return this.CBaseEntity.GetAngularVelocity()
-function pcapEntities::GetBoundingMaxs() return this.CBaseEntity.GetBoundingMaxs()
-function pcapEntities::GetBoundingMins() return this.CBaseEntity.GetBoundingMins()
-function pcapEntities::GetCenter() return this.CBaseEntity.GetCenter()
-function pcapEntities::GetClassname() return this.CBaseEntity.GetClassname()
-function pcapEntities::GetForwardVector() return this.CBaseEntity.GetForwardVector()
-function pcapEntities::GetHealth() return this.CBaseEntity.GetHealth()
-function pcapEntities::GetLeftVector() return this.CBaseEntity.GetLeftVector()
-function pcapEntities::GetMaxHealth() return this.CBaseEntity.GetMaxHealth()
-function pcapEntities::GetModelKeyValues() return this.CBaseEntity.GetModelKeyValues()
-function pcapEntities::GetModelName() return this.CBaseEntity.GetModelName()
-function pcapEntities::GetName() return this.CBaseEntity.GetName()
-function pcapEntities::GetOrigin() return this.CBaseEntity.GetOrigin()
-function pcapEntities::GetScriptId() return this.CBaseEntity.GetScriptId()
-function pcapEntities::GetUpVector() return this.CBaseEntity.GetUpVector()
-function pcapEntities::GetPartnername() return this.CBaseEntity.GetPartnername()
-function pcapEntities::GetPartnerInstance() return this.CBaseEntity.GetPartnerInstance()
-function pcapEntities::ValidateScriptScope() return this.CBaseEntity.ValidateScriptScope()
-function pcapEntities::EyePosition() return this.CBaseEntity.EyePosition()
+function pcapEntity::GetAngles() return this.CBaseEntity.GetAngles()
+function pcapEntity::GetAngularVelocity() return this.CBaseEntity.GetAngularVelocity()
+function pcapEntity::GetBoundingMaxs() return this.CBaseEntity.GetBoundingMaxs()
+function pcapEntity::GetBoundingMins() return this.CBaseEntity.GetBoundingMins()
+function pcapEntity::GetCenter() return this.CBaseEntity.GetCenter()
+function pcapEntity::GetClassname() return this.CBaseEntity.GetClassname()
+function pcapEntity::GetForwardVector() return this.CBaseEntity.GetForwardVector()
+function pcapEntity::GetHealth() return this.CBaseEntity.GetHealth()
+function pcapEntity::GetLeftVector() return this.CBaseEntity.GetLeftVector()
+function pcapEntity::GetMaxHealth() return this.CBaseEntity.GetMaxHealth()
+function pcapEntity::GetModelKeyValues() return this.CBaseEntity.GetModelKeyValues()
+function pcapEntity::GetModelName() return this.CBaseEntity.GetModelName()
+function pcapEntity::GetName() return this.CBaseEntity.GetName()
+function pcapEntity::GetOrigin() return this.CBaseEntity.GetOrigin()
+function pcapEntity::GetScriptId() return this.CBaseEntity.GetScriptId()
+function pcapEntity::GetUpVector() return this.CBaseEntity.GetUpVector()
+function pcapEntity::GetPartnername() return this.CBaseEntity.GetPartnername()
+function pcapEntity::GetPartnerInstance() return this.CBaseEntity.GetPartnerInstance()
+function pcapEntity::ValidateScriptScope() return this.CBaseEntity.ValidateScriptScope()
+function pcapEntity::EyePosition() return this.CBaseEntity.EyePosition()
 
-function pcapEntities::SetAbsOrigin(vector) this.CBaseEntity.SetAbsOrigin(vector)
-function pcapEntities::SetForwardVector(vector) this.CBaseEntity.SetForwardVector(vector)
-function pcapEntities::SetHealth(health) this.CBaseEntity.SetHealth(health)
-function pcapEntities::SetMaxHealth(health) this.CBaseEntity.SetMaxHealth(health)
-function pcapEntities::SetModel(model_name) this.CBaseEntity.SetModel(model_name)
-function pcapEntities::SetOrigin(vector) this.CBaseEntity.SetOrigin(vector)
+function pcapEntity::SetAbsOrigin(vector) this.CBaseEntity.SetAbsOrigin(vector)
+function pcapEntity::SetForwardVector(vector) this.CBaseEntity.SetForwardVector(vector)
+function pcapEntity::SetHealth(health) this.CBaseEntity.SetHealth(health)
+function pcapEntity::SetMaxHealth(health) this.CBaseEntity.SetMaxHealth(health)
+function pcapEntity::SetModel(model_name) this.CBaseEntity.SetModel(model_name)
+function pcapEntity::SetOrigin(vector) this.CBaseEntity.SetOrigin(vector)
 
 
-// add CBaseEnts check with pcapEntities
+// add CBaseEnts check with pcapEntity

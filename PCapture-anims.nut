@@ -18,7 +18,7 @@ animate <- {
     /* 
     * Smoothly changes the alpha value of an entities from the initial value to the final value over a specified time.
     * 
-    * @param {PCapLib-Entities|CBaseEntity|string} entities - The entities (or targetname) to animate.
+    * @param {pcapEntity|CBaseEntity|string} entities - The entities (or targetname) to animate.
     * @param {int} startOpacity - The initial opacity value.
     * @param {int} endOpacity - The final opacity value.
     * @param {int|float} time - The duration of the animation in seconds.
@@ -61,7 +61,7 @@ animate <- {
     /*  
     * Smoothly changes the color of entities from start to end over time. 
     *
-    * @param {PCapLib-Entities|CBaseEntity|string} entities - The entities.
+    * @param {pcapEntity|CBaseEntity|string} entities - The entities.
     * @param {string|Vector} startColor - The starting color.
     * @param {string|Vector} endColor - The ending color.
     * @param {int|float} time - The duration in seconds.  
@@ -97,7 +97,7 @@ animate <- {
     /* 
     * Moves an entities from the start position to the end position over a specified time based on increments of time.
     * 
-    * @param {PCapLib-Entities|CBaseEntity|string} entities - The entities (or targetname) to animate.
+    * @param {pcapEntity|CBaseEntity|string} entities - The entities (or targetname) to animate.
     * @param {Vector} startPos - The initial position.
     * @param {Vector} endPos - The final position.
     * @param {int|float} time - The duration of the animation in seconds.
@@ -134,7 +134,7 @@ animate <- {
     
     /* Moves an entities from the start position to the end position over a specified time based on speed.
     * 
-    * @param {PCapLib-Entities|CBaseEntity|string} entities - The entities to animate.
+    * @param {pcapEntity|CBaseEntity|string} entities - The entities to animate.
     * @param {Vector} startPos - The initial position.
     * @param {Vector} endPos - The final position.
     * @param {int|float} speed - The speed at which to move the entities in units per second.
@@ -176,7 +176,7 @@ animate <- {
     /*
     * Changes angles of entities from start to end over time.
     *
-    * @param {PCapLib-Entities|CBaseEntity|string} entities - The entities.
+    * @param {pcapEntity|CBaseEntity|string} entities - The entities.
     * @param {Vector} startAngles - Starting angles.  
     * @param {Vector} endAngles - Ending angles.
     * @param {int|float} time - Duration in seconds. 
@@ -215,7 +215,7 @@ animate <- {
 /*
 * Gets a valid event name for the entities.
 * 
-* @param {PCapLib-Entities|CBaseEntity|string} entities - The entities.
+* @param {pcapEntity|CBaseEntity|string} entities - The entities.
 * @param {object} EventSetting - The event settings.
 * @returns {string} The event name. 
 */
@@ -236,8 +236,8 @@ function _GetValidEventName(entities, EventSetting) {
 /*
 * Gets valid entity/entities from input.
 *
-* @param {PCapLib-Entities|CBaseEntity|string} entities - The entity input.  
-* @returns {array(PCapLib-Entities)} Valid entity/entities.
+* @param {pcapEntity|CBaseEntity|string} entities - The entity input.  
+* @returns {array(pcapEntity)} Valid entity/entities.
 */ 
 function _GetValidEntitiy(entities) {
     if (typeof entities == "string") {
@@ -251,8 +251,8 @@ function _GetValidEntitiy(entities) {
         }
     }
             
-    if (typeof entities != "PCapLib-Entities")
-            return [pcapEntities(entities)]
+    if (typeof entities != "pcapEntity")
+            return [pcapEntity(entities)]
     
     return [entities]
 }

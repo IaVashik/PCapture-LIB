@@ -41,7 +41,7 @@ See the [full documentation](documentation.md) for details on all modules and us
 
 PCapture-LIB provides various useful VScript modules and enhancements for Portal 2 mapping, consolidating handy functions and classes written for the Project Capture modification into an open-source library format.
 
-It aims to help mappers take their maps to the next level by providing tools for complex scripting while staying intuitive and easy to use. Features like the quaternion math module, bboxcast tracelines, property animation presets, and the enhanced pcapEntities wrapper class abstract away boilerplate code so mappers can focus on creativity.
+It aims to help mappers take their maps to the next level by providing tools for complex scripting while staying intuitive and easy to use. Features like the quaternion math module, bboxcast tracelines, property animation presets, and the enhanced pcapEntity wrapper class abstract away boilerplate code so mappers can focus on creativity.
 
 With the powerful event scheduling system, robust array utils, vector operations, and interpolation math, PCapture-LIB has all the ingredients for advanced logic scripts while remaining approachable for newcomers.
 

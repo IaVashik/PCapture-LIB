@@ -44,7 +44,7 @@ class bboxcast {
     *
     * @param {Vector} startpos - Start position.
     * @param {Vector} endpos - End position.
-    * @param {CBaseEntity|array} ignoreEnt - Entity to ignore. 
+    * @param {CBaseEntity|pcapEntity|array} ignoreEnt - Entity to ignore. 
     * @param {object} settings - Trace settings.
     */
     constructor(startpos, endpos, ignoreEnt = null, settings = ::defaultSettings) {
@@ -244,8 +244,7 @@ class bboxcast {
     * @returns {boolean} True if should ignore.
     */
     function _checkEntityIsIgnored(ent, ignoreEnt) {
-
-        if(typeof ignoreEnt == "PCapLib-Entities")
+        if(typeof ignoreEnt == "pcapEntity")
             ignoreEnt = ignoreEnt.CBaseEntity
 
         local classname = ent.GetClassname()
@@ -253,9 +252,9 @@ class bboxcast {
         if(traceSettings.customFilter && traceSettings.customFilter(ent))
             return false
 
-        if (type(ignoreEnt) == "array") {
+        if (type(ignoreEnt) == "array" || type(ignoreEnt) == "arrayLib") {
             foreach (mask in ignoreEnt) {
-                if(typeof mask == "PCapLib-Entities")
+                if(typeof mask == "pcapEntity")
                     mask = mask.CBaseEntity
                 if (mask == ent) {
                     return false;
