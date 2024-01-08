@@ -225,7 +225,7 @@ function GetPostfix(name) {
 
 /* Precaches a sound script for later use.
 * 
-* @param {string|array} sound_path - The path to the sound script.
+* @param {string|array|arrayLib} sound_path - The path to the sound script.
 */
 function Precache(sound_path) {
     if(typeof sound_path == "string")

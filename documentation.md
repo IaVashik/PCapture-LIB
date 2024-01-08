@@ -7,18 +7,18 @@ The main file in the library. It currently contains various rubbish that will ne
 
 | Name | Usage | Description |
 |-|-|-|  
-| RunScriptCode.delay | void RunScriptCode::delay(script, delay, activator, caller) | Creates a delay before executing the specified script. |
-| RunScriptCode.loopy | void RunScriptCode::loopy(func, delay, loop, outputs) | Executes a function repeatedly with a specified delay for a given number of loops. |
+| RunScriptCode.delay | void RunScriptCode::delay(script, delay, activator = null, caller = null) | Creates a delay before executing the specified script. |
+| RunScriptCode.loopy | void RunScriptCode::loopy(func, delay, loop, outputs = null) | Executes a function repeatedly with a specified delay for a given number of loops. |
 | RunScriptCode.fromStr | void RunScriptCode::fromStr(string value) | Executes a script from a string. |
 | DrawEntityBBox | void dev::DrawEntityBBox(entity, time) | Draws the bounding box of an entity. |
-| drawbox | void dev::drawbox(vector, color, time) | Draws a box at the specified position. |
+| drawbox | void dev::drawbox(vector, color, time = 0.05) | Draws a box at the specified position. |
 | log | void dev::log(string msg) | Logs a message if developer mode is enabled. |
 | warning | void dev::warning(string msg) | Displays a warning message if developer mode is enabled. |
 | error | void dev::error(string msg) | Displays an error message if developer mode is enabled. |
 | StrToVec | Vector StrToVec(string value) | Converts a string to a Vector. *Example: "255 31 10" -> Vector(255, 31, 10)* |
 | GetPrefix | void GetPrefix(string&#124;CBaseEntity name) | Gets the prefix of an entity name. |
 | GetPostfix | void GetPostfix(string&#124;CBaseEntity name) | Gets the postfix of an entity name. |
-| Precache | void Precache(string sound_path) | Precaches a sound |
+| Precache | void Precache(string&#124;array&#124;arrayLib sound_path) | Precaches a sound |
 | fprint | void fprint(string msg, any vargs...) | Prints a formatted message to the console. |
 
 ## 2. [`PCapture-Entities`](PCapture-Entities.nut)
@@ -27,33 +27,33 @@ Improved Entities Module. Contains A VERY LARGE number of different functions th
 
 | Name | Usage | Description |
 |-|-|-|
-| CreateByClassname | pcapEntity entLib::CreateByClassname(string classname, table keyvalues) | Creates an entity of the specified classname with provided keyvalues |
-| FindByClassname | pcapEntity entLib::FindByClassname(string classname, CBaseEntity start_ent) | Finds an entity by classname starting search from given entity |  
-| FindByClassnameWithin | pcapEntity entLib::FindByClassnameWithin(string classname, Vector origin, int radius, CBaseEntity start_ent) | Finds an entity by classname within given radius of a point |
-| FindByName | pcapEntity entLib::FindByName(string targetname, CBaseEntity start_ent) | Finds an entity by targetname starting search from given entity |
-| FindByNameWithin | pcapEntity entLib::FindByNameWithin(string targetname, Vector origin, int radius, CBaseEntity start_ent) | Finds an entity by targetname within given radius of a point |
-| FindByModel | pcapEntity entLib::FindByModel(string model, CBaseEntity start_ent) | Finds an entity by model starting search from given entity |
-| FindByModelWithin | pcapEntity entLib::FindByModelWithin(string model, Vector origin, int radius, CBaseEntity start_ent) | Finds an entity by model within given radius of a point |  
-| FindInSphere | pcapEntity entLib::FindInSphere(Vector origin, int radius, CBaseEntity start_ent) | Finds entities within sphere of given radius from point |
-| FromEntity | pcapEntity entLib::FromEntity(CBaseEntity entity) | Creates pcapEntity object from given entity |
+| CreateByClassname | pcapEntity entLib::CreateByClassname(string classname, table keyvalues = null) | Creates an entity of the specified classname with provided keyvalues |
+| FindByClassname | pcapEntity entLib::FindByClassname(string classname, CBaseEntity start_ent = null) | Finds an entity by classname starting search from given entity |  
+| FindByClassnameWithin | pcapEntity entLib::FindByClassnameWithin(string classname, Vector origin, int radius, CBaseEntity start_ent = null) | Finds an entity by classname within given radius of a point |
+| FindByName | pcapEntity entLib::FindByName(string targetname, CBaseEntity start_ent = null) | Finds an entity by targetname starting search from given entity |
+| FindByNameWithin | pcapEntity entLib::FindByNameWithin(string targetname, Vector origin, int radius, CBaseEntity start_ent = null) | Finds an entity by targetname within given radius of a point |
+| FindByModel | pcapEntity entLib::FindByModel(string model, CBaseEntity start_ent = null) | Finds an entity by model starting search from given entity |
+| FindByModelWithin | pcapEntity entLib::FindByModelWithin(string model, Vector origin, int radius, CBaseEntity start_ent = null) | Finds an entity by model within given radius of a point |  
+| FindInSphere | pcapEntity entLib::FindInSphere(Vector origin, int radius, CBaseEntity start_ent = null) | Finds entities within sphere of given radius from point |
+| FromEntity | pcapEntity entLib::FromEntity(CBaseEntity entity) | Creates pcapEntity object from given CBaseEntity |
 | SetAbsAngles | void pcapEntity::SetAbsAngles(Vector vector) | Sets absolute rotation angles of the entity |
 | Destroy | void pcapEntity::Destroy() | Destroys the entity |
-| Kill | void pcapEntity::Kill(int fireDelay) | Kills the entity with delay |
+| Kill | void pcapEntity::Kill(int fireDelay = 0) | Kills the entity with delay |
 | IsValid | bool pcapEntity::IsValid() | Checks if the entity is valid |
 | IsPlayer | bool pcapEntity::IsPlayer() | Checks if the entity is the player |
 | SetKeyValue | void pcapEntity::SetKeyValue(string key, any value) | Sets a keyvalue of the entity |
-| addOutput | void pcapEntity::addOutput(string output, string target, string input, string param, int delay, int fires) | Sets a outputs of the entity |
+| addOutput | void pcapEntity::addOutput(string output, string target, string input, string param = "", int delay = 0, int fires = -1) | Sets a outputs of the entity |
 | SetName | void pcapEntity::SetName(string name) | Sets name (targetname) of the entity |  
-| SetParent | void pcapEntity::SetParent(string name, string&#124;CBaseEntity&#124;pcapEntity parent, int fireDelay) | Sets parent entity |
-| SetCollision | void pcapEntity::SetCollision(int solid, int fireDelay) | Sets collision type of the entity |
+| SetParent | void pcapEntity::SetParent(string name, string&#124;CBaseEntity&#124;pcapEntity parent, int fireDelay = 0) | Sets parent entity |
+| SetCollision | void pcapEntity::SetCollision(int solid, int fireDelay = 0) | Sets collision type of the entity |
 | SetCollisionGroup | void pcapEntity::SetCollisionGroup(int collisionGroup) | Sets collision group of the entity |
-| SetAnimation | void pcapEntity::SetAnimation(string animationName, int fireDelay) | Start playing animation of the entity |
-| SetAlpha | void pcapEntity::SetAlpha(int opacity, int fireDelay) | Sets opacity of the entity |
-| SetColor | void pcapEntity::SetColor(Vector&#124;string colorValue, int fireDelay) | Sets color of the entity |
-| SetColor | void pcapEntity::SetSkin(int skin, int fireDelay) | Sets the skin of the entity |
-| SetDrawEnabled | void pcapEntity::SetDrawEnabled(bool isEnabled, int fireDelay) | Enables/Disables rendering of the entity |
+| SetAnimation | void pcapEntity::SetAnimation(string animationName, int fireDelay = 0) | Start playing animation of the entity |
+| SetAlpha | void pcapEntity::SetAlpha(int opacity, int fireDelay = 0) | Sets opacity of the entity |
+| SetColor | void pcapEntity::SetColor(Vector&#124;string colorValue, int fireDelay = 0) | Sets color of the entity |
+| SetColor | void pcapEntity::SetSkin(int skin, int fireDelay = 0) | Sets the skin of the entity |
+| SetDrawEnabled | void pcapEntity::SetDrawEnabled(bool isEnabled, int fireDelay = 0) | Enables/Disables rendering of the entity |
 | SetSpawnflags | void pcapEntity::SetSpawnflags(int flag) | Sets spawnflags of the entity |
-| SetModelScale | void pcapEntity::SetModelScale(int scaleValue, int fireDelay) | Sets model scale of the entity |
+| SetModelScale | void pcapEntity::SetModelScale(int scaleValue, int fireDelay = 0) | Sets model scale of the entity |
 | SetCenter | void pcapEntity::SetCenter(Vector vector) | Sets center of the entity |
 | SetBBox | void pcapEntity::SetBBox(Vector|string min, Vector|string max) | Sets bounding box of the entity |
 | SetUserData | void pcapEntity::SetUserData(string name, any value) | Stores arbitrary value associated with the entity |
@@ -62,10 +62,10 @@ Improved Entities Module. Contains A VERY LARGE number of different functions th
 | GetAABB | table pcapEntity::GetAABB() | Returns oriented bounding box of the entity |
 | GetIndex | int pcapEntity::GetIndex() | Returns index of the entity |
 | GetKeyValue | any pcapEntity::GetKeyValue(string key) | Returns keyvalue of the entity |
-| GetSpawnflags | int&#124;null pcapEntity::GetSpawnflags() | Returns spawnflags of the entity |
-| GetAlpha | int&#124;null pcapEntity::GetAlpha() | Returns opacity of the entity |
-| GetColor | string&#124;null pcapEntity::GetColor() | Returns color of the entity |
-| GetNamePrefix | string pcapEntity::GetNamePrefix() | Returns name prefix of the entity |
+| GetSpawnflags | int&#124;null pcapEntity::GetSpawnflags() | Returns spawnflags of the entity, if such information is available |
+| GetAlpha | int&#124;null pcapEntity::GetAlpha() | Returns opacity of the entity, if such information is available |
+| GetColor | string&#124;null pcapEntity::GetColor() | Returns color of the entity, if such information is available |
+| GetNamePrefix | string pcapEntity::GetNamePrefix() | Returns name prefix of the entity, if such information is available |
 | GetNamePostfix | string pcapEntity::GetNamePostfix() | Returns name postfix of the entity |
 | CreateAABB | Vector pcapEntity::CreateAABB(int stat) | Returns AABB face of the entity |
 | getBBoxPoints | Array<Vector> pcapEntity::getBBoxPoints() | Returns AABB vertices of the entity |
@@ -118,9 +118,8 @@ Improved EntFire/logic_relay/loop module. Allows you to create whole events from
 
 | Name | Usage | Description |
 |-|-|-|
-| CreateScheduleEvent | void CreateScheduleEvent(string eventName, string&#124;function action, float timeDelay, string note) | Creates a scheduled event |
-| ExecuteScheduledEvents | void ExecuteScheduledEvents() | Executes scheduled events when time is up |
-| cancelScheduledEvent | void cancelScheduledEvent(string eventName, float delay) | Cancels a scheduled event |
+| CreateScheduleEvent | void CreateScheduleEvent(string eventName, string&#124;function action, float timeDelay, string note = null) | Creates a scheduled event |
+| cancelScheduledEvent | void cancelScheduledEvent(string eventName, float delay = 0) | Cancels a scheduled event |
 | getEventInfo | table&#124;null getEventInfo(string eventName) | Gets info for scheduled event |
 | eventIsValid | bool eventIsValid(string eventName) | Checks if event is valid |
 | getEventNote | any getEventNote(string eventName) | Returns the nearest note of the event if it exists |
@@ -139,22 +138,22 @@ Improved arrays module. Contains easy output in the console and additional featu
 | clear | void clear() | Clear the array and table. |
 | extend | void extend(array other) | Extend the array with another array. |
 | filter | arrayLib filter(Function func) | Filter the array by a predicate function. Returns the filtered array. |
-| find | boolean find(any match) | Check if the array contains a value. Returns whether the value is found. |
+| find | bool find(any match) | Check if the array contains a value. Returns whether the value is found. |
 | search | int&#124;null search(any&#124;Function match) | Search for a value in the array. Returns the index of the match or null. |
 | insert | any insert(int idx, any val) | Insert a value into the array at the specified index. |
 | len | int len() | Get the length of the array. |
 | map | arrayLib map(Function func) | Map the array to a new array using a mapping function. Returns the mapped array. |
 | pop | any pop() | Pop a value off the end of the array. Returns the popped value. |
-| get | any get(int idx, any default) | Retrieve the element at the specified index in the array. Default value to return if the index is out of bounds |
+| get | any get(int idx, any default = null) | Retrieve the element at the specified index in the array. Default value to return if the index is out of bounds |
 | push | void push(any val) | Append a value to the array. |
 | remove | void remove(int idx) | Remove an element from the array at the specified index. |
-| resize | void resize(int size, [any fill]) | Resize the array to the specified size. Optionally fill new slots with a fill value. |
+| resize | void resize(int size, any fill = null) | Resize the array to the specified size. Optionally fill new slots with a fill value. |
 | reverse | arrayLib reverse() | Reverse the array in-place. Returns the reversed array. |
-| slice | arrayLib slice(int start, [int end]) | Slice a portion of the array. Returns the sliced array. |
-| sort | arrayLib sort([Function func]) | Sort the array. Optionally accepts a compare function. Returns the sorted array. |
+| slice | arrayLib slice(int start, int end = null) | Slice a portion of the array. Returns the sliced array. |
+| sort | arrayLib sort(Function func = null) | Sort the array. Optionally accepts a compare function. Returns the sorted array. |
 | top | any top() | Get the last element of the array. |
-| join | string join([string joinstr]) | Join the array into a string using the specified separator string. Returns the joined string. |
-| totable | table totable([boolean recreate]) | Convert the array to a table representation. Optionally recreate the table if it already exists. Returns the table representation. |
+| join | string join(string joinstr = "") | Join the array into a string using the specified separator string. Returns the joined string. |
+| totable | table totable(bool recreate = false) | Convert the array to a table representation. Optionally recreate the table if it already exists. Returns the table representation. |
 
 ## 6. [`PCapture-BBoxCast`](PCapture-bboxcast.nut)  
 
@@ -164,7 +163,7 @@ The PCapture-bboxcast library allows rays to hit entities by using their boundin
 
 | Name | Usage | Description |
 |-|-|-|
-| bboxcast | bboxcast(Vector startpos, Vector endpos, CBaseEntity&#124;pcapEntity&#124;array&#124;arrayLib ignoreEnt, table settings) | Create bboxcast instance. |
+| bboxcast | bboxcast(Vector startpos, Vector endpos, Entity&#124;arrays ignoreEnt = null, table settings = ::defaultSettings) | Create bboxcast instance. |
 | GetStartPos | Vector bboxcast::GetStartPos() | Get the starting position. |
 | GetEndPos | Vector bboxcast::GetEndPos() | Get the ending position. |
 | GetHitpos | Vector bboxcast::GetHitpos() | Get the hit position. | 
