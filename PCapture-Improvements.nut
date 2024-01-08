@@ -55,4 +55,24 @@ function EntFireByHandle(target, action, value = "", delay = 0, activator = null
 }
 
 
-// TODO: GetPlayer()
+/* 
+    TODO: Add description
+*/
+_GetPlayer <- GetPlayer
+function GetPlayer() {
+    return pcapPlayer(_GetPlayer())
+}
+
+class pcapPlayer extends pcapEntity {
+    function EyePosition() {
+        return this.CBaseEntity.EyePosition()
+    }
+
+    function EyeAngles() {
+        return this.GetUserData("Eye").GetAngles()
+    }
+
+    function EyeForwardVector() {
+        return this.GetUserData("Eye").GetForwardVector()
+    }
+}
