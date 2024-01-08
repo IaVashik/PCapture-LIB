@@ -24,8 +24,10 @@ if("_EntFireByHandle" in getroottable()) {
 */
 _frametime <- FrameTime
 function FrameTime() {
-     /* Limits the frame time between 0.016 and 1 to avoid extreme values */
-    return math.clamp(_frametime(), 0.016, 1)
+    local tick = _frametime()
+    if(tick == 0) 
+        return 0.016
+    return tick
 }
 
 
