@@ -44,7 +44,7 @@ class bboxcast {
     *
     * @param {Vector} startpos - Start position.
     * @param {Vector} endpos - End position.
-    * @param {CBaseEntity|pcapEntity|array} ignoreEnt - Entity to ignore. 
+    * @param {CBaseEntity|pcapEntity|array|arrayLib} ignoreEnt - Entity to ignore. 
     * @param {object} settings - Trace settings.
     */
     constructor(startpos, endpos, ignoreEnt = null, settings = ::defaultSettings) {
@@ -252,7 +252,7 @@ class bboxcast {
         if(traceSettings.customFilter && traceSettings.customFilter(ent))
             return false
 
-        if (type(ignoreEnt) == "array" || type(ignoreEnt) == "arrayLib") {
+        if (typeof ignoreEnt == "array" || typeof ignoreEnt == "arrayLib") {
             foreach (mask in ignoreEnt) {
                 if(typeof mask == "pcapEntity")
                     mask = mask.CBaseEntity
