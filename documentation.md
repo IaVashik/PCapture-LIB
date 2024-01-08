@@ -39,6 +39,7 @@ Improved Entities Module. Contains A VERY LARGE number of different functions th
 | SetAbsAngles | void pcapEntity::SetAbsAngles(Vector vector) | Sets absolute rotation angles of the entity |
 | Destroy | void pcapEntity::Destroy() | Destroys the entity |
 | Kill | void pcapEntity::Kill(int fireDelay = 0) | Kills the entity with delay |
+| Dissolve | void pcapEntity::Dissolve() | Dissolve the entity |
 | IsValid | bool pcapEntity::IsValid() | Checks if the entity is valid |
 | IsPlayer | bool pcapEntity::IsPlayer() | Checks if the entity is the player |
 | SetKeyValue | void pcapEntity::SetKeyValue(string key, any value) | Sets a keyvalue of the entity |
