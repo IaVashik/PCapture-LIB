@@ -3,26 +3,50 @@ This library consists of several modules that can be extremely useful for you
 
 ## 1. [`PCapture-Lib`](pcapture-lib.nut)
 
-The main file in the library. It currently contains various rubbish that will need to be broken down into files in the future.
+The main file in the library. Initializes required parts of the library
+
+
+## 2. [`PCapture-Utils`](pcapture-utils.nut)
+
+A collection of utility functions for script execution and debugging. It's a Swiss army knife for developers working with Squirrel :D
+
+### RunScriptCode
+
+`RunScriptCode` provides utility functions for executing scripts.
 
 | Name | Usage | Description |
 |-|-|-|  
-| RunScriptCode.delay | void RunScriptCode::delay(script, delay, activator = null, caller = null) | Creates a delay before executing the specified script. |
-| RunScriptCode.recursive | void RunScriptCode::recursive(script, delay, eventName = "global") | Schedules the execution of a script recursively at a fixed interval. |
-| RunScriptCode.loopy | void RunScriptCode::loopy(func, delay, loop, outputs = null) | Executes a function repeatedly with a specified delay for a given number of loops. |
-| RunScriptCode.fromStr | void RunScriptCode::fromStr(string value) | Executes a script from a string. |
+| delay | void RunScriptCode::delay(script, delay, activator = null, caller = null) | Creates a delay before executing the specified script. |
+| recursive | void RunScriptCode::recursive(script, delay, eventName = "global") | Schedules the execution of a script recursively at a fixed interval. |
+| loopy | void RunScriptCode::loopy(func, delay, loop, outputs = null) | Runs func repeatedly for given loops. |
+| fromStr | void RunScriptCode::fromStr(string value) | Executes a script from a string. |
+
+
+### dev 
+
+`dev` provides developer utility functions. 
+| Name | Usage | Description |
+|-|-|-|
 | DrawEntityBBox | void dev::DrawEntityBBox(entity, time) | Draws the bounding box of an entity. |
 | drawbox | void dev::drawbox(vector, color, time = 0.05) | Draws a box at the specified position. |
 | log | void dev::log(string msg) | Logs a message if developer mode is enabled. |
 | warning | void dev::warning(string msg) | Displays a warning message if developer mode is enabled. |
 | error | void dev::error(string msg) | Displays an error message if developer mode is enabled. |
+
+
+### Other Functions
+
+Other utility functions.
+| Name | Usage | Description |
+|-|-|-|
+| fprint | void fprint(string msg, any vargs...) | Prints a formatted message to the console. |
 | StrToVec | Vector StrToVec(string value) | Converts a string to a Vector. *Example: "255 31 10" -> Vector(255, 31, 10)* |
 | GetPrefix | void GetPrefix(string&#124;CBaseEntity name) | Gets the prefix of an entity name. |
 | GetPostfix | void GetPostfix(string&#124;CBaseEntity name) | Gets the postfix of an entity name. |
 | Precache | void Precache(string&#124;array&#124;arrayLib sound_path) | Precaches a sound |
-| fprint | void fprint(string msg, any vargs...) | Prints a formatted message to the console. |
 
-## 2. [`PCapture-Entities`](PCapture-Entities.nut)
+
+## 3. [`PCapture-Entities`](PCapture-Entities.nut)
 
 Improved Entities Module. Contains A VERY LARGE number of different functions that you just missed later!
 
@@ -72,7 +96,7 @@ Improved Entities Module. Contains A VERY LARGE number of different functions th
 | CreateAABB | Vector pcapEntity::CreateAABB(int stat) | Returns AABB face of the entity |
 | getBBoxPoints | Array<Vector> pcapEntity::getBBoxPoints() | Returns AABB vertices of the entity |
 
-## 3. [`PCapture-Math`](PCapture-math.nut)  
+## 4. [`PCapture-Math`](PCapture-math.nut)  
 
 Mathematical module. Contains many different functions including lerp functions, quaternions and more
 
@@ -114,7 +138,7 @@ Mathematical module. Contains many different functions including lerp functions,
 | RandomVector | Vector math::RandomVector(int min, int max) | Returns a randomized vector in the min to max range |
 
 
-## 4. [`PCapture-EventHandler`](PCapture-EventHandler.nut)  
+## 5. [`PCapture-EventHandler`](PCapture-EventHandler.nut)  
 
 Improved EntFire/logic_relay/loop module. Allows you to create whole events from many different events and cancel them at any time, unlike EntFireByHandler. Able to take not only string, but also full-fledged functions:
 
@@ -126,7 +150,7 @@ Improved EntFire/logic_relay/loop module. Allows you to create whole events from
 | eventIsValid | bool eventIsValid(string eventName) | Checks if event is valid |
 | getEventNote | any getEventNote(string eventName) | Returns the nearest note of the event if it exists |
 
-## 5. [`PCapture-Array`](PCapture-array.nut ) 
+## 6. [`PCapture-Array`](PCapture-array.nut ) 
 
 Improved arrays module. Contains easy output in the console and additional features to simplify life:
 
@@ -157,7 +181,7 @@ Improved arrays module. Contains easy output in the console and additional featu
 | join | string join(string joinstr = "") | Join the array into a string using the specified separator string. Returns the joined string. |
 | totable | table totable(bool recreate = false) | Convert the array to a table representation. Optionally recreate the table if it already exists. Returns the table representation. |
 
-## 6. [`PCapture-BBoxCast`](PCapture-bboxcast.nut)  
+## 7. [`PCapture-BBoxCast`](PCapture-bboxcast.nut)  
 
 Improved [BBoxCast](https://github.com/IaVashik/portal2-BBoxCast) for BBox-based ray tracing in Portal 2, more optimized.
 
@@ -176,7 +200,7 @@ The PCapture-bboxcast library allows rays to hit entities by using their boundin
 | GetFraction | float bboxcast::GetFraction() | Get the fraction of the path traversed. |
 | GetImpactNormal | Vector bboxcast::GetImpactNormal() | Get the surface normal at the impact point. |
 
-## 7. [`PCapture-Anims`](PCapture-anims.nut) 
+## 8. [`PCapture-Anims`](PCapture-anims.nut) 
 
 Animation module, used to quickly create animation events related to alpha, color, object moving
 
@@ -187,3 +211,15 @@ Animation module, used to quickly create animation events related to alpha, colo
 | PositionTransitionByTime | void animate::PositionTransitionByTime(pcapEntity&#124;CBaseEntity&#124;string entities, Vector startPos, Vector endPos, int&#124;float time, {eventName = null, globalDelay = 0, note = null, outputs = null} EventSetting) | Moves entities from the start position to the end position over a specified time based on increments of time. |
 | PositionTransitionBySpeed | number animate::PositionTransitionBySpeed(pcapEntity&#124;CBaseEntity&#124;string entity, Vector startPos, Vector endPos, int&#124;float speed, {eventName = null, globalDelay = 0, note = null, outputs = null} EventSetting) | Moves entities from the start position to the end position over a specified time based on speed. |
 | AnglesTransitionByTime | void animate::AnglesTransitionByTime(pcapEntity&#124;CBaseEntity&#124;string entity, Vector startAngles, Vector endAngles, int&#124;float time, {eventName = null, globalDelay = 0, note = null, outputs = null} EventSetting) | Changes angles of entities from the start angles to the end angles over a specified time. |
+
+## 9. [`PCapture-Improvements`](PCapture-Improvements.nut)
+
+Overrides and improves existing standard VScripts functions.
+| Name | Usage | Description |
+|-|-|-|
+| FrameTime             | void FrameTime()                                       | Limits frametime to avoid zero values, providing a default if zero.   |
+| EntFireByHandle       | void EntFireByHandle(target, action, value = "", delay = 0, activator = null, caller = null) | Wrapper to handle PCapLib objects with EntFireByHandle.               |
+| GetPlayerEx           | pcapPlayer GetPlayerEx(index)                                | Retrieves a player entity with extended functionality.                |
+| pcapPlayer.EyePosition | Vector pcapPlayer::EyePosition()                         | Gets the eye position of the player entity.                           |
+| pcapPlayer.EyeAngles   | Vector pcapPlayer::EyeAngles()                           | Gets the eye angles of the player entity.                             |
+| pcapPlayer.EyeForwardVector | Vector pcapPlayer::EyeForwardVector()               | Gets the forward vector from the player entity's eye position.        |
