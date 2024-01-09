@@ -58,9 +58,8 @@ function EntFireByHandle(target, action, value = "", delay = 0, activator = null
 /* 
     TODO: Add description
 */
-_GetPlayer <- GetPlayer
-function GetPlayer() {
-    return pcapPlayer(_GetPlayer())
+function GetPlayerEx() {
+    return pcapPlayer(GetPlayer())
 }
 
 class pcapPlayer extends pcapEntity {
