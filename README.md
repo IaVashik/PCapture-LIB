@@ -34,7 +34,7 @@ And more to come!
 
 PCapture-LIB is designed to be easy to use. Simply include pcapture-lib in your vscript and you will be able to start using the provided features and classes. 
 
-See the [full documentation](documentation.md) for details on all modules and usage examples.
+See the [full documentation](Documentation/ReadMe.md) for details on all modules and usage examples.
 
 
 # About
