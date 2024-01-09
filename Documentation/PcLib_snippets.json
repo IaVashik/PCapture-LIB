@@ -1,0 +1,485 @@
+{
+	"CreateByClassname": {
+		"prefix": "CreateByClassname",
+		"body": [
+			"entLib.CreateByClassname(${1:classname}, ${2:keyvalues})"
+		],
+		"description": "Creates an entity of the specified classname with provided keyvalues"
+	},
+	"FindByClassname": {
+		"prefix": "FindByClassname",
+		"body": [
+			"entLib.FindByClassname(${1:classname}, ${2:start_ent})"
+		],
+		"description": "Finds an entity by classname starting search from given entity"
+	},
+	"FindByClassnameWithin": {
+		"prefix": "FindByClassnameWithin",
+		"body": [
+			"entLib.FindByClassnameWithin(${1:classname}, ${2:origin}, ${3:radius}, ${4:start_ent})"
+		],
+		"description": "Finds an entity by classname within given radius of a point"
+	},
+	"FindByName": {
+		"prefix": "FindByName",
+		"body": [
+			"entLib.FindByName(${1:targetname}, ${2:start_ent})"
+		],
+		"description": "Finds an entity by targetname starting search from given entity"
+	},
+	"FindByNameWithin": {
+		"prefix": "FindByNameWithin",
+		"body": [
+			"entLib.FindByNameWithin(${1:targetname}, ${2:origin}, ${3:radius}, ${4:start_ent})"
+		],
+		"description": "Finds an entity by targetname within given radius of a point"
+	},
+	"FindByModel": {
+		"prefix": "FindByModel",
+		"body": [
+			"entLib.FindByModel(${1:model}, ${2:start_ent})"
+		],
+		"description": "Finds an entity by model starting search from given entity"
+	},
+	"FindByModelWithin": {
+		"prefix": "FindByModelWithin",
+		"body": [
+			"entLib.FindByModelWithin(${1:model}, ${2:origin}, ${3:radius}, ${4:start_ent})"
+		],
+		"description": "Finds an entity by model within given radius of a point"
+	},
+	"FindInSphere": {
+		"prefix": "FindInSphere",
+		"body": [
+			"entLib.FindInSphere(${1:origin}, ${2:radius}, ${3:start_ent})"
+		],
+		"description": "Finds entities within a sphere of given radius from point"
+	},
+	"FromEntity": {
+		"prefix": "FromEntity",
+		"body": [
+			"entLib.FromEntity(${1:entity})"
+		],
+		"description": "Creates pcapEntities object from given entity"
+	},
+	"SetAbsAngles": {
+		"prefix": "SetAbsAngles",
+		"body": [
+			"SetAbsAngles(${1:vector})"
+		],
+		"description": "Sets absolute rotation angles of the entity"
+	},
+	"Destroy": {
+		"prefix": "Destroy",
+		"body": [
+			"Destroy()"
+		],
+		"description": "Destroys the entity"
+	},
+	"Kill": {
+		"prefix": "Kill",
+		"body": [
+			"Kill(${1:fireDelay})"
+		],
+		"description": "Kills the entity with delay"
+	},
+	"IsPlayer": {
+		"prefix": "IsPlayer",
+		"body": [
+			"IsPlayer()"
+		],
+		"description": "Checks if the entity is the player"
+	},
+	"SetKeyValue": {
+		"prefix": "SetKeyValue",
+		"body": [
+			"SetKeyValue(${1:key}, ${2:value})"
+		],
+		"description": "Sets a keyvalue of the entity"
+	},
+	"SetName": {
+		"prefix": "SetName",
+		"body": [
+			"SetName(${1:name})"
+		],
+		"description": "Sets name (targetname) of the entity"
+	},
+	"SetParent": {
+		"prefix": "SetParent",
+		"body": [
+			"SetParent(${1:name}, ${2:parent}, ${3:fireDelay})"
+		],
+		"description": "Sets parent entity"
+	},
+	"SetCollision": {
+		"prefix": "SetCollision",
+		"body": [
+			"SetCollision(${1:solid}, ${2:fireDelay})"
+		],
+		"description": "Sets collision type of the entity"
+	},
+	"SetCollisionGroup": {
+		"prefix": "SetCollisionGroup",
+		"body": [
+			"SetCollisionGroup(${1:collisionGroup})"
+		],
+		"description": "Sets collision group of the entity"
+	},
+	"SetAlpha": {
+		"prefix": "SetAlpha",
+		"body": [
+			"SetAlpha(${1:opacity}, ${2:fireDelay})"
+		],
+		"description": "Sets opacity of the entity"
+	},
+	"SetColor": {
+		"prefix": "SetColor",
+		"body": [
+			"SetColor(${1:colorValue}, ${2:fireDelay})"
+		],
+		"description": "Sets color of the entity"
+	},
+	"SetDrawEnabled": {
+		"prefix": "SetDrawEnabled",
+		"body": [
+			"SetDrawEnabled(${1:isEnabled}, ${2:fireDelay})"
+		],
+		"description": "Enables/Disables rendering of the entity"
+	},
+	"SetSpawnflags": {
+		"prefix": "SetSpawnflags",
+		"body": [
+			"SetSpawnflags(${1:flag})"
+		],
+		"description": "Sets spawnflags of the entity"
+	},
+	"SetModelScale": {
+		"prefix": "SetModelScale",
+		"body": [
+			"SetModelScale(${1:scaleValue}, ${2:fireDelay})"
+		],
+		"description": "Sets model scale of the entity"
+	},
+	"SetCenter": {
+		"prefix": "SetCenter",
+		"body": [
+			"SetCenter(${1:vector})"
+		],
+		"description": "Sets center of the entity"
+	},
+	"SetBBox": {
+		"prefix": "SetBBox",
+		"body": [
+			"SetBBox(${1:min}, ${2:max})"
+		],
+		"description": "Sets bounding box of the entity"
+	},
+	"SetUserData": {
+		"prefix": "SetUserData",
+		"body": [
+			"SetUserData(${1:name}, ${2:value})"
+		],
+		"description": "Stores arbitrary value associated with the entity"
+	},
+	"GetUserData": {
+		"prefix": "GetUserData",
+		"body": [
+			"GetUserData(${1:name})"
+		],
+		"description": "Gets stored value by name"
+	},
+	"GetBBox": {
+		"prefix": "GetBBox",
+		"body": [
+			"GetBBox()"
+		],
+		"description": "Returns the bounding box of the entity"
+	},
+	"GetAABB": {
+		"prefix": "GetAABB",
+		"body": [
+			"GetAABB()"
+		],
+		"description": "Returns the oriented bounding box of the entity"
+	},
+	"GetIndex": {
+		"prefix": "GetIndex",
+		"body": [
+			"GetIndex()"
+		],
+		"description": "Returns the index of the entity"
+	},
+	"GetKeyValue": {
+		"prefix": "GetKeyValue",
+		"body": [
+			"GetKeyValue(${1:key})"
+		],
+		"description": "Returns the keyvalue of the entity"
+	},
+	"GetSpawnflags": {
+		"prefix": "GetSpawnflags",
+		"body": [
+			"GetSpawnflags()"
+		],
+		"description": "Returns the spawnflags of the entity"
+	},
+	"GetAlpha": {
+		"prefix": "GetAlpha",
+		"body": [
+			"GetAlpha()"
+		],
+		"description": "Returns the opacity of the entity"
+	},
+	"GetColor": {
+		"prefix": "GetColor",
+		"body": [
+			"GetColor()"
+		],
+		"description": "Returns the color of the entity"
+	},
+	"GetNamePrefix": {
+		"prefix": "GetNamePrefix",
+		"body": [
+			"GetNamePrefix()"
+		],
+		"description": "Returns the name prefix of the entity"
+	},
+	"GetNamePostfix": {
+		"prefix": "GetNamePostfix",
+		"body": [
+			"GetNamePostfix()"
+		],
+		"description": "Returns the name postfix of the entity"
+	},
+	"CreateAABB": {
+		"prefix": "CreateAABB",
+		"body": [
+			"CreateAABB(${1:stat})"
+		],
+		"description": "Returns the AABB face of the entity"
+	},
+	"getBBoxPoints": {
+		"prefix": "getBBoxPoints",
+		"body": [
+			"getBBoxPoints()"
+		],
+		"description": "Returns the AABB vertices of the entity"
+	},
+	"Quaternion.new": {
+		"prefix": "Quaternion.new",
+		"body": [
+			"math.Quaternion.new(${1:angles})"
+		],
+		"description": "Creates a quaternion from Euler angles"
+	},
+	"rotate": {
+		"prefix": "rotate",
+		"body": [
+			"rotate(${1:angle})"
+		],
+		"description": "Rotates a vector by a quaternion"
+	},
+	"unrotate": {
+		"prefix": "unrotate",
+		"body": [
+			"unrotate(${1:angle})"
+		],
+		"description": "Un-rotates a vector by a quaternion"
+	},
+	"slerp": {
+		"prefix": "slerp",
+		"body": [
+			"slerp(${1:target}, ${2:t})"
+		],
+		"description": "Performs spherical linear interpolation between quaternions"
+	},
+	"toVector": {
+		"prefix": "toVector",
+		"body": [
+			"toVector()"
+		],
+		"description": "Converts a quaternion to Euler angles"
+	},
+	"IsValid": {
+		"prefix": "IsValid",
+		"body": [
+			"IsValid()"
+		],
+		"description": "Checks if the quaternion is valid"
+	},
+	"get_table": {
+		"prefix": "get_table",
+		"body": [
+			"get_table()"
+		],
+		"description": "Gets the quaternion as a table"
+	},
+	"lerp.int": {
+		"prefix": "lerp.int",
+		"body": [
+			"math.lerp.int(${1:start}, ${2:end}, ${3:t})"
+		],
+		"description": "Performs integer linear interpolation"
+	},
+	"lerp.vector": {
+		"prefix": "lerp.vector",
+		"body": [
+			"math.lerp.vector(${1:start}, ${2:end}, ${3:t})"
+		],
+		"description": "Performs vector linear interpolation"
+	},
+	"lerp.color": {
+		"prefix": "lerp.color",
+		"body": [
+			"math.lerp.color(${1:start}, ${2:end}, ${3:t})"
+		],
+		"description": "Performs color linear interpolation"
+	},
+	"clamp": {
+		"prefix": "clamp",
+		"body": [
+			"math.clamp(${1:value}, ${2:min}, ${3:max})"
+		],
+		"description": "Clamps an integer within a range"
+	},
+	"roundVector": {
+		"prefix": "roundVector",
+		"body": [
+			"math.roundVector(${1:vec}, ${2:precision})"
+		],
+		"description": "Rounds a vector to a certain precision"
+	},
+	"Sign": {
+		"prefix": "Sign",
+		"body": [
+			"math.Sign(${1:x})"
+		],
+		"description": "Gets the sign of a number"
+	},
+	"copysign": {
+		"prefix": "copysign",
+		"body": [
+			"math.copysign(${1:value}, ${2:sign})"
+		],
+		"description": "Copies the sign of a value"
+	},
+	"rotateVector": {
+		"prefix": "rotateVector",
+		"body": [
+			"math.rotateVector(${1:vector}, ${2:angle})"
+		],
+		"description": "Rotates a vector by a quaternion"
+	},
+	"unrotateVector": {
+		"prefix": "unrotateVector",
+		"body": [
+			"math.unrotateVector(${1:vector}, ${2:angle})"
+		],
+		"description": "Un-rotates a vector by a quaternion"
+	},
+	"normalize": {
+		"prefix": "normalize",
+		"body": [
+			"normalize()"
+		],
+		"description": "Normalizes a vector"
+	},
+	"resize": {
+		"prefix": "resize",
+		"body": [
+			"resize(${1:length})"
+		],
+		"description": "Resizes a vector to a certain length"
+	},
+	"get_length": {
+		"prefix": "get_length",
+		"body": [
+			"get_length()"
+		],
+		"description": "Gets the length of a vector"
+	},
+	"Reflect": {
+		"prefix": "Reflect",
+		"body": [
+			"Reflect(${1:normalSurface})"
+		],
+		"description": "Reflects a vector on a surface"
+	},
+	"toAngles": {
+		"prefix": "toAngles",
+		"body": [
+			"toAngles()"
+		],
+		"description": "Converts a vector to angles"
+	},
+	"toString": {
+		"prefix": "toString",
+		"body": [
+			"toString()"
+		],
+		"description": "Converts a vector to a string"
+	},
+	"CreateScheduleEvent": {
+		"prefix": "CreateScheduleEvent",
+		"body": [
+			"CreateScheduleEvent(${1:eventName}, ${2:action}, ${3:timeDelay}, ${4:note})"
+		],
+		"description": "Creates a scheduled event"
+	},
+	"cancelScheduledEvent": {
+		"prefix": "cancelScheduledEvent",
+		"body": [
+			"cancelScheduledEvent(${1:eventName}, ${2:delay})"
+		],
+		"description": "Cancels a scheduled event"
+	},
+	"getEventInfo": {
+		"prefix": "getEventInfo",
+		"body": [
+			"getEventInfo(${1:eventName})"
+		],
+		"description": "Gets information for a scheduled event"
+	},
+	"eventIsValid": {
+		"prefix": "eventIsValid",
+		"body": [
+			"eventIsValid(${1:eventName})"
+		],
+		"description": "Checks if an event is valid"
+	},
+	"AlphaTransition": {
+		"prefix": "animate.AlphaTransition",
+		"body": [
+			"animate.AlphaTransition(${1:entity}, ${2:startOpacity}, ${3:endOpacity}, ${4:time}, {eventName = ${5:eventName}, globalDelay = ${6: delay}, note = ${7: note}, outputs = ${8: output}})"
+		],
+		"description": "Animates the alpha value of an entity"
+	},
+	"ColorTransition": {
+		"prefix": "animate.ColorTransition",
+		"body": [
+			"animate.ColorTransition(${1:entity}, ${2:startColor}, ${3:endColor}, ${4:time}, {eventName = ${5:eventName}, globalDelay = ${6: delay}, note = ${7: note}, outputs = ${8: output}})"
+		],
+		"description": "Animates the color of an entity"
+	},
+	"cheapColorTransition": {
+		"prefix": "animate.cheapColorTransition",
+		"body": [
+			"animate.cheapColorTransition(${1:entity}, ${2:startColor}, ${3:endColor}, ${4:time}, {eventName = ${5:eventName}, globalDelay = ${6: delay}, note = ${7: note}, outputs = ${8: output}}, ${8:note})"
+		],
+		"description": "Animates the color of an entity (cheaper)"
+	},
+	"PositionTransitionByTime": {
+		"prefix": "animate.PositionTransitionByTime",
+		"body": [
+			"animate.PositionTransitionByTime(${1:entity}, ${2:startPos}, ${3:endPos}, ${4:time}, {eventName = ${5:eventName}, globalDelay = ${6: delay}, note = ${7: note}, outputs = ${8: output}})"
+		],
+		"description": "Animates the position of an entity over time"
+	},
+	"PositionTransitionBySpeed": {
+		"prefix": "animate.PositionTransitionBySpeed",
+		"body": [
+			"animate.PositionTransitionBySpeed(${1:entity}, ${2:startPos}, ${3:endPos}, ${4:speed}, {eventName = ${5:eventName}, globalDelay = ${6: delay}, note = ${7: note}, outputs = ${8: output}})"
+		],
+		"description": "Animates the position of an entity based on speed"
+	}
+}
