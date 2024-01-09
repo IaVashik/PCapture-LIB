@@ -53,13 +53,13 @@ Improved Entities Module. Contains A VERY LARGE number of different functions th
 | Name | Usage | Description |
 |-|-|-|
 | CreateByClassname | pcapEntity entLib::CreateByClassname(string classname, table keyvalues = null) | Creates an entity of the specified classname with provided keyvalues |
-| FindByClassname | pcapEntity entLib::FindByClassname(string classname, CBaseEntity start_ent = null) | Finds an entity by classname starting search from given entity |  
-| FindByClassnameWithin | pcapEntity entLib::FindByClassnameWithin(string classname, Vector origin, int radius, CBaseEntity start_ent = null) | Finds an entity by classname within given radius of a point |
-| FindByName | pcapEntity entLib::FindByName(string targetname, CBaseEntity start_ent = null) | Finds an entity by targetname starting search from given entity |
-| FindByNameWithin | pcapEntity entLib::FindByNameWithin(string targetname, Vector origin, int radius, CBaseEntity start_ent = null) | Finds an entity by targetname within given radius of a point |
-| FindByModel | pcapEntity entLib::FindByModel(string model, CBaseEntity start_ent = null) | Finds an entity by model starting search from given entity |
-| FindByModelWithin | pcapEntity entLib::FindByModelWithin(string model, Vector origin, int radius, CBaseEntity start_ent = null) | Finds an entity by model within given radius of a point |  
-| FindInSphere | pcapEntity entLib::FindInSphere(Vector origin, int radius, CBaseEntity start_ent = null) | Finds entities within sphere of given radius from point |
+| FindByClassname | pcapEntity entLib::FindByClassname(string classname, CBaseEntity&#124;pcapEntity start_ent = null) | Finds an entity by classname starting search from given entity |  
+| FindByClassnameWithin | pcapEntity entLib::FindByClassnameWithin(string classname, Vector origin, int radius, CBaseEntity&#124;pcapEntity start_ent = null) | Finds an entity by classname within given radius of a point |
+| FindByName | pcapEntity entLib::FindByName(string targetname, CBaseEntity&#124;pcapEntity start_ent = null) | Finds an entity by targetname starting search from given entity |
+| FindByNameWithin | pcapEntity entLib::FindByNameWithin(string targetname, Vector origin, int radius, CBaseEntity&#124;pcapEntity start_ent = null) | Finds an entity by targetname within given radius of a point |
+| FindByModel | pcapEntity entLib::FindByModel(string model, CBaseEntity&#124;pcapEntity start_ent = null) | Finds an entity by model starting search from given entity |
+| FindByModelWithin | pcapEntity entLib::FindByModelWithin(string model, Vector origin, int radius, CBaseEntity&#124;pcapEntity start_ent = null) | Finds an entity by model within given radius of a point |  
+| FindInSphere | pcapEntity entLib::FindInSphere(Vector origin, int radius, CBaseEntity&#124;pcapEntity start_ent = null) | Finds entities within sphere of given radius from point |
 | FromEntity | pcapEntity entLib::FromEntity(CBaseEntity entity) | Creates pcapEntity object from given CBaseEntity |
 | SetAbsAngles | void pcapEntity::SetAbsAngles(Vector vector) | Sets absolute rotation angles of the entity |
 | Destroy | void pcapEntity::Destroy() | Destroys the entity |
@@ -76,7 +76,7 @@ Improved Entities Module. Contains A VERY LARGE number of different functions th
 | SetAnimation | void pcapEntity::SetAnimation(string animationName, int fireDelay = 0) | Start playing animation of the entity |
 | SetAlpha | void pcapEntity::SetAlpha(int opacity, int fireDelay = 0) | Sets opacity of the entity |
 | SetColor | void pcapEntity::SetColor(Vector&#124;string colorValue, int fireDelay = 0) | Sets color of the entity |
-| SetColor | void pcapEntity::SetSkin(int skin, int fireDelay = 0) | Sets the skin of the entity |
+| SetSkin | void pcapEntity::SetSkin(int skin, int fireDelay = 0) | Sets the skin of the entity |
 | SetDrawEnabled | void pcapEntity::SetDrawEnabled(bool isEnabled, int fireDelay = 0) | Enables/Disables rendering of the entity |
 | SetSpawnflags | void pcapEntity::SetSpawnflags(int flag) | Sets spawnflags of the entity |
 | SetModelScale | void pcapEntity::SetModelScale(int scaleValue, int fireDelay = 0) | Sets model scale of the entity |
