@@ -8,6 +8,7 @@ The main file in the library. It currently contains various rubbish that will ne
 | Name | Usage | Description |
 |-|-|-|  
 | RunScriptCode.delay | void RunScriptCode::delay(script, delay, activator = null, caller = null) | Creates a delay before executing the specified script. |
+| RunScriptCode.recursive | void RunScriptCode::recursive(script, delay, eventName = "global") | Schedules the execution of a script recursively at a fixed interval. |
 | RunScriptCode.loopy | void RunScriptCode::loopy(func, delay, loop, outputs = null) | Executes a function repeatedly with a specified delay for a given number of loops. |
 | RunScriptCode.fromStr | void RunScriptCode::fromStr(string value) | Executes a script from a string. |
 | DrawEntityBBox | void dev::DrawEntityBBox(entity, time) | Draws the bounding box of an entity. |

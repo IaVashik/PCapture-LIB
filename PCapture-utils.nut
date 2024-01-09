@@ -40,6 +40,24 @@ RunScriptCode <- {
             this.delay(outputs, 0)
     },
 
+    /* Schedules the execution of a script recursively at a fixed interval.
+     *
+     * This function schedules the provided script to run repeatedly at a specified interval. After each execution,
+     * the function schedules itself to run again, creating a loop that continues until you cancel the event
+     *
+     * @param {string|function} script - The script to be executed. Can be a function or a string containing code.
+     * @param {int|float} runDelay - The time delay between consecutive executions in seconds.
+     * @param {string} eventName - The name of the event used for scheduling. (optional, default="global")
+     */
+    recursive = function(script, runDelay = FrameTime(), eventName = "global") {
+        local runAgain = function() : (script, runDelay, eventName) {
+            RunScriptCode.recursive(script, runDelay, eventName)
+        }
+        
+        CreateScheduleEvent(eventName, script, runDelay)
+        CreateScheduleEvent(eventName, runAgain, runDelay)
+    },
+
     /* Execute a script from a string.
     * 
     * @param {string} str - The script string.
