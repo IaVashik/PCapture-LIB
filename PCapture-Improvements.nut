@@ -5,7 +5,7 @@
 |     One-of-a-Kind - laVashik :D                                                   |
  +---------------------------------------------------------------------------------+
 | PCapture-Improvements.nut                                                         |
-|                                                                                   |
+|       Overrides and improves existing standard VScripts functions.                |
 |                                                                                   |
 +----------------------------------------------------------------------------------+ */
 
@@ -55,10 +55,13 @@ function EntFireByHandle(target, action, value = "", delay = 0, activator = null
 }
 
 
-/* 
-    TODO: Add description
+/*
+* Retrieves a player entity with extended functionality.
+* 
+* @param {int} index - The index of the player (1-based).
+* @returns {pcapEntity} - An extended player entity with additional methods.
 */
-function GetPlayerEx() {
+function GetPlayerEx(index = 1) { // TODO
     return pcapPlayer(GetPlayer())
 }
 
