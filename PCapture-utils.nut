@@ -14,30 +14,30 @@ RunScriptCode <- {
     /* Creates a delay before executing the specified script.
     * 
     * @param {string|function} script - The script to execute. Can be a function or a string.
-    * @param {int|float} delay - The delay in seconds.
+    * @param {int|float} runDelay - The delay in seconds.
     * @param {CBaseEntity|pcapEntity} activator - The activator entity. (optional)
     * @param {CBaseEntity|pcapEntity} caller - The caller entity. (optional)
     */
-    delay = function(script, delay, activator = null, caller = null) {
+    delay = function(script, runDelay, activator = null, caller = null) {
         if (typeof script == "function")
-            return CreateScheduleEvent("global", script, delay)
+            return CreateScheduleEvent("global", script, runDelay)
 
-        EntFireByHandle(self, "runscriptcode", script, delay, activator, caller)
+        EntFireByHandle(self, "runscriptcode", script, runDelay, activator, caller)
     },  
 
     /* Executes a function repeatedly with a specified delay for a given number of loops.
     * 
     * @param {string} func - The function to execute.
-    * @param {int|float} delay - The delay between each execution in seconds.
+    * @param {int|float} runDelay - The delay between each execution in seconds.
     * @param {int|float} loop - The number of loops.
     * @param {string} outputs - The function to execute after all loops completed. (optional)
     */
-    loopy = function(func, delay, loop, outputs = null) {
+    loopy = function(func, runDelay, loop, outputs = null) {
         if (loop > 0) {
-            delay(func, delay)
-            delay("loopy(\"" + func + "\"," + delay + "," + (loop - 1) + ",\"" + outputs + "\")", delay)
+            this.delay(func, runDelay)
+            this.delay("loopy(\"" + func + "\"," + runDelay + "," + (loop - 1) + ",\"" + outputs + "\")", runDelay)
         } else if (outputs)
-            delay(outputs, 0)
+            this.delay(outputs, 0)
     },
 
     /* Execute a script from a string.
