@@ -1,12 +1,12 @@
 # PCapture VScripts Library documentation
 This library consists of several modules that can be extremely useful for you
 
-## 1. [`PCapture-Lib`](pcapture-lib.nut)
+## 1. [`PCapture-Lib`](PCapture-Lib.nut)
 
 The main file in the library. Initializes required parts of the library
 
 
-## 2. [`PCapture-Utils`](pcapture-utils.nut)
+## 2. [`PCapture-Utils`](PCapture-Utils.nut)
 
 A collection of utility functions for script execution and debugging. It's a Swiss army knife for developers working with Squirrel :D
 
@@ -96,7 +96,7 @@ Improved Entities Module. Contains A VERY LARGE number of different functions th
 | CreateAABB | Vector pcapEntity::CreateAABB(int stat) | Returns AABB face of the entity |
 | getBBoxPoints | Array<Vector> pcapEntity::getBBoxPoints() | Returns AABB vertices of the entity |
 
-## 4. [`PCapture-Math`](PCapture-math.nut)  
+## 4. [`PCapture-Math`](PCapture-Math.nut)  
 
 Mathematical module. Contains many different functions including lerp functions, quaternions and more
 
@@ -150,7 +150,7 @@ Improved EntFire/logic_relay/loop module. Allows you to create whole events from
 | eventIsValid | bool eventIsValid(string eventName) | Checks if event is valid |
 | getEventNote | any getEventNote(string eventName) | Returns the nearest note of the event if it exists |
 
-## 6. [`PCapture-Array`](PCapture-array.nut ) 
+## 6. [`PCapture-Array`](PCapture-Arrays.nut ) 
 
 Improved arrays module. Contains easy output in the console and additional features to simplify life:
 
@@ -181,7 +181,7 @@ Improved arrays module. Contains easy output in the console and additional featu
 | join | string join(string joinstr = "") | Join the array into a string using the specified separator string. Returns the joined string. |
 | totable | table totable(bool recreate = false) | Convert the array to a table representation. Optionally recreate the table if it already exists. Returns the table representation. |
 
-## 7. [`PCapture-BBoxCast`](PCapture-bboxcast.nut)  
+## 7. [`PCapture-BBoxCast`](PCapture-Bboxcast.nut)  
 
 Improved [BBoxCast](https://github.com/IaVashik/portal2-BBoxCast) for BBox-based ray tracing in Portal 2, more optimized.
 
@@ -200,7 +200,7 @@ The PCapture-bboxcast library allows rays to hit entities by using their boundin
 | GetFraction | float bboxcast::GetFraction() | Get the fraction of the path traversed. |
 | GetImpactNormal | Vector bboxcast::GetImpactNormal() | Get the surface normal at the impact point. |
 
-## 8. [`PCapture-Anims`](PCapture-anims.nut) 
+## 8. [`PCapture-Anims`](PCapture-Anims.nut) 
 
 Animation module, used to quickly create animation events related to alpha, color, object moving
 
