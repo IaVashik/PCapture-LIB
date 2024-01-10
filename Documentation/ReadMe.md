@@ -42,8 +42,8 @@ Other utility functions.
 | fprint | void fprint(string msg, any vargs...) | Prints a formatted message to the console. |
 | StrToVec | Vector StrToVec(string value) | Converts a string to a Vector. *Example: "255 31 10" -> Vector(255, 31, 10)* |
 | GetPrefix | void GetPrefix(string&#124;CBaseEntity name) | Gets the prefix of an entity name. |
-| GetPostfix | void GetPostfix(string&#124;CBaseEntity name) | Gets the postfix of an entity name. |
-| Precache | void Precache(string&#124;array&#124;arrayLib sound_path) | Precaches a sound |
+| GetPostfix | string GetPostfix(string&#124;CBaseEntity name) | Gets the postfix of an entity name. |
+| Precache | string Precache(string&#124;array&#124;arrayLib sound_path) | Precaches a sound |
 
 
 ## 3. [`PCapture-Entities`](/PCapture-Entities.nut)
