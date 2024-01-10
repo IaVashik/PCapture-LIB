@@ -135,7 +135,7 @@ Mathematical module. Contains many different functions including lerp functions,
 | RemapVal | Vector math::RemapVal(float value, float low1, float high1, float low2, float high2) | Remaps a value from the range [A, B] to the range [C, D].
 | rotateVector | Vector math::rotateVector(Vector vector, Vector angle) | Rotate vector by quaternion |
 | unrotateVector | Vector math::unrotateVector(Vector vector, Vector angle) | Un-rotate vector by quaternion |
-| RandomVector | Vector math::RandomVector(int min, int max) | Returns a randomized vector in the min to max range |
+| randomVector | Vector math::randomVector(int min, int max) | Returns a randomized vector in the min to max range |
 | reflectVector | Vector math::reflectVector(Vector dir, Vector normal) | Returns a reflection vector? |
 
 
