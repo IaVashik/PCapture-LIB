@@ -136,6 +136,7 @@ Mathematical module. Contains many different functions including lerp functions,
 | rotateVector | Vector math::rotateVector(Vector vector, Vector angle) | Rotate vector by quaternion |
 | unrotateVector | Vector math::unrotateVector(Vector vector, Vector angle) | Un-rotate vector by quaternion |
 | RandomVector | Vector math::RandomVector(int min, int max) | Returns a randomized vector in the min to max range |
+| reflectVector | Vector math::reflectVector(Vector dir, Vector normal) | Returns a reflection vector? |
 
 
 ## 5. [`PCapture-EventHandler`](/PCapture-EventHandler.nut)  
