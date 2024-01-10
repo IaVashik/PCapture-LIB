@@ -1,10 +1,73 @@
 {
-	"CreateByClassname": {
-		"prefix": "CreateByClassname",
+	"delay": {
+		"prefix": "delay",
 		"body": [
-			"entLib.CreateByClassname(${1:classname}, ${2:keyvalues})"
+			"RunScriptCode.delay(${1:script}, ${2:delay}, ${3:activator}, ${4:caller})"
 		],
-		"description": "Creates an entity of the specified classname with provided keyvalues"
+		"description": "Creates a delay before executing the specified script."
+	},
+	"delay": {
+		"prefix": "delay",
+		"body": [
+			"RunScriptCode.delay(${1:script}, ${2:delay}, ${3:activator}, ${4:caller})"
+		],
+		"description": "Creates a delay before executing the specified script."
+	},
+	"recursive": {
+		"prefix": "recursive",
+		"body": [
+			"RunScriptCode.recursive(${1:script}, ${2:delay}, ${3:eventName})"
+		],
+		"description": "Schedules the execution of a script recursively at a fixed interval."
+	},
+	"loopy": {
+		"prefix": "loopy",
+		"body": [
+			"RunScriptCode.loopy(${1:func}, ${2:delay}, ${3:loop}, ${4:outputs})"
+		],
+		"description": "Runs func repeatedly for given loops."
+	},
+	"fromStr": {
+		"prefix": "fromStr",
+		"body": [
+			"RunScriptCode.fromStr(${1:value})"
+		],
+		"description": "Executes a script from a string."
+	},
+	"fprint": {
+		"prefix": "fprint",
+		"body": [
+			"fprint(${1:msg}, ${2:vargs})"
+		],
+		"description": "Prints a formatted message to the console."
+	},
+	"StrToVec": {
+		"prefix": "StrToVec",
+		"body": [
+			"StrToVec(${1:value})"
+		],
+		"description": "Converts a string to a Vector. Example: 255 31 10 -> Vector(255, 31, 10)"
+	},
+	"GetPrefix": {
+		"prefix": "GetPrefix",
+		"body": [
+			"GetPrefix(${1:name}"
+		],
+		"description": "Gets the prefix of an entity name."
+	},
+	"GetPostfix": {
+		"prefix": "GetPostfix",
+		"body": [
+			"GetPostfix(${1:name}"
+		],
+		"description": "Gets the Postfix of an entity name."
+	},
+	"Precache": {
+		"prefix": "Precache",
+		"body": [
+			"Precache(${1:sound_path})"
+		],
+		"description": "Precaches a sound"
 	},
 	"FindByClassname": {
 		"prefix": "FindByClassname",
@@ -83,6 +146,13 @@
 		],
 		"description": "Kills the entity with delay"
 	},
+	"Dissolve": {
+		"prefix": "Dissolve",
+		"body": [
+			"Dissolve()"
+		],
+		"description": "Dissolves the pcapEntity"
+	},
 	"IsPlayer": {
 		"prefix": "IsPlayer",
 		"body": [
@@ -96,6 +166,13 @@
 			"SetKeyValue(${1:key}, ${2:value})"
 		],
 		"description": "Sets a keyvalue of the entity"
+	},
+	"addOutput": {
+		"prefix": "addOutput",
+		"body": [
+			"addOutput(${1:output} ${2:target}, ${3:input}, ${4:param}, ${5:delay}, ${6:fires})"
+		],
+		"description": "Does an a AddOutput to a pcapEntity"
 	},
 	"SetName": {
 		"prefix": "SetName",
@@ -125,6 +202,13 @@
 		],
 		"description": "Sets collision group of the entity"
 	},
+	"SetAnimation": {
+		"prefix": "SetAnimation",
+		"body": [
+			"SetAnimation(${1:animationName}, ${2:fireDelay})"
+		],
+		"description": "Set's the animation of an a pcapEntity"
+	},
 	"SetAlpha": {
 		"prefix": "SetAlpha",
 		"body": [
@@ -138,6 +222,13 @@
 			"SetColor(${1:colorValue}, ${2:fireDelay})"
 		],
 		"description": "Sets color of the entity"
+	},
+	"SetSkin": {
+		"prefix": "SetSkin",
+		"body": [
+			"SetSkin(${1:skinNumber}, ${2:fireDelay})"
+		],
+		"description": "Checks if the quaternion is valid"
 	},
 	"SetDrawEnabled": {
 		"prefix": "SetDrawEnabled",
@@ -293,19 +384,26 @@
 		],
 		"description": "Performs spherical linear interpolation between quaternions"
 	},
+	"Norm": {
+		"prefix": "Norm",
+		"body": [
+			"Norm()"
+		],
+		"description": "Returns normalized quaternion"
+	},
 	"toVector": {
 		"prefix": "toVector",
 		"body": [
 			"toVector()"
 		],
-		"description": "Converts a quaternion to Euler angles"
+		"description": "Converts quaternion to Euler angles"
 	},
 	"IsValid": {
 		"prefix": "IsValid",
 		"body": [
 			"IsValid()"
 		],
-		"description": "Checks if the quaternion is valid"
+		"description": "Checks if the pcapEntity/quaternion is valid"
 	},
 	"get_table": {
 		"prefix": "get_table",
@@ -335,6 +433,27 @@
 		],
 		"description": "Performs color linear interpolation"
 	},
+	"lerp.sVector": {
+		"prefix": "lerp.sVector",
+		"body": [
+			"math.lerp.sVector(${1:start}, ${2:end}, ${3:t})"
+		],
+		"description": "Vector spherical interpolation"
+	},
+	"min": {
+		"prefix": "min",
+		"body": [
+			"math.min(${1:vargs})"
+		],
+		"description": "Returns the minimum value"
+	},
+	"max": {
+		"prefix": "max",
+		"body": [
+			"math.max(${1:vargs})"
+		],
+		"description": "Returns the maximum value"
+	},
 	"clamp": {
 		"prefix": "clamp",
 		"body": [
@@ -363,6 +482,13 @@
 		],
 		"description": "Copies the sign of a value"
 	},
+	"RemapVal": {
+		"prefix": "RemapVal",
+		"body": [
+			"math.RemapVal(${1:value}, ${2:low1}, ${3:high1}, ${4:low2}, ${5:high2})"
+		],
+		"description": "Remaps a value from the range [A, B] to the range [C, D]."
+	},
 	"rotateVector": {
 		"prefix": "rotateVector",
 		"body": [
@@ -377,47 +503,12 @@
 		],
 		"description": "Un-rotates a vector by a quaternion"
 	},
-	"normalize": {
-		"prefix": "normalize",
+	"RandomVector": {
+		"prefix": "RandomVector",
 		"body": [
-			"normalize()"
+			"math.RandomVector(${1:min}, ${2:max})"
 		],
-		"description": "Normalizes a vector"
-	},
-	"resize": {
-		"prefix": "resize",
-		"body": [
-			"resize(${1:length})"
-		],
-		"description": "Resizes a vector to a certain length"
-	},
-	"get_length": {
-		"prefix": "get_length",
-		"body": [
-			"get_length()"
-		],
-		"description": "Gets the length of a vector"
-	},
-	"Reflect": {
-		"prefix": "Reflect",
-		"body": [
-			"Reflect(${1:normalSurface})"
-		],
-		"description": "Reflects a vector on a surface"
-	},
-	"toAngles": {
-		"prefix": "toAngles",
-		"body": [
-			"toAngles()"
-		],
-		"description": "Converts a vector to angles"
-	},
-	"toString": {
-		"prefix": "toString",
-		"body": [
-			"toString()"
-		],
-		"description": "Converts a vector to a string"
+		"description": "Returns a randomized vector in the min to max range"
 	},
 	"CreateScheduleEvent": {
 		"prefix": "CreateScheduleEvent",
@@ -426,10 +517,10 @@
 		],
 		"description": "Creates a scheduled event"
 	},
-	"cancelScheduledEvent": {
-		"prefix": "cancelScheduledEvent",
+	"cancelScheduleEvent": {
+		"prefix": "cancelScheduleEvent",
 		"body": [
-			"cancelScheduledEvent(${1:eventName}, ${2:delay})"
+			"cancelScheduleEvent(${1:eventName}, ${2:delay})"
 		],
 		"description": "Cancels a scheduled event"
 	},
@@ -438,48 +529,20 @@
 		"body": [
 			"getEventInfo(${1:eventName})"
 		],
-		"description": "Gets information for a scheduled event"
+		"description": "Gets the info for an a scheduled event"
 	},
 	"eventIsValid": {
 		"prefix": "eventIsValid",
 		"body": [
 			"eventIsValid(${1:eventName})"
 		],
-		"description": "Checks if an event is valid"
+		"description": "Checks if event is valid"
 	},
-	"AlphaTransition": {
-		"prefix": "animate.AlphaTransition",
+	"getEventNote": {
+		"prefix": "getEventNote",
 		"body": [
-			"animate.AlphaTransition(${1:entity}, ${2:startOpacity}, ${3:endOpacity}, ${4:time}, {eventName = ${5:eventName}, globalDelay = ${6: delay}, note = ${7: note}, outputs = ${8: output}})"
+			"getEventNote(${1:eventName})"
 		],
-		"description": "Animates the alpha value of an entity"
+		"description": "Returns the nearest note of the event if it exists"
 	},
-	"ColorTransition": {
-		"prefix": "animate.ColorTransition",
-		"body": [
-			"animate.ColorTransition(${1:entity}, ${2:startColor}, ${3:endColor}, ${4:time}, {eventName = ${5:eventName}, globalDelay = ${6: delay}, note = ${7: note}, outputs = ${8: output}})"
-		],
-		"description": "Animates the color of an entity"
-	},
-	"cheapColorTransition": {
-		"prefix": "animate.cheapColorTransition",
-		"body": [
-			"animate.cheapColorTransition(${1:entity}, ${2:startColor}, ${3:endColor}, ${4:time}, {eventName = ${5:eventName}, globalDelay = ${6: delay}, note = ${7: note}, outputs = ${8: output}}, ${8:note})"
-		],
-		"description": "Animates the color of an entity (cheaper)"
-	},
-	"PositionTransitionByTime": {
-		"prefix": "animate.PositionTransitionByTime",
-		"body": [
-			"animate.PositionTransitionByTime(${1:entity}, ${2:startPos}, ${3:endPos}, ${4:time}, {eventName = ${5:eventName}, globalDelay = ${6: delay}, note = ${7: note}, outputs = ${8: output}})"
-		],
-		"description": "Animates the position of an entity over time"
-	},
-	"PositionTransitionBySpeed": {
-		"prefix": "animate.PositionTransitionBySpeed",
-		"body": [
-			"animate.PositionTransitionBySpeed(${1:entity}, ${2:startPos}, ${3:endPos}, ${4:speed}, {eventName = ${5:eventName}, globalDelay = ${6: delay}, note = ${7: note}, outputs = ${8: output}})"
-		],
-		"description": "Animates the position of an entity based on speed"
-	}
 }
