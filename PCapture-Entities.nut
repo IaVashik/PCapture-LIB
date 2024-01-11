@@ -246,7 +246,7 @@ class pcapEntity {
     * @returns {bool} - True if this entity is the player, false otherwise.
     */
     function IsPlayer() {
-        return this.CBaseEntity == GetPlayer()
+        return this.CBaseEntity == GetPlayer()  // todo
     }
 
 
@@ -280,11 +280,30 @@ class pcapEntity {
     * @param {string} target - Targets entities named
     * @param {string} input - Via this input
     * @param {string} param - with a parameter ovveride of
-    * @param {int|float} delay - Delay in seconds before applying.
+    * @param {int|float} delay - Delay in seconds before applying. // todo
     * @param {int} fires - 
     */
     function addOutput(outputName, target, input, param = "", delay = 0, fires = -1) {
+        if(typeof target == instance)
+            target = target.GetName()
         this.SetKeyValue(outputName, target + "\x001B" + input + "\x001B" + param + "\x001B" + delay + "\x001B" + fires)
+    }
+
+    /* TODO
+    *
+    * @param {string} outputName - Output named
+    * @param {string} script - 
+    * @param {int|float} delay - Delay in seconds before applying. // todo
+    * @param {int} fires - 
+    */
+    function ConnectOutputEx(outputName, script, delay = 0, fires = -1) {
+        if(typeof script == "function") {
+            local funcName = UniqueString("OutputFunc")
+            getroottable()[funcName] <- script
+            script = funcName + "()"
+        } 
+
+        this.addOutput(outputName, self, "RunScriptCode", script, delay, fires)
     }
 
 
@@ -668,8 +687,8 @@ class pcapEntity {
     }
 }
 
-function pcapEntity::ConnectOutput(output, func_name) this.CBaseEntity.ConnectOutput(output, func_name)
-function pcapEntity::DisconnectOutput(output, func_name) this.CBaseEntity.DisconnectOutput(output, func_name)
+function pcapEntity::ConnectOutput(output, funcName) this.CBaseEntity.ConnectOutput(output, funcName)
+function pcapEntity::DisconnectOutput(output, funcName) this.CBaseEntity.DisconnectOutput(output, funcName)
 function pcapEntity::EmitSound(sound_name) this.CBaseEntity.EmitSound(sound_name)
 function pcapEntity::PrecacheSoundScript(sound_name) this.CBaseEntity.PrecacheSoundScript(sound_name)
 function pcapEntity::IsSequenceFinished() return this.CBaseEntity.IsSequenceFinished()

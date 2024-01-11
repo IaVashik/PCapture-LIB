@@ -69,6 +69,7 @@ Improved Entities Module. Contains A VERY LARGE number of different functions th
 | IsPlayer | bool pcapEntity::IsPlayer() | Checks if the entity is the player |
 | SetKeyValue | void pcapEntity::SetKeyValue(string key, any value) | Sets a keyvalue of the entity |
 | addOutput | void pcapEntity::addOutput(string output, string target, string input, string param = "", int delay = 0, int fires = -1) | Sets a outputs of the entity |
+| ConnectOutputEx | void pcapEntity::ConnectOutputEx(string&#124;function output, string script, int delay = 0, int fires = -1) | TODO |
 | SetName | void pcapEntity::SetName(string name) | Sets name (targetname) of the entity |  
 | SetParent | void pcapEntity::SetParent(string name, string&#124;CBaseEntity&#124;pcapEntity parent, int fireDelay = 0) | Sets parent entity |
 | SetCollision | void pcapEntity::SetCollision(int solid, int fireDelay = 0) | Sets collision type of the entity |
