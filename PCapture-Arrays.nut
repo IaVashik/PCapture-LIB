@@ -17,7 +17,7 @@ if("arrayLib" in getroottable()) {
 /*
 * Enhanced arrays module.
 */
-class arrayLib {
+::arrayLib <- class {
 
     /* The internal array. */
     arr = null

@@ -29,7 +29,7 @@ if("bboxcast" in getroottable()) {
 /*
 * A class for performing bbox-based ray tracing in Portal 2.
 */
-class bboxcast {
+::bboxcast <- class {
     startpos = null;
     endpos = null;
     hitpos = null;
@@ -381,14 +381,14 @@ function bboxcast::TracePlayerEyes(distance, ignoreEnt = null, settings = ::defa
 /*
 * Store disabled entities' bounding boxes.
 */   
-disabled_entity <- {}
+__disabled_entity <- {}
 
 /*
 * Disable entity by setting size to 0. 
 *
 * @param {Entity} ent - Entity to disable.
 */
-function CorrectDisable(ent = null) {
+function CorrectDisable(ent = null) : (__disabled_entity) {
     if(!ent)
         ent = caller
     if(typeof ent == "string")
@@ -396,8 +396,8 @@ function CorrectDisable(ent = null) {
 
     EntFireByHandle(ent, "Disable", "", 0, null, null)
     local entIndex = ent.entindex.tostring()
-    if( !(entIndex in disabled_entity)) {
-        disabled_entity[entIndex] <- {min = ent.GetBoundingMins(), max = ent.GetBoundingMaxs()}
+    if( !(entIndex in __disabled_entity)) {
+        __disabled_entity[entIndex] <- {min = ent.GetBoundingMins(), max = ent.GetBoundingMaxs()}
     }
     ent.SetSize(Vector(), Vector())
 }
@@ -408,7 +408,7 @@ function CorrectDisable(ent = null) {
 *  
 * @param {Entity} ent - Entity to enable. 
 */
-function CorrectEnable(ent = null) {
+function CorrectEnable(ent = null) : (__disabled_entity) {
     if(!ent)
         ent = caller
     if(typeof ent == "string")
@@ -416,8 +416,8 @@ function CorrectEnable(ent = null) {
 
     EntFireByHandle(ent, "Enable", "", 0, null, null)
     local entIndex = ent.entindex.tostring()
-    if( entIndex in disabled_entity ) {
-        local BBox = disabled_entity[entIndex]
+    if( entIndex in __disabled_entity ) {
+        local BBox = __disabled_entity[entIndex]
         ent.SetSize(BBox.min, BBox.max)
     }
 }

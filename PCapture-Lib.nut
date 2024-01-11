@@ -25,4 +25,4 @@ IncludeScript("pcapture-lib/PCapture-Bboxcast")
 IncludeScript("pcapture-lib/PCapture-Anims")
 IncludeScript("pcapture-lib/PCapture-Improvements")
 
-dissolver <- entLib.CreateByClassname("env_entity_dissolver", {targetname = "@dissolver"})
+::dissolver <- entLib.CreateByClassname("env_entity_dissolver", {targetname = "@dissolver"})
