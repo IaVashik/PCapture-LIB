@@ -485,9 +485,13 @@ math <- {
         return math.Quaternion.new(angle).unrotate(vector)
     },
 
-    RandomVector = function(min, max) {
+    randomVector = function(min, max) {
         if(typeof min == "Vector" && typeof max == "Vector") 
             return Vector(RandomFloat(min.x, max.x), RandomFloat(min.y, max.y), RandomFloat(min.z, max.z))
         return Vector(RandomFloat(min, max), RandomFloat(min, max), RandomFloat(min, max))
-    } 
+    },
+
+    reflectVector = function(dir, normal) {
+        return dir - normal * (dir.Dot(normal) * 2)
+    }
 }

@@ -342,8 +342,11 @@ class bboxcast {
 function bboxcast::TracePlayerEyes(distance, ignoreEnt = null, settings = ::defaultSettings, player = null) { // TODO эксперементальная поддержка CO-OP!
     // Get the player's eye position and forward direction
     if(player == null) 
-        player = entLib.FromEntity(GetPlayer())
-    if(!player) return bboxcast(Vector(0, 0, 0), Vector(1, 1, 1))
+        player = GetPlayerEx()
+    if(!player) 
+        return bboxcast(Vector(), Vector())
+    if(typeof player != "pcapEntity") 
+        player = entLib.FromEntity(player)
     
     local eyePointEntity = player.GetUserData("Eye")
     local eyePosition = eyePointEntity.GetOrigin()
@@ -356,7 +359,7 @@ function bboxcast::TracePlayerEyes(distance, ignoreEnt = null, settings = ::defa
     // Check if any entities should be ignored during the trace
     if (ignoreEnt) {
         // If ignoreEnt is an array, append the player entity to it
-        if (type(ignoreEnt) == "array") {
+        if (type(ignoreEnt) == "array" || typeof ignoreEnt == "arrayLib") {
             ignoreEnt.append(player)
         }
         // If ignoreEnt is a single entity, create a new array with both the player and ignoreEnt

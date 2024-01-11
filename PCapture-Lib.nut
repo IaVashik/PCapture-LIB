@@ -16,13 +16,13 @@ if (!("self" in this)) {
 }
 
 // Library files
-IncludeScript("pcapture-lib/PCapture-math")
-IncludeScript("pcapture-lib/PCapture-array")
-IncludeScript("pcapture-lib/PCapture-utils")
+IncludeScript("pcapture-lib/PCapture-Math")
+IncludeScript("pcapture-lib/PCapture-Arrays")
+IncludeScript("pcapture-lib/PCapture-Utils")
 IncludeScript("pcapture-lib/PCapture-Entities")
 IncludeScript("pcapture-lib/PCapture-EventHandler")
-IncludeScript("pcapture-lib/PCapture-bboxcast")
-IncludeScript("pcapture-lib/PCapture-anims")
+IncludeScript("pcapture-lib/PCapture-Bboxcast")
+IncludeScript("pcapture-lib/PCapture-Anims")
 IncludeScript("pcapture-lib/PCapture-Improvements")
 
 dissolver <- entLib.CreateByClassname("env_entity_dissolver", {targetname = "@dissolver"})
