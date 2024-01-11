@@ -227,6 +227,8 @@ class pcapEntity {
 
 
     function Dissolve() {
+        if(this.GetName() == "")
+            this.SetName(UniqueString("targetname"))
         dissolver.SetKeyValue("target", this.GetName())
         EntFireByHandle(dissolver, "dissolve")
     }
