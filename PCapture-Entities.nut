@@ -15,7 +15,7 @@ if("entLib" in getroottable()) {
 }
 
 
-class entLib {
+::entLib <- class {
     /* Creates an entity of the specified classname with the provided keyvalues.
     *
     * @param {string} classname - The classname of the entity.
@@ -50,7 +50,7 @@ class entLib {
         if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
         local new_entity = Entities.FindByClassname(start_ent, classname)
-        return __init(new_entity)
+        return entlib.__init(new_entity)
     }
 
 
@@ -66,7 +66,7 @@ class entLib {
         if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
         local new_entity = Entities.FindByClassnameWithin(start_ent, classname, origin, radius)
-        return __init(new_entity)
+        return entlib.__init(new_entity)
     }
 
 
@@ -80,7 +80,7 @@ class entLib {
         if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
         local new_entity = Entities.FindByName(start_ent, targetname)
-        return __init(new_entity)
+        return entlib.__init(new_entity)
     }
 
 
@@ -96,7 +96,7 @@ class entLib {
         if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
         local new_entity = Entities.FindByNameWithin(start_ent, targetname, origin, radius)
-        return __init(new_entity)
+        return entlib.__init(new_entity)
     }
 
 
@@ -110,7 +110,7 @@ class entLib {
         if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
         local new_entity = Entities.FindByModel(start_ent, model)
-        return __init(new_entity)
+        return entlib.__init(new_entity)
     }
 
 
@@ -133,7 +133,7 @@ class entLib {
             }
         }
 
-        return __init(new_entity)
+        return entlib.__init(new_entity)
     }
 
 
@@ -148,14 +148,14 @@ class entLib {
         if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
         local new_entity = Entities.FindInSphere(start_ent, origin, radius)
-        return __init(new_entity)
+        return entlib.__init(new_entity)
     }
 
 
     function FromEntity(CBaseEntity) {
         if(typeof CBaseEntity == "pcapEntity")
             return CBaseEntity
-        return __init(CBaseEntity)
+        return entlib.__init(CBaseEntity)
     }
 
     /* Initializes an entity object.

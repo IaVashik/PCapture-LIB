@@ -14,6 +14,51 @@ if("animate" in getroottable()) {
     return
 }
 
+/*
+* Gets a valid event name for the entities.
+* 
+* @param {pcapEntity|CBaseEntity|string} entities - The entities.
+* @param {object} EventSetting - The event settings.
+* @returns {string} The event name. 
+*/
+local _GetValidEventName = function(entities, EventSetting) {
+    if (!("eventName" in EventSetting && EventSetting.eventName)) {
+        if(typeof entities == "array")
+            return entities[0].GetClassname() 
+    }
+
+    // if(eventIsValid(EventSetting.eventName)) {
+    //     cancelScheduledEvent(EventSetting.eventName)
+    // }
+
+    return EventSetting.eventName
+}
+
+
+/*
+* Gets valid entity/entities from input.
+*
+* @param {pcapEntity|CBaseEntity|string} entities - The entity input.  
+* @returns {array(pcapEntity)} Valid entity/entities.
+*/ 
+local _GetValidEntitiy = function(entities) {
+    if (typeof entities == "string") {
+        if(entities.find("*") == null)
+            return [entLib.FindByName(entities)]
+        else {
+            local entities = []
+            for(local ent; ent = entLib.FindByName(entities, ent);)
+                entities.append(ent)
+            return entities
+        }
+    }
+            
+    if (typeof entities != "pcapEntity")
+            return [pcapEntity(entities)]
+    
+    return [entities]
+}
+
 ::animate <- {
     /* 
     * Smoothly changes the alpha value of an entities from the initial value to the final value over a specified time.
@@ -219,50 +264,4 @@ if("animate" in getroottable()) {
             CreateScheduleEvent(eventName, EventSetting.outputs, time)
         }
     }
-}
-
-
-/*
-* Gets a valid event name for the entities.
-* 
-* @param {pcapEntity|CBaseEntity|string} entities - The entities.
-* @param {object} EventSetting - The event settings.
-* @returns {string} The event name. 
-*/
-local _GetValidEventName = function(entities, EventSetting) {
-    if (!("eventName" in EventSetting && EventSetting.eventName)) {
-        if(typeof entities == "array")
-            return entities[0].GetClassname() 
-    }
-
-    // if(eventIsValid(EventSetting.eventName)) {
-    //     cancelScheduledEvent(EventSetting.eventName)
-    // }
-
-    return EventSetting.eventName
-}
-
-
-/*
-* Gets valid entity/entities from input.
-*
-* @param {pcapEntity|CBaseEntity|string} entities - The entity input.  
-* @returns {array(pcapEntity)} Valid entity/entities.
-*/ 
-local _GetValidEntitiy = function(entities) {
-    if (typeof entities == "string") {
-        if(entities.find("*") == null)
-            return [entLib.FindByName(entities)]
-        else {
-            local entities = []
-            for(local ent; ent = entLib.FindByName(entities, ent);)
-                entities.append(ent)
-            return entities
-        }
-    }
-            
-    if (typeof entities != "pcapEntity")
-            return [pcapEntity(entities)]
-    
-    return [entities]
 }
