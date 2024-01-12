@@ -120,7 +120,7 @@ Mathematical module. Contains many different functions including lerp functions,
 |-|-|-|
 | lerp.int | int math::lerp::int(int start, int end, float t) | Integer linear interpolation |
 | lerp.vector | Vector math::lerp::vector(Vector start, Vector end, float t) | Vector linear interpolation |
-| lerp.color | string math::lerp::color(Vector/string start, Vector/string end, float t) | Color linear interpolation |  
+| lerp.color | string math::lerp::color(Vector&#124;string start, Vector&#124;string end, float t) | Color linear interpolation |  
 | lerp.sVector | Vector math::lerp::sVector(Vector start, Vector end, float t) | Vector spherical interpolation |
 
 ### Others math functions

@@ -299,8 +299,8 @@ if("math" in getroottable()) {
 
         /* Performs linear interpolation (lerp) between two colors.
         *
-        * @param {Vector/string} start - The starting color vector or string representation (e.g., "255 0 0").
-        * @param {Vector/string} end - The ending color vector or string representation.
+        * @param {Vector|string} start - The starting color vector or string representation (e.g., "255 0 0").
+        * @param {Vector|string} end - The ending color vector or string representation.
         * @param {int|float} t - The interpolation parameter.
         * @returns {string} - The interpolated color string representation (e.g., "128 64 0").
         */
