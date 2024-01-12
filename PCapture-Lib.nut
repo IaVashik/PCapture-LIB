@@ -6,7 +6,7 @@
  +---------------------------------------------------------------------------------+
 | pcapture-lib.nut                                                                  |
 |       The main file in the library. Initializes required parts of the library     |
-|                                                                                   |
+|    GitHud repo: https://github.com/IaVashik/PCapture-LIB                          |
 +----------------------------------------------------------------------------------+ */
 
 if (!("self" in this)) {
