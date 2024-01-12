@@ -266,8 +266,7 @@ if("arrayLib" in getroottable()) {
     * @returns {any} - The last element.
     */
     function top() {
-        arr.top();
-        return this
+        return arr.top();
     }
 
     /*

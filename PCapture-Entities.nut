@@ -50,7 +50,7 @@ if("entLib" in getroottable()) {
         if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
         local new_entity = Entities.FindByClassname(start_ent, classname)
-        return entlib.__init(new_entity)
+        return entLib.__init(new_entity)
     }
 
 
@@ -66,7 +66,7 @@ if("entLib" in getroottable()) {
         if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
         local new_entity = Entities.FindByClassnameWithin(start_ent, classname, origin, radius)
-        return entlib.__init(new_entity)
+        return entLib.__init(new_entity)
     }
 
 
@@ -80,7 +80,7 @@ if("entLib" in getroottable()) {
         if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
         local new_entity = Entities.FindByName(start_ent, targetname)
-        return entlib.__init(new_entity)
+        return entLib.__init(new_entity)
     }
 
 
@@ -96,7 +96,7 @@ if("entLib" in getroottable()) {
         if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
         local new_entity = Entities.FindByNameWithin(start_ent, targetname, origin, radius)
-        return entlib.__init(new_entity)
+        return entLib.__init(new_entity)
     }
 
 
@@ -110,7 +110,7 @@ if("entLib" in getroottable()) {
         if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
         local new_entity = Entities.FindByModel(start_ent, model)
-        return entlib.__init(new_entity)
+        return entLib.__init(new_entity)
     }
 
 
@@ -133,7 +133,7 @@ if("entLib" in getroottable()) {
             }
         }
 
-        return entlib.__init(new_entity)
+        return entLib.__init(new_entity)
     }
 
 
@@ -148,14 +148,14 @@ if("entLib" in getroottable()) {
         if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
         local new_entity = Entities.FindInSphere(start_ent, origin, radius)
-        return entlib.__init(new_entity)
+        return entLib.__init(new_entity)
     }
 
 
     function FromEntity(CBaseEntity) {
         if(typeof CBaseEntity == "pcapEntity")
             return CBaseEntity
-        return entlib.__init(CBaseEntity)
+        return entLib.__init(CBaseEntity)
     }
 
     /* Initializes an entity object.
