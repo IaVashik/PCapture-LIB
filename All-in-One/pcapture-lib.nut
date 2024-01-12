@@ -574,7 +574,7 @@ if("entLib" in getroottable()) {
         if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
         local new_entity = null
-        for(local ent; ent = FindByClassnameWithin("*", origin, radius, start_ent);) {
+        for(local ent; ent = Entities.FindByClassnameWithin(ent, "*", origin, radius);) {
             if(ent.GetModelName() == model && ent != start_ent) {
                 new_entity = ent;
                 break;
@@ -655,13 +655,13 @@ if("entLib" in getroottable()) {
         this.SetUserData(key, value)
     }
         function addOutput(outputName, target, input, param = "", delay = 0, fires = -1) {
-        if(typeof target == instance)
+        if(typeof target == "instance")
             target = target.GetName()
         this.SetKeyValue(outputName, target + "\x001B" + input + "\x001B" + param + "\x001B" + delay + "\x001B" + fires)
     }
         function ConnectOutputEx(outputName, script, delay = 0, fires = -1) {
         if(typeof script == "function") {
-            local funcName = UniqueString("OutputFunc")
+            local funcName = "OutputFunc" + UniqueString()
             getroottable()[funcName] <- script
             script = funcName + "()"
         } 
@@ -1008,11 +1008,15 @@ if("bboxcast" in getroottable()) {
         function GetFraction() {
         return _GetDist(startpos, hitpos) / _GetDist(startpos, endpos)
     }
+        function GetDir() {
+        return this.endpos - this.startpos
+    }
         function GetImpactNormal() { 
         if(surfaceNormal)
             return surfaceNormal
         local intersectionPoint = this.hitpos
-        local dir = (this.hitpos - this.startpos).normalize()
+        local dir = (this.hitpos - this.startpos)
+        dir.Norm()
         local perpDir = Vector(-dir.y, dir.x, 0)
         local offset1 = perpDir
         local offset2 = dir.Cross(offset1)
@@ -1024,7 +1028,9 @@ if("bboxcast" in getroottable()) {
             intersectionPoint2 = _TraceEnd(newStart2, newStart2 + dir * 8000)
         local edge1 = intersectionPoint1 - intersectionPoint;
         local edge2 = intersectionPoint2 - intersectionPoint;
-        this.surfaceNormal = edge2.Cross(edge1).normalize()
+        local normal = edge2.Cross(edge1)
+        normal.Norm()
+        this.surfaceNormal = normal
         return this.surfaceNormal
     }
         function Trace(startpos, endpos, ignoreEnt) {
@@ -1280,7 +1286,8 @@ local _GetValidEntitiy = function(entities) {
         local eventName = _GetValidEventName(entities, EventSetting)
         local globalDelay = "globalDelay" in EventSetting ? EventSetting.globalDelay : 0
         local distance = endPos - startPos
-        local dir = (endPos - startPos).normalize()
+        local dir = (endPos - startPos)
+        dir.Norm()
         local steps = abs(distance.Length() / speed)
         for (local tick = 1; tick <= steps; tick++) {
             local newPosition = startPos + (dir * speed * tick)
@@ -1355,6 +1362,6 @@ local _EntFireByHandle = EntFireByHandle
         return this.GetUserData("Eye").GetForwardVector()
     }
 }
-if("dissolver" in getroottable() == false) {
+if(("dissolver" in getroottable()) == false) {
     ::dissolver <- entLib.CreateByClassname("env_entity_dissolver", {targetname = "@dissolver"})
 } 
