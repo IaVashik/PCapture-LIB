@@ -126,7 +126,7 @@ if("entLib" in getroottable()) {
         if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
         local new_entity = null
-        for(local ent; ent = FindByClassnameWithin("*", origin, radius, start_ent);) {
+        for(local ent; ent = Entities.FindByClassnameWithin(ent, "*", origin, radius);) {
             if(ent.GetModelName() == model && ent != start_ent) {
                 new_entity = ent;
                 break;
@@ -286,7 +286,7 @@ if("entLib" in getroottable()) {
     * @param {int} fires - 
     */
     function addOutput(outputName, target, input, param = "", delay = 0, fires = -1) {
-        if(typeof target == instance)
+        if(typeof target == "instance")
             target = target.GetName()
         this.SetKeyValue(outputName, target + "\x001B" + input + "\x001B" + param + "\x001B" + delay + "\x001B" + fires)
     }
@@ -300,7 +300,7 @@ if("entLib" in getroottable()) {
     */
     function ConnectOutputEx(outputName, script, delay = 0, fires = -1) {
         if(typeof script == "function") {
-            local funcName = UniqueString("OutputFunc")
+            local funcName = "OutputFunc" + UniqueString()
             getroottable()[funcName] <- script
             script = funcName + "()"
         } 
