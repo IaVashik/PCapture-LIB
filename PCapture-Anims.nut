@@ -200,7 +200,8 @@ local _GetValidEntitiy = function(entities) {
         local globalDelay = "globalDelay" in EventSetting ? EventSetting.globalDelay : 0
 
         local distance = endPos - startPos
-        local dir = (endPos - startPos).normalize()
+        local dir = (endPos - startPos)
+        dir.Norm()
 
         local steps = abs(distance.Length() / speed)
         for (local tick = 1; tick <= steps; tick++) {
