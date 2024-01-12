@@ -130,6 +130,15 @@ if("bboxcast" in getroottable()) {
     }
 
     /*
+    * Get the direction.
+    *
+    * @returns {Vector} Direction.
+    */
+    function GetDir() {
+        return this.endpos - this.startpos
+    }
+
+    /*
     * Get the surface normal at the impact point.
     *
     * @returns {Vector} Surface normal. 
@@ -142,7 +151,8 @@ if("bboxcast" in getroottable()) {
         local intersectionPoint = this.hitpos
 
         // Calculate the normalized direction vector from startpos to hitpos
-        local dir = (this.hitpos - this.startpos).normalize()
+        local dir = (this.hitpos - this.startpos)
+        dir.Norm()
 
         // Calculate offset vectors perpendicular to the trace direction
         local perpDir = Vector(-dir.y, dir.x, 0)
@@ -175,7 +185,9 @@ if("bboxcast" in getroottable()) {
         local edge2 = intersectionPoint2 - intersectionPoint;
 
         // Calculate the cross product of the two edges to find the normal vector
-        this.surfaceNormal = edge2.Cross(edge1).normalize()
+        local normal = edge2.Cross(edge1)
+        normal.Norm()
+        this.surfaceNormal = normal
 
         return this.surfaceNormal
     }

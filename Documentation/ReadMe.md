@@ -203,7 +203,7 @@ The PCapture-bboxcast library allows rays to hit entities by using their boundin
 | GetImpactNormal | Vector bboxcast::GetImpactNormal() | Get the surface normal at the impact point. |
 | CorrectDisable | void CorrectDisable(Entity ent = caller) | Set bbox to 0 to disable collisions/hits and disable entity. | 
 | CorrectEnable | void CorrectEnable(Entity ent = caller) | Restore original bbox to re-enable collisions/hits and enable entity. |
-
+todo: GetDir
 
 Remember to correctly disable objects using the following steps:- Use the `CorrectDisable()` function to set the bbox of the entity to (0, 0, 0) and disable it.- To re-enable a previously disabled entity, use the `CorrectEnable()` function to restore its original size 
 
