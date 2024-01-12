@@ -14,7 +14,7 @@ if("math" in getroottable()) {
     return
 }
 
-math <- {
+::math <- {
     /* Quaternion class for quaternion operations.
     *
     * @param {Quaternion} quaternion - The quaternion to initialize.

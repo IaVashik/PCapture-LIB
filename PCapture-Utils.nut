@@ -10,7 +10,7 @@
 +----------------------------------------------------------------------------------+ */
 
 
-RunScriptCode <- {
+::RunScriptCode <- {
     /* Creates a delay before executing the specified script.
     * 
     * @param {string|function} script - The script to execute. Can be a function or a string.
@@ -68,7 +68,7 @@ RunScriptCode <- {
 }
 
 
-dev <- {
+::dev <- {
     /* Draws the bounding box of an entity for the specified time.
     * 
     * @param {CBaseEntity|pcapEntity} ent - The entity to draw the bounding box for.
@@ -141,7 +141,7 @@ dev <- {
 * @param {any} vargs... - Additional arguments to substitute into the placeholders.
 
 */
-function fprint(msg, ...) {
+::fprint <- function(msg, ...) {
 
     // If you are sure of what you are doing, you don't have to use it
     local subst_count = 0;
@@ -185,7 +185,7 @@ function fprint(msg, ...) {
 * @param {string} str - The string representation of the vector, e.g., "x y z".
 * @returns {Vector} - The converted vector.
 */
-function StrToVec(str) {
+::StrToVec <- function(str) {
     local str_arr = split(str, " ")
     local vec = Vector(str_arr[0].tointeger(), str_arr[1].tointeger(), str_arr[2].tointeger())
     return vec
@@ -196,7 +196,7 @@ function StrToVec(str) {
 *
 * @returns {string} - The prefix of the entity name.
 */
-function GetPrefix(name) {
+::GetPrefix <- function(name) {
     local parts = split(name, "-")
     if(parts.len() == 0)
         return name
@@ -211,7 +211,7 @@ function GetPrefix(name) {
 *
 * @returns {string} - The postfix of the entity name.
 */
-function GetPostfix(name) {
+::GetPostfix <- function(name) {
     local parts = split(name, "-")
     if(parts.len() == 0)
         return name
@@ -226,7 +226,7 @@ function GetPostfix(name) {
 * 
 * @param {string|array|arrayLib} sound_path - The path to the sound script.
 */
-function Precache(sound_path) {
+::Precache <- function(sound_path) {
     if(typeof sound_path == "string")
         return self.PrecacheSoundScript(sound_path)
     foreach(path in sound_path)

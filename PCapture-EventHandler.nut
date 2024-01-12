@@ -16,9 +16,9 @@ if("CreateScheduleEvent" in getroottable()) {
 }
 
 // Object to store scheduled events 
-scheduledEventsList <- {global = []}
+::scheduledEventsList <- {global = []}
 // Var to track if event loop is running
-isEventLoopRunning <- false
+::isEventLoopRunning <- false
 
 
 /*
@@ -29,7 +29,7 @@ isEventLoopRunning <- false
  * @param {int|float} timeDelay - Delay in seconds before executing event.
  * @param {string} note - Optional note about the event, if needed.
 */
-function CreateScheduleEvent(eventName, action, timeDelay, note = null)
+::CreateScheduleEvent <- function(eventName, action, timeDelay, note = null)
 {
     if ( !(eventName in scheduledEventsList) )
     {
@@ -54,10 +54,11 @@ function CreateScheduleEvent(eventName, action, timeDelay, note = null)
     }
 }
 
+
 /*
  * Executes scheduled events when their time is up
 */
-function ExecuteScheduledEvents() {
+::ExecuteScheduledEvents <- function() {
     if(scheduledEventsList.len() == 1 && scheduledEventsList.global.len() == 0)
         return isEventLoopRunning = false
 
@@ -97,7 +98,7 @@ function ExecuteScheduledEvents() {
 * @param {string} eventName - Name of event to cancel.
 * @param {int|float} delay - Delay in seconds before event cancelation
 */
-function cancelScheduledEvent(eventName, delay = 0) 
+::cancelScheduledEvent <- function(eventName, delay = 0) 
 {
     if(eventName == "global")
         return dev.warning("The global event cannot be closed!")
@@ -127,7 +128,7 @@ function cancelScheduledEvent(eventName, delay = 0)
  * @param {string} eventName - Name of event to get info for.
  * @returns {table|null} - The event info object or null if not found.
 */
-function getEventInfo(eventName)
+::getEventInfo <- function(eventName)
 {
     local event = null
     if(eventName in scheduledEventsList)
@@ -141,12 +142,12 @@ function getEventInfo(eventName)
  * @param {string} eventName - Name of event to get info for.
  * @returns {bool} - Object exists or not.
 */
-function eventIsValid(eventName) {
+::eventIsValid <- function(eventName) {
     return eventName in scheduledEventsList && scheduledEventsList[eventName].len() != 0
 }
 
 
-function getEventNote(eventName) {
+::getEventNote <- function(eventName) {
     local info = getEventInfo(eventName)
     if(!info || info.len() == 0) 
         return null
