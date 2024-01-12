@@ -1,3 +1,15 @@
+/*+--------------------------------------------------------------------------------+
+|                           PCapture Vscripts Library                               |
+ +---------------------------------------------------------------------------------+
+|  Author:                                                                          |
+|     One-of-a-Kind - laVashik :D                                                   |
+|  Don't forgot about credits! ^-^                                                  |
+ +---------------------------------------------------------------------------------+
+|    VScripts library for Portal 2 that provides various features and enhancements. |
+|    It aims to help modders build advanced custom mechanics more easily!!          |
+|    GitHud repo: https://github.com/IaVashik/PCapture-LIB                          |
++----------------------------------------------------------------------------------+ */
+
 if (!("self" in this)) {
     self <- Entities.FindByClassname(null, "worldspawn")
 } else {
