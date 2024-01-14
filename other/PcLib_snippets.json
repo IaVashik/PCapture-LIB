@@ -34,6 +34,41 @@
 		],
 		"description": "Executes a script from a string."
 	},
+	"DrawEntityBBox": {
+		"prefix": "DrawEntityBBox",
+		"body": [
+			"dev.DrawEntityBBox(${1:entity}, ${2:time})"
+		],
+		"description": "Draws the bounding box of an entity."
+	},
+	"drawbox": {
+		"prefix": "drawbox",
+		"body": [
+			"dev.drawbox(${1:vector}, ${2:color}, ${3:time})"
+		],
+		"description": "Draws a box at the specified position."
+	},
+	"log": {
+		"prefix": "log",
+		"body": [
+			"dev.log(${1:msg})"
+		],
+		"description": "Logs a message if developer mode is enabled."
+	},
+	"warning": {
+		"prefix": "warning",
+		"body": [
+			"dev.drawbox(${1:msg})"
+		],
+		"description": "Displays a warning message if developer mode is enabled."
+	},
+	"error": {
+		"prefix": "error",
+		"body": [
+			"dev.error(${1:msg})"
+		],
+		"description": "Displays an error message if developer mode is enabled."
+	},
 	"fprint": {
 		"prefix": "fprint",
 		"body": [
@@ -46,7 +81,7 @@
 		"body": [
 			"StrToVec(${1:value})"
 		],
-		"description": "Converts a string to a Vector. Example: 255 31 10 -> Vector(255, 31, 10)"
+		"description": "Converts a string to a Vector. Example: 255 31 10 -> Vector(255, 31, 10)."
 	},
 	"GetPrefix": {
 		"prefix": "GetPrefix",
