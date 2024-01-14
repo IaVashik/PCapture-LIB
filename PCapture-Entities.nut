@@ -15,19 +15,7 @@ if("entLib" in getroottable()) {
 }
 
 
-/* Initializes an entity object.
-*
-* @param {CBaseEntity} entity - The entity object.
-* @param {string} type - The type of entity.
-* @returns {pcapEntity} - A new entity object.
-*/
-function init(CBaseEntity) {
-    if(!CBaseEntity)
-        return null
-    return pcapEntity(CBaseEntity)
-}
-
-class entLib {
+::entLib <- class {
     /* Creates an entity of the specified classname with the provided keyvalues.
     *
     * @param {string} classname - The classname of the entity.
@@ -62,7 +50,7 @@ class entLib {
         if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
         local new_entity = Entities.FindByClassname(start_ent, classname)
-        return init(new_entity)
+        return entLib.__init(new_entity)
     }
 
 
@@ -78,7 +66,7 @@ class entLib {
         if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
         local new_entity = Entities.FindByClassnameWithin(start_ent, classname, origin, radius)
-        return init(new_entity)
+        return entLib.__init(new_entity)
     }
 
 
@@ -92,7 +80,7 @@ class entLib {
         if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
         local new_entity = Entities.FindByName(start_ent, targetname)
-        return init(new_entity)
+        return entLib.__init(new_entity)
     }
 
 
@@ -108,7 +96,7 @@ class entLib {
         if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
         local new_entity = Entities.FindByNameWithin(start_ent, targetname, origin, radius)
-        return init(new_entity)
+        return entLib.__init(new_entity)
     }
 
 
@@ -122,7 +110,7 @@ class entLib {
         if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
         local new_entity = Entities.FindByModel(start_ent, model)
-        return init(new_entity)
+        return entLib.__init(new_entity)
     }
 
 
@@ -138,14 +126,14 @@ class entLib {
         if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
         local new_entity = null
-        for(local ent; ent = FindByClassnameWithin("*", origin, radius, start_ent);) {
+        for(local ent; ent = Entities.FindByClassnameWithin(ent, "*", origin, radius);) {
             if(ent.GetModelName() == model && ent != start_ent) {
                 new_entity = ent;
                 break;
             }
         }
 
-        return init(new_entity)
+        return entLib.__init(new_entity)
     }
 
 
@@ -160,21 +148,33 @@ class entLib {
         if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
         local new_entity = Entities.FindInSphere(start_ent, origin, radius)
-        return init(new_entity)
+        return entLib.__init(new_entity)
     }
 
 
     function FromEntity(CBaseEntity) {
         if(typeof CBaseEntity == "pcapEntity")
             return CBaseEntity
-        return init(CBaseEntity)
+        return entLib.__init(CBaseEntity)
+    }
+
+    /* Initializes an entity object.
+    *
+    * @param {CBaseEntity} entity - The entity object.
+    * @param {string} type - The type of entity.
+    * @returns {pcapEntity} - A new entity object.
+    */
+    function __init(CBaseEntity) {
+        if(!CBaseEntity)
+            return null
+        return pcapEntity(CBaseEntity)
     }
 }
 
 
 
 
-class pcapEntity {
+::pcapEntity <- class {
     CBaseEntity = null;
     Scope = {}
 
@@ -227,6 +227,8 @@ class pcapEntity {
 
 
     function Dissolve() {
+        if(this.GetName() == "")
+            this.SetName(UniqueString("targetname"))
         dissolver.SetKeyValue("target", this.GetName())
         EntFireByHandle(dissolver, "dissolve")
     }
@@ -246,7 +248,7 @@ class pcapEntity {
     * @returns {bool} - True if this entity is the player, false otherwise.
     */
     function IsPlayer() {
-        return this.CBaseEntity == GetPlayer()
+        return this.CBaseEntity == GetPlayer()  // todo
     }
 
 
@@ -280,11 +282,30 @@ class pcapEntity {
     * @param {string} target - Targets entities named
     * @param {string} input - Via this input
     * @param {string} param - with a parameter ovveride of
-    * @param {int|float} delay - Delay in seconds before applying.
+    * @param {int|float} delay - Delay in seconds before applying. // todo
     * @param {int} fires - 
     */
     function addOutput(outputName, target, input, param = "", delay = 0, fires = -1) {
+        if(typeof target == "instance")
+            target = target.GetName()
         this.SetKeyValue(outputName, target + "\x001B" + input + "\x001B" + param + "\x001B" + delay + "\x001B" + fires)
+    }
+
+    /* TODO
+    *
+    * @param {string} outputName - Output named
+    * @param {string} script - 
+    * @param {int|float} delay - Delay in seconds before applying. // todo
+    * @param {int} fires - 
+    */
+    function ConnectOutputEx(outputName, script, delay = 0, fires = -1) {
+        if(typeof script == "function") {
+            local funcName = "OutputFunc" + UniqueString()
+            getroottable()[funcName] <- script
+            script = funcName + "()"
+        } 
+
+        this.addOutput(outputName, self, "RunScriptCode", script, delay, fires)
     }
 
 
@@ -668,8 +689,8 @@ class pcapEntity {
     }
 }
 
-function pcapEntity::ConnectOutput(output, func_name) this.CBaseEntity.ConnectOutput(output, func_name)
-function pcapEntity::DisconnectOutput(output, func_name) this.CBaseEntity.DisconnectOutput(output, func_name)
+function pcapEntity::ConnectOutput(output, funcName) this.CBaseEntity.ConnectOutput(output, funcName)
+function pcapEntity::DisconnectOutput(output, funcName) this.CBaseEntity.DisconnectOutput(output, funcName)
 function pcapEntity::EmitSound(sound_name) this.CBaseEntity.EmitSound(sound_name)
 function pcapEntity::PrecacheSoundScript(sound_name) this.CBaseEntity.PrecacheSoundScript(sound_name)
 function pcapEntity::IsSequenceFinished() return this.CBaseEntity.IsSequenceFinished()

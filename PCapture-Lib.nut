@@ -6,7 +6,7 @@
  +---------------------------------------------------------------------------------+
 | pcapture-lib.nut                                                                  |
 |       The main file in the library. Initializes required parts of the library     |
-|                                                                                   |
+|    GitHud repo: https://github.com/IaVashik/PCapture-LIB                          |
 +----------------------------------------------------------------------------------+ */
 
 if (!("self" in this)) {
@@ -25,4 +25,6 @@ IncludeScript("pcapture-lib/PCapture-Bboxcast")
 IncludeScript("pcapture-lib/PCapture-Anims")
 IncludeScript("pcapture-lib/PCapture-Improvements")
 
-dissolver <- entLib.CreateByClassname("env_entity_dissolver", {targetname = "@dissolver"})
+if(("dissolver" in getroottable()) == false) {
+    ::dissolver <- entLib.CreateByClassname("env_entity_dissolver", {targetname = "@dissolver"})
+} 

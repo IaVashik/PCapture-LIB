@@ -22,8 +22,8 @@ if("_EntFireByHandle" in getroottable()) {
 * 
 * @returns {number} Clamped frametime 
 */
-_frametime <- FrameTime
-function FrameTime() {
+local _frametime = FrameTime
+::FrameTime <- function() : (_frametime) {
     local tick = _frametime()
     if(tick == 0) 
         return 0.016
@@ -41,8 +41,8 @@ function FrameTime() {
 * @param {CBaseEntity|pcapEntity} activator - Activator entity. (optional)
 * @param {CBaseEntity|pcapEntity} caller - Caller entity. (optional)
 */
-_EntFireByHandle <- EntFireByHandle
-function EntFireByHandle(target, action, value = "", delay = 0, activator = null, caller = null) {
+local _EntFireByHandle = EntFireByHandle
+::EntFireByHandle <- function(target, action, value = "", delay = 0, activator = null, caller = null) : (_EntFireByHandle) {
     /* Extract the underlying entity from the pcapEntity wrapper */
     if (typeof target == "pcapEntity")
         target = target.CBaseEntity 
@@ -61,11 +61,11 @@ function EntFireByHandle(target, action, value = "", delay = 0, activator = null
 * @param {int} index - The index of the player (1-based).
 * @returns {pcapEntity} - An extended player entity with additional methods.
 */
-function GetPlayerEx(index = 1) { // TODO
+::GetPlayerEx <- function(index = 1) { // TODO
     return pcapPlayer(GetPlayer())
 }
 
-class pcapPlayer extends pcapEntity {
+::pcapPlayer <- class extends pcapEntity {
     function EyePosition() {
         return this.CBaseEntity.EyePosition()
     }

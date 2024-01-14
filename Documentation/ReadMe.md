@@ -69,6 +69,7 @@ Improved Entities Module. Contains A VERY LARGE number of different functions th
 | IsPlayer | bool pcapEntity::IsPlayer() | Checks if the entity is the player |
 | SetKeyValue | void pcapEntity::SetKeyValue(string key, any value) | Sets a keyvalue of the entity |
 | addOutput | void pcapEntity::addOutput(string output, string target, string input, string param = "", int delay = 0, int fires = -1) | Sets a outputs of the entity |
+| ConnectOutputEx | void pcapEntity::ConnectOutputEx(string&#124;function output, string script, int delay = 0, int fires = -1) | TODO |
 | SetName | void pcapEntity::SetName(string name) | Sets name (targetname) of the entity |  
 | SetParent | void pcapEntity::SetParent(string name, string&#124;CBaseEntity&#124;pcapEntity parent, int fireDelay = 0) | Sets parent entity |
 | SetCollision | void pcapEntity::SetCollision(int solid, int fireDelay = 0) | Sets collision type of the entity |
@@ -119,7 +120,7 @@ Mathematical module. Contains many different functions including lerp functions,
 |-|-|-|
 | lerp.int | int math::lerp::int(int start, int end, float t) | Integer linear interpolation |
 | lerp.vector | Vector math::lerp::vector(Vector start, Vector end, float t) | Vector linear interpolation |
-| lerp.color | string math::lerp::color(Vector/string start, Vector/string end, float t) | Color linear interpolation |  
+| lerp.color | string math::lerp::color(Vector&#124;string start, Vector&#124;string end, float t) | Color linear interpolation |  
 | lerp.sVector | Vector math::lerp::sVector(Vector start, Vector end, float t) | Vector spherical interpolation |
 
 ### Others math functions
@@ -202,7 +203,7 @@ The PCapture-bboxcast library allows rays to hit entities by using their boundin
 | GetImpactNormal | Vector bboxcast::GetImpactNormal() | Get the surface normal at the impact point. |
 | CorrectDisable | void CorrectDisable(Entity ent = caller) | Set bbox to 0 to disable collisions/hits and disable entity. | 
 | CorrectEnable | void CorrectEnable(Entity ent = caller) | Restore original bbox to re-enable collisions/hits and enable entity. |
-
+todo: GetDir
 
 Remember to correctly disable objects using the following steps:- Use the `CorrectDisable()` function to set the bbox of the entity to (0, 0, 0) and disable it.- To re-enable a previously disabled entity, use the `CorrectEnable()` function to restore its original size 
 
