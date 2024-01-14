@@ -205,7 +205,7 @@
 	"addOutput": {
 		"prefix": "addOutput",
 		"body": [
-			"addOutput(${1:output} ${2:target}, ${3:input}, ${4:param}, ${5:delay}, ${6:fires})"
+			"addOutput(${1:output}, ${2:target}, ${3:input}, ${4:param}, ${5:delay}, ${6:fires})"
 		],
 		"description": "Does an a AddOutput to a pcapEntity"
 	},
@@ -580,4 +580,172 @@
 		],
 		"description": "Returns the nearest note of the event if it exists"
 	},
+	"constructor": {
+		"prefix": "constructor",
+		"body": [
+			"constructor${1:array})"
+		],
+		"description": "Constructor. Initializes the array with the provided initial array."
+	},
+	"new": {
+		"prefix": "new",
+		"body": [
+			"arrayLib.new(${1:eventName})"
+		],
+		"description":"Create a new arrayLib instance from arguments. Returns the new arrayLib instance."
+	},
+	"append": {
+		"prefix": "append",
+		"body": [
+			"append(${1:val})"
+		],
+		"description": "Append a value to the array. Returns the new array length."
+	},
+	"apply": {
+		"prefix": "apply",
+		"body": [
+			"apply(${1:function})"
+		],
+		"description": "Apply a function to each element of the array."
+	},
+	"clear": {
+		"prefix": "clear",
+		"body": [
+			"clear()"
+		],
+		"description": "Clear the array and table."
+	},
+	"extend": {
+		"prefix": "extend",
+		"body": [
+			"extend(${1:anotherArray})"
+		],
+		"description": "Extend the array with an a another array."
+	},
+	"filter": {
+		"prefix": "filter",
+		"body": [
+			"filter(${1:function})"
+		],
+		"description": "Filter the array by a predicate function. Returns the filtered array."
+	},
+	"find": {
+		"prefix": "find",
+		"body": [
+			"find(${1:match})"
+		],
+		"description": "Check if the array contains a value. Returns whether the value is found."
+	},
+	"search": {
+		"prefix": "search",
+		"body": [
+			"search(${1:match})"
+		],
+		"description": "Search for a value in the array. Returns the index of the match or null."
+	},
+	"insert": {
+		"prefix": "insert",
+		"body": [
+			"insert(${1:index}, ${2:value})"
+		],
+		"description": "Insert a value into the array at the specified index."
+	},
+	"len": {
+		"prefix": "len",
+		"body": [
+			"len()"
+		],
+		"description": "Get the length of the array."
+	},
+	"map": {
+		"prefix": "map",
+		"body": [
+			"map(${1:function})"
+		],
+		"description": "Map the array to a new array using a mapping function. Returns the mapped array."
+	},
+	"pop": {
+		"prefix": "pop",
+		"body": [
+			"pop()"
+		],
+		"description": "Pop a value off the end of the array. Returns the popped value."
+	},
+	"get": {
+		"prefix": "getEventNote",
+		"body": [
+			"get(${1:index}, ${2:default})"
+		],
+		"description": "Retrieve the element at the specified index in the array. Default value to return if the index is out of bounds"
+	},
+	"push": {
+		"prefix": "push",
+		"body": [
+			"push(${1:value})"
+		],
+		"description": "Append a value to the array."
+	},
+	"remove": {
+		"prefix": "remove",
+		"body": [
+			"remove(${1:index})"
+		],
+		"description": "Remove an element from the array at the specified index."
+	},
+	"resize": {
+		"prefix": "resize",
+		"body": [
+			"resize(${1:size}, ${2:fill})"
+		],
+		"description": "Resize the array to the specified size. Optionally fill new slots with a fill value."
+	},
+	"reverse": {
+		"prefix": "reverse",
+		"body": [
+			"reverse()"
+		],
+		"description": "Reverse the array in-place. Returns the reversed array."
+	},
+	"slice": {
+		"prefix": "slice",
+		"body": [
+			"slice(${1:start}, ${2:end})"
+		],
+		"description": "Slice a portion of the array. Returns the sliced array."
+	},
+	"sort": {
+		"prefix": "sort",
+		"body": [
+			"sort(${1:function})"
+		],
+		"description": "Sort the array. Optionally accepts a compare function. Returns the sorted array."
+	},
+	"top": {
+		"prefix": "top",
+		"body": [
+			"top()"
+		],
+		"description": "Get the last element of the array."
+	},
+	"join": {
+		"prefix": "join",
+		"body": [
+			"join(${1:joinStr})"
+		],
+		"description": "Join the array into a string using the specified separator string. Returns the joined string."
+	},
+	"totable": {
+		"prefix": "totable",
+		"body": [
+			"totable(${1:recreate})"
+		],
+		"description": "Convert the array to a table representation. Optionally recreate the table if it already exists. Returns the table representation."
+	},
 }
+//"": {
+//		"prefix": "",
+//		"body": [
+//		"(${1:})"
+//		],
+//		"description": ""
+//	},
