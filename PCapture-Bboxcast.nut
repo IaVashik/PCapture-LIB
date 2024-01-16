@@ -146,9 +146,7 @@ if("bboxcast" in getroottable()) {
     * @returns {Vector} Direction.
     */
     function GetDir() {
-        local dir = this.endpos - this.startpos
-        dir.Norm()
-        return dir
+        return this.endpos - this.startpos
     }
 
     /*
@@ -402,7 +400,7 @@ function bboxcast::TracePlayerEyes(distance, ignoreEnt = null, settings = ::defa
     }
 
     // Perform the bboxcast trace and return the trace result
-    return bboxcast(startpos, endpos, ignoreEnt, note, settings)
+    return bboxcast(startpos, endpos, ignoreEnt, settings, note)
 }
 
 
