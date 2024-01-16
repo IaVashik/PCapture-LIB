@@ -49,7 +49,7 @@ if("bboxcast" in getroottable()) {
     * @param {any} note - Optional note about the raycast, if needed.
     * @param {object} settings - Trace settings.
     */
-    constructor(startpos, endpos, ignoreEnt = null, note = null, settings = ::defaultSettings) {
+    constructor(startpos, endpos, ignoreEnt = null, settings = ::defaultSettings, note = null) {
         this.startpos = startpos;
         this.endpos = endpos;
         this.ignoreEnt = ignoreEnt
@@ -368,7 +368,7 @@ if("bboxcast" in getroottable()) {
 * @param {Entity} player - Player entity.
 * @returns {bboxcast} Resulting trace. 
 */
-function bboxcast::TracePlayerEyes(distance, ignoreEnt = null, note = null, settings = ::defaultSettings, player = null) {
+function bboxcast::TracePlayerEyes(distance, ignoreEnt = null, settings = ::defaultSettings, player = null, note = null) {
     // Get the player's eye position and forward direction
     if(player == null) 
         player = GetPlayerEx()
