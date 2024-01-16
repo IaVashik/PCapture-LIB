@@ -312,7 +312,7 @@ if("bboxcast" in getroottable()) {
 
     function _checkSettings(inputSettings) {
         // Check if settings is already in the correct format
-        if (inputSettings.len() == 5)
+        if (inputSettings.len() == 4)  // TODO!
             return inputSettings
             
         // Check and assign default values if missing
@@ -356,7 +356,7 @@ if("bboxcast" in getroottable()) {
 * @param {Entity} player - Player entity.
 * @returns {bboxcast} Resulting trace. 
 */
-function bboxcast::TracePlayerEyes(distance, ignoreEnt = null, note = null, settings = ::defaultSettings, player = null) { // TODO эксперементальная поддержка CO-OP!
+function bboxcast::TracePlayerEyes(distance, ignoreEnt = null, note = null, settings = ::defaultSettings, player = null) {
     // Get the player's eye position and forward direction
     if(player == null) 
         player = GetPlayerEx()
@@ -390,7 +390,7 @@ function bboxcast::TracePlayerEyes(distance, ignoreEnt = null, note = null, sett
     }
 
     // Perform the bboxcast trace and return the trace result
-    return bboxcast(startpos, endpos, ignoreEnt, settings, note)
+    return bboxcast(startpos, endpos, ignoreEnt, note, settings)
 }
 
 
