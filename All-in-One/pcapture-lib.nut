@@ -643,9 +643,10 @@ if("entLib" in getroottable()) {
             this.SetName(UniqueString("targetname"))
         dissolver.SetKeyValue("target", this.GetName())
         EntFireByHandle(dissolver, "dissolve")
+        this.SetUserData("Dissolved", true)
     }
         function IsValid() {
-        return this.CBaseEntity && this.CBaseEntity.IsValid()
+        return this.CBaseEntity && this.CBaseEntity.IsValid() && this.GetUserData("Dissolved") != true
     }
         function IsPlayer() {
         return this.CBaseEntity == GetPlayer()  
@@ -667,7 +668,7 @@ if("entLib" in getroottable()) {
         this.SetUserData(key, value)
     }
         function addOutput(outputName, target, input, param = "", delay = 0, fires = -1) {
-        if(typeof target == "instance")
+        if(typeof target == "instance" || typeof target == "pcapEntity")
             target = target.GetName()
         this.SetKeyValue(outputName, target + "\x001B" + input + "\x001B" + param + "\x001B" + delay + "\x001B" + fires)
     }
@@ -746,6 +747,10 @@ if("entLib" in getroottable()) {
             maxBounds = StrToVec(maxBounds)
         }
         this.CBaseEntity.SetSize(minBounds, maxBounds)
+    }
+    function SetContext(name, value, fireDelay = 0) {
+        EntFireByHandle(this.CBaseEntity, "AddContext", (name + ":" + value), fireDelay)
+        this.SetUserData(name, value)
     }
         function SetUserData(name, value) {
         this.CBaseEntity.GetScriptScope()[name.tolower()] <- value
@@ -987,12 +992,12 @@ if("bboxcast" in getroottable()) {
     ignoreEnt = null;
     traceSettings = null;
     PortalFound = [];
-        constructor(startpos, endpos, ignoreEnt = null, settings = ::defaultSettings) {
+        constructor(startpos, endpos, ignoreEnt = null, note = null, settings = ::defaultSettings) {
         this.startpos = startpos;
         this.endpos = endpos;
         this.ignoreEnt = ignoreEnt
         this.traceSettings = _checkSettings(settings)
-        local result = this.Trace(startpos, endpos, ignoreEnt)
+        local result = this.Trace(startpos, endpos, ignoreEnt, note)
         this.hitpos = result.hit
         this.hitent = result.ent
     }
@@ -1045,7 +1050,7 @@ if("bboxcast" in getroottable()) {
         this.surfaceNormal = normal
         return this.surfaceNormal
     }
-        function Trace(startpos, endpos, ignoreEnt) {
+        function Trace(startpos, endpos, ignoreEnt, note) {
         local hitpos = _TraceEnd(startpos, endpos)
         local dist = hitpos - startpos
         local dist_coeff = abs(dist.Length() / traceSettings.ErrorCoefficient) + 1
@@ -1053,7 +1058,7 @@ if("bboxcast" in getroottable()) {
         for (local i = 0.0; i < step; i++) {
             local Ray_part = startpos + dist * (i / step)
             for (local ent;ent = Entities.FindByClassnameWithin(ent, "*", Ray_part, 5 * dist_coeff);) {
-                if (ent && _checkEntityIsIgnored(ent, ignoreEnt)) {
+                if (ent && _checkEntityIsIgnored(ent, ignoreEnt, note)) {
                     return {hit = Ray_part, ent = ent}
                 }
             }
@@ -1066,11 +1071,11 @@ if("bboxcast" in getroottable()) {
         function _isIgnoredEntity(entityClass) {
         return traceSettings.ignoreClass.find(entityClass) && !_isPriorityEntity(entityClass)
     }
-        function _checkEntityIsIgnored(ent, ignoreEnt) {
+        function _checkEntityIsIgnored(ent, ignoreEnt, note) {
         if(typeof ignoreEnt == "pcapEntity")
             ignoreEnt = ignoreEnt.CBaseEntity
         local classname = ent.GetClassname()
-        if(traceSettings.customFilter && traceSettings.customFilter(ent))
+        if(traceSettings.customFilter && traceSettings.customFilter(ent, note))
             return false
         if (typeof ignoreEnt == "array" || typeof ignoreEnt == "arrayLib") {
             foreach (mask in ignoreEnt) {
@@ -1107,7 +1112,7 @@ if("bboxcast" in getroottable()) {
         return startpos + (endpos - startpos) * (TraceLine(startpos, endpos, null))
     }
     function _checkSettings(inputSettings) {
-        if (inputSettings.len() == 5)
+        if (inputSettings.len() == 4)  
             return inputSettings
         if (!("ignoreClass" in inputSettings)) {
             inputSettings["ignoreClass"] <- ::defaultSettings["ignoreClass"]
@@ -1131,7 +1136,7 @@ if("bboxcast" in getroottable()) {
         return "Bboxcast 2.0 | \nstartpos: " + startpos + ", \nendpos: " + endpos + ", \nhitpos: " + hitpos + ", \nent: " + hitent + "\n========================================================="
     }
 }
-function bboxcast::TracePlayerEyes(distance, ignoreEnt = null, settings = ::defaultSettings, player = null) { 
+function bboxcast::TracePlayerEyes(distance, ignoreEnt = null, note = null, settings = ::defaultSettings, player = null) {
     if(player == null) 
         player = GetPlayerEx()
     if(!player) 
@@ -1154,7 +1159,7 @@ function bboxcast::TracePlayerEyes(distance, ignoreEnt = null, settings = ::defa
     else {
         ignoreEnt = player
     }
-    return bboxcast(startpos, endpos, ignoreEnt, settings)
+    return bboxcast(startpos, endpos, ignoreEnt, note, settings)
 }
 __disabled_entity <- {}
 function CorrectDisable(ent = null) : (__disabled_entity) {

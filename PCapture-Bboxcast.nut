@@ -36,6 +36,7 @@ if("bboxcast" in getroottable()) {
     hitent = null;
     surfaceNormal = null;
     ignoreEnt = null;
+    // note = null;
     traceSettings = null;
     PortalFound = [];
 
@@ -45,14 +46,15 @@ if("bboxcast" in getroottable()) {
     * @param {Vector} startpos - Start position.
     * @param {Vector} endpos - End position.
     * @param {CBaseEntity|pcapEntity|array|arrayLib} ignoreEnt - Entity to ignore. 
+    * @param {any} note - Optional note about the raycast, if needed.
     * @param {object} settings - Trace settings.
     */
-    constructor(startpos, endpos, ignoreEnt = null, settings = ::defaultSettings) {
+    constructor(startpos, endpos, ignoreEnt = null, note = null, settings = ::defaultSettings) {
         this.startpos = startpos;
         this.endpos = endpos;
         this.ignoreEnt = ignoreEnt
         this.traceSettings = _checkSettings(settings)
-        local result = this.Trace(startpos, endpos, ignoreEnt)
+        local result = this.Trace(startpos, endpos, ignoreEnt, note)
         this.hitpos = result.hit
         this.hitent = result.ent
     }
@@ -200,9 +202,10 @@ if("bboxcast" in getroottable()) {
     * @param {Vector} startpos - Start position.
     * @param {Vector} endpos - End position.
     * @param {Entity} ignoreEnt - Entity to ignore.
+    * @param {any} note - Optional note about the raycast, if needed.
     * @returns {object} Trace result.
     */
-    function Trace(startpos, endpos, ignoreEnt) {
+    function Trace(startpos, endpos, ignoreEnt, note) {
         // Get the hit position from the fast trace
         local hitpos = _TraceEnd(startpos, endpos)
         // Calculate the distance between start and hit positions
@@ -218,7 +221,7 @@ if("bboxcast" in getroottable()) {
             local Ray_part = startpos + dist * (i / step)
             // Find the entity at the ray point
             for (local ent;ent = Entities.FindByClassnameWithin(ent, "*", Ray_part, 5 * dist_coeff);) {
-                if (ent && _checkEntityIsIgnored(ent, ignoreEnt)) {
+                if (ent && _checkEntityIsIgnored(ent, ignoreEnt, note)) {
                     return {hit = Ray_part, ent = ent}
                 }
             }
@@ -253,15 +256,16 @@ if("bboxcast" in getroottable()) {
     *
     * @param {Entity} ent - Entity to check.
     * @param {Entity|array} ignoreEnt - Entities being ignored. 
+    * @param {any} note - Optional note about the raycast, use in custom filter.
     * @returns {boolean} True if should ignore.
     */
-    function _checkEntityIsIgnored(ent, ignoreEnt) {
+    function _checkEntityIsIgnored(ent, ignoreEnt, note) {
         if(typeof ignoreEnt == "pcapEntity")
             ignoreEnt = ignoreEnt.CBaseEntity
 
         local classname = ent.GetClassname()
 
-        if(traceSettings.customFilter && traceSettings.customFilter(ent))
+        if(traceSettings.customFilter && traceSettings.customFilter(ent, note))
             return false
 
         if (typeof ignoreEnt == "array" || typeof ignoreEnt == "arrayLib") {
@@ -308,7 +312,7 @@ if("bboxcast" in getroottable()) {
 
     function _checkSettings(inputSettings) {
         // Check if settings is already in the correct format
-        if (inputSettings.len() == 5)
+        if (inputSettings.len() == 4)  // TODO!
             return inputSettings
             
         // Check and assign default values if missing
@@ -347,11 +351,12 @@ if("bboxcast" in getroottable()) {
 *
 * @param {float} distance - Trace distance.
 * @param {Entity} ignoreEnt - Entity to ignore.  
+* @param {any} note - Optional note about the raycast, use in custom filter.
 * @param {object} settings - Trace settings.
 * @param {Entity} player - Player entity.
 * @returns {bboxcast} Resulting trace. 
 */
-function bboxcast::TracePlayerEyes(distance, ignoreEnt = null, settings = ::defaultSettings, player = null) { // TODO эксперементальная поддержка CO-OP!
+function bboxcast::TracePlayerEyes(distance, ignoreEnt = null, note = null, settings = ::defaultSettings, player = null) {
     // Get the player's eye position and forward direction
     if(player == null) 
         player = GetPlayerEx()
@@ -385,7 +390,7 @@ function bboxcast::TracePlayerEyes(distance, ignoreEnt = null, settings = ::defa
     }
 
     // Perform the bboxcast trace and return the trace result
-    return bboxcast(startpos, endpos, ignoreEnt, settings)
+    return bboxcast(startpos, endpos, ignoreEnt, note, settings)
 }
 
 
