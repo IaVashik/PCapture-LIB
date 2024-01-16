@@ -96,6 +96,15 @@ if("bboxcast" in getroottable()) {
     }
 
     /*
+    * Get the hit entity classname.
+    *
+    * @returns {string} Hit entity classname.
+    */
+    function GetEntityClassname() {
+        return hitent ? this.GetEntity().GetClassname() : null 
+    }
+
+    /*
     * Get entities to ignore.
     *
     * @returns {Entity|array} Ignored entities.
@@ -290,8 +299,9 @@ if("bboxcast" in getroottable()) {
                 return false
             }
             else {
-                local classType = split(classname, "_")[0] + "_"
-                if(_isIgnoredEntity(classType))
+                local classType = split(classname, "_")[0] + "_"    // ! CRITICAL BUG !
+                // hack
+                if(_isIgnoredEntity(classType) && !_isPriorityEntity(classname))
                     return false
             }
         }
