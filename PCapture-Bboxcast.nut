@@ -92,7 +92,7 @@ if("bboxcast" in getroottable()) {
     * @returns {Entity} Hit entity.
     */
     function GetEntity() {
-        return entLib.FromEntity(hitent)
+        return entLib.FromEntity(this.hitent)
     }
 
     /*
@@ -101,7 +101,7 @@ if("bboxcast" in getroottable()) {
     * @returns {string} Hit entity classname.
     */
     function GetEntityClassname() {
-        return hitent ? this.GetEntity().GetClassname() : null 
+        return this.hitent ? this.GetEntity().GetClassname() : null 
     }
 
     /*
@@ -146,7 +146,9 @@ if("bboxcast" in getroottable()) {
     * @returns {Vector} Direction.
     */
     function GetDir() {
-        return this.endpos - this.startpos
+        local dir = this.endpos - this.startpos
+        dir.Norm()
+        return dir
     }
 
     /*
