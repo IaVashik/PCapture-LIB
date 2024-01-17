@@ -231,6 +231,8 @@ if("entLib" in getroottable()) {
             this.SetName(UniqueString("targetname"))
         dissolver.SetKeyValue("target", this.GetName())
         EntFireByHandle(dissolver, "dissolve")
+
+        this.SetUserData("Dissolved", true)
     }
 
 
@@ -239,7 +241,7 @@ if("entLib" in getroottable()) {
     * @returns {bool} - True if the entity is valid, false otherwise.
     */
     function IsValid() {
-        return this.CBaseEntity && this.CBaseEntity.IsValid()
+        return this.CBaseEntity && this.CBaseEntity.IsValid() && this.GetUserData("Dissolved") != true
     }
 
 
@@ -279,14 +281,14 @@ if("entLib" in getroottable()) {
     /* Sets the outputs of the entity.  (TODO improve description)
     *
     * @param {string} outputName - Output named
-    * @param {string} target - Targets entities named
+    * @param {string|CBaseEntity|pcapEntity} target - Targets entities named
     * @param {string} input - Via this input
     * @param {string} param - with a parameter ovveride of
     * @param {int|float} delay - Delay in seconds before applying. // todo
     * @param {int} fires - 
     */
     function addOutput(outputName, target, input, param = "", delay = 0, fires = -1) {
-        if(typeof target == "instance")
+        if(typeof target == "instance" || typeof target == "pcapEntity")
             target = target.GetName()
         this.SetKeyValue(outputName, target + "\x001B" + input + "\x001B" + param + "\x001B" + delay + "\x001B" + fires)
     }
@@ -467,6 +469,11 @@ if("entLib" in getroottable()) {
     }
 
 
+    function SetContext(name, value, fireDelay = 0) {
+        EntFireByHandle(this.CBaseEntity, "AddContext", (name + ":" + value), fireDelay)
+        this.SetUserData(name, value)
+    }
+    
     /* Stores an arbitrary value associated with the entity.
     *
     * @param {string} name - The name of the value.  

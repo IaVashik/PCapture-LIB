@@ -191,11 +191,12 @@ The PCapture-bboxcast library allows rays to hit entities by using their boundin
 
 | Name | Usage | Description |
 |-|-|-|
-| bboxcast | bboxcast(Vector startpos, Vector endpos, Entity&#124;arrays ignoreEnt = null, table settings = ::defaultSettings) | Create bboxcast instance. |
+| bboxcast | bboxcast(Vector startpos, Vector endpos, Entity&#124;arrays ignoreEnt = null, table settings = ::defaultSettings, note = null) | Create bboxcast instance. |
 | GetStartPos | Vector bboxcast::GetStartPos() | Get the starting position. |
 | GetEndPos | Vector bboxcast::GetEndPos() | Get the ending position. |
 | GetHitpos | Vector bboxcast::GetHitpos() | Get the hit position. | 
 | GetEntity | pcapEntity bboxcast::GetEntity() | Get the hit entity. |
+| GetEntityClassname | pcapEntity bboxcast::GetEntityClassname() | Get the hit entity classname. |
 | GetIngoreEntities | Entity&#124;array bboxcast::GetIngoreEntities() | Get entities to ignore. |
 | DidHit | bool bboxcast::DidHit() | Check if the trace hit anything. |
 | DidHitWorld | bool bboxcast::DidHitWorld() | Check if the trace hit the world. |

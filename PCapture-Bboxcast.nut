@@ -49,7 +49,7 @@ if("bboxcast" in getroottable()) {
     * @param {any} note - Optional note about the raycast, if needed.
     * @param {object} settings - Trace settings.
     */
-    constructor(startpos, endpos, ignoreEnt = null, note = null, settings = ::defaultSettings) {
+    constructor(startpos, endpos, ignoreEnt = null, settings = ::defaultSettings, note = null) {
         this.startpos = startpos;
         this.endpos = endpos;
         this.ignoreEnt = ignoreEnt
@@ -92,7 +92,16 @@ if("bboxcast" in getroottable()) {
     * @returns {Entity} Hit entity.
     */
     function GetEntity() {
-        return entLib.FromEntity(hitent)
+        return entLib.FromEntity(this.hitent)
+    }
+
+    /*
+    * Get the hit entity classname.
+    *
+    * @returns {string} Hit entity classname.
+    */
+    function GetEntityClassname() {
+        return this.hitent ? this.GetEntity().GetClassname() : null 
     }
 
     /*
@@ -290,8 +299,9 @@ if("bboxcast" in getroottable()) {
                 return false
             }
             else {
-                local classType = split(classname, "_")[0] + "_"
-                if(_isIgnoredEntity(classType))
+                local classType = split(classname, "_")[0] + "_"    // ! CRITICAL BUG !
+                // hack
+                if(_isIgnoredEntity(classType) && !_isPriorityEntity(classname))
                     return false
             }
         }
@@ -356,7 +366,7 @@ if("bboxcast" in getroottable()) {
 * @param {Entity} player - Player entity.
 * @returns {bboxcast} Resulting trace. 
 */
-function bboxcast::TracePlayerEyes(distance, ignoreEnt = null, note = null, settings = ::defaultSettings, player = null) {
+function bboxcast::TracePlayerEyes(distance, ignoreEnt = null, settings = ::defaultSettings, player = null, note = null) {
     // Get the player's eye position and forward direction
     if(player == null) 
         player = GetPlayerEx()
@@ -390,7 +400,7 @@ function bboxcast::TracePlayerEyes(distance, ignoreEnt = null, note = null, sett
     }
 
     // Perform the bboxcast trace and return the trace result
-    return bboxcast(startpos, endpos, ignoreEnt, note, settings)
+    return bboxcast(startpos, endpos, ignoreEnt, settings, note)
 }
 
 
