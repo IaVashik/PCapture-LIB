@@ -232,3 +232,10 @@
     foreach(path in sound_path)
         self.PrecacheSoundScript(path)
 }
+
+
+::GetFromTable <- function(table, key, defaultValue = null) {
+    if(key in table) 
+        return table[key]
+    return defaultValue
+}
