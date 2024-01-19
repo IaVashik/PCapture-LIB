@@ -59,7 +59,7 @@ if("bboxcast" in getroottable()) {
     * @returns {Vector} Start position.
     */
     function GetStartPos() {
-        return startpos
+        return this.startpos
     }
 
     /*
@@ -68,7 +68,7 @@ if("bboxcast" in getroottable()) {
     * @returns {Vector} End position.
     */
     function GetEndPos() {
-        return endpos
+        return this.endpos
     }
 
      /*
@@ -77,16 +77,16 @@ if("bboxcast" in getroottable()) {
     * @returns {Vector} Hit position. 
     */
     function GetHitpos() {
-        return hitpos
+        return this.hitpos
     }
 
     /*
     * Get the hit entity.
     *
-    * @returns {Entity} Hit entity.
+    * @returns {pcapEntity} Hit entity. // todo docx 
     */
     function GetEntity() {
-        return entLib.FromEntity(hitent)
+        return this.hitent
     }
 
     /*
@@ -95,7 +95,7 @@ if("bboxcast" in getroottable()) {
     * @returns {Entity|array} Ignored entities.
     */
     function GetIngoreEntities() {
-        return ignoreEnts
+        return this.ignoreEnts
     }
 
     /*
@@ -104,7 +104,7 @@ if("bboxcast" in getroottable()) {
     * @returns {boolean} True if hit.
     */
     function DidHit() {
-        return GetFraction() != 1
+        return this.GetFraction() != 1
     }
 
     /*
@@ -113,7 +113,7 @@ if("bboxcast" in getroottable()) {
     * @returns {boolean} True if hit world.
     */
     function DidHitWorld() {
-        return (!hitent && DidHit())
+        return !this.hitent && DidHit()
     }
 
     /*
@@ -122,8 +122,11 @@ if("bboxcast" in getroottable()) {
     * @returns {float} Path fraction.
     */
     function GetFraction() {
-        return this._GetDist(startpos, hitpos) / this._GetDist(startpos, endpos)
+        return GetDist(this.startpos, this.hitpos) / GetDist(this.startpos, this.endpos)
     }
+
+    // todo
+    function GetImpactNormal() Vector 
 
     /*
     * Get the direction.
@@ -134,275 +137,15 @@ if("bboxcast" in getroottable()) {
         return this.endpos - this.startpos
     }
 
-    /*
-    * Get the surface normal at the impact point.
-    *
-    * @returns {Vector} Surface normal. 
-    */
-    function GetImpactNormal() { 
-        // If the surface normal is already calculated, return it
-        if(surfaceNormal)
-            return surfaceNormal
+    //TODO 
 
-        local intersectionPoint = this.hitpos
-
-        // Calculate the normalized direction vector from startpos to hitpos
-        local dir = (this.hitpos - this.startpos)
-        dir.Norm()
-
-        // Calculate offset vectors perpendicular to the trace direction
-        local perpDir = Vector(-dir.y, dir.x, 0)
-        local offset1 = perpDir
-        local offset2 = dir.Cross(offset1)
-
-        // Calculate new start positions for two additional traces
-        local newStart1 = this.startpos + offset1
-        local newStart2 = this.startpos + offset2
-
-        // Perform two additional traces to find intersection points
-        local intersectionPoint1
-        local intersectionPoint2
-        if(this.GetEntity()) { // TODO
-            local normalSetting = {
-                ignoreClass = ["*"],
-                priorityClass = [this.GetEntity().GetClassname()],
-                ErrorCoefficient = 3000,
-            }
-            intersectionPoint1 = this.Trace(newStart1, newStart1 + dir * 8000, this.ignoreEnts).hit
-            intersectionPoint2 = this.Trace(newStart1, newStart2 + dir * 8000, this.ignoreEnts).hit
-        }
-        else {
-            intersectionPoint1 = this.CheapTrace(newStart1, newStart1 + dir * 8000)
-            intersectionPoint2 = this.CheapTrace(newStart2, newStart2 + dir * 8000)
-        }
-
-        // Calculate two edge vectors from intersection point to hitpos
-        local edge1 = intersectionPoint1 - intersectionPoint;
-        local edge2 = intersectionPoint2 - intersectionPoint;
-
-        // Calculate the cross product of the two edges to find the normal vector
-        local normal = edge2.Cross(edge1)
-        normal.Norm()
-
-        this.surfaceNormal = normal
-
-        return this.surfaceNormal
-    }
-
-
-
-    /*
-    * Perform the main trace.
-    *
-    * @param {Vector} startpos - Start position.
-    * @param {Vector} endpos - End position.
-    * @param {Entity} ignoreEnts - Entity to ignore.
-    * @returns {object} Trace result.
-    */
-    function Trace(startpos, endpos, ignoreEnts) {
-        // Get the hit position from the fast trace
-        local hitpos = this.CheapTrace(startpos, endpos)
-        // Calculate the distance between start and hit positions
-        local dist = (hitpos - startpos).Length()
-        // Calculate a distance coefficient for more precise tracing based on distance and error coefficient
-        local dist_coeff = abs(dist / this.settings.GetErrorCoefficient()) + 1
-        // Calculate the number of steps based on distance and distance coefficient
-        local step = dist / 14 / dist_coeff
-
-        // Iterate through each step
-        for (local i = 0.0; i < step; i++) {
-            // Calculate the ray position for the current step
-            local rayPart = startpos + dist * (i / step)
-            // Find the entity at the ray point
-            // TODO!!!
-            for (local ent;ent = Entities.FindByClassnameWithin(ent, "*", rayPart, 5 * dist_coeff);) {
-                if (ent && _hitEntity(ent, ignoreEnts)) {
-                    return {hit = rayPart, ent = ent}
-                }
-            }
-        }
-
-        return {hit = hitpos, ent = null}
-    }
-
-    // Check if an entity should be ignored based on the provided settings
-    /*
-    * Check if entity is a priority class.
-    *
-    * @param {string} entityClass - Entity class name.
-    * @returns {boolean} True if priority.
-    */
-    function _isPriorityEntity(entityClass) {
-        return settings.GetPriorityClass().find(entityClass) // todo!
-    }
-
-    /* 
-    * Check if entity is an ignored class.
-    *
-    * @param {string} entityClass - Entity class name.
-    * @returns {boolean} True if ignored.
-    */
-    function _isIgnoredEntity(entityClass) {
-        return settings.GetIgnoreClass().find(entityClass)
-    }
-
-    /*
-    * Check if entity should be ignored.
-    *
-    * @param {Entity} ent - Entity to check.
-    * @param {Entity|array} ignoreEnts - Entities being ignored. 
-    * @returns {boolean} True if should ignore.
-    */
-    function _hitEntity(ent, ignoreEnts, note) {
-        local classname = ent.GetClassname()
-
-        // todo
-        if(settings.RunUserFilter(ent, note))
-            return true
-
-        // todo
-        // if(settings.RunUserFilter2(ent, note))
-        //     return false
-
-        if (typeof ignoreEnts == "array" || typeof ignoreEnts == "arrayLib") { // todo
-            foreach (mask in ignoreEnts) {
-                if(typeof mask == "pcapEntity")
-                    mask = mask.CBaseEntity
-                if (mask == ent) {
-                    return false;
-                }
-            }
-        } 
-        else if (ent == ignoreEnts) {
-            return false;
-        }
-
-        if (_isIgnoredEntity(classname) && !_isPriorityEntity(classname)) {
-            return false
-        }
-        else {  //! critical todo
-            local classType = split(classname, "_")[0] + "_"
-            if(_isIgnoredEntity(classType) && !_isPriorityEntity(classname))
-                return false
-        }
-
-        return true
-    }
-
-    // Calculate the distance between two points // todo
-    function _GetDist(start, end) {
-        return (start - end).Length()
-    }
-
-    function CheapTrace(startpos,endpos) {
-        return startpos + (endpos - startpos) * (TraceLine(startpos, endpos, null))
-    }
-
-
+    function CheapTrace(startpos, endpos) Vector
+    function Trace(startpos, endpos, ignoreEnts) table
+    function _hitEntity(ent, ignoreEnts, note) bool
+    function _isIgnoredEntity(entityClass) bool
+    function _isPriorityEntity(entityClass) bool
     // Convert the bboxcast object to string representation
     function _tostring() {
         return "Bboxcast 2.0 | \nstartpos: " + startpos + ", \nendpos: " + endpos + ", \nhitpos: " + hitpos + ", \nent: " + hitent + "\n========================================================="
     }
-}
-
-// PRESETS
-
-/*
-* Perform trace from player's eyes.
-*
-* @param {float} distance - Trace distance.
-* @param {Entity} ignoreEnts - Entity to ignore.  
-* @param {object} settings - Trace settings.
-* @param {Entity} player - Player entity.
-* @returns {bboxcast} Resulting trace. 
-*/
-function bboxcast::TracePlayerEyes(distance, ignoreEnts = null, settings = ::defaultSettings, player = null) {
-    // Get the player's eye position and forward direction
-    if(player == null) 
-        player = GetPlayerEx()
-    if(!player) 
-        return bboxcast(Vector(), Vector())
-    if(typeof player != "pcapEntity") 
-        player = pcapPlayer(player)
-
-    // Calculate the start and end positions of the trace
-    local startpos = player.EyePosition()
-    local endpos = startpos + player.EyeForwardVector() * distance
-
-    // Check if any entities should be ignored during the trace
-    if (ignoreEnts) {
-        // If ignoreEnts is an array, append the player entity to it
-        if (typeof ignoreEnts == "array" || typeof ignoreEnts == "arrayLib") {
-            ignoreEnts.append(player)
-        }
-        // If ignoreEnts is a single entity, create a new array with both the player and ignoreEnts
-        else {
-            ignoreEnts = [player, ignoreEnts]
-        }
-    }
-    // If no ignoreEnts is provided, ignore the player only
-    else {
-        ignoreEnts = player
-    }
-
-    // Perform the bboxcast trace and return the trace result
-    return bboxcast(startpos, endpos, ignoreEnts, settings)
-}
-
-
-
-/*
-* Disable entity by setting size to 0. 
-*
-* @param {Entity} ent - Entity to disable.
-*/
-function CorrectDisable(ent = null) {
-    if(ent == null)
-        ent = caller
-    if(typeof ent != "pcapEntity")
-        ent = entLib.FromEntity(ent)
-
-    EntFireByHandle(ent, "Disable")
-    ent.SetUserData("bboxInfo", ent.GetBBox())
-    ent.SetBBox(Vector(), Vector())
-}
-
-
-/*
-* Enable previously disabled entity.
-*  
-* @param {Entity} ent - Entity to enable. 
-*/
-function CorrectEnable(ent = null) {
-    if(ent == null)
-        ent = caller
-    if(typeof ent != "pcapEntity")
-        ent = entLib.FromEntity(ent)
-
-    EntFireByHandle(ent, "Enable")
-    local bbox = ent.GetUserData("bboxInfo")
-    ent.SetBBox(bbox.min, bbox.max)
-}
-
-
-for(local player; player = entLib.FindByClassname("player", player);) {
-    if(player.GetUserData("Eye")) return
-
-    local controlName = "eyeControl" + UniqueString()
-    local eyeControlEntity = entLib.CreateByClassname("logic_measure_movement", {
-        targetname = controlName, measuretype = 1}
-    )
-
-    local eyeName = "eyePoint" + UniqueString()
-    local eyePointEntity = entLib.CreateByClassname("info_target". {targetname = eyeName})
-
-    local playerName = player.GetName() == "" ? "!player" : player.GetName()
-
-    EntFireByHandle(eyeControlEntity, "setmeasuretarget", playerName)
-    EntFireByHandle(eyeControlEntity, "setmeasurereference", controlName);
-    EntFireByHandle(eyeControlEntity, "SetTargetReference", controlName);
-    EntFireByHandle(eyeControlEntity, "Settarget", eyeName);
-    EntFireByHandle(eyeControlEntity, "Enable")
-
-    player.SetUserData("Eye", eyePointEntity)
 }
