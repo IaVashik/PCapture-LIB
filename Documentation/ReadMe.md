@@ -17,7 +17,7 @@ A collection of utility functions for script execution and debugging. It's a Swi
 | Name | Usage | Description |
 |-|-|-|  
 | delay | void RunScriptCode::delay(script, delay, activator = null, caller = null) | Creates a delay before executing the specified script. |
-| recursive | void RunScriptCode::recursive(script, delay, eventName = "global") | Schedules the execution of a script recursively at a fixed interval. |
+| recursive | void RunScriptCode::recursive(script, interval = tick, globalDelay = 0, eventName = "global") | Schedules the execution of a script recursively at a fixed interval. |
 | loopy | void RunScriptCode::loopy(func, delay, loop, outputs = null) | Runs func repeatedly for given loops. |
 | fromStr | void RunScriptCode::fromStr(string value) | Executes a script from a string. |
 
