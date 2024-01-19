@@ -352,27 +352,19 @@ function bboxcast::TracePlayerEyes(distance, ignoreEnts = null, settings = ::def
 
 
 /*
-* Store disabled entities' bounding boxes.
-*/   
-__disabled_entity <- {}
-
-/*
 * Disable entity by setting size to 0. 
 *
 * @param {Entity} ent - Entity to disable.
 */
-function CorrectDisable(ent = null) : (__disabled_entity) {
-    if(!ent)
+function CorrectDisable(ent = null) {
+    if(ent == null)
         ent = caller
-    if(typeof ent == "string")
-        ent = Entities.FindByName(null, ent)
+    if(typeof ent != "pcapEntity")
+        ent = entLib.FromEntity(ent)
 
-    EntFireByHandle(ent, "Disable", "", 0, null, null)
-    local entIndex = ent.entindex.tostring()
-    if( !(entIndex in __disabled_entity)) {
-        __disabled_entity[entIndex] <- {min = ent.GetBoundingMins(), max = ent.GetBoundingMaxs()}
-    }
-    ent.SetSize(Vector(), Vector())
+    EntFireByHandle(ent, "Disable")
+    ent.SetUserData("bboxInfo", ent.GetBBox())
+    ent.SetBBox(Vector(), Vector())
 }
 
 
@@ -381,40 +373,36 @@ function CorrectDisable(ent = null) : (__disabled_entity) {
 *  
 * @param {Entity} ent - Entity to enable. 
 */
-function CorrectEnable(ent = null) : (__disabled_entity) {
-    if(!ent)
+function CorrectEnable(ent = null) {
+    if(ent == null)
         ent = caller
-    if(typeof ent == "string")
-        ent = Entities.FindByName(null, ent)
+    if(typeof ent != "pcapEntity")
+        ent = entLib.FromEntity(ent)
 
-    EntFireByHandle(ent, "Enable", "", 0, null, null)
-    local entIndex = ent.entindex.tostring()
-    if( entIndex in __disabled_entity ) {
-        local BBox = __disabled_entity[entIndex]
-        ent.SetSize(BBox.min, BBox.max)
-    }
+    EntFireByHandle(ent, "Enable")
+    local bbox = ent.GetUserData("bboxInfo")
+    ent.SetBBox(bbox.min, bbox.max)
 }
 
 
 for(local player; player = entLib.FindByClassname("player", player);) {
     if(player.GetUserData("Eye")) return
 
-    eyeControlEntity <- Entities.CreateByClassname( "logic_measure_movement" )
     local controlName = "eyeControl" + UniqueString()
-    eyeControlEntity.__KeyValueFromString("targetname", controlName)
-    eyeControlEntity.__KeyValueFromInt("measuretype", 1)
+    local eyeControlEntity = entLib.CreateByClassname("logic_measure_movement", {
+        targetname = controlName, measuretype = 1}
+    )
 
-    eyePointEntity <- Entities.CreateByClassname( "info_target" )
     local eyeName = "eyePoint" + UniqueString()
-    eyePointEntity.__KeyValueFromString("targetname", eyeName)
+    local eyePointEntity = entLib.CreateByClassname("info_target". {targetname = eyeName})
 
     local playerName = player.GetName() == "" ? "!player" : player.GetName()
 
-    EntFireByHandle(eyeControlEntity, "setmeasuretarget", playerName, 0, null, null)
-    EntFireByHandle(eyeControlEntity, "setmeasurereference", controlName, 0, null, null);
-    EntFireByHandle(eyeControlEntity, "SetTargetReference", controlName, 0, null, null);
-    EntFireByHandle(eyeControlEntity, "Settarget", eyeName, 0, null, null);
-    EntFireByHandle(eyeControlEntity, "Enable", "", 0, null, null)
+    EntFireByHandle(eyeControlEntity, "setmeasuretarget", playerName)
+    EntFireByHandle(eyeControlEntity, "setmeasurereference", controlName);
+    EntFireByHandle(eyeControlEntity, "SetTargetReference", controlName);
+    EntFireByHandle(eyeControlEntity, "Settarget", eyeName);
+    EntFireByHandle(eyeControlEntity, "Enable")
 
     player.SetUserData("Eye", eyePointEntity)
 }
