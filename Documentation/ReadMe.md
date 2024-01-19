@@ -16,10 +16,10 @@ A collection of utility functions for script execution and debugging. It's a Swi
 
 | Name | Usage | Description |
 |-|-|-|  
-| delay | void RunScriptCode::delay(script, delay, activator = null, caller = null) | Creates a delay before executing the specified script. |
-| recursive | void RunScriptCode::recursive(script, interval = tick, globalDelay = 0, eventName = "global") | Schedules the execution of a script recursively at a fixed interval. |
-| loopy | void RunScriptCode::loopy(func, delay, loop, outputs = null) | Runs func repeatedly for given loops. |
-| fromStr | void RunScriptCode::fromStr(string value) | Executes a script from a string. |
+| delay | void RunScriptCode::delay(string&#124;func script, float fireDelay, Ent activator = null, Ent caller = null) | Creates a delay before executing the specified script. |
+| recursive | void RunScriptCode::recursive(string&#124;func script, float interval = tick, float globalDelay = 0, string eventName = "global") | Schedules the execution of a script recursively at a fixed interval. |
+| loopy | void RunScriptCode::loopy(string&#124;func func, float fireDelay, int loop, string&#124;func outputs = null) | Runs func repeatedly for given loops. |
+| fromStr | void RunScriptCode::fromStr(string script) | Executes a script from a string. |
 
 
 ### dev 
@@ -27,8 +27,8 @@ A collection of utility functions for script execution and debugging. It's a Swi
 `dev` provides developer utility functions. 
 | Name | Usage | Description |
 |-|-|-|
-| DrawEntityBBox | void dev::DrawEntityBBox(entity, time) | Draws the bounding box of an entity. |
-| drawbox | void dev::drawbox(vector, color, time = 0.05) | Draws a box at the specified position. |
+| DrawEntityBBox | void dev::DrawEntityBBox(Ent entity, float time) | Draws the bounding box of an entity. |
+| drawbox | void dev::drawbox(Vector origin, Vector color, float time = 0.05) | Draws a box at the specified position. |
 | log | void dev::log(string msg) | Logs a message if developer mode is enabled. |
 | warning | void dev::warning(string msg) | Displays a warning message if developer mode is enabled. |
 | error | void dev::error(string msg) | Displays an error message if developer mode is enabled. |
