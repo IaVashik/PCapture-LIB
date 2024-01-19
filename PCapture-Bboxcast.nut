@@ -17,14 +17,7 @@ if("bboxcast" in getroottable()) {
 /*
 * Default settings for bboxcast traces.
 */  
-::defaultSettings <- {  //  TODO make as a class
-    ignoreClass = arrayLib.new("info_target", "viewmodel", "weapon_", "func_illusionary", "info_particle_system",
-    "trigger_", "phys_", "env_sprite", "point_", "vgui_", "physicsclonearea", "env_beam", "func_breakable"),
-    priorityClass = arrayLib.new("linked_portal_door"),
-    customFilter = null,      // function(ent) {return false},
-    ErrorCoefficient = 500,
-    // enablePortalTracing = false 
-}
+::defaultSettings <- TraceSettings.new()
 
 /*
 * A class for performing bbox-based ray tracing in Portal 2.
@@ -32,11 +25,13 @@ if("bboxcast" in getroottable()) {
 ::bboxcast <- class {
     startpos = null;
     endpos = null;
+    ignoreEnt = null;
+    settings = null;
+
     hitpos = null;
     hitent = null;
     surfaceNormal = null;
-    ignoreEnt = null;
-    traceSettings = null;
+
     PortalFound = [];
 
     /*
@@ -47,11 +42,12 @@ if("bboxcast" in getroottable()) {
     * @param {CBaseEntity|pcapEntity|array|arrayLib} ignoreEnt - Entity to ignore. 
     * @param {object} settings - Trace settings.
     */
-    constructor(startpos, endpos, ignoreEnt = null, settings = ::defaultSettings) {
+    constructor(startpos, endpos, ignoreEnt = null, settings = defaultSettings) {
         this.startpos = startpos;
         this.endpos = endpos;
         this.ignoreEnt = ignoreEnt
-        this.traceSettings = _checkSettings(settings)
+        this.settings = settings
+
         local result = this.Trace(startpos, endpos, ignoreEnt)
         this.hitpos = result.hit
         this.hitent = result.ent
@@ -126,7 +122,7 @@ if("bboxcast" in getroottable()) {
     * @returns {float} Path fraction.
     */
     function GetFraction() {
-        return _GetDist(startpos, hitpos) / _GetDist(startpos, endpos)
+        return this._GetDist(startpos, hitpos) / this._GetDist(startpos, endpos)
     }
 
     /*
@@ -166,19 +162,19 @@ if("bboxcast" in getroottable()) {
         // Perform two additional traces to find intersection points
         local intersectionPoint1
         local intersectionPoint2
-        // if(this.GetEntity()) {
-        //     local normalSetting = {
-        //         ignoreClass = ["*"],
-        //         priorityClass = [this.GetEntity().GetClassname()],
-        //         ErrorCoefficient = 3000,
-        //     }
-        //     intersectionPoint1 = bboxcast(newStart1, newStart1 + dir * 8000, this.ignoreEnt, normalSetting).GetHitpos()
-        //     intersectionPoint2 = bboxcast(newStart2, newStart2 + dir * 8000, this.ignoreEnt, normalSetting).GetHitpos()
-        // }
-        // else {
-            intersectionPoint1 = _TraceEnd(newStart1, newStart1 + dir * 8000)
-            intersectionPoint2 = _TraceEnd(newStart2, newStart2 + dir * 8000)
-        // }
+        if(this.GetEntity()) { // TODO
+            local normalSetting = {
+                ignoreClass = ["*"],
+                priorityClass = [this.GetEntity().GetClassname()],
+                ErrorCoefficient = 3000,
+            }
+            intersectionPoint1 = this.Trace(newStart1, newStart1 + dir * 8000, this.ignoreEnt).hit
+            intersectionPoint2 = this.Trace(newStart1, newStart2 + dir * 8000, this.ignoreEnt).hit
+        }
+        else {
+            intersectionPoint1 = this.CheapTrace(newStart1, newStart1 + dir * 8000)
+            intersectionPoint2 = this.CheapTrace(newStart2, newStart2 + dir * 8000)
+        }
 
         // Calculate two edge vectors from intersection point to hitpos
         local edge1 = intersectionPoint1 - intersectionPoint;
@@ -187,6 +183,7 @@ if("bboxcast" in getroottable()) {
         // Calculate the cross product of the two edges to find the normal vector
         local normal = edge2.Cross(edge1)
         normal.Norm()
+
         this.surfaceNormal = normal
 
         return this.surfaceNormal
@@ -204,22 +201,23 @@ if("bboxcast" in getroottable()) {
     */
     function Trace(startpos, endpos, ignoreEnt) {
         // Get the hit position from the fast trace
-        local hitpos = _TraceEnd(startpos, endpos)
+        local hitpos = this.CheapTrace(startpos, endpos)
         // Calculate the distance between start and hit positions
-        local dist = hitpos - startpos
+        local dist = (hitpos - startpos).Length()
         // Calculate a distance coefficient for more precise tracing based on distance and error coefficient
-        local dist_coeff = abs(dist.Length() / traceSettings.ErrorCoefficient) + 1
+        local dist_coeff = abs(dist / this.settings.GetErrorCoefficient()) + 1
         // Calculate the number of steps based on distance and distance coefficient
-        local step = dist.Length() / 14 / dist_coeff
+        local step = dist / 14 / dist_coeff
 
         // Iterate through each step
         for (local i = 0.0; i < step; i++) {
             // Calculate the ray position for the current step
-            local Ray_part = startpos + dist * (i / step)
+            local rayPart = startpos + dist * (i / step)
             // Find the entity at the ray point
-            for (local ent;ent = Entities.FindByClassnameWithin(ent, "*", Ray_part, 5 * dist_coeff);) {
-                if (ent && _checkEntityIsIgnored(ent, ignoreEnt)) {
-                    return {hit = Ray_part, ent = ent}
+            // TODO!!!
+            for (local ent;ent = Entities.FindByClassnameWithin(ent, "*", rayPart, 5 * dist_coeff);) {
+                if (ent && _isNotIgnored(ent, ignoreEnt)) {
+                    return {hit = rayPart, ent = ent}
                 }
             }
         }
@@ -255,84 +253,49 @@ if("bboxcast" in getroottable()) {
     * @param {Entity|array} ignoreEnt - Entities being ignored. 
     * @returns {boolean} True if should ignore.
     */
-    function _checkEntityIsIgnored(ent, ignoreEnt) {
-        if(typeof ignoreEnt == "pcapEntity")
-            ignoreEnt = ignoreEnt.CBaseEntity
 
-        local classname = ent.GetClassname()
+     UUUUUUUUUUUUUUGHHHHH FUCKING FUNC
+    // function _isNotIgnored(ent, ignoreEnt) {
+    //     local classname = ent.GetClassname()
 
-        if(traceSettings.customFilter && traceSettings.customFilter(ent))
-            return false
+    //     // todo
+    //     if(traceSettings.customFilter && traceSettings.customFilter(ent))
+    //         return true
 
-        if (typeof ignoreEnt == "array" || typeof ignoreEnt == "arrayLib") {
-            foreach (mask in ignoreEnt) {
-                if(typeof mask == "pcapEntity")
-                    mask = mask.CBaseEntity
-                if (mask == ent) {
-                    return false;
-                }
-            }
-        } 
-        else if (ent == ignoreEnt) {
-            return false;
-        }
+    //     if (typeof ignoreEnt == "array" || typeof ignoreEnt == "arrayLib") { // todo
+    //         foreach (mask in ignoreEnt) {
+    //             if(typeof mask == "pcapEntity")
+    //                 mask = mask.CBaseEntity
+    //             if (mask == ent) {
+    //                 return false;
+    //             }
+    //         }
+    //     } 
+    //     else if (ent == ignoreEnt) {
+    //         return true;
+    //     }
 
-        if (traceSettings.ignoreClass.find("*")) {
-            if(!_isPriorityEntity(classname))
-                return false
-        }
-        else {
-            if (_isIgnoredEntity(classname)) {
-                return false
-            }
-            else {
-                local classType = split(classname, "_")[0] + "_"
-                if(_isIgnoredEntity(classType))
-                    return false
-            }
-        }
+    //     if (_isIgnoredEntity(classname)) {
+    //         return false
+    //     }
+    //     else {
+    //         local classType = split(classname, "_")[0] + "_"
+    //         if(_isIgnoredEntity(classType))
+    //             return false
+    //     }
 
+    //     return false
+    // }
 
-        return true
-    }
-
-    // Calculate the distance between two points
+    // Calculate the distance between two points // todo
     function _GetDist(start, end) {
         return (start - end).Length()
     }
 
-    // Internal function
-    function _TraceEnd(startpos,endpos) {
+    function CheapTrace(startpos,endpos) {
         return startpos + (endpos - startpos) * (TraceLine(startpos, endpos, null))
     }
 
-    function _checkSettings(inputSettings) {
-        // Check if settings is already in the correct format
-        if (inputSettings.len() == 5)
-            return inputSettings
-            
-        // Check and assign default values if missing
-        if (!("ignoreClass" in inputSettings)) {
-            inputSettings["ignoreClass"] <- ::defaultSettings["ignoreClass"]
-        }
-        if (!("priorityClass" in inputSettings)) {
-            inputSettings["priorityClass"] <- ::defaultSettings["priorityClass"]
-        }   
-        if (!("ErrorCoefficient" in inputSettings)) {
-            inputSettings["ErrorCoefficient"] <- ::defaultSettings["ErrorCoefficient"]
-        }
-        if (!("customFilter" in inputSettings)) {
-            inputSettings["customFilter"] <- ::defaultSettings["customFilter"]
-        }
-    
-        // Convert arrays to tables
-        if(typeof inputSettings["ignoreClass"] == "array")
-            inputSettings["ignoreClass"] = arrayLib(inputSettings["ignoreClass"])
-        if(typeof inputSettings["priorityClass"] == "array")
-            inputSettings["priorityClass"] = arrayLib(inputSettings["priorityClass"]) 
-    
-        return inputSettings
-    }
 
     // Convert the bboxcast object to string representation
     function _tostring() {
@@ -351,7 +314,7 @@ if("bboxcast" in getroottable()) {
 * @param {Entity} player - Player entity.
 * @returns {bboxcast} Resulting trace. 
 */
-function bboxcast::TracePlayerEyes(distance, ignoreEnt = null, settings = ::defaultSettings, player = null) { // TODO эксперементальная поддержка CO-OP!
+function bboxcast::TracePlayerEyes(distance, ignoreEnt = null, settings = ::defaultSettings, player = null) {
     // Get the player's eye position and forward direction
     if(player == null) 
         player = GetPlayerEx()
