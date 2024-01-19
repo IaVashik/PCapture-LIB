@@ -42,13 +42,13 @@ if("bboxcast" in getroottable()) {
     * @param {CBaseEntity|pcapEntity|array|arrayLib} ignoreEnts - Entity to ignore. 
     * @param {object} settings - Trace settings.
     */
-    constructor(startpos, endpos, ignoreEnts = null, settings = defaultSettings) {
+    constructor(startpos, endpos, ignoreEnts = null, settings = defaultSettings, note) {
         this.startpos = startpos;
         this.endpos = endpos;
         this.ignoreEnts = ignoreEnts
         this.settings = settings
 
-        local result = settings.portalTracing ? this.tryTeleportTrace(startpos, endpos, ignoreEnts) : this.Trace(startpos, endpos, ignoreEnts)
+        local result = settings.portalTracing ? this.portalTrace(startpos, endpos, ignoreEnts, note) : this.Trace(startpos, endpos, ignoreEnts, note)
         this.hitpos = result.hit
         this.hitent = result.ent
     }

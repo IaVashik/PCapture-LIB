@@ -6,7 +6,7 @@
 * @param {Entity} ignoreEnts - Entity to ignore.
 * @returns {object} Trace result.
 */
-function Trace(startpos, endpos, ignoreEnts) {
+function Trace(startpos, endpos, ignoreEnts, note) {
     // Get the hit position from the fast trace
     local hitpos = this.CheapTrace(startpos, endpos)
     // Calculate the distance between start and hit positions
@@ -23,7 +23,7 @@ function Trace(startpos, endpos, ignoreEnts) {
         // Find the entity at the ray point
         // TODO!!! separate code! "*"
         for (local ent;ent = Entities.FindByClassnameWithin(ent, "*", rayPart, 5 * dist_coeff);) {
-            if (ent && _hitEntity(ent, ignoreEnts)) {
+            if (ent && _hitEntity(ent, ignoreEnts, note)) {
                 return {hit = rayPart, ent = ent}
             }
         }

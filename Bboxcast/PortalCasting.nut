@@ -6,9 +6,9 @@
 * @param {Entity} ignoreEnts - Entity to ignore.
 * @returns {object} Trace result.
 */
-function bboxcast::tryTeleportTrace(startpos, endpos, ignoreEnts) {
+function bboxcast::portalTrace(startpos, endpos, ignoreEnts, note) {
     for (local i = 0; i < 10; i++) { // todo?
-        local tracedata = Trace(startpos, endpos, ignoreEnts);
+        local tracedata = Trace(startpos, endpos, ignoreEnts, note);
         local hitPos = tracedata.hit
         local hitEnt = tracedata.ent
         
