@@ -66,39 +66,39 @@ function TraceSettings::SetCustomFilter(func) {
 
 
 // TODO
-function TraceGettings::GetIgnoreClass() {
+function TraceSettings::GetIgnoreClass() {
     return this.ignoreClass
 }
 
-function TraceGettings::GetPriorityClass() {
+function TraceSettings::GetPriorityClass() {
     return this.priorityClass
 }
 
-function TraceGettings::GetErrorCoefficient() {
+function TraceSettings::GetErrorCoefficient() {
     return this.errorCoefficient
 }
 
-function TraceGettings::GetCustomFilter() {
+function TraceSettings::GetCustomFilter() {
     return this.customFilter
 }
 
 
 // TODO
-function TraceGettings::EnablePortalTracing() {
+function TraceSettings::EnablePortalTracing() {
     this.portalTracing = true
 }
 
-function TraceGettings::DisablePortalTracing() {
+function TraceSettings::DisablePortalTracing() {
     this.portalTracing = false
 }
 
-function TraceGettings::TogglePortalTracing() {
+function TraceSettings::TogglePortalTracing() {
     this.portalTracing = !this.portalTracing
 }
 
 
 // TODO
-function TraceGettings::_toArrayLib(array) {
+function TraceSettings::_toArrayLib(array) {
     if(typeof array == "array")
         return arrayLib(array)
     return array
