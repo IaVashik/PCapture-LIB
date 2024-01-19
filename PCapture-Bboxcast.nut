@@ -32,7 +32,7 @@ if("bboxcast" in getroottable()) {
     hitent = null;
     surfaceNormal = null;
 
-    PortalFound = [];
+    // PortalFound = [];
 
     /*
     * Constructor.
@@ -48,7 +48,7 @@ if("bboxcast" in getroottable()) {
         this.ignoreEnts = ignoreEnts
         this.settings = settings
 
-        local result = this.Trace(startpos, endpos, ignoreEnts)
+        local result = settings.portalTracing ? this.tryTeleportTrace(startpos, endpos, ignoreEnts) : this.Trace(startpos, endpos, ignoreEnts)
         this.hitpos = result.hit
         this.hitent = result.ent
     }
