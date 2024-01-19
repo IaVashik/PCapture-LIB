@@ -1,6 +1,6 @@
 IncludeScript("pcapture-lib/PCapture-Lib.nut")
 
-function assertEq(a, b) {
+::assertEq <- function(a, b) {
     if (a != b) {
         return dev.error("TEST ERROR: Expected `" + b + "` but got `" + a + "`")
     }
