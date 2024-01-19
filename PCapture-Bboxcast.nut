@@ -25,7 +25,7 @@ if("bboxcast" in getroottable()) {
 ::bboxcast <- class {
     startpos = null;
     endpos = null;
-    ignoreEnt = null;
+    ignoreEnts = null;
     settings = null;
 
     hitpos = null;
@@ -39,16 +39,16 @@ if("bboxcast" in getroottable()) {
     *
     * @param {Vector} startpos - Start position.
     * @param {Vector} endpos - End position.
-    * @param {CBaseEntity|pcapEntity|array|arrayLib} ignoreEnt - Entity to ignore. 
+    * @param {CBaseEntity|pcapEntity|array|arrayLib} ignoreEnts - Entity to ignore. 
     * @param {object} settings - Trace settings.
     */
-    constructor(startpos, endpos, ignoreEnt = null, settings = defaultSettings) {
+    constructor(startpos, endpos, ignoreEnts = null, settings = defaultSettings) {
         this.startpos = startpos;
         this.endpos = endpos;
-        this.ignoreEnt = ignoreEnt
+        this.ignoreEnts = ignoreEnts
         this.settings = settings
 
-        local result = this.Trace(startpos, endpos, ignoreEnt)
+        local result = this.Trace(startpos, endpos, ignoreEnts)
         this.hitpos = result.hit
         this.hitent = result.ent
     }
@@ -95,7 +95,7 @@ if("bboxcast" in getroottable()) {
     * @returns {Entity|array} Ignored entities.
     */
     function GetIngoreEntities() {
-        return ignoreEnt
+        return ignoreEnts
     }
 
     /*
@@ -168,8 +168,8 @@ if("bboxcast" in getroottable()) {
                 priorityClass = [this.GetEntity().GetClassname()],
                 ErrorCoefficient = 3000,
             }
-            intersectionPoint1 = this.Trace(newStart1, newStart1 + dir * 8000, this.ignoreEnt).hit
-            intersectionPoint2 = this.Trace(newStart1, newStart2 + dir * 8000, this.ignoreEnt).hit
+            intersectionPoint1 = this.Trace(newStart1, newStart1 + dir * 8000, this.ignoreEnts).hit
+            intersectionPoint2 = this.Trace(newStart1, newStart2 + dir * 8000, this.ignoreEnts).hit
         }
         else {
             intersectionPoint1 = this.CheapTrace(newStart1, newStart1 + dir * 8000)
@@ -196,10 +196,10 @@ if("bboxcast" in getroottable()) {
     *
     * @param {Vector} startpos - Start position.
     * @param {Vector} endpos - End position.
-    * @param {Entity} ignoreEnt - Entity to ignore.
+    * @param {Entity} ignoreEnts - Entity to ignore.
     * @returns {object} Trace result.
     */
-    function Trace(startpos, endpos, ignoreEnt) {
+    function Trace(startpos, endpos, ignoreEnts) {
         // Get the hit position from the fast trace
         local hitpos = this.CheapTrace(startpos, endpos)
         // Calculate the distance between start and hit positions
@@ -216,7 +216,7 @@ if("bboxcast" in getroottable()) {
             // Find the entity at the ray point
             // TODO!!!
             for (local ent;ent = Entities.FindByClassnameWithin(ent, "*", rayPart, 5 * dist_coeff);) {
-                if (ent && _hitEntity(ent, ignoreEnt)) {
+                if (ent && _hitEntity(ent, ignoreEnts)) {
                     return {hit = rayPart, ent = ent}
                 }
             }
@@ -250,10 +250,10 @@ if("bboxcast" in getroottable()) {
     * Check if entity should be ignored.
     *
     * @param {Entity} ent - Entity to check.
-    * @param {Entity|array} ignoreEnt - Entities being ignored. 
+    * @param {Entity|array} ignoreEnts - Entities being ignored. 
     * @returns {boolean} True if should ignore.
     */
-    function _hitEntity(ent, ignoreEnt, note) {
+    function _hitEntity(ent, ignoreEnts, note) {
         local classname = ent.GetClassname()
 
         // todo
@@ -264,8 +264,8 @@ if("bboxcast" in getroottable()) {
         // if(settings.RunUserFilter2(ent, note))
         //     return false
 
-        if (typeof ignoreEnt == "array" || typeof ignoreEnt == "arrayLib") { // todo
-            foreach (mask in ignoreEnt) {
+        if (typeof ignoreEnts == "array" || typeof ignoreEnts == "arrayLib") { // todo
+            foreach (mask in ignoreEnts) {
                 if(typeof mask == "pcapEntity")
                     mask = mask.CBaseEntity
                 if (mask == ent) {
@@ -273,7 +273,7 @@ if("bboxcast" in getroottable()) {
                 }
             }
         } 
-        else if (ent == ignoreEnt) {
+        else if (ent == ignoreEnts) {
             return false;
         }
 
@@ -311,46 +311,42 @@ if("bboxcast" in getroottable()) {
 * Perform trace from player's eyes.
 *
 * @param {float} distance - Trace distance.
-* @param {Entity} ignoreEnt - Entity to ignore.  
+* @param {Entity} ignoreEnts - Entity to ignore.  
 * @param {object} settings - Trace settings.
 * @param {Entity} player - Player entity.
 * @returns {bboxcast} Resulting trace. 
 */
-function bboxcast::TracePlayerEyes(distance, ignoreEnt = null, settings = ::defaultSettings, player = null) {
+function bboxcast::TracePlayerEyes(distance, ignoreEnts = null, settings = ::defaultSettings, player = null) {
     // Get the player's eye position and forward direction
     if(player == null) 
         player = GetPlayerEx()
     if(!player) 
         return bboxcast(Vector(), Vector())
     if(typeof player != "pcapEntity") 
-        player = entLib.FromEntity(player)
-    
-    local eyePointEntity = player.GetUserData("Eye")
-    local eyePosition = eyePointEntity.GetOrigin()
-    local eyeDirection = eyePointEntity.GetForwardVector()
+        player = pcapPlayer(player)
 
     // Calculate the start and end positions of the trace
-    local startpos = eyePosition
-    local endpos = eyePosition + eyeDirection * distance
+    local startpos = player.EyePosition()
+    local endpos = startpos + player.EyeForwardVector() * distance
 
     // Check if any entities should be ignored during the trace
-    if (ignoreEnt) {
-        // If ignoreEnt is an array, append the player entity to it
-        if (type(ignoreEnt) == "array" || typeof ignoreEnt == "arrayLib") {
-            ignoreEnt.append(player)
+    if (ignoreEnts) {
+        // If ignoreEnts is an array, append the player entity to it
+        if (typeof ignoreEnts == "array" || typeof ignoreEnts == "arrayLib") {
+            ignoreEnts.append(player)
         }
-        // If ignoreEnt is a single entity, create a new array with both the player and ignoreEnt
+        // If ignoreEnts is a single entity, create a new array with both the player and ignoreEnts
         else {
-            ignoreEnt = [player, ignoreEnt]
+            ignoreEnts = [player, ignoreEnts]
         }
     }
-    // If no ignoreEnt is provided, ignore the player only
+    // If no ignoreEnts is provided, ignore the player only
     else {
-        ignoreEnt = player
+        ignoreEnts = player
     }
 
     // Perform the bboxcast trace and return the trace result
-    return bboxcast(startpos, endpos, ignoreEnt, settings)
+    return bboxcast(startpos, endpos, ignoreEnts, settings)
 }
 
 
