@@ -239,3 +239,8 @@
         return table[key]
     return defaultValue
 }
+
+
+::GetDist <- function(vec1, vec2) {
+    return (vec2 - vec1).Length()
+}
