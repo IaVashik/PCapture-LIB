@@ -216,7 +216,7 @@ if("bboxcast" in getroottable()) {
             // Find the entity at the ray point
             // TODO!!!
             for (local ent;ent = Entities.FindByClassnameWithin(ent, "*", rayPart, 5 * dist_coeff);) {
-                if (ent && _isNotIgnored(ent, ignoreEnt)) {
+                if (ent && _hitEntity(ent, ignoreEnt)) {
                     return {hit = rayPart, ent = ent}
                 }
             }
@@ -233,7 +233,7 @@ if("bboxcast" in getroottable()) {
     * @returns {boolean} True if priority.
     */
     function _isPriorityEntity(entityClass) {
-        return traceSettings.priorityClass.find(entityClass)
+        return settings.GetPriorityClass().find(entityClass) // todo!
     }
 
     /* 
@@ -243,7 +243,7 @@ if("bboxcast" in getroottable()) {
     * @returns {boolean} True if ignored.
     */
     function _isIgnoredEntity(entityClass) {
-        return traceSettings.ignoreClass.find(entityClass) && !_isPriorityEntity(entityClass)
+        return settings.GetIgnoreClass().find(entityClass)
     }
 
     /*
@@ -253,39 +253,41 @@ if("bboxcast" in getroottable()) {
     * @param {Entity|array} ignoreEnt - Entities being ignored. 
     * @returns {boolean} True if should ignore.
     */
+    function _hitEntity(ent, ignoreEnt, note) {
+        local classname = ent.GetClassname()
 
-     UUUUUUUUUUUUUUGHHHHH FUCKING FUNC
-    // function _isNotIgnored(ent, ignoreEnt) {
-    //     local classname = ent.GetClassname()
+        // todo
+        if(settings.RunUserFilter(ent, note))
+            return true
 
-    //     // todo
-    //     if(traceSettings.customFilter && traceSettings.customFilter(ent))
-    //         return true
+        // todo
+        // if(settings.RunUserFilter2(ent, note))
+        //     return false
 
-    //     if (typeof ignoreEnt == "array" || typeof ignoreEnt == "arrayLib") { // todo
-    //         foreach (mask in ignoreEnt) {
-    //             if(typeof mask == "pcapEntity")
-    //                 mask = mask.CBaseEntity
-    //             if (mask == ent) {
-    //                 return false;
-    //             }
-    //         }
-    //     } 
-    //     else if (ent == ignoreEnt) {
-    //         return true;
-    //     }
+        if (typeof ignoreEnt == "array" || typeof ignoreEnt == "arrayLib") { // todo
+            foreach (mask in ignoreEnt) {
+                if(typeof mask == "pcapEntity")
+                    mask = mask.CBaseEntity
+                if (mask == ent) {
+                    return false;
+                }
+            }
+        } 
+        else if (ent == ignoreEnt) {
+            return false;
+        }
 
-    //     if (_isIgnoredEntity(classname)) {
-    //         return false
-    //     }
-    //     else {
-    //         local classType = split(classname, "_")[0] + "_"
-    //         if(_isIgnoredEntity(classType))
-    //             return false
-    //     }
+        if (_isIgnoredEntity(classname) && !_isPriorityEntity(classname)) {
+            return false
+        }
+        else {  //! critical todo
+            local classType = split(classname, "_")[0] + "_"
+            if(_isIgnoredEntity(classType) && !_isPriorityEntity(classname))
+                return false
+        }
 
-    //     return false
-    // }
+        return true
+    }
 
     // Calculate the distance between two points // todo
     function _GetDist(start, end) {
