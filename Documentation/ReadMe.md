@@ -191,7 +191,7 @@ The PCapture-bboxcast library allows rays to hit entities by using their boundin
 
 | Name | Usage | Description |
 |-|-|-|
-| bboxcast | bboxcast(Vector startpos, Vector endpos, Entity&#124;arrays ignoreEnt = null, table settings = ::defaultSettings) | Create bboxcast instance. |
+| bboxcast | bboxcast(Vector startpos, Vector endpos, Entity&#124;arrays ignoreEnts = null, table settings = ::defaultSettings) | Create bboxcast instance. |
 | GetStartPos | Vector bboxcast::GetStartPos() | Get the starting position. |
 | GetEndPos | Vector bboxcast::GetEndPos() | Get the ending position. |
 | GetHitpos | Vector bboxcast::GetHitpos() | Get the hit position. | 
