@@ -319,6 +319,14 @@ if("entLib" in getroottable()) {
         this.SetKeyValue("targetname", name)
     }
 
+    /* Sets the Unique targetname of the entity.
+    *
+    * @param {string} prefix - The prefix to be set.
+    */
+    function SetUniqueName(prefix = "a") {
+        this.SetKeyValue("targetname", prefix + UniqueString())
+    }
+
 
     /* Sets the parent of the entity.
     *
