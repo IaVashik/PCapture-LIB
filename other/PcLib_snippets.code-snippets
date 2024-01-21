@@ -6,13 +6,6 @@
 		],
 		"description": "Creates a delay before executing the specified script."
 	},
-	"delay": {
-		"prefix": "delay",
-		"body": [
-			"RunScriptCode.delay(${1:script}, ${2:delay}, ${3:activator}, ${4:caller})"
-		],
-		"description": "Creates a delay before executing the specified script."
-	},
 	"recursive": {
 		"prefix": "recursive",
 		"body": [
@@ -748,6 +741,9 @@
 		],
 		"description": "Convert the array to a table representation. Optionally recreate the table if it already exists. Returns the table representation."
 	},
+
+	//todo: Make  BBoxCast snippets when the documentation becomes good
+
 	"AlphaTransition": {
 		"prefix": "AlphaTransition",
 		"body": [
@@ -782,5 +778,47 @@
 		"animate.AnglesTransitionByTime(${1:entity}, ${2:startAngles}, ${3:endAngles}, ${4:time}, ${5:eventSettings})"
 		],
 		"description": "Changes angles of entities from the start angles to the end angles over a specified time."
+	},
+	"FrameTime": {
+		"prefix": "FrameTime",
+		"body": [
+		"FrameTime()"
+		],
+		"description": "Limits frametime to avoid zero values, providing a default if zero."
+	},
+	"EntFireByHandle": {
+		"prefix": "EntFireByHandle",
+		"body": [
+		"EntFireByHandle(${1:target}, ${2:action}, ${3:value}, ${4:delay}, ${5:activator}, ${6:caller})"
+		],
+		"description": "Wrapper to handle PCapLib objects with EntFireByHandle."
+	},
+	"GetPlayerEx": {
+		"prefix": "GetPlayerEx",
+		"body": [
+		"GetPlayerEx(${1:index})"
+		],
+		"description": "Retrieves a player entity with extended functionality."
+	},
+	"EyePosition": {
+		"prefix": "EyePosition",
+		"body": [
+		"pcapPlayer.EyePosition()"
+		],
+		"description": "Gets the eye position of the player entity."
+	},
+	"EyeAngles": {
+		"prefix": "EyeAngles",
+		"body": [
+		"pcapPlayer.EyeAngles()"
+		],
+		"description": "Gets the eye angles of the player entity."
+	},
+	"EyeForwardVector": {
+		"prefix": "EyeForwardVector",
+		"body": [
+		"pcapPlayer.EyeForwardVector()"
+		],
+		"description": "Gets the forward vector from the player entity's eye position."
 	},
 }
