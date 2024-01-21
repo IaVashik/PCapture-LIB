@@ -46,16 +46,17 @@
      * the function schedules itself to run again, creating a loop that continues until you cancel the event
      *
      * @param {string|function} script - The script to be executed. Can be a function or a string containing code.
-     * @param {int|float} runDelay - The time delay between consecutive executions in seconds.
+     * @param {int|float} interval -  // TODO
+     * @param {int|float} runDelay - The time delay between consecutive executions in seconds. // TODO
      * @param {string} eventName - The name of the event used for scheduling. (optional, default="global")
      */
-    recursive = function(script, runDelay = FrameTime(), eventName = "global") {
-        local runAgain = function() : (script, runDelay, eventName) {
-            RunScriptCode.recursive(script, runDelay, eventName)
+    recursive = function(script, interval = FrameTime(), runDelay = 0, eventName = "global") {
+        local runAgain = function() : (script, interval, eventName) {
+            RunScriptCode.recursive(script, interval, 0, eventName)
         }
         
         CreateScheduleEvent(eventName, script, runDelay)
-        CreateScheduleEvent(eventName, runAgain, runDelay)
+        CreateScheduleEvent(eventName, runAgain, interval + runDelay)
     },
 
     /* Execute a script from a string.

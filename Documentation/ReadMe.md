@@ -16,10 +16,10 @@ A collection of utility functions for script execution and debugging. It's a Swi
 
 | Name | Usage | Description |
 |-|-|-|  
-| delay | void RunScriptCode::delay(script, delay, activator = null, caller = null) | Creates a delay before executing the specified script. |
-| recursive | void RunScriptCode::recursive(script, delay, eventName = "global") | Schedules the execution of a script recursively at a fixed interval. |
-| loopy | void RunScriptCode::loopy(func, delay, loop, outputs = null) | Runs func repeatedly for given loops. |
-| fromStr | void RunScriptCode::fromStr(string value) | Executes a script from a string. |
+| delay | void RunScriptCode::delay(string&#124;func script, float fireDelay, Ent activator = null, Ent caller = null) | Creates a delay before executing the specified script. |
+| recursive | void RunScriptCode::recursive(string&#124;func script, float interval = tick, float globalDelay = 0, string eventName = "global") | Schedules the execution of a script recursively at a fixed interval. |
+| loopy | void RunScriptCode::loopy(string&#124;func func, float fireDelay, int loop, string&#124;func outputs = null) | Runs func repeatedly for given loops. |
+| fromStr | void RunScriptCode::fromStr(string script) | Executes a script from a string. |
 
 
 ### dev 
@@ -27,8 +27,8 @@ A collection of utility functions for script execution and debugging. It's a Swi
 `dev` provides developer utility functions. 
 | Name | Usage | Description |
 |-|-|-|
-| DrawEntityBBox | void dev::DrawEntityBBox(entity, time) | Draws the bounding box of an entity. |
-| drawbox | void dev::drawbox(vector, color, time = 0.05) | Draws a box at the specified position. |
+| DrawEntityBBox | void dev::DrawEntityBBox(Ent entity, float time) | Draws the bounding box of an entity. |
+| drawbox | void dev::drawbox(Vector origin, Vector color, float time = 0.05) | Draws a box at the specified position. |
 | log | void dev::log(string msg) | Logs a message if developer mode is enabled. |
 | warning | void dev::warning(string msg) | Displays a warning message if developer mode is enabled. |
 | error | void dev::error(string msg) | Displays an error message if developer mode is enabled. |
@@ -71,6 +71,7 @@ Improved Entities Module. Contains A VERY LARGE number of different functions th
 | addOutput | void pcapEntity::addOutput(string output, string target, string input, string param = "", int delay = 0, int fires = -1) | Sets a outputs of the entity |
 | ConnectOutputEx | void pcapEntity::ConnectOutputEx(string&#124;function output, string script, int delay = 0, int fires = -1) | TODO |
 | SetName | void pcapEntity::SetName(string name) | Sets name (targetname) of the entity |  
+| SetUniqueName | void pcapEntity::SetUniqueName(string preifx = "") | Sets unique name (targetname) of the entity |  
 | SetParent | void pcapEntity::SetParent(string name, string&#124;CBaseEntity&#124;pcapEntity parent, int fireDelay = 0) | Sets parent entity |
 | SetCollision | void pcapEntity::SetCollision(int solid, int fireDelay = 0) | Sets collision type of the entity |
 | SetCollisionGroup | void pcapEntity::SetCollisionGroup(int collisionGroup) | Sets collision group of the entity |
@@ -137,7 +138,8 @@ Mathematical module. Contains many different functions including lerp functions,
 | rotateVector | Vector math::rotateVector(Vector vector, Vector angle) | Rotate vector by quaternion |
 | unrotateVector | Vector math::unrotateVector(Vector vector, Vector angle) | Un-rotate vector by quaternion |
 | randomVector | Vector math::randomVector(int min, int max) | Returns a randomized vector in the min to max range |
-| reflectVector | Vector math::reflectVector(Vector dir, Vector normal) | Returns a reflection vector? |
+| reflectVector | Vector math::reflectVector(Vector dir, Vector normal) | Returns a reflection vector |
+| clampVector | Vector math::clampVector(Vector dir, int min = 0, int max = 255) | Clamp vector within range |
 
 
 ## 5. [`PCapture-EventHandler`](/PCapture-EventHandler.nut)  

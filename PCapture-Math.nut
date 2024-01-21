@@ -493,5 +493,9 @@ if("math" in getroottable()) {
 
     reflectVector = function(dir, normal) {
         return dir - normal * (dir.Dot(normal) * 2)
+    },
+
+    clampVector = function(vector, min = 0, max = 255) { // todo
+        return Vector(this.clamp(vector.x, min, max), this.clamp(vector.y, min, max), this.clamp(vector.z, min, max))
     }
 }

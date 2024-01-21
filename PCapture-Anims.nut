@@ -46,10 +46,10 @@ local _GetValidEntitiy = function(entities) {
         if(entities.find("*") == null)
             return [entLib.FindByName(entities)]
         else {
-            local entities = []
+            local ents = []
             for(local ent; ent = entLib.FindByName(entities, ent);)
-                entities.append(ent)
-            return entities
+                ents.append(ent)
+            return ents
         }
     }
             
