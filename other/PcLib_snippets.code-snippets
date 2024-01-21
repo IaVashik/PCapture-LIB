@@ -217,7 +217,7 @@
 		"description": "Sets name (targetname) of the entity"
 	},
 	"SetUniqueName": {
-		"prefix": "",
+		"prefix": "SetUniqueName",
 		"body": [
 		"SetUniqueName(${1:prefix})"
 		],
@@ -747,5 +747,40 @@
 			"totable(${1:recreate})"
 		],
 		"description": "Convert the array to a table representation. Optionally recreate the table if it already exists. Returns the table representation."
+	},
+	"AlphaTransition": {
+		"prefix": "AlphaTransition",
+		"body": [
+		"animate.AlphaTransition(${1:entity}, ${2:startOpacity}, ${3:endOpacity}, ${4:time}, ${5:eventSettings})"
+		],
+		"description": "Smoothly changes the alpha value of entities from the initial value to the final value over a specified time."
+	},
+	"ColorTransition": {
+		"prefix": "ColorTransition",
+		"body": [
+		"animate.ColorTransition(${1:entity}, ${2:startColor}, ${3:endColor}, ${4:time}, ${5:eventSettings})"
+		],
+		"description": "Smoothly changes the color of entities from the start color to the end color over a specified time."
+	},
+	"PositionTransitionByTime": {
+		"prefix": "",
+		"body": [
+		"animate.PositionTransitionByTime(${1:entity}, ${2:startPos}, ${3:endPos}, ${4:time}, ${5:eventSettings})"
+		],
+		"description": "Moves entities from the start position to the end position over a specified time based on increments of time."
+	},
+	"PositionTransitionBySpeed": {
+		"prefix": "PositionTransitionBySpeed",
+		"body": [
+		"animate.PositionTransitionBySpeed(${1:entity}, ${2:startOpacity}, ${3:endOpacity}, ${4:speed}, ${5:eventSettings})"
+		],
+		"description": "Moves entities from the start position to the end position over a specified time based on speed."
+	},
+	"AnglesTransitionByTime": {
+		"prefix": "AnglesTransitionByTime",
+		"body": [
+		"animate.AnglesTransitionByTime(${1:entity}, ${2:startAngles}, ${3:endAngles}, ${4:time}, ${5:eventSettings})"
+		],
+		"description": "Changes angles of entities from the start angles to the end angles over a specified time."
 	},
 }
