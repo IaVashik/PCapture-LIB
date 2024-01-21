@@ -216,6 +216,13 @@
 		],
 		"description": "Sets name (targetname) of the entity"
 	},
+	"SetUniqueName": {
+		"prefix": "",
+		"body": [
+		"SetUniqueName(${1:prefix})"
+		],
+		"description": "Sets unique name (targetname) of the entity"
+	},
 	"SetParent": {
 		"prefix": "SetParent",
 		"body": [
@@ -742,10 +749,3 @@
 		"description": "Convert the array to a table representation. Optionally recreate the table if it already exists. Returns the table representation."
 	},
 }
-//"": {
-//		"prefix": "",
-//		"body": [
-//		"(${1:})"
-//		],
-//		"description": ""
-//	},
