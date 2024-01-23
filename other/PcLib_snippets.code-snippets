@@ -1,4 +1,5 @@
 {
+	//* PCapture-Utils
 	"delay": {
 		"prefix": "delay",
 		"body": [
@@ -97,6 +98,10 @@
 		],
 		"description": "Precaches a sound"
 	},
+
+
+	//* PCapture-Entities
+	// entLib
 	"FindByClassname": {
 		"prefix": "FindByClassname",
 		"body": [
@@ -153,6 +158,8 @@
 		],
 		"description": "Creates pcapEntities object from given entity"
 	},
+
+	// PcapEntity
 	"SetAbsAngles": {
 		"prefix": "SetAbsAngles",
 		"body": [
@@ -391,6 +398,9 @@
 		],
 		"description": "Returns the AABB vertices of the entity"
 	},
+	
+	//* PCapture-Math
+	// quaternion
 	"Quaternion.new": {
 		"prefix": "Quaternion.new",
 		"body": [
@@ -419,13 +429,6 @@
 		],
 		"description": "Performs spherical linear interpolation between quaternions"
 	},
-	"Norm": {
-		"prefix": "Norm",
-		"body": [
-			"Norm()"
-		],
-		"description": "Returns normalized quaternion"
-	},
 	"toVector": {
 		"prefix": "toVector",
 		"body": [
@@ -433,20 +436,7 @@
 		],
 		"description": "Converts quaternion to Euler angles"
 	},
-	"IsValid": {
-		"prefix": "IsValid",
-		"body": [
-			"IsValid()"
-		],
-		"description": "Checks if the pcapEntity/quaternion is valid"
-	},
-	"get_table": {
-		"prefix": "get_table",
-		"body": [
-			"get_table()"
-		],
-		"description": "Gets the quaternion as a table"
-	},
+	// lerps
 	"lerp.int": {
 		"prefix": "lerp.int",
 		"body": [
@@ -545,6 +535,8 @@
 		],
 		"description": "Returns a randomized vector in the min to max range"
 	},
+
+	//* PCapture-EventHandler
 	"CreateScheduleEvent": {
 		"prefix": "CreateScheduleEvent",
 		"body": [
@@ -580,15 +572,10 @@
 		],
 		"description": "Returns the nearest note of the event if it exists"
 	},
-	"constructor": {
-		"prefix": "constructor",
-		"body": [
-			"constructor${1:array})"
-		],
-		"description": "Constructor. Initializes the array with the provided initial array."
-	},
-	"new": {
-		"prefix": "new",
+
+	//* PCapture-Arrays
+	"newArraylib": {
+		"prefix": "arrayLib.new",
 		"body": [
 			"arrayLib.new(${1:eventName})"
 		],
@@ -742,8 +729,10 @@
 		"description": "Convert the array to a table representation. Optionally recreate the table if it already exists. Returns the table representation."
 	},
 
+	//* PCapture-Bboxcast
 	//todo: Make  BBoxCast snippets when the documentation becomes good
 
+	//* PCapture-Anims
 	"AlphaTransition": {
 		"prefix": "AlphaTransition",
 		"body": [
@@ -779,6 +768,8 @@
 		],
 		"description": "Changes angles of entities from the start angles to the end angles over a specified time."
 	},
+
+	//* PCapture-Improvements
 	"FrameTime": {
 		"prefix": "FrameTime",
 		"body": [
@@ -803,21 +794,21 @@
 	"EyePosition": {
 		"prefix": "EyePosition",
 		"body": [
-		"pcapPlayer.EyePosition()"
+		"EyePosition()"
 		],
 		"description": "Gets the eye position of the player entity."
 	},
 	"EyeAngles": {
 		"prefix": "EyeAngles",
 		"body": [
-		"pcapPlayer.EyeAngles()"
+		"EyeAngles()"
 		],
 		"description": "Gets the eye angles of the player entity."
 	},
 	"EyeForwardVector": {
 		"prefix": "EyeForwardVector",
 		"body": [
-		"pcapPlayer.EyeForwardVector()"
+		"EyeForwardVector()"
 		],
 		"description": "Gets the forward vector from the player entity's eye position."
 	},
