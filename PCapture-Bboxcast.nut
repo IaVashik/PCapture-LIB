@@ -45,13 +45,14 @@ IncludeScript("pcapture-lib/Bboxcast/BBoxDisabler")
     * @param {CBaseEntity|pcapEntity|array|arrayLib} ignoreEnts - Entity to ignore. 
     * @param {object} settings - Trace settings.
     */
-    constructor(startpos, endpos, ignoreEnts = null, settings = defaultSettings, note) {
+    constructor(startpos, endpos, ignoreEnts = null, settings = defaultSettings, note = null) {
         this.startpos = startpos;
         this.endpos = endpos;
         this.ignoreEnts = ignoreEnts
         this.settings = settings
 
-        local result = settings.portalTracing ? this.portalTrace(startpos, endpos, ignoreEnts, note) : this.Trace(startpos, endpos, ignoreEnts, note)
+        // local result = settings.portalTracing ? this.portalTrace(startpos, endpos, ignoreEnts, note) : this.Trace(startpos, endpos, ignoreEnts, note)
+        local result = this.Trace(startpos, endpos, ignoreEnts, note)
         this.hitpos = result.hit
         this.hitent = result.ent
     }
@@ -143,7 +144,7 @@ IncludeScript("pcapture-lib/Bboxcast/BBoxDisabler")
     //TODO 
 
     function CheapTrace(startpos, endpos) Vector
-    function Trace(startpos, endpos, ignoreEnts) table
+    function Trace(startpos, endpos, ignoreEnts, note) table
     function _hitEntity(ent, ignoreEnts, note) bool
     function _isIgnoredEntity(entityClass) bool
     function _isPriorityEntity(entityClass) bool
@@ -154,6 +155,6 @@ IncludeScript("pcapture-lib/Bboxcast/BBoxDisabler")
 }
 
 IncludeScript("pcapture-lib/Bboxcast/Trace")
-IncludeScript("pcapture-lib/Bboxcast/PortalCastings")
+IncludeScript("pcapture-lib/Bboxcast/PortalCasting")
 IncludeScript("pcapture-lib/Bboxcast/ImpactNormal")
 IncludeScript("pcapture-lib/Bboxcast/Presets")

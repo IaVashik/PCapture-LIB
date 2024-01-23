@@ -89,7 +89,7 @@ for(local player; player = entLib.FindByClassname("player", player);) {
     )
 
     local eyeName = "eyePoint" + UniqueString()
-    local eyePointEntity = entLib.CreateByClassname("info_target". {targetname = eyeName})
+    local eyePointEntity = entLib.CreateByClassname("info_target", {targetname = eyeName})
 
     local playerName = player.GetName() == "" ? "!player" : player.GetName()
 

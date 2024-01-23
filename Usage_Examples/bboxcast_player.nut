@@ -1,15 +1,13 @@
 IncludeScript("PCapture-Lib/pcapture-lib")
 
 // Custom settings for ignoring certain classes of entities
-customSettings <- {
-    ignoreClass = ["viewmodel", "weapon_", "info_target", "func_illusionary"]
-}
+customSettings <- TraceSettings.new({ignoreClass = ["viewmodel", "weapon_", "info_target", "func_illusionary"]})
+customSettings.EnablePortalTracing()
 
 lastEntity <- null
 
 // Loop function for continuous ray tracing
-function LoopFunction()
-{
+function LoopFunction() {
     // Perform a trace from the player's eyes with a maximum distance of 1000 units using custom settings
     local bboxTrace = bboxcast.TracePlayerEyes(1000, null, customSettings)
     dev.drawbox(bboxTrace.GetHitpos(), Vector(125, 125, 125))

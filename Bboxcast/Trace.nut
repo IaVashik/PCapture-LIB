@@ -6,7 +6,7 @@
 * @param {Entity} ignoreEnts - Entity to ignore.
 * @returns {object} Trace result.
 */
-function Trace(startpos, endpos, ignoreEnts, note) {
+function bboxcast::Trace(startpos, endpos, ignoreEnts, note) {
     // Get the hit position from the fast trace
     local hitpos = this.CheapTrace(startpos, endpos)
     // Calculate the distance between start and hit positions
@@ -39,7 +39,7 @@ function Trace(startpos, endpos, ignoreEnts, note) {
 * @param {string} entityClass - Entity class name.
 * @returns {boolean} True if priority.
 */
-function _isPriorityEntity(entityClass) {
+function bboxcast::_isPriorityEntity(entityClass) {
     return settings.GetPriorityClass().find(entityClass) // todo!
 }
 
@@ -49,7 +49,7 @@ function _isPriorityEntity(entityClass) {
 * @param {string} entityClass - Entity class name.
 * @returns {boolean} True if ignored.
 */
-function _isIgnoredEntity(entityClass) {
+function bboxcast::_isIgnoredEntity(entityClass) {
     return settings.GetIgnoreClass().find(entityClass)
 }
 
@@ -60,11 +60,11 @@ function _isIgnoredEntity(entityClass) {
 * @param {Entity|array} ignoreEnts - Entities being ignored. 
 * @returns {boolean} True if should ignore.
 */
-function _hitEntity(ent, ignoreEnts, note) {
+function bboxcast::_hitEntity(ent, ignoreEnts, note) {
     local classname = ent.GetClassname()
 
     // todo
-    if(settings.RunUserFilter(ent, note))
+    if(settings.customFilter && settings.customFilter(ent, note))
         return true
 
     // todo

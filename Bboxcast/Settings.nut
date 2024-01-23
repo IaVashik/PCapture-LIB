@@ -31,17 +31,19 @@ class TraceSettings {
     function DisablePortalTracing() null
     function TogglePortalTracing() null
 
-    function _toArrayLib(array)
+    function RunUserFilter() bool
+
+    function _toArrayLib(array) arrayLib
 }
 
 
 // TODO
-function TraceSettings::new(settings) {
-    local _ignoreClass = this._toArrayLib(GetFromTable("ignoreClass", this.ignoreClass))
-    local _priorityClass = this._toArrayLib(GetFromTable("priorityClass", this.priorityClass))
-    local _errorCoefficient = GetFromTable("errorCoefficient", this.errorCoefficient)
-    local _customFilter = GetFromTable("customFilter", this.customFilter)
-    local _portalTracing = GetFromTable("portalTracing", this.portalTracing)
+function TraceSettings::new(settings = {}) {
+    local _ignoreClass = toArrayLib(GetFromTable(settings, "ignoreClass", TraceSettings.ignoreClass))
+    local _priorityClass = toArrayLib(GetFromTable(settings, "priorityClass", TraceSettings.priorityClass))
+    local _errorCoefficient = GetFromTable(settings, "errorCoefficient", TraceSettings.errorCoefficient)
+    local _customFilter = GetFromTable(settings, "customFilter", TraceSettings.customFilter)
+    local _portalTracing = GetFromTable(settings, "portalTracing", TraceSettings.portalTracing)
 
     return TraceSettings(_ignoreClass, _priorityClass, _errorCoefficient, _customFilter, _portalTracing)
 }
@@ -98,7 +100,7 @@ function TraceSettings::TogglePortalTracing() {
 
 
 // TODO
-function TraceSettings::_toArrayLib(array) {
+::toArrayLib <- function(array) {
     if(typeof array == "array")
         return arrayLib(array)
     return array
