@@ -177,19 +177,19 @@ if("bboxcast" in getroottable()) {
         // Perform two additional traces to find intersection points
         local intersectionPoint1
         local intersectionPoint2
-        // if(this.GetEntity()) {
-        //     local normalSetting = {
-        //         ignoreClass = ["*"],
-        //         priorityClass = [this.GetEntity().GetClassname()],
-        //         ErrorCoefficient = 3000,
-        //     }
-        //     intersectionPoint1 = bboxcast(newStart1, newStart1 + dir * 8000, this.ignoreEnt, normalSetting).GetHitpos()
-        //     intersectionPoint2 = bboxcast(newStart2, newStart2 + dir * 8000, this.ignoreEnt, normalSetting).GetHitpos()
-        // }
-        // else {
+        if(this.GetEntity()) {
+            local normalSetting = {
+                ignoreClass = ["*"],
+                priorityClass = [this.GetEntity().GetClassname()],
+                ErrorCoefficient = 3000,
+            }
+            intersectionPoint1 = bboxcast(newStart1, newStart1 + dir * 8000, this.ignoreEnt, normalSetting).GetHitpos()
+            intersectionPoint2 = bboxcast(newStart2, newStart2 + dir * 8000, this.ignoreEnt, normalSetting).GetHitpos()
+        }
+        else {
             intersectionPoint1 = _TraceEnd(newStart1, newStart1 + dir * 8000)
             intersectionPoint2 = _TraceEnd(newStart2, newStart2 + dir * 8000)
-        // }
+        }
 
         // Calculate two edge vectors from intersection point to hitpos
         local edge1 = intersectionPoint1 - intersectionPoint;
@@ -275,7 +275,7 @@ if("bboxcast" in getroottable()) {
         local classname = ent.GetClassname()
 
         if(traceSettings.customFilter && traceSettings.customFilter(ent, note))
-            return false
+            return true
 
         if (typeof ignoreEnt == "array" || typeof ignoreEnt == "arrayLib") {
             foreach (mask in ignoreEnt) {

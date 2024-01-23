@@ -73,8 +73,8 @@ local _GetValidEntitiy = function(entities) {
         EventSetting = {eventName = null, globalDelay = 0, note = null, outputs = null}) : (_GetValidEventName, _GetValidEntitiy) {
 
         entities = _GetValidEntitiy(entities)
-        if(entities[0].GetAlpha() == endOpacity)
-            return 
+        // if(entities[0].GetAlpha() == endOpacity) // todo bruh
+        //     return 
         
         local eventName = _GetValidEventName(entities, EventSetting)
         local globalDelay = "globalDelay" in EventSetting ? EventSetting.globalDelay : 0
