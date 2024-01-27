@@ -10,11 +10,11 @@ function bboxcast::Trace(startpos, endpos, ignoreEnts, note) {
     // Get the hit position from the fast trace
     local hitpos = this.CheapTrace(startpos, endpos)
     // Calculate the distance between start and hit positions
-    local dist = (hitpos - startpos).Length()
+    local dist = hitpos - startpos
     // Calculate a distance coefficient for more precise tracing based on distance and error coefficient
-    local dist_coeff = abs(dist / this.settings.GetErrorCoefficient()) + 1
+    local dist_coeff = abs(dist.Length() / this.settings.GetErrorCoefficient()) + 1
     // Calculate the number of steps based on distance and distance coefficient
-    local step = dist / 14 / dist_coeff
+    local step = dist.Length() / 14 / dist_coeff
 
     // Iterate through each step
     for (local i = 0.0; i < step; i++) {
@@ -70,7 +70,6 @@ function bboxcast::_hitEntity(ent, ignoreEnts, note) {
     // todo
     // if(settings.RunUserFilter2(ent, note))
     //     return false
-
     if (typeof ignoreEnts == "array" || typeof ignoreEnts == "arrayLib") { // todo
         foreach (mask in ignoreEnts) {
             if(typeof mask == "pcapEntity")
@@ -80,7 +79,7 @@ function bboxcast::_hitEntity(ent, ignoreEnts, note) {
             }
         }
     } 
-    else if (ent == ignoreEnts) {
+    else if (ent == ignoreEnts.CBaseEntity) {
         return false;
     }
 

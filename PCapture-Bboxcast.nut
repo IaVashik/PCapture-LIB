@@ -51,8 +51,7 @@ IncludeScript("pcapture-lib/Bboxcast/BBoxDisabler")
         this.ignoreEnts = ignoreEnts
         this.settings = settings
 
-        // local result = settings.portalTracing ? this.portalTrace(startpos, endpos, ignoreEnts, note) : this.Trace(startpos, endpos, ignoreEnts, note)
-        local result = this.Trace(startpos, endpos, ignoreEnts, note)
+        local result = settings.portalTracing ? this.portalTrace(startpos, endpos, ignoreEnts, note) : this.Trace(startpos, endpos, ignoreEnts, note)
         this.hitpos = result.hit
         this.hitent = result.ent
     }
@@ -90,7 +89,7 @@ IncludeScript("pcapture-lib/Bboxcast/BBoxDisabler")
     * @returns {pcapEntity} Hit entity. // todo docx 
     */
     function GetEntity() {
-        return this.hitent
+        return entLib.FromEntity(this.hitent)
     }
 
     /*
