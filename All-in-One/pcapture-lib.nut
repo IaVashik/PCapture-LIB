@@ -269,6 +269,9 @@ if("math" in getroottable()) {
     },
     reflectVector = function(dir, normal) {
         return dir - normal * (dir.Dot(normal) * 2)
+    },
+    clampVector = function(vector, min = 0, max = 255) { 
+        return Vector(this.clamp(vector.x, min, max), this.clamp(vector.y, min, max), this.clamp(vector.z, min, max))
     }
 }
 if("arrayLib" in getroottable()) {
@@ -439,12 +442,12 @@ if("arrayLib" in getroottable()) {
         } else if (outputs)
             this.delay(outputs, 0)
     },
-        recursive = function(script, runDelay = FrameTime(), eventName = "global") {
-        local runAgain = function() : (script, runDelay, eventName) {
-            RunScriptCode.recursive(script, runDelay, eventName)
+        recursive = function(script, interval = FrameTime(), runDelay = 0, eventName = "global") {
+        local runAgain = function() : (script, interval, eventName) {
+            RunScriptCode.recursive(script, interval, 0, eventName)
         }
         CreateScheduleEvent(eventName, script, runDelay)
-        CreateScheduleEvent(eventName, runAgain, runDelay)
+        CreateScheduleEvent(eventName, runAgain, interval + runDelay)
     },
         fromStr = function(str) {
         compilestring(str)()
@@ -682,6 +685,9 @@ if("entLib" in getroottable()) {
     }
         function SetName(name) {
         this.SetKeyValue("targetname", name)
+    }
+        function SetUniqueName(prefix = "a") {
+        this.SetKeyValue("targetname", prefix + UniqueString())
     }
         function SetParent(parentEnt, fireDelay = 0) {
         this.SetUserData("parent", parentEnt)
@@ -992,7 +998,7 @@ if("bboxcast" in getroottable()) {
     ignoreEnt = null;
     traceSettings = null;
     PortalFound = [];
-        constructor(startpos, endpos, ignoreEnt = null, note = null, settings = ::defaultSettings) {
+        constructor(startpos, endpos, ignoreEnt = null, settings = ::defaultSettings, note = null) {
         this.startpos = startpos;
         this.endpos = endpos;
         this.ignoreEnt = ignoreEnt
@@ -1011,7 +1017,10 @@ if("bboxcast" in getroottable()) {
         return hitpos
     }
         function GetEntity() {
-        return entLib.FromEntity(hitent)
+        return entLib.FromEntity(this.hitent)
+    }
+        function GetEntityClassname() {
+        return this.hitent ? this.GetEntity().GetClassname() : null 
     }
         function GetIngoreEntities() {
         return ignoreEnt
@@ -1041,8 +1050,19 @@ if("bboxcast" in getroottable()) {
         local newStart2 = this.startpos + offset2
         local intersectionPoint1
         local intersectionPoint2
+        if(this.GetEntity()) {
+            local normalSetting = {
+                ignoreClass = ["*"],
+                priorityClass = [this.GetEntity().GetClassname()],
+                ErrorCoefficient = 3000,
+            }
+            intersectionPoint1 = bboxcast(newStart1, newStart1 + dir * 8000, this.ignoreEnt, normalSetting).GetHitpos()
+            intersectionPoint2 = bboxcast(newStart2, newStart2 + dir * 8000, this.ignoreEnt, normalSetting).GetHitpos()
+        }
+        else {
             intersectionPoint1 = _TraceEnd(newStart1, newStart1 + dir * 8000)
             intersectionPoint2 = _TraceEnd(newStart2, newStart2 + dir * 8000)
+        }
         local edge1 = intersectionPoint1 - intersectionPoint;
         local edge2 = intersectionPoint2 - intersectionPoint;
         local normal = edge2.Cross(edge1)
@@ -1076,7 +1096,7 @@ if("bboxcast" in getroottable()) {
             ignoreEnt = ignoreEnt.CBaseEntity
         local classname = ent.GetClassname()
         if(traceSettings.customFilter && traceSettings.customFilter(ent, note))
-            return false
+            return true
         if (typeof ignoreEnt == "array" || typeof ignoreEnt == "arrayLib") {
             foreach (mask in ignoreEnt) {
                 if(typeof mask == "pcapEntity")
@@ -1098,8 +1118,8 @@ if("bboxcast" in getroottable()) {
                 return false
             }
             else {
-                local classType = split(classname, "_")[0] + "_"
-                if(_isIgnoredEntity(classType))
+                local classType = split(classname, "_")[0] + "_"    
+                if(_isIgnoredEntity(classType) && !_isPriorityEntity(classname))
                     return false
             }
         }
@@ -1136,7 +1156,7 @@ if("bboxcast" in getroottable()) {
         return "Bboxcast 2.0 | \nstartpos: " + startpos + ", \nendpos: " + endpos + ", \nhitpos: " + hitpos + ", \nent: " + hitent + "\n========================================================="
     }
 }
-function bboxcast::TracePlayerEyes(distance, ignoreEnt = null, note = null, settings = ::defaultSettings, player = null) {
+function bboxcast::TracePlayerEyes(distance, ignoreEnt = null, settings = ::defaultSettings, player = null, note = null) {
     if(player == null) 
         player = GetPlayerEx()
     if(!player) 
@@ -1159,7 +1179,7 @@ function bboxcast::TracePlayerEyes(distance, ignoreEnt = null, note = null, sett
     else {
         ignoreEnt = player
     }
-    return bboxcast(startpos, endpos, ignoreEnt, note, settings)
+    return bboxcast(startpos, endpos, ignoreEnt, settings, note)
 }
 __disabled_entity <- {}
 function CorrectDisable(ent = null) : (__disabled_entity) {
@@ -1219,10 +1239,10 @@ local _GetValidEntitiy = function(entities) {
         if(entities.find("*") == null)
             return [entLib.FindByName(entities)]
         else {
-            local entities = []
+            local ents = []
             for(local ent; ent = entLib.FindByName(entities, ent);)
-                entities.append(ent)
-            return entities
+                ents.append(ent)
+            return ents
         }
     }
     if (typeof entities != "pcapEntity")
@@ -1233,8 +1253,6 @@ local _GetValidEntitiy = function(entities) {
         AlphaTransition = function(entities, startOpacity, endOpacity, time, 
         EventSetting = {eventName = null, globalDelay = 0, note = null, outputs = null}) : (_GetValidEventName, _GetValidEntitiy) {
         entities = _GetValidEntitiy(entities)
-        if(entities[0].GetAlpha() == endOpacity)
-            return 
         local eventName = _GetValidEventName(entities, EventSetting)
         local globalDelay = "globalDelay" in EventSetting ? EventSetting.globalDelay : 0
         local note = "note" in EventSetting ? EventSetting.note : null
