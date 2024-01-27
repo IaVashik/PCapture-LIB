@@ -493,5 +493,10 @@ if("math" in getroottable()) {
 
     reflectVector = function(dir, normal) {
         return dir - normal * (dir.Dot(normal) * 2)
+    },
+
+    resizeVector = function(vector, element) {
+        local tx = sqrt((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z))
+        return vector * (element / tx)
     }
 }
