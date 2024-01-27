@@ -2,6 +2,9 @@
 
 This module provides an improved interface for interacting with entities.
 
+## Class entLib
+
+
 ### CreateByClassname(classname, keyvalues)
 
 Creates an entity by classname. 
@@ -150,10 +153,10 @@ Represents an enhanced entity object.
 
 ### SetAbsAngles(angles) 
 
-Sets absolute rotation angles of the entity.
+Sets rotation angles(Vector) of the entity.
 
 ```
-ent.SetAbsAngles(Vector(45, 0, 0))
+ent.SetAbsAngles(Vector(45, 0, 0)) // diffirence: ent.SetAngles(45, 0, 0)
 ```
 
 Rotates entity to have pitch of 45 degrees.
@@ -229,7 +232,7 @@ Sets the targetname to "box01".
 - key - Key
 - value - Value
 
-### addOutput(output, target, input, param, delay, fires)
+### ddOutput(outputName, target, input, param = "", delay = 0, fires = -1) 
 
 Sets outputs for the entity. 
 
@@ -242,9 +245,9 @@ Kills the entity 0.5 seconds after taking damage.
 - output - Output name  
 - target - Target name
 - input - Input name
-- param - Parameter
-- delay - Delay 
-- fires - Fire count
+- param - Parameter (optional)
+- delay - Delay (optional)
+- fires - Fire count (optional)
 
 
 ### SetName(name) 
@@ -290,7 +293,7 @@ Makes entity non-solid immediately.
 Sets collision group of the entity.
 
 ```
-ent.SetCollisionGroup(COLLISION_GROUP_WEAPON)
+ent.SetCollisionGroup(COLLISION_GROUP_WEAPON) // todo
 ```
 
 Sets collision group to COLLISION_GROUP_WEAPON.
@@ -329,6 +332,7 @@ Sets color of the entity.
 
 ```
 ent.SetColor("0 255 0", 0)
+ent.SetColor(Vector(125, 125, 125))
 ```
 
 Sets entity color to green instantly.
@@ -379,7 +383,7 @@ Sets entity to spawn asleep.
 Sets model scale of the entity.
 
 ```
-ent.SetModelScale(2, 0)
+ent.SetModelScale(2)
 ``` 
 
 Scales entity model to twice size instantly.
@@ -404,7 +408,7 @@ Moves entity center to <0, 0, 100>.
 Sets bounding box of the entity. 
 
 ```
-ent.SetBBox("-16 -16 -18", "16 16 18")
+ent.SetBBox(Vector(-16 -16 -18), (16 16 18))
 ```
 
 Resizes entity bounds.
@@ -430,7 +434,7 @@ Saves a table associated with the entity.
 Gets a stored value by name.
 
 ```
-local val = ent.GetUserData("example")
+local val = ent.GetUserData("example") // outputs: {a = 1, b = 2}
 ``` 
 
 Retrieves previously stored data.
@@ -461,13 +465,13 @@ Returns {min, max, center} table.
 
 ### GetIndex()
 
-Gets entity index.
+Gets edicts index.
 
 ```
 local index = ent.GetIndex()
 ```
 
-Returns entity index number.
+Returns entity *edicts index* number.
 
 ### GetKeyValue(key)
 
@@ -481,7 +485,7 @@ Retrieves "targetname" keyvalue.
 
 - key - Key name
 
-Returns value or null.
+Returns value or null. // TODO!!!
 
 ### GetSpawnflags()
 
@@ -520,29 +524,6 @@ Gets name prefix.
 ### GetNamePostfix() 
 
 Gets name postfix.
-
-### CreateAABB(stat)
-
-Gets oriented bounding box face.
-
-```
-local min = ent.CreateAABB(0)
-``` 
-
-Returns minimum face vector.
-
-- stat - Face number 0-7
-
-### getBBoxPoints() 
-
-Gets bounding box vertices.
-
-```
-local verts = ent.getBBoxPoints()
-```
-
-Returns array of 8 vertices.
-
 
 #### And all the other methods from CBaseEntity
 
