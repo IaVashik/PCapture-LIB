@@ -171,78 +171,66 @@ Returns interpolated value.
 
 ## Other Math Functions
 
-### min(vargs...)
+### math.min(vargs...)
 
 Returns the minimum value.
 
 ```
-local min = min(10, 5, 20) // Outputs: 5
+local min = math.min(10, 5, 20) // Outputs: 5
 ```
 
 - vargs - Numbers to compare
 
-### max(vargs...)
+### math.max(vargs...)
 
 Returns the maximum value.
 
 ```
-local max = max(10, 5, 20) // Outputs: 20
+local max = math.max(10, 5, 20) // Outputs: 20
 ```
 
 - vargs - Numbers to compare
 
-### clamp(value, min, max) 
+### math.clamp(value, min, max) 
 
 Clamps value within min/max range. 
 
 ```
-local result = clamp(15, 10, 20) // Outputs: 15 
+local result = math.clamp(15, 10, 20) // Outputs: 15 
+local result2 = math.clamp(15, 20, 30) // Outputs: 20 
 ```
 
 - value - Value to clamp
 - min - Minimum value
 - max - Maximum value
 
-### roundVector(vec, precision)
-
-Rounds vector components to precision.
-
-```
-local result = roundVector(Vector(1.234, 5.678, 9.101), 100) // Outputs: Vector(1.23, 5.68, 9.10)
-```
-
-- vec - Vector to round 
-- precision - Rounding precision 
-
-Rounds to two decimal places.
-
-### Sign(x)
+### math.Sign(x)
 
 Gets sign of number (-1, 0, or 1).
 
 ```  
-local sign = Sign(-5) // Outputs: -1
+local sign = math.Sign(-5) // Outputs: -1
 ```
 
 - x - Number to get sign of
 
-### copysign(value, sign)
+### math.copysign(value, sign)
 
 Copies sign of value. 
 
 ```
-local result = copysign(5, -1) // Outputs: -5
+local result = math.copysign(5, -1) // Outputs: -5
 ```
 
 - value - Value to copy sign to
 - sign - Sign to copy
 
-### RemapVal(val, A, B, C, D)
+### math.RemapVal(val, A, B, C, D)
 
 Remaps value from [A, B] range to [C, D] range.
 
 ```
-local result = RemapVal(25, 0, 50, 0, 100) // Outputs: 50
+local result = math.RemapVal(25, 0, 50, 0, 100) // Outputs: 50
 ```
 
 - val - Value to remap 
@@ -251,29 +239,42 @@ local result = RemapVal(25, 0, 50, 0, 100) // Outputs: 50
 - C - Start of output range
 - D - End of output range
 
-### rotateVector(vec, angle) 
+### math.roundVector(vec, precision)
+
+Rounds vector components to precision.
+
+```
+local result = math.roundVector(Vector(1.234, 5.678, 9.101), 90) // Outputs: Vector(1.23, 5.68, 9.10)
+```
+
+- vec - Vector to round 
+- precision - Rounding precision 
+
+Rounds to two decimal places.
+
+### math.rotateVector(vec, angle) 
 
 Rotates vector by quaternion from angles. 
 
 ```
-local rotated = rotateVector(Vector(1, 0, 0), Vector(0, 45, 0)) // Outputs: Rotated vector
+local rotated = math.rotateVector(Vector(1, 0, 0), Vector(0, 45, 0)) // Outputs: Rotated vector
 ```
 
 - vec - Vector to rotate
 - angle - Rotation angles 
 
-### unrotateVector(vec, angle)
+### math.unrotateVector(vec, angle)
 
 Unrotates vector by quaternion from angles.
 
 ```
-local unrotated = unrotateVector(rotated, Vector(0, 45, 0)) // Outputs: Original vector 
+local unrotated = math.unrotateVector(rotated, Vector(0, 45, 0)) // Outputs: Original vector 
 ```
 
 - vec - Vector to unrotate
 - angle - Rotation angles
 
-### RandomVector(min, max) 
+### math.RandomVector(min, max) 
 
 Generates random vector within min/max range. 
 

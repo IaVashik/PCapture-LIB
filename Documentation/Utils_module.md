@@ -109,6 +109,7 @@ Prints a formatted message to console.
 
 ```
 fprint("Hello, my name is {}", "John") // outputs "Hello, my name is John"
+fprint("Ent: {}, model: {}, health: {}", ent, ent.GetModelName(), ent.GetHealth()) // outputs: "Ent: " TODO
 ```
 
 Prints "Hello, my name is John" to the console.
