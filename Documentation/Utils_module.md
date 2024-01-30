@@ -2,11 +2,11 @@
 
 This module contains useful utilities for script execution and debugging. It's a Swiss army knife for developers working with Squirrel.
 
-### *Class* RunScriptCode
+## Class `RunScriptCode`
 
 Provides functions for executing scripts.
 
-#### delay(script, delay, activator, caller) 
+### delay(script, delay, activator = null, caller = null) 
 
 Creates a delay before executing the specified script.
 
@@ -16,13 +16,13 @@ RunScriptCode.delay("printl(\"Hello\")", 1.5) // outputs: "Hello"
 
 Outputs "Hello" to the console after 1.5 second delay.
 
-- script - The script to execute, string or function  
-- delay - The delay in seconds
-- activator - The activator entity (optional)
-- caller - The caller entity (optional)
+- `script` (string|function): The script to execute, string or function  
+- `delay` (int|float): The delay in seconds
+- `activator` (CBaseEntity|pcapEntity, *optional*): The activator entity
+- `caller` (CBaseEntity|pcapEntity, *optional*): The caller entity
 
 
-#### recursive(script, delay, eventName)
+### recursive(script, delay, eventName)
 
 Executes a script recursively at a fixed interval.
 This function schedules the provided script to run repeatedly at a specified interval. After each execution, the function schedules itself to run again, creating a loop that continues until you cancel the event.
@@ -33,15 +33,15 @@ RunScriptCode.recursive("printl(\"Hello\")", 1) // outputs "Hello" every 1 secon
 
 Recursively outputs "Hello" to console every 1 second.
 
-- script - The script to execute, string or function
-- delay - The interval between executions in seconds  
-- eventName - The event name for scheduling (default "global")
+- `script` (string|function): The script to execute, string or function
+- `delay` (int|float, *optional*): The interval between executions in seconds (default *every tick*)
+- `eventName` (string, *optional*): The event name for scheduling (default *"global"*)
 
-> **Note:**
+> **Note: **
 > To stop execution, call `cancelScheduledEvent(eventName)`
 
 
-#### loopy(func, delay, loop, outputs)
+### loopy(func, delay, loop, outputs)
 
 Executes a function repeatedly for a given number of loops. 
 
@@ -51,12 +51,12 @@ RunScriptCode.loopy("printl(\"Hello\")", 1, 5) // outputs "Hello" 5 times with 1
 
 Outputs "Hello" 5 times to console with 1 second delay between prints.
 
-- func - The function to execute
-- delay - The delay between executions in seconds
-- loop - The number of loops  
-- outputs - The function to execute after all loops (optional)
+- `func` (string|function): The function to execute
+- `delay` (int|float): The delay between executions in seconds
+- `loop` (int): The number of loops  
+- `outputs` (string|function, *optional*): The function to execute after all loops (*optional*)
 
-#### fromStr(str) 
+### fromStr(str) 
 
 Executes a script from a string.
 
@@ -66,13 +66,13 @@ RunScriptCode.fromStr("printl(\"Hello World!\")") // outputs "Hello World!"
 
 Executes the given script string, printing "Hello World!".
 
-- str - The script string
+- `str` (str): The script string
 
-### *Class* dev
+## Class `dev`
 
 Provides developer utilities. 
 
-#### DrawEntityBBox(ent, time)
+### DrawEntityBBox(ent, time)
 
 Draws the bounding box of an entity. 
 
@@ -83,11 +83,11 @@ dev.DrawEntityBBox(ent, 10)
 
 Draws bounding box of "prop_physics" entity for 10 seconds.
 
-- ent - The entity
-- time - Display time in seconds
+- `ent` (CBaseEntity|pcapEntity): The entity
+- `time` (int|float): Display time in seconds
 
 
-#### drawbox(vector, color, time) 
+### drawbox(vector, color, time = 0.05) 
 
 Draws a box at the specified position.
 
@@ -97,13 +97,13 @@ dev.drawbox(Vector(0, 0, 0), "255 0 0")
 
 Draws a red box at the origin for 0.05 seconds.
 
-- vector - The position
-- color - The color as Vector or string 
-- time - Display time in seconds (default 0.05)
+- `vector` (Vector): The position
+- `color` (Vector|string): The color as Vector or string 
+- `time` (int|float, *optional*): Display time in seconds (default *0.05*)
 
 ### Other Functions 
 
-#### fprint(msg, ...)
+### fprint(msg, ...)
 
 Prints a formatted message to console.
 
@@ -114,31 +114,32 @@ fprint("Ent: {}, model: {}, health: {}", ent, ent.GetModelName(), ent.GetHealth(
 
 Prints "Hello, my name is John" to the console.
 
-- msg - The message string with `{}` placeholders
-- ... - Values to substitute into placeholders
+- `msg` (str): The message string with `{}` placeholders
+- `...` (any): Values to substitute into placeholders
 
 
-#### StrToVec(str) 
+### StrToVec(str) 
 
 Converts a string to a Vector. 
 
 ```
-local vec = StrToVec("1.0 2.5 3.2") // vec = Vector(1.0, 2.5, 3.2) 
+local vec = StrToVec("1.0 2.5 3.2") 
+// vec = Vector(1.0, 2.5, 3.2) 
 ```
 
 Converts "1.0 2.5 3.2" to Vector(1.0, 2.5, 3.2).
 
-- str - The string like "x y z"
+- `str` (str): The string like "x y z"
 
-#### GetPrefix(name)
+### GetPrefix(name)
 
 Gets the prefix of an entity name.
 
-#### GetPostfix(name)  
+### GetPostfix(name)  
 
 Gets the postfix of an entity name.
 
-#### Precache(sound_path)
+### Precache(sound_path)
 
 Precaches a sound.
 
@@ -148,4 +149,4 @@ Precache("sound/weapon_my.wav")
 
 Precaches "sound/weapon_my.wav" sound.
 
-- sound_path - Path to the sound
+- `sound_path` (string|array|arrayLib): Path to the sound
