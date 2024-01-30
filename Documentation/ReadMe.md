@@ -45,6 +45,7 @@ Other utility functions.
 | GetPostfix | string GetPostfix(string&#124;CBaseEntity name) | Gets the postfix of an entity name. |
 | Precache | string Precache(string&#124;array&#124;arrayLib sound_path) | Precaches a sound |
 
+#### [More info about *PCapture-Utils* here](Utils_module.md)
 
 ## 3. [`PCapture-Entities`](/PCapture-Entities.nut)
 
@@ -65,7 +66,7 @@ Improved Entities Module. Contains A VERY LARGE number of different functions th
 | Destroy | void pcapEntity::Destroy() | Destroys the entity |
 | Kill | void pcapEntity::Kill(int fireDelay = 0) | Kills the entity with delay |
 | Dissolve | void pcapEntity::Dissolve() | Dissolve the entity |
-| IsValid | bool pcapEntity::IsValid() | Checks if the entity is valid |
+| IsValid | bool pcapEntity::IsValUtilsid() | Checks if the entity is valid |
 | IsPlayer | bool pcapEntity::IsPlayer() | Checks if the entity is the player |
 | SetKeyValue | void pcapEntity::SetKeyValue(string key, any value) | Sets a keyvalue of the entity |
 | addOutput | void pcapEntity::addOutput(string output, string target, string input, string param = "", int delay = 0, int fires = -1) | Sets a outputs of the entity |
@@ -97,6 +98,8 @@ Improved Entities Module. Contains A VERY LARGE number of different functions th
 | GetNamePostfix | string pcapEntity::GetNamePostfix() | Returns name postfix of the entity |
 | CreateAABB | Vector pcapEntity::CreateAABB(int stat) | Returns AABB face of the entity |
 | getBBoxPoints | Array<Vector> pcapEntity::getBBoxPoints() | Returns AABB vertices of the entity |
+
+#### [More info about *PCapture-Entities* here](Entities_module.md)
 
 ## 4. [`PCapture-Math`](/PCapture-Math.nut)  
 
@@ -141,6 +144,7 @@ Mathematical module. Contains many different functions including lerp functions,
 | reflectVector | Vector math::reflectVector(Vector dir, Vector normal) | Returns a reflection vector |
 | clampVector | Vector math::clampVector(Vector dir, int min = 0, int max = 255) | Clamp vector within range |
 
+#### [More info about *PCapture-Math* here](Math_module.md)
 
 ## 5. [`PCapture-EventHandler`](/PCapture-EventHandler.nut)  
 
@@ -153,6 +157,8 @@ Improved EntFire/logic_relay/loop module. Allows you to create whole events from
 | getEventInfo | table&#124;null getEventInfo(string eventName) | Gets info for scheduled event |
 | eventIsValid | bool eventIsValid(string eventName) | Checks if event is valid |
 | getEventNote | any getEventNote(string eventName) | Returns the nearest note of the event if it exists |
+
+#### [More info about *PCapture-EventHandler* here](EventHandler_module.md)
 
 ## 6. [`PCapture-Array`](/PCapture-Arrays.nut ) 
 
@@ -185,8 +191,10 @@ Improved arrays module. Contains easy output in the console and additional featu
 | join | string join(string joinstr = "") | Join the array into a string using the specified separator string. Returns the joined string. |
 | totable | table totable(bool recreate = false) | Convert the array to a table representation. Optionally recreate the table if it already exists. Returns the table representation. |
 
-## 7. [`PCapture-BBoxCast`](/PCapture-Bboxcast.nut)  
+#### [More info about *PCapture-Arrays* here](Arrays_module.md)
 
+## 7. [`PCapture-BBoxCast`](/PCapture-Bboxcast.nut)  
+#### TODO
 Improved [BBoxCast](https://github.com/IaVashik/portal2-BBoxCast) for BBox-based ray tracing in Portal 2, more optimized.
 
 The PCapture-bboxcast library allows rays to hit entities by using their bounding boxes (BBox), unlike the regular traceline() function that only hits world geometry. It provides enhanced trace capabilities for custom gameplay mechanics or any vscripts involving ray interactions.
@@ -223,6 +231,8 @@ Animation module, used to quickly create animation events related to alpha, colo
 | PositionTransitionBySpeed | number animate::PositionTransitionBySpeed(pcapEntity&#124;CBaseEntity&#124;string entity, Vector startPos, Vector endPos, int&#124;float speed, {eventName = null, globalDelay = 0, note = null, outputs = null} EventSetting) | Moves entities from the start position to the end position over a specified time based on speed. |
 | AnglesTransitionByTime | void animate::AnglesTransitionByTime(pcapEntity&#124;CBaseEntity&#124;string entity, Vector startAngles, Vector endAngles, int&#124;float time, {eventName = null, globalDelay = 0, note = null, outputs = null} EventSetting) | Changes angles of entities from the start angles to the end angles over a specified time. |
 
+#### [More info about *PCapture-Anims* here](Anims_module.md)
+
 ## 9. [`PCapture-Improvements`](/PCapture-Improvements.nut)
 
 Overrides and improves existing standard VScripts functions.
@@ -234,3 +244,5 @@ Overrides and improves existing standard VScripts functions.
 | pcapPlayer.EyePosition | Vector pcapPlayer::EyePosition()                         | Gets the eye position of the player entity.                           |
 | pcapPlayer.EyeAngles   | Vector pcapPlayer::EyeAngles()                           | Gets the eye angles of the player entity.                             |
 | pcapPlayer.EyeForwardVector | Vector pcapPlayer::EyeForwardVector()               | Gets the forward vector from the player entity's eye position.        |
+
+#### [More info about *PCapture-Improvements* here](Improvements_module.md)
