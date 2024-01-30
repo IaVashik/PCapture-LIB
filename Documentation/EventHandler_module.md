@@ -1,12 +1,12 @@
 # PCapture-EventHandler
 
-Improved event handling module for creating and canceling scheduled events a more controlled and versatile way of creating scheduled events compared to built-in functions like `EntFireByHandler` or `logic_timer`. It allows you to create and manage events by providing the event name, action to execute, time delay, and an optional note to track the event's progress or for other purposes.
+Improved event handling module for creating and canceling scheduled events a more controlled and versatile way of creating scheduled events compared to built-in functions like `EntFireByHandler` or `logic_timer`. It allows you to create and manage events by providing the event name, action to execute, time delay, and an *optional* note to track the event's progress or for other purposes.
 
 ## Usage
 
-CreateScheduleEvent is used to create a new scheduled event. You specify the event name, the action to execute (either a string or a function), the time delay in seconds, and an optional note. The event will be executed after the specified delay.
+CreateScheduleEvent is used to create a new scheduled event. You specify the event name, the action to execute (either a string or a function), the time delay in seconds, and an *optional* note. The event will be executed after the specified delay.
 
-cancelScheduledEvent allows you to cancel a scheduled event with the given name. You can also specify an optional delay before the cancelation.
+cancelScheduledEvent allows you to cancel a scheduled event with the given name. You can also specify an *optional* delay before the cancelation.
 
 getEventInfo retrieves information about a scheduled event. This can be useful for debugging or tracking the progress of an event.
 
@@ -26,7 +26,7 @@ CreateScheduleEvent("EventName", "printl(\"Scheduled Event!\")", 1.5)
 - `eventName` (string): Name of the event.
 - `action` (string|function): Action to execute for the event.
 - `timeDelay` (int|float): Delay in seconds before executing the event.
-- `note` (string, optional): Optional note about the event.
+- `note` (string, *optional*): *optional* note about the event.
 
 ### cancelScheduledEvent(eventName, delay = 0)
 
@@ -36,7 +36,7 @@ Cancels a scheduled event with the given name.
 cancelScheduledEvent("EventName", 2.5)
 ```
 - `eventName` (string): Name of the event to cancel.
-- `delay` (int|float, optional): Delay in seconds before cancelation.
+- `delay` (int|float, *optional*): Delay in seconds before cancelation.
 > **Note:** The global event cannot be closed using this function.
 
 ### getEventInfo(eventName)
