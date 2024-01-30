@@ -144,7 +144,7 @@ arr.push("I love Nullpoint Crisis!")
 ```
 
 - `val` (any): The value to append.
-> Note: 
+> **Note:**
 > In operation, **push()** is identical to `append()` but provides a more convenient method name for those programmers particularly accustomed to working with stacks.
 
 ### remove(idx)

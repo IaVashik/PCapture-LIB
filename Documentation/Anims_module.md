@@ -20,10 +20,10 @@ animate.AlphaTransition("box01", 255, 100, 1, {eventName = "test"})
 - `startOpacity` (int): The initial opacity value.
 - `endOpacity` (int): The final opacity value.
 - `time` (int|float): The duration of the animation in seconds.
-- `EventSetting` (table, optional): The event settings.
+- `EventSetting` (table, *optional*): The event settings.
   - `eventName` (string): The name of the event. If not provided, it will be inferred from the entities.
   - `globalDelay` (int): The global delay before starting the animation.
-  - `note` (string): Optional note about the event.
+  - `note` (string, *optional*): note about the event.
   - `outputs` (string|function): Outputs to execute with a specified delay, if provided.
 
 ### ColorTransition(entities, startColor, endColor, time, EventSetting = {eventName = null, globalDelay = 0, note = null, outputs = null})
@@ -37,10 +37,10 @@ animate.ColorTransition(ent, ent.GetColor(), "255 125 125", 1, {globalDelay = 1}
 - `startColor` (string|Vector): The starting color.
 - `endColor` (string|Vector): The ending color.
 - `time` (int|float): The duration in seconds.
-- `EventSetting` (table, optional): The event settings.
+- `EventSetting` (table, *optional*): The event settings.
   - `eventName` (string): The name of the event. If not provided, it will be inferred from the entities.
   - `globalDelay` (int): The global delay before starting the animation.
-  - `note` (string): Optional note about the event.
+  - `note` (string, *optional*): note about the event.
   - `outputs` (string|function): Outputs to execute with a specified delay, if provided.
 
 ### PositionTransitionByTime(entities, startPos, endPos, time, EventSetting = {eventName = null, globalDelay = 0, note = null, outputs = null})
@@ -57,10 +57,10 @@ animate.PositionTransitionByTime(ent, ent.GetOrigin(), GetPlayer().GetOrigin(), 
 - `startPos` (Vector): The initial position.
 - `endPos` (Vector): The final position.
 - `time` (int|float): The duration of the animation in seconds.
-- `EventSetting` (table, optional): The event settings.
+- `EventSetting` (table, *optional*): The event settings.
   - `eventName` (string): The name of the event. If not provided, it will be inferred from the entities.
   - `globalDelay` (int): The global delay before starting the animation.
-  - `note` (string): Optional note about the event.
+  - `note` (string, *optional*): note about the event.
   - `outputs` (string|function): Outputs to execute with a specified delay, if provided.
 
 ### PositionTransitionBySpeed(entities, startPos, endPos, speed, EventSetting = {eventName = null, globalDelay = 0, note = null, outputs = null})
@@ -73,10 +73,10 @@ animate.PositionTransitionBySpeed(ent, ent.GetOrigin(), GetPlayer().GetOrigin(),
 - `startPos` (Vector): The initial position.
 - `endPos` (Vector): The final position.
 - `speed` (int|float): The speed at which to move the entities in units per second.
-- `EventSetting` (table, optional): The event settings.
+- `EventSetting` (table, *optional*): The event settings.
   - `eventName` (string): The name of the event. If not provided, it will be inferred from the entities.
   - `globalDelay` (int): The global delay before starting the animation.
-  - `note` (string): Optional note about the event.
+  - `note` (string, *optional*): note about the event.
   - `outputs` (string|function): Outputs to execute with a specified delay, if provided.
 - Returns: The time taken to complete the animation.
 
@@ -88,8 +88,8 @@ Changes angles of entities from start to end over time.
 - `startAngles` (Vector): Starting angles.
 - `endAngles` (Vector): Ending angles.
 - `time` (int|float): Duration in seconds.
-- `EventSetting` (table, optional): Event settings.
+- `EventSetting` (table, *optional*): Event settings.
   - `eventName` (string): The name of the event. If not provided, it will be inferred from the entities.
   - `globalDelay` (int): The global delay before starting the animation.
-  - `note` (string): Optional note about the event.
+  - `note` (string, *optional*): note about the event.
   - `outputs` (string|function): Outputs to execute with a specified delay, if provided.
