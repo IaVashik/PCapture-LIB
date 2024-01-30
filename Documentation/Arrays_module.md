@@ -2,7 +2,9 @@
 
 Enhanced arrays module.
 
-### arrayLib.new(...)
+## Class arrayLib
+
+### new(...)
 
 Create a new arrayLib instance from arguments.
 
@@ -16,18 +18,20 @@ local arr = arrayLib.new(1, 2, 3)
 >Syntax sugar: 
 >`local arr = arrayLib([1, 2, 3])`
 
-### arrayLib.append(val)
+### append(val)
 
 Append a value to the array.
 
 ```
 arr.append(4)
+arr.append("string")
+arr.append({table = "lol"})
 ```
 
 - `val` (any): The value to append.
 - Returns: The new array length.
 
-### arrayLib.apply(func)
+### apply(func)
 
 Apply a function to each element.
 
@@ -37,7 +41,7 @@ arr.apply(function(val) return val * 2)
 
 - `func` (function): The function to apply.
 
-### arrayLib.clear()
+### clear()
 
 Clear the array and table.
 
@@ -45,28 +49,29 @@ Clear the array and table.
 arr.clear()
 ```
 
-### arrayLib.extend(other)
+### extend(other)
 
 Extend the array with another array.
 
 ```
 arr.extend([4, 5, 6])
+arr.extend(arrayLib.new(7, 8, 9))
 ```
 
 - `other` (array|arrayLib): The array to extend from.
 
-### arrayLib.filter(func)
+### filter(func)
 
 Filter the array by a predicate function.
 
 ```
-local filteredArray = arr.filter(function(idx, val) return val > 2 end)
+local filteredArray = arr.filter(function(idx, val) return val > 2) // todo
 ```
 
 - `func` (function(idx, val, newArray)): The predicate function.
 - Returns: The filtered array.
 
-### arrayLib.find(match)
+### find(match)
 
 Check if the array contains a value.
 
@@ -77,7 +82,7 @@ local found = arr.find(3)
 - `match` (any): The value to find.
 - Returns: Whether the value is found.
 
-### arrayLib.search(match)
+### search(match)
 
 Search for a value in the array.
 
@@ -88,18 +93,18 @@ local idx = arr.search(function(val) return val > 2 end)
 - `match` (any|function): The value or predicate to search for.
 - Returns: The index of the match or null.
 
-### arrayLib.insert(idx, val)
+### insert(idx, val)
 
 Insert a value into the array.
 
 ```
-arr.insert(1, "a")
+arr.insert(1, "test")
 ```
 
 - idx (int): The index to insert at.
 - val (any): The value to insert.
 
-### arrayLib.len()
+### len()
 
 Get the array length.
 
@@ -109,7 +114,7 @@ local length = arr.len()
 
 - Returns: The array length.
 
-### arrayLib.map(func)
+### map(func)
 
 Map the array to a new array via a function.
 
@@ -120,7 +125,7 @@ local mappedArray = arr.map(function(val) return val * 2 end)
 - `func` (function): The mapping function.
 - Returns: The mapped array.
 
-### arrayLib.pop()
+### pop()
 
 Pop a value off the end of the array.
 
@@ -130,17 +135,19 @@ local value = arr.pop()
 
 - Returns: The popped value.
 
-### arrayLib.push(val)
+### push(val)
 
 Append a value to the array.
 
 ```
-arr.push(4)
+arr.push("I love Nullpoint Crisis!")
 ```
 
 - `val` (any): The value to append.
+> Note: 
+> In operation, **push()** is identical to `append()` but provides a more convenient method name for those programmers particularly accustomed to working with stacks.
 
-### arrayLib.remove(idx)
+### remove(idx)
 
 Remove an element by index.
 
@@ -150,7 +157,7 @@ arr.remove(1)
 
 - idx (int): The index to remove.
 
-### arrayLib.resize(size, fill = null)
+### resize(size, fill = null)
 
 Resize the array.
 
@@ -159,9 +166,9 @@ arr.resize(5, 0)
 ```
 
 - `size` (int): The new size.
-- `fill` (any, optional): The fill value for new slots.
+- `fill` (any, *optional*): The fill value for new slots.
 
-### arrayLib.reverse()
+### reverse()
 
 Reverse the array in-place.
 
@@ -171,19 +178,20 @@ arr.reverse()
 
 - Returns: The reversed array.
 
-### arrayLib.slice(start, end = null)
+### slice(start, end = null)
 
-Slice a portion of the array.
+Creates a new sub-array from an array
 
 ```
-local slicedArray = arr.slice(1, 3)
+local anArray = arrayLib.new("one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
+local newArray = anArray.slice(1, 3) // Output: ["three", "four", "five", "six"]
 ```
 
 - `start` (int): The start index.
-- `end` (int, optional): The end index.
+- `end` (int, *optional*): The end index.
 - Returns: The sliced array.
 
-### arrayLib.sort(func = null)
+### sort(func = null)
 
 Sort the array.
 
@@ -191,10 +199,10 @@ Sort the array.
 arr.sort()
 ```
 
-- `func` (function, optional): Optional compare function.
+- `func` (function, *optional*): *optional* compare function.
 - Returns: The sorted array.
 
-### arrayLib.top()
+### top()
 
 Get the last element.
 
@@ -204,18 +212,20 @@ local lastElement = arr.top()
 
 - Returns: The last element.
 
-### arrayLib.join(joinstr = "")
+### join(joinstr = "")
 
 Join the array into a string.
 
 ```
-local joinedString = arr.join(", ")
+local anArray = arrayLib.new("one", "two", "three")
+local joinedString = anArray.join(", ") // Output: "one, two, three"
+anArray.join(" -> ") // Output: "one -> two -> three"
 ```
 
-- `joinstr` (string, optional): The separator string.
+- `joinstr` (string, *optional*): The separator string.
 - Returns: The joined string.
 
-### arrayLib.get(idx, defaultVal = null)
+### get(idx, defaultVal = null)
 
 Retrieve the element at the specified index in the array.
 
@@ -224,16 +234,17 @@ local element = arr.get(0)
 ```
 
 - `idx` (integer): The index of the element to retrieve.
-- `defaultVal` (any, optional): Optional default value to return if the index is out of bounds. Defaults to null.
+- `defaultVal` (any, *optional*): *optional* default value to return if the index is out of bounds. Defaults to null.
 - Returns: The element at the specified index or the default value if the index is out of bounds.
 
-### arrayLib.totable(recreate = false)
+### totable(recreate = false)
 
 Convert the array to a table.
 
 ```
-local table = arr.totable()
+local anArray = arrayLib.new("one", "two", "three")
+local table = anArray.totable() // Output: {one = null, two = null, three = null}
 ```
 
-- `recreate` (boolean, optional): Whether to recreate the table.
+- `recreate` (boolean, *optional*): Whether to recreate the table.
 - Returns: The table representation.
