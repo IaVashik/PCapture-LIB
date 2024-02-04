@@ -22,13 +22,13 @@ Outputs "Hello" to the console after 1.5 second delay.
 - `caller` (CBaseEntity|pcapEntity, *optional*): The caller entity
 
 
-### recursive(script, delay, eventName)
+### setInterval(script, delay, eventName)
 
 Executes a script recursively at a fixed interval.
 This function schedules the provided script to run repeatedly at a specified interval. After each execution, the function schedules itself to run again, creating a loop that continues until you cancel the event.
 
 ```
-RunScriptCode.recursive("printl(\"Hello\")", 1) // outputs "Hello" every 1 second
+RunScriptCode.setInterval("printl(\"Hello\")", 1) // outputs "Hello" every 1 second
 ``` 
 
 Recursively outputs "Hello" to console every 1 second.

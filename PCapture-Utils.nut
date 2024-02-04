@@ -50,9 +50,9 @@
      * @param {int|float} runDelay - The time delay between consecutive executions in seconds. // TODO
      * @param {string} eventName - The name of the event used for scheduling. (optional, default="global")
      */
-    recursive = function(script, interval = FrameTime(), runDelay = 0, eventName = "global") {
+    setInterval = function(script, interval = FrameTime(), runDelay = 0, eventName = "global") {
         local runAgain = function() : (script, interval, eventName) {
-            RunScriptCode.recursive(script, interval, 0, eventName)
+            RunScriptCode.setInterval(script, interval, 0, eventName)
         }
         
         CreateScheduleEvent(eventName, script, runDelay)

@@ -442,9 +442,9 @@ if("arrayLib" in getroottable()) {
         } else if (outputs)
             this.delay(outputs, 0)
     },
-        recursive = function(script, interval = FrameTime(), runDelay = 0, eventName = "global") {
+        setInterval = function(script, interval = FrameTime(), runDelay = 0, eventName = "global") {
         local runAgain = function() : (script, interval, eventName) {
-            RunScriptCode.recursive(script, interval, 0, eventName)
+            RunScriptCode.setInterval(script, interval, 0, eventName)
         }
         CreateScheduleEvent(eventName, script, runDelay)
         CreateScheduleEvent(eventName, runAgain, interval + runDelay)
@@ -462,7 +462,7 @@ if("arrayLib" in getroottable()) {
     },
         log = function(msg) {
         if (developer() != 0)
-            printl("• " + msg)
+            printl("ï¿½ " + msg)
     },
         warning = function(msg) {
         _more_info("? Warning (%s [%d]): %s", msg)

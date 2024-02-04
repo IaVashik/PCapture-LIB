@@ -7,10 +7,10 @@
 		],
 		"description": "Creates a delay before executing the specified script."
 	},
-	"recursive": {
-		"prefix": "recursive",
+	"setInterval": {
+		"prefix": "setInterval",
 		"body": [
-			"RunScriptCode.recursive(${1:script}, ${2:delay}, ${3:eventName})"
+			"RunScriptCode.setInterval(${1:script}, ${2:delay}, ${3:eventName})"
 		],
 		"description": "Schedules the execution of a script recursively at a fixed interval."
 	},
