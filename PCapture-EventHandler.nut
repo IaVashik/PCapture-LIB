@@ -31,24 +31,30 @@ if("CreateScheduleEvent" in getroottable()) {
 */
 ::CreateScheduleEvent <- function(eventName, action, timeDelay, note = null)
 {
-    if ( !(eventName in scheduledEventsList) )
-    {
-        scheduledEventsList[eventName] <- []
+    if ( !(eventName in scheduledEventsList) ) {
+        scheduledEventsList[eventName] <- [[]]
         // dev.log("Created new Event - " + eventName)
     }
-
-    local newScheduledEvent = {action = action, timeDelay = (Time() + timeDelay), note = note}
-    local currentEventList = scheduledEventsList[eventName]
-
-    local lastIndex = currentEventList.len() - 1
-    while (lastIndex >= 0 && currentEventList[lastIndex].timeDelay > newScheduledEvent.timeDelay)
-    {
-        lastIndex--
+    if(scheduledEventsList[eventName].top().len() > 300) {
+        scheduledEventsList[eventName].append([])
     }
-    currentEventList.insert(lastIndex + 1, newScheduledEvent)
 
-    if(!isEventLoopRunning)
-    {
+    timeDelay += Time()
+    local newScheduledEvent = {action = action, timeDelay = timeDelay, note = note}
+    local currentEventList = scheduledEventsList[eventName].top()
+
+    if(currentEventList.len() == 0 || timeDelay > currentEventList.top().timeDelay) {
+        currentEventList.append(newScheduledEvent)
+    }
+
+    local pos = currentEventList.len() - 1
+    while (pos >= 0 && currentEventList[pos].timeDelay > timeDelay) {
+        pos--
+    }
+
+    currentEventList.insert(pos + 1, newScheduledEvent)
+
+    if(!isEventLoopRunning) {
         isEventLoopRunning = true
         ExecuteScheduledEvents()
     }
@@ -62,31 +68,32 @@ if("CreateScheduleEvent" in getroottable()) {
     if(scheduledEventsList.len() == 1 && scheduledEventsList.global.len() == 0)
         return isEventLoopRunning = false
 
-    foreach(eventName, eventInfo in scheduledEventsList)
-    {
-        if(eventInfo.len() == 0 && eventName != "global")
-            cancelScheduledEvent(eventName)
-        
-        while (eventInfo.len() > 0 && Time() >= eventInfo[0].timeDelay) 
-        {
-            local event = eventInfo[0]
-            // printl(("eventName : "+eventName+", event: "+event.action+", timeDelay: "+event.timeDelay+", Time(): "+Time())) //DEV CODE
-            if(typeof event.action == "string") {
-                // try {
-                    compilestring( event.action )()
-                // }
-                // catch(exception) {
-                    // dev.error(exception + "! Event action: " + event.action)
-                // }
+    foreach(eventName, eventArray in scheduledEventsList) {
+        foreach(idx, eventInfo in eventArray) {
+            while (eventInfo.len() > 0 && Time() >= eventInfo[0].timeDelay) {
+                local event = eventInfo[0]
+                // printl(("eventName : "+eventName+", event: "+event.action+", timeDelay: "+event.timeDelay+", Time(): "+Time())) //DEV CODE
+                if(typeof event.action == "string") {
+                    // try {
+                        compilestring( event.action )()
+                    // }
+                    // catch(exception) {
+                        // dev.error(exception + "! Event action: " + event.action)
+                    // }
+                }
+                else if(typeof event.action == "function" || typeof event.action == "native function"){
+                    event.action() 
+                }
+                else {
+                    dev.warning("Unable to process event " + event.action + " in event " + eventName)
+                }
+                eventInfo.remove(0) 
+                if(eventInfo.len() == 0) 
+                    eventArray.remove(idx)
             }
-            else if(typeof event.action == "function" || typeof event.action == "native function"){
-                event.action() 
-            }
-            else {
-                dev.warning("Unable to process event " + event.action + " in event " + eventName)
-            }
-            eventInfo.remove(0) 
         }
+        if(eventArray.len() == 0 && eventName != "global" && eventName in scheduledEventsList) 
+            cancelScheduledEvent(eventName)
     }
 
     RunScriptCode.delay("ExecuteScheduledEvents()", FrameTime())
