@@ -222,7 +222,7 @@ if("entLib" in getroottable()) {
     */
     function Kill(fireDelay = 0) {
         EntFireByHandle(CBaseEntity, "kill", "", fireDelay)
-        this.CBaseEntity = null
+        this.CBaseEntity = null // todo bug
     }
 
 
@@ -308,6 +308,15 @@ if("entLib" in getroottable()) {
         } 
 
         this.addOutput(outputName, self, "RunScriptCode", script, delay, fires)
+    }
+
+
+    function EmitSoundEx(sound_name, timeDelay = 0, eventName = this) {
+        if(timeDelay == 0)
+            return this.CBaseEntity.EmitSound(sound_name)
+        CreateScheduleEvent(eventName, function():(CBaseEntity, sound_name) {
+            CBaseEntity.EmitSound(sound_name)
+        }, timeDelay)
     }
 
 
