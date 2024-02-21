@@ -35,24 +35,42 @@ if("CreateScheduleEvent" in getroottable()) {
         scheduledEventsList[eventName] <- [[]]
         // dev.log("Created new Event - " + eventName)
     }
-    if(scheduledEventsList[eventName].top().len() > 300) {
-        scheduledEventsList[eventName].append([])
+
+    local eventList = scheduledEventsList[eventName]
+    if(eventList.len() == 0 || eventList.top().len() > 300) {
+        eventList.append([])
     }
 
     timeDelay += Time()
     local newScheduledEvent = {action = action, timeDelay = timeDelay, note = note}
-    local currentEventList = scheduledEventsList[eventName].top()
+    local currentEventList = eventList.top()
 
     if(currentEventList.len() == 0 || timeDelay > currentEventList.top().timeDelay) {
-        currentEventList.append(newScheduledEvent)
+        return currentEventList.append(newScheduledEvent)
     }
 
-    local pos = currentEventList.len() - 1
-    while (pos >= 0 && currentEventList[pos].timeDelay > timeDelay) {
-        pos--
-    }
+    //! --- A binary tree. This is an experimental code!!
+    local low = 0
+    local high = currentEventList.len() - 1
+    local mid
 
-    currentEventList.insert(pos + 1, newScheduledEvent)
+    while (low <= high) {
+        mid = (low + high) / 2
+        if (currentEventList[mid].timeDelay < newScheduledEvent.timeDelay) {
+            low = mid + 1
+        }
+        else if (currentEventList[mid].timeDelay > newScheduledEvent.timeDelay) {
+            high = mid - 1
+        }
+        else {
+            low = mid
+            break
+        }
+    }
+    
+    currentEventList.insert(low, newScheduledEvent)
+    //! ---
+
 
     if(!isEventLoopRunning) {
         isEventLoopRunning = true
