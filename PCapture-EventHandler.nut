@@ -71,7 +71,6 @@ if("CreateScheduleEvent" in getroottable()) {
     currentEventList.insert(low, newScheduledEvent)
     //! ---
 
-
     if(!isEventLoopRunning) {
         isEventLoopRunning = true
         ExecuteScheduledEvents()
