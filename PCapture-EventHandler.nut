@@ -29,8 +29,12 @@ if("CreateScheduleEvent" in getroottable()) {
  * @param {int|float} timeDelay - Delay in seconds before executing event.
  * @param {string} note - Optional note about the event, if needed.
 */
-::CreateScheduleEvent <- function(eventName, action, timeDelay, note = null)
-{
+::CreateScheduleEvent <- function(eventName, action, timeDelay, note = null) {
+    if(!isEventLoopRunning) {
+        isEventLoopRunning = true
+        ExecuteScheduledEvents()
+    }
+
     if ( !(eventName in scheduledEventsList) ) {
         scheduledEventsList[eventName] <- [[]]
         // dev.log("Created new Event - " + eventName)
@@ -44,10 +48,12 @@ if("CreateScheduleEvent" in getroottable()) {
     timeDelay += Time()
     local newScheduledEvent = {action = action, timeDelay = timeDelay, note = note}
     local currentEventList = eventList.top()
+    // printl("eventName: "+eventName+",  - "+eventList.len()+", currentEventList: "+currentEventList.len())
 
-    if(currentEventList.len() == 0 || timeDelay > currentEventList.top().timeDelay) {
+    if(currentEventList.len() == 0 || timeDelay >= currentEventList.top().timeDelay) {
         return currentEventList.append(newScheduledEvent)
     }
+    // printl("NOT append! " + eventName + ": timeDelay: "+timeDelay+"; previous timeDelay:"+(currentEventList.top().timeDelay))
 
     //! --- A binary tree. This is an experimental code!!
     local low = 0
@@ -70,11 +76,6 @@ if("CreateScheduleEvent" in getroottable()) {
     
     currentEventList.insert(low, newScheduledEvent)
     //! ---
-
-    if(!isEventLoopRunning) {
-        isEventLoopRunning = true
-        ExecuteScheduledEvents()
-    }
 }
 
 
@@ -82,14 +83,15 @@ if("CreateScheduleEvent" in getroottable()) {
  * Executes scheduled events when their time is up
 */
 ::ExecuteScheduledEvents <- function() {
-    if(scheduledEventsList.len() == 1 && scheduledEventsList.global.len() == 0)
+    if(scheduledEventsList.len() == 1 && scheduledEventsList.global.len() == 0) {
         return isEventLoopRunning = false
+    }
 
     foreach(eventName, eventArray in scheduledEventsList) {
         foreach(idx, eventInfo in eventArray) {
             while (eventInfo.len() > 0 && Time() >= eventInfo[0].timeDelay) {
                 local event = eventInfo[0]
-                // printl(("eventName : "+eventName+", event: "+event.action+", timeDelay: "+event.timeDelay+", Time(): "+Time())) //DEV CODE
+                // printl(("eventName : "+eventName+", enclosure: "+idx+", event: "+event.action+", timeDelay: "+event.timeDelay+", Time(): "+Time())) //DEV CODE
                 if(typeof event.action == "string") {
                     // try {
                         compilestring( event.action )()
