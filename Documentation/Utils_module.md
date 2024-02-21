@@ -92,13 +92,13 @@ Draws bounding box of "prop_physics" entity for 10 seconds.
 Draws a box at the specified position.
 
 ```
-dev.drawbox(Vector(0, 0, 0), "255 0 0")  
+dev.drawbox(Vector(0, 0, 0), Vector(255, 0, 0))  
 ```
 
 Draws a red box at the origin for 0.05 seconds.
 
 - `vector` (Vector): The position
-- `color` (Vector|string): The color as Vector or string 
+- `color` (Vector): The color as Vector or string 
 - `time` (int|float, *optional*): Display time in seconds (default *0.05*)
 
 ### Other Functions 
