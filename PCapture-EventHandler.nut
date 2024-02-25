@@ -92,19 +92,20 @@ if("CreateScheduleEvent" in getroottable()) {
             while (eventInfo.len() > 0 && Time() >= eventInfo[0].timeDelay) {
                 local event = eventInfo[0]
                 // printl(("eventName : "+eventName+", enclosure: "+idx+", event: "+event.action+", timeDelay: "+event.timeDelay+", Time(): "+Time())) //DEV CODE
-                if(typeof event.action == "string") {
-                    // try {
+                try {
+                    if(typeof event.action == "string") {
                         compilestring( event.action )()
-                    // }
-                    // catch(exception) {
-                        // dev.error(exception + "! Event action: " + event.action)
-                    // }
+                    }
+                    else if(typeof event.action == "function" || typeof event.action == "native function"){
+                        event.action() 
+                    }
+                    else {
+                        dev.warning("Unable to process event " + event.action + " in event " + eventName)
+                    }
                 }
-                else if(typeof event.action == "function" || typeof event.action == "native function"){
-                    event.action() 
-                }
-                else {
-                    dev.warning("Unable to process event " + event.action + " in event " + eventName)
+                catch(exception) {
+                    dev.error(eventName + " error! Event action: " + event.action)
+                    throw exception
                 }
                 eventInfo.remove(0) 
                 if(eventInfo.len() == 0) 
