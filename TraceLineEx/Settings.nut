@@ -1,5 +1,5 @@
 // todo нейминг и ещё одна user filter func!
-class TraceSettings {
+::TraceSettings <- class {
     ignoreClass = arrayLib.new("viewmodel", "weapon_", "info_particle_system",
     "trigger_", "phys_", "env_", "point_", "info_", "vgui_", "physicsclonearea");
     priorityClass = arrayLib.new();
@@ -99,7 +99,7 @@ function TraceSettings::TogglePortalTracing() {
 }
 
 
-// TODO
+//! BIG TODO
 ::toArrayLib <- function(array) {
     if(typeof array == "array")
         return arrayLib(array)

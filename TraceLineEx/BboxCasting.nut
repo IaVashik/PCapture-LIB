@@ -1,27 +1,3 @@
-/*+--------------------------------------------------------------------------------+
-|                           PCapture Vscripts Library                               |
- +---------------------------------------------------------------------------------+
-| Author:                                                                           |
-|     One-of-a-Kind - laVashik :D                                                   |
- +---------------------------------------------------------------------------------+
-| PCapture-bboxcast.nut                                                             |
-|       Improved BBoxCast. More info here:                                          |
-|       https://github.com/IaVashik/portal2-BBoxCast                                |
-+----------------------------------------------------------------------------------+ */
-
-if("bboxcast" in getroottable()) {
-    dev.warning("Animate module initialization skipped. Module already initialized.")
-    return
-}
-
-IncludeScript("pcapture-lib/Bboxcast/Settings")
-IncludeScript("pcapture-lib/Bboxcast/BBoxDisabler")
-
-/*
-* Default settings for bboxcast traces.
-*/  
-::defaultSettings <- TraceSettings.new()
-
 /*
 * A class for performing bbox-based ray tracing in Portal 2.
 */
@@ -51,9 +27,10 @@ IncludeScript("pcapture-lib/Bboxcast/BBoxDisabler")
         this.ignoreEnts = ignoreEnts
         this.settings = settings
 
-        local result = settings.portalTracing ? this.portalTrace(startpos, endpos, ignoreEnts, note) : this.Trace(startpos, endpos, ignoreEnts, note)
-        this.hitpos = result.hit
-        this.hitent = result.ent
+        local result = TraceLineAnalyzer(this, settings, note)
+        // settings.portalTracing ? this.portalTrace(startpos, endpos, ignoreEnts, note) : this.Trace(startpos, endpos, ignoreEnts, note)
+        this.hitpos = result.GetHitpos()
+        this.hitent = result.GetEntity()
     }
 
     /*
@@ -129,7 +106,18 @@ IncludeScript("pcapture-lib/Bboxcast/BBoxDisabler")
     }
 
     // todo
-    function GetImpactNormal() Vector 
+    function GetImpactNormal() {
+        // If the surface normal is already calculated, return it
+        if(this.surfaceNormal)
+            return this.surfaceNormal
+        
+        local withEntity = null
+        if(this.hitent) 
+            withEntity = this.ignoreEnts
+
+        this.surfaceNormal = CalculateImpactNormal(this.startpos, this.hitpos, withEntity)
+        return this.surfaceNormal
+    } 
 
     /*
     * Get the direction.
@@ -140,13 +128,6 @@ IncludeScript("pcapture-lib/Bboxcast/BBoxDisabler")
         return this.endpos - this.startpos
     }
 
-    //TODO 
-
-    function CheapTrace(startpos, endpos) Vector
-    function Trace(startpos, endpos, ignoreEnts, note) table
-    function _hitEntity(ent, ignoreEnts, note) bool
-    function _isIgnoredEntity(entityClass) bool
-    function _isPriorityEntity(entityClass) bool
     // Convert the bboxcast object to string representation
     function _tostring() {
         return "Bboxcast 2.0 | \nstartpos: " + startpos + ", \nendpos: " + endpos + ", \nhitpos: " + hitpos + ", \nent: " + hitent + "\n========================================================="
