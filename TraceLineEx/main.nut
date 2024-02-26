@@ -9,18 +9,18 @@
 |       https://github.com/IaVashik/portal2-BBoxCast                                |
 +----------------------------------------------------------------------------------+ */
 
-IncludeScript("pcapture-lib/TraceLineEx/Settings")
+IncludeScript("pcapture-lib/TraceLineEx/TraceSettings")
 
 //* Default settings for bboxcast traces.
 ::defaultSettings <- TraceSettings.new()
 
 
 IncludeScript("pcapture-lib/TraceLineEx/CheapTrace")
-IncludeScript("pcapture-lib/TraceLineEx/Trace")
-IncludeScript("pcapture-lib/TraceLineEx/BboxCastings")
-IncludeScript("pcapture-lib/TraceLineEx/PortalCastings")
+IncludeScript("pcapture-lib/TraceLineEx/TraceLineAnalyzer")
+IncludeScript("pcapture-lib/TraceLineEx/BboxCasting")
+// IncludeScript("pcapture-lib/TraceLineEx/PortalCasting")
 
-// IncludeScript("pcapture-lib/TraceLineEx/Presets")
+IncludeScript("pcapture-lib/TraceLineEx/Presets")
 
 IncludeScript("pcapture-lib/TraceLineEx/utils/ImpactNormal")
 IncludeScript("pcapture-lib/TraceLineEx/utils/BBoxDisabler")

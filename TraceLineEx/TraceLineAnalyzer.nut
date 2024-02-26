@@ -9,29 +9,34 @@
         this.bboxcastInstance = bboxcast
         this.settings = settings
 
-        local result = this.Trace(bboxcast, note)
+        local result = this.Trace(bboxcastInstance, note)
         this.hitpos = result[0]
         this.hitent = result[1]
     }
 
-    function GetHitpos() Vector
-    function GetEntity() pcapEntity
+    function GetHitpos() {
+        return this.hitpos
+    }
+
+    function GetEntity() {
+        return this.hitent
+    }
 
     // todo add args
-    function Trace(bboxcast, note) array(hitpos, hitent) 
+    function Trace(bboxcastInstance, note) array(hitpos, hitent) 
     function _isPriorityEntity() bool
     function _isIgnoredEntity() bool
     function _hitEntity() bool
 }
 
 
-function bboxcast::Trace(bboxcast, note) {
-    local startpos = bboxcast.startpos
-    local endpos =  bboxcast.endpos
-    local ignoreEnts = bboxcast.ignoreEnts
+function TraceLineAnalyzer::Trace(bboxcastInstance, note) {
+    local startpos = bboxcastInstance.startpos
+    local endpos = bboxcastInstance.endpos
+    local ignoreEnts = bboxcastInstance.ignoreEnts
 
     // Get the hit position from the fast trace
-    local hitpos = CheapTrace(startpos, endpos)
+    local hitpos = CheapTrace(startpos, endpos).GetHitpos()
     // Calculate the distance between start and hit positions
     local dist = hitpos - startpos
     // Calculate a distance coefficient for more precise tracing based on distance and error coefficient
@@ -52,7 +57,7 @@ function bboxcast::Trace(bboxcast, note) {
         }
     }
 
-    return [hitpos, ent]
+    return [hitpos, null]
 }
 
 // Check if an entity should be ignored based on the provided settings
@@ -62,7 +67,7 @@ function bboxcast::Trace(bboxcast, note) {
 * @param {string} entityClass - Entity class name.
 * @returns {boolean} True if priority.
 */
-function bboxcast::_isPriorityEntity(entityClass) {
+function TraceLineAnalyzer::_isPriorityEntity(entityClass) {
     return settings.GetPriorityClass().find(entityClass) // todo!
 }
 
@@ -72,7 +77,7 @@ function bboxcast::_isPriorityEntity(entityClass) {
 * @param {string} entityClass - Entity class name.
 * @returns {boolean} True if ignored.
 */
-function bboxcast::_isIgnoredEntity(entityClass) {
+function TraceLineAnalyzer::_isIgnoredEntity(entityClass) {
     return settings.GetIgnoreClass().find(entityClass)
 }
 
@@ -83,7 +88,7 @@ function bboxcast::_isIgnoredEntity(entityClass) {
 * @param {Entity|array} ignoreEnts - Entities being ignored. 
 * @returns {boolean} True if should ignore.
 */
-function bboxcast::_hitEntity(ent, ignoreEnts, note) {
+function TraceLineAnalyzer::_hitEntity(ent, ignoreEnts, note) {
     local classname = ent.GetClassname()
 
     // todo
@@ -93,17 +98,19 @@ function bboxcast::_hitEntity(ent, ignoreEnts, note) {
     // todo
     // if(settings.RunUserFilter2(ent, note))
     //     return false
-    if (typeof ignoreEnts == "array" || typeof ignoreEnts == "arrayLib") { // todo
-        foreach (mask in ignoreEnts) {
-            if(typeof mask == "pcapEntity")
-                mask = mask.CBaseEntity
-            if (mask == ent) {
-                return false;
+    if(ignoreEnts) {
+        if (typeof ignoreEnts == "array" || typeof ignoreEnts == "arrayLib") { // todo
+            foreach (mask in ignoreEnts) {
+                if(typeof mask == "pcapEntity")
+                    mask = mask.CBaseEntity
+                if (mask == ent) {
+                    return false;
+                }
             }
+        } 
+        else if (ent == ignoreEnts.CBaseEntity) {
+            return false;
         }
-    } 
-    else if (ent == ignoreEnts.CBaseEntity) {
-        return false;
     }
 
     if (_isIgnoredEntity(classname) && !_isPriorityEntity(classname)) {

@@ -54,6 +54,6 @@
         if(ignoreEnts)
             return TraceLineAnalyzer(newStart, endPos, ignoreEnts).GetHitpos()
         
-        return CheapTrace(newStart, endPos)
+        return CheapTrace(newStart, endPos).GetHitpos()
     }
 }

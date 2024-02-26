@@ -133,8 +133,3 @@
         return "Bboxcast 2.0 | \nstartpos: " + startpos + ", \nendpos: " + endpos + ", \nhitpos: " + hitpos + ", \nent: " + hitent + "\n========================================================="
     }
 }
-
-IncludeScript("pcapture-lib/Bboxcast/Trace")
-IncludeScript("pcapture-lib/Bboxcast/PortalCasting")
-IncludeScript("pcapture-lib/Bboxcast/ImpactNormal")
-IncludeScript("pcapture-lib/Bboxcast/Presets")
