@@ -1,7 +1,7 @@
 // todo нейминг и ещё одна user filter func!
 ::TraceSettings <- class {
     ignoreClass = arrayLib.new("viewmodel", "weapon_", "info_particle_system",
-        "trigger_", "phys_", "env_", "point_", "info_", "vgui_", "physicsclonearea"
+        "trigger_", "phys_", "env_", "point_", "info_", "vgui_", "physicsclonearea", "prop_portal", "portal_base2D"
     );
     priorityClass = arrayLib.new();
     errorCoefficient = 500;
