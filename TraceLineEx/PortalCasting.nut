@@ -35,11 +35,10 @@ local applyPortal = function (startPos, hitPos, portal, partner) {
             return tracedata
 
         local normal = tracedata.GetImpactNormal()
-        if(normal.Dot(portal.GetForwardVector()) < 0.9)
+        if(normal.Dot(portal.GetForwardVector()) < 0.8)
             return tracedata
         
         local partner = portal.GetUserData("partner")
-
         if (partner == null) 
             return tracedata
 
@@ -48,14 +47,43 @@ local applyPortal = function (startPos, hitPos, portal, partner) {
         endPos = ray.endPos
         previousTracedata = tracedata
     }
-    // 
-
     return previousTracedata
 }
 
 
-::PortalBboxCast <- function(startpos, endpos, ignoreEnts = null, settings = defaultSettings, note = null) : (applyPortal) {
+::PortalBboxCast <- function(startPos, endPos, ignoreEnts = null, settings = defaultSettings, note = null) : (applyPortal) {
+    local previousTracedata
+    // Portal castings
+    for (local i = 0; i < 10; i++) { // todo?
+        local tracedata = BboxCast(startPos, endPos, ignoreEnts, settings, note)
+        tracedata.portalEntryInfo = previousTracedata
 
+        local hitPos = tracedata.GetHitpos()
+        local portal = tracedata.GetEntity()
+
+        if(!portal || portal.GetClassname() != "linked_portal_door")
+            portal = entLib.FindByClassnameWithin("prop_portal", hitPos, 1) // todo: i should optimize it...
+        if(!portal)
+            return tracedata
+        
+        local partner = portal.GetUserData("partner")
+        if (partner == null) 
+            return tracedata
+
+        if(portal.GetClassname() == "prop_portal") {
+            local normal = tracedata.GetImpactNormal()
+            if(normal.Dot(portal.GetForwardVector()) < 0.8)
+                return tracedata
+        } else { // todo
+            ignoreEnts = addInIgnoreList(ignoreEnts, partner)
+        }
+
+        local ray = applyPortal(startPos, hitPos, portal, partner);
+        startPos = ray.startPos + partner.GetForwardVector() // A small hack to keep tracing from getting stuck
+        endPos = ray.endPos
+        previousTracedata = tracedata
+    }
+    return previousTracedata
 }
 
 
@@ -64,6 +92,16 @@ local applyPortal = function (startPos, hitPos, portal, partner) {
 for(local portal; portal = entLib.FindByClassname("linked_portal_door", portal);) {
     local partner = entLib.FromEntity(portal.GetPartnerInstance())
     portal.SetUserData("partner", partner)
+
+    if(portal.GetModelName() == "")
+        continue
+    
+    local wpInfo = split(portal.GetModelName(), " ")
+    local wpBBox = math.rotateVector(Vector(5, wpInfo[0].tointeger(), wpInfo[1].tointeger()), portal.GetAngles())
+    wpBBox.x = abs(wpBBox.x); // TODO добавить abs для векторов
+    wpBBox.y = abs(wpBBox.y);
+    wpBBox.z = abs(wpBBox.z);
+    portal.SetBBox(wpBBox * -1, wpBBox) 
 }
 
 for(local portal; portal = entLib.FindByClassname("prop_portal", portal);) { // todo
