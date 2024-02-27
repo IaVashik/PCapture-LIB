@@ -15,6 +15,7 @@ IncludeScript("pcapture-lib/TraceLineEx/TraceSettings")
 ::defaultSettings <- TraceSettings.new()
 
 
+IncludeScript("pcapture-lib/TraceLineEx/TraceResult")
 IncludeScript("pcapture-lib/TraceLineEx/CheapTrace")
 IncludeScript("pcapture-lib/TraceLineEx/TraceLineAnalyzer")
 IncludeScript("pcapture-lib/TraceLineEx/BboxCasting")
