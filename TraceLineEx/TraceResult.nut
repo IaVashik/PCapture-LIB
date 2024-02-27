@@ -85,6 +85,10 @@
             return entLib.FromEntity(this.hitent)
     }
 
+    function GetEntityClassname() {
+        return this.hitent ? this.GetEntity().GetClassname() : null 
+    }
+
     function GetIngoreEntities() {
         return this.traceHandler.ignoreEnts
     }
