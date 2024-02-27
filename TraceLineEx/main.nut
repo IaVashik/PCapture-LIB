@@ -19,7 +19,7 @@ IncludeScript("pcapture-lib/TraceLineEx/TraceResult")
 IncludeScript("pcapture-lib/TraceLineEx/CheapTrace")
 IncludeScript("pcapture-lib/TraceLineEx/TraceLineAnalyzer")
 IncludeScript("pcapture-lib/TraceLineEx/BboxCasting")
-// IncludeScript("pcapture-lib/TraceLineEx/PortalCasting")
+IncludeScript("pcapture-lib/TraceLineEx/PortalCasting")
 
 IncludeScript("pcapture-lib/TraceLineEx/Presets")
 

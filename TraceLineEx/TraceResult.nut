@@ -3,6 +3,7 @@
     hitpos = null;
 
     surfaceNormal = null;
+    portalEntryInfo = null;
 
     constructor(traceHandler, hitpos) {
         this.traceHandler = traceHandler
@@ -21,12 +22,20 @@
         return this.hitpos
     }
 
+    function GetFraction() {
+        return this.traceHandler.fraction
+    }
+
     function DidHit() {
         return this.traceHandler.fraction != 1
     }
 
     function GetDir() {
         return (this.GetEndPos() - this.GetStartPos())
+    }
+
+    function GetPortalEntryInfo() {
+        return this.portalEntryInfo
     }
 
     function GetImpactNormal() {
@@ -51,6 +60,7 @@
     hitent = null;
 
     surfaceNormal = null;
+    portalEntryInfo = null;
 
     constructor(traceHandler, hitpos, hitent) {
         this.traceHandler = traceHandler
@@ -101,6 +111,10 @@
 
     function GetDir() {
         return (this.GetEndPos() - this.GetStartPos())
+    }
+
+    function GetPortalEntryInfo() {
+        return this.portalEntryInfo
     }
 
     // todo

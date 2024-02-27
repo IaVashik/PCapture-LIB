@@ -41,3 +41,11 @@ TracePresets["CheapTracePlayerEyes"] <- function(distance, player) : (GetEyeEndp
 
     return CheapTrace(startpos, endpos)
 }
+
+TracePresets["CheapPortalTracePlayerEyes"] <- function(distance, player) : (GetEyeEndpos) {
+    // Calculate the start and end positions of the trace
+    local startpos = player.EyePosition()
+    local endpos = GetEyeEndpos(player, distance)
+
+    return PortalTrace(startpos, endpos)
+}

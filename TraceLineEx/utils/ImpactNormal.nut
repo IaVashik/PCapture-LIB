@@ -51,7 +51,6 @@ local _getIntPointCostly = function(newStart, dir, traceResult) {
     local intersectionPoints
 
     if(typeof traceResult == "BboxTraceResult" && traceResult.GetEntity() && traceResult.GetTraceSettings().costlyNormal) {
-        printl("bbox method")
         intersectionPoints = {
             point1 = _getIntPointCostly(newStartsPos[0], dir, traceResult),
             point2 = _getIntPointCostly(newStartsPos[1], dir, traceResult)
