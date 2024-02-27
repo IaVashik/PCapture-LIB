@@ -5,9 +5,10 @@
     SCOPE.endpos <- endpos;
     SCOPE.ignoreEnts <- ignoreEnts
     SCOPE.settings <- settings
+    SCOPE.note <- note
     SCOPE.type <- "BboxCast"
 
-    local result = TraceLineAnalyzer(SCOPE, settings, note)
+    local result = TraceLineAnalyzer(startpos, endpos, ignoreEnts, settings, note)
     
     return BboxTraceResult(SCOPE, result.GetHitpos(), result.GetEntity())
 }

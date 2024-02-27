@@ -1,18 +1,21 @@
 // todo нейминг и ещё одна user filter func!
 ::TraceSettings <- class {
     ignoreClass = arrayLib.new("viewmodel", "weapon_", "info_particle_system",
-    "trigger_", "phys_", "env_", "point_", "info_", "vgui_", "physicsclonearea");
+        "trigger_", "phys_", "env_", "point_", "info_", "vgui_", "physicsclonearea"
+    );
     priorityClass = arrayLib.new();
     errorCoefficient = 500;
+    costlyNormal = false; // UNSTABLE!
     customFilter = null;
-    portalTracing = false;
 
-    constructor(ignoreClass, priorityClass, errorCoefficient, customFilter, portalTracing) {
+    // portalTracing = false;
+
+    constructor(ignoreClass, priorityClass, errorCoefficient, customFilter, costlyNormal) {
         this.ignoreClass = ignoreClass
         this.priorityClass = priorityClass
         this.errorCoefficient = errorCoefficient
         this.customFilter = customFilter
-        this.portalTracing = portalTracing
+        this.costlyNormal = costlyNormal
     }
 
     function new(table) TraceSettings
@@ -26,6 +29,8 @@
     function GetPriorityClass() array
     function GetErrorCoefficient() int
     function GetCustomFilter() func
+
+    function ToggleCostlyNormal(bool) null
 
     function EnablePortalTracing() null
     function DisablePortalTracing() null
@@ -43,9 +48,9 @@ function TraceSettings::new(settings = {}) {
     local _priorityClass = toArrayLib(GetFromTable(settings, "priorityClass", TraceSettings.priorityClass))
     local _errorCoefficient = GetFromTable(settings, "errorCoefficient", TraceSettings.errorCoefficient)
     local _customFilter = GetFromTable(settings, "customFilter", TraceSettings.customFilter)
-    local _portalTracing = GetFromTable(settings, "portalTracing", TraceSettings.portalTracing)
-
-    return TraceSettings(_ignoreClass, _priorityClass, _errorCoefficient, _customFilter, _portalTracing)
+    local _costlyNormal = GetFromTable(settings, "costlyNormal", false)
+    
+    return TraceSettings(_ignoreClass, _priorityClass, _errorCoefficient, _customFilter, _costlyNormal)
 }
 
 
@@ -82,6 +87,12 @@ function TraceSettings::GetErrorCoefficient() {
 
 function TraceSettings::GetCustomFilter() {
     return this.customFilter
+}
+
+
+//TODO
+function TraceSettings::ToggleCostlyNormal(bool) {
+    this.costlyNormal = bool
 }
 
 

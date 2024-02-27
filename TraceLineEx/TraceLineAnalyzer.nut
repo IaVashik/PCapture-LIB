@@ -1,15 +1,12 @@
 ::TraceLineAnalyzer <- class {
-    bboxcastInstance = null
     settings = null;
-
     hitpos = null;
     hitent = null;
 
-    constructor(bboxcast, settings, note) {
-        this.bboxcastInstance = bboxcast
-        this.settings = settings
-
-        local result = this.Trace(bboxcastInstance, note)
+    constructor(startpos, endpos, ignoreEnts, settings, note) {
+        this.settings = settings // todo
+        
+        local result = this.Trace(startpos, endpos, ignoreEnts, note)
         this.hitpos = result[0]
         this.hitent = result[1]
     }
@@ -23,18 +20,14 @@
     }
 
     // todo add args
-    function Trace(bboxcastInstance, note) array(hitpos, hitent) 
+    function Trace(startpos, endpos, ignoreEnts, note) array(hitpos, hitent) 
     function _isPriorityEntity() bool
     function _isIgnoredEntity() bool
     function _hitEntity() bool
 }
 
 
-function TraceLineAnalyzer::Trace(bboxcastInstance, note) {
-    local startpos = bboxcastInstance.startpos
-    local endpos = bboxcastInstance.endpos
-    local ignoreEnts = bboxcastInstance.ignoreEnts
-
+function TraceLineAnalyzer::Trace(startpos, endpos, ignoreEnts, note) {
     // Get the hit position from the fast trace
     local hitpos = CheapTrace(startpos, endpos).GetHitpos()
     // Calculate the distance between start and hit positions

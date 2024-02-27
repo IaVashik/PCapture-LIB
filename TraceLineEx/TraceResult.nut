@@ -34,7 +34,7 @@
         if(this.surfaceNormal)
             return this.surfaceNormal
         
-        this.surfaceNormal = CalculateImpactNormal(this.GetStartPos(), this.hitpos)
+        this.surfaceNormal = CalculateImpactNormal(this.GetStartPos(), this.hitpos, this)
         return this.surfaceNormal 
     } 
 
@@ -71,11 +71,20 @@
     }
 
     function GetEntity() {
-        return entLib.FromEntity(this.hitent)
+        if(this.hitent && this.hitent.IsValid())
+            return entLib.FromEntity(this.hitent)
     }
 
     function GetIngoreEntities() {
         return this.traceHandler.ignoreEnts
+    }
+
+    function GetTraceSettings() {
+        return this.traceHandler.settings
+    }
+
+    function GetNote() {
+        return this.traceHandler.note
     }
 
     function DidHit() {
@@ -99,14 +108,10 @@
         // If the surface normal is already calculated, return it
         if(this.surfaceNormal)
             return this.surfaceNormal
-        
-        local withEntity = null
-        if(this.hitent) 
-            withEntity = this.GetIngoreEntities()
 
-        this.surfaceNormal = CalculateImpactNormal(this.GetStartPos(), this.hitpos, withEntity)
+        this.surfaceNormal = CalculateImpactNormal(this.GetStartPos(), this.hitpos, this)
         return this.surfaceNormal
     } 
 
-    function _typeof() return "TraceResult"
+    function _typeof() return "BboxTraceResult"
 } 
