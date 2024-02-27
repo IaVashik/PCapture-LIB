@@ -198,27 +198,6 @@ Improved arrays module. Contains easy output in the console and additional featu
 #### TODO
 Improved [BBoxCast](https://github.com/IaVashik/portal2-BBoxCast) for BBox-based ray tracing in Portal 2, more optimized.
 
-The PCapture-bboxcast library allows rays to hit entities by using their bounding boxes (BBox), unlike the regular traceline() function that only hits world geometry. It provides enhanced trace capabilities for custom gameplay mechanics or any vscripts involving ray interactions.
-
-| Name | Usage | Description |
-|-|-|-|
-| bboxcast | bboxcast(Vector startpos, Vector endpos, Entity&#124;arrays ignoreEnt = null, table settings = ::defaultSettings, note = null) | Create bboxcast instance. |
-| GetStartPos | Vector bboxcast::GetStartPos() | Get the starting position. |
-| GetEndPos | Vector bboxcast::GetEndPos() | Get the ending position. |
-| GetHitpos | Vector bboxcast::GetHitpos() | Get the hit position. | 
-| GetEntity | pcapEntity bboxcast::GetEntity() | Get the hit entity. |
-| GetEntityClassname | pcapEntity bboxcast::GetEntityClassname() | Get the hit entity classname. |
-| GetIngoreEntities | Entity&#124;array bboxcast::GetIngoreEntities() | Get entities to ignore. |
-| DidHit | bool bboxcast::DidHit() | Check if the trace hit anything. |
-| DidHitWorld | bool bboxcast::DidHitWorld() | Check if the trace hit the world. |
-| GetFraction | float bboxcast::GetFraction() | Get the fraction of the path traversed. |
-| GetImpactNormal | Vector bboxcast::GetImpactNormal() | Get the surface normal at the impact point. |
-| CorrectDisable | void CorrectDisable(Entity ent = caller) | Set bbox to 0 to disable collisions/hits and disable entity. | 
-| CorrectEnable | void CorrectEnable(Entity ent = caller) | Restore original bbox to re-enable collisions/hits and enable entity. |
-todo: GetDir
-
-Remember to correctly disable objects using the following steps:- Use the `CorrectDisable()` function to set the bbox of the entity to (0, 0, 0) and disable it.- To re-enable a previously disabled entity, use the `CorrectEnable()` function to restore its original size 
-
 
 ## 8. [`PCapture-Anims`](/PCapture-Anims.nut) 
 
