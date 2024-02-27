@@ -496,6 +496,11 @@ if("math" in getroottable()) {
     },
 
     clampVector = function(vector, min = 0, max = 255) { // todo
-        return Vector(this.clamp(vector.x, min, max), this.clamp(vector.y, min, max), this.clamp(vector.z, min, max))
+        return Vector(this.clamp(vector.x, min, max), this.clamp(vector.y, min, max), this.clamp(vector.z, min, max)) 
+    },
+
+    resizeVector = function(vector, element) {
+        local tx = sqrt((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z))
+        return vector * (element / tx)
     }
 }

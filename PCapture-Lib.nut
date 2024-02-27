@@ -21,9 +21,11 @@ IncludeScript("pcapture-lib/PCapture-Arrays")
 IncludeScript("pcapture-lib/PCapture-Utils")
 IncludeScript("pcapture-lib/PCapture-Entities")
 IncludeScript("pcapture-lib/PCapture-EventHandler")
-IncludeScript("pcapture-lib/PCapture-Bboxcast")
 IncludeScript("pcapture-lib/PCapture-Anims")
 IncludeScript("pcapture-lib/PCapture-Improvements")
+
+// TODO delete?
+IncludeScript("pcapture-lib/TraceLineEx/main")
 
 if(("dissolver" in getroottable()) == false) {
     ::dissolver <- entLib.CreateByClassname("env_entity_dissolver", {targetname = "@dissolver"})
