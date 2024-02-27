@@ -188,6 +188,7 @@ Improved arrays module. Contains easy output in the console and additional featu
 | slice | arrayLib slice(int start, int end = null) | Slice a portion of the array. Returns the sliced array. |
 | sort | arrayLib sort(Function func = null) | Sort the array. Optionally accepts a compare function. Returns the sorted array. |
 | top | any top() | Get the last element of the array. |
+| Clone | arrayLib Clone() | Returns a clone of the array |
 | join | string join(string joinstr = "") | Join the array into a string using the specified separator string. Returns the joined string. |
 | totable | table totable(bool recreate = false) | Convert the array to a table representation. Optionally recreate the table if it already exists. Returns the table representation. |
 

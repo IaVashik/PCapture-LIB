@@ -225,6 +225,26 @@ anArray.join(" -> ") // Output: "one -> two -> three"
 - `joinstr` (string, *optional*): The separator string.
 - Returns: The joined string.
 
+### Clone()
+
+Returns a clone of the array
+
+```
+local arr1 = arrayLib.new(1,2,3)
+local arr2 = arr1 // Not cloning, but assigning a link/pointer
+printl(arr1 == arr2) // Outputs: "true"
+
+local arr3 = arr1.Clone()
+printl(arr1 == arr3) // Outputs: "false"
+
+arr3.append(4)
+printl(arr1) // Outputs: "Array: [1, 2, 3]"
+printl(arr3) // Outputs: "Array: [1, 2, 3, 4]"
+```
+
+- Returns: Full clone of your array
+
+
 ### get(idx, defaultVal = null)
 
 Retrieve the element at the specified index in the array.

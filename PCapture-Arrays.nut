@@ -335,6 +335,14 @@ if("arrayLib" in getroottable()) {
             this.table[val] <- null
     }
 
+
+    function Clone() {
+        local arr = clone this
+        arr.arr = clone arr.arr
+        arr.table = clone arr.table
+        return arr
+    }
+
     /*
     * Convert the array to a string.
     *
