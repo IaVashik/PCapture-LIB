@@ -1,25 +1,17 @@
+::TracePresets <- {}
 
-/*
-* Perform trace from player's eyes.
-*
-* @param {float} distance - Trace distance.
-* @param {Entity} ignoreEnts - Entity to ignore.  
-* @param {object} settings - Trace settings.
-* @param {Entity} player - Player entity.
-* @returns {bboxcast} Resulting trace. 
-*/
-function bboxcast::TracePlayerEyes(distance, ignoreEnts = null, settings = ::defaultSettings, player = null) {
-    // Get the player's eye position and forward direction
-    if(player == null) 
-        player = GetPlayerEx()
-    if(!player) 
-        return bboxcast(Vector(), Vector())
+local GetEyeEndpos = function(player, distance) {
     if(typeof player != "pcapEntity") 
-        player = pcapPlayer(player)
+        player = pcapPlayer(player) //! TODO change in merge commit!
 
+    return player.EyePosition() + player.EyeForwardVector() * distance
+}
+
+
+TracePresets["TracePlayerEyes"] <- function(distance, player, ignoreEnts = null, settings = ::defaultSettings) : (GetEyeEndpos) {
     // Calculate the start and end positions of the trace
     local startpos = player.EyePosition()
-    local endpos = startpos + player.EyeForwardVector() * distance
+    local endpos = GetEyeEndpos(player, distance)
 
     // Check if any entities should be ignored during the trace
     if (ignoreEnts) {
@@ -38,5 +30,14 @@ function bboxcast::TracePlayerEyes(distance, ignoreEnts = null, settings = ::def
     }
 
     // Perform the bboxcast trace and return the trace result
-    return bboxcast(startpos, endpos, ignoreEnts, settings)
+    return BboxCast(startpos, endpos, ignoreEnts, settings)
+}
+
+
+TracePresets["CheapTracePlayerEyes"] <- function(distance, player) : (GetEyeEndpos) {
+    // Calculate the start and end positions of the trace
+    local startpos = player.EyePosition()
+    local endpos = GetEyeEndpos(player, distance)
+
+    return CheapTrace(startpos, endpos)
 }
