@@ -101,8 +101,10 @@ function TraceLineAnalyzer::_hitEntity(ent, ignoreEnts, note) {
                 }
             }
         } 
-        else if (ent == ignoreEnts.CBaseEntity) {
+        else if (typeof ignoreEnts == "pcapEntity" && ent == ignoreEnts.CBaseEntity) {
             return false;
+        } else if (ent == ignoreEnts) {
+            return false
         }
     }
 
