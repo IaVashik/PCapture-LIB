@@ -2,12 +2,12 @@
 
 local GetEyeEndpos = function(player, distance) {
     if(typeof player != "pcapEntity") 
-        player = pcapPlayer(player) //! TODO change in merge commit!
+        player = entLib.FromEntity(player)
 
     return player.EyePosition() + player.EyeForwardVector() * distance
 }
 
-addInIgnoreList <- function(ignoreEnts, newEnt) {
+::addInIgnoreList <- function(ignoreEnts, newEnt) {
     // Check if any entities should be ignored during the trace
     if (ignoreEnts) {
         // If ignoreEnts is an array, append the player entity to it
