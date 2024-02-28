@@ -31,47 +31,11 @@ EntFireByHandle(target, action, value, delay, activator, caller)
 
 ### GetPlayerEx
 
-Retrieves a player entity with extended functionality (pcapPlayer).
+Retrieves a player entity with extended functionality (pcapEntity).
 
 ```
 local player = GetPlayerEx(1)
 ```
 
 - index (int, *optional*): The index of the player (1-based). // TODO
-- Returns: pcapPlayer.
-
-### pcapPlayer
-
-Enhanced player entity class *(extended pcapEntity)* with extended methods.
-
-#### EyePosition
-
-Returns the eye position of the player.
-
-```
-local eyePos = player.EyePosition()
-```
-
-- Returns: The eye position.
-
-#### EyeAngles
-
-Returns the eye angles of the player.
-
-```
-local eyeAngles = player.EyeAngles()
-```
-
-- Returns: The eye angles.
-
-#### EyeForwardVector
-
-Returns the forward vector of the player's eye.
-
-```
-local eyeForward = player.EyeForwardVector()
-```
-
-- Returns: The forward vector of the eye.
-
-#### And also all methods from pcapEntity
+- Returns: pcapEntity.

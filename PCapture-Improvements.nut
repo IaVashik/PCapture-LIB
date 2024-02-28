@@ -61,43 +61,14 @@ local _EntFireByHandle = EntFireByHandle
 * @param {int} index - The index of the player (1-based).
 * @returns {pcapEntity} - An extended player entity with additional methods.
 */
-::GetPlayerEx <- function(index = 1) { // TODO
-    return pcapPlayer(GetPlayer())
-}
-
-::pcapPlayer <- class extends pcapEntity {
-    function EyePosition() {
-        return this.CBaseEntity.EyePosition()
+::GetPlayerEx <- function(index = 1) {
+    if(IsMultiplayer()) {
+        local idx = 1
+        for(local player; player = Entities.FindByClassname(player, "player"); idx++) {
+            if(idx == index) return player
+        }
+        return null
     }
 
-    function EyeAngles() {
-        return this.GetUserData("Eye").GetAngles()
-    }
-
-    function EyeForwardVector() {
-        return this.GetUserData("Eye").GetForwardVector()
-    }
-}
-
-
-for(local player; player = entLib.FindByClassname("player", player);) {
-    if(player.GetUserData("Eye")) return
-
-    local controlName = "eyeControl" + UniqueString()
-    local eyeControlEntity = entLib.CreateByClassname("logic_measure_movement", {
-        targetname = controlName, measuretype = 1}
-    )
-
-    local eyeName = "eyePoint" + UniqueString()
-    local eyePointEntity = entLib.CreateByClassname("info_target", {targetname = eyeName})
-
-    local playerName = player.GetName() == "" ? "!player" : player.GetName()
-
-    EntFireByHandle(eyeControlEntity, "setmeasuretarget", playerName)
-    EntFireByHandle(eyeControlEntity, "setmeasurereference", controlName);
-    EntFireByHandle(eyeControlEntity, "SetTargetReference", controlName);
-    EntFireByHandle(eyeControlEntity, "Settarget", eyeName);
-    EntFireByHandle(eyeControlEntity, "Enable")
-
-    player.SetUserData("Eye", eyePointEntity)
+    return pcapEntity(GetPlayer()) 
 }

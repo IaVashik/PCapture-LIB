@@ -250,7 +250,20 @@ if("entLib" in getroottable()) {
     * @returns {bool} - True if this entity is the player, false otherwise.
     */
     function IsPlayer() {
-        return this.CBaseEntity == GetPlayer()  // todo
+        return this.CBaseEntity.GetClassname() == "player"  // todo
+    }
+
+
+    function EyePosition() {
+        if(this.IsPlayer()) return this.CBaseEntity.EyePosition()
+    }
+
+    function EyeAngles() {
+        if(this.IsPlayer()) return this.GetUserData("Eye").GetAngles()
+    }
+
+    function EyeForwardVector() {
+        if(this.IsPlayer()) return this.GetUserData("Eye").GetForwardVector()
     }
 
 

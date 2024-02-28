@@ -68,6 +68,9 @@ Improved Entities Module. Contains A VERY LARGE number of different functions th
 | Dissolve | void pcapEntity::Dissolve() | Dissolve the entity |
 | IsValid | bool pcapEntity::IsValUtilsid() | Checks if the entity is valid |
 | IsPlayer | bool pcapEntity::IsPlayer() | Checks if the entity is the player |
+| EyePosition | Vector pcapEntity::EyePosition() | Gets the eye position of the player entity.                           |
+| EyeAngles   | Vector pcapEntity::EyeAngles() | Gets the eye angles of the player entity.                             |
+| EyeForwardVector | Vector pcapEntity::EyeForwardVector() | Gets the forward vector from the player entity's eye position.        |
 | SetKeyValue | void pcapEntity::SetKeyValue(string key, any value) | Sets a keyvalue of the entity |
 | addOutput | void pcapEntity::addOutput(string output, string target, string input, string param = "", int delay = 0, int fires = -1) | Sets a outputs of the entity |
 | ConnectOutputEx | void pcapEntity::ConnectOutputEx(string&#124;function output, string script, int delay = 0, int fires = -1) | TODO |
@@ -220,9 +223,6 @@ Overrides and improves existing standard VScripts functions.
 |-|-|-|
 | FrameTime             | void FrameTime()                                       | Limits frametime to avoid zero values, providing a default if zero.   |
 | EntFireByHandle       | void EntFireByHandle(target, action, value = "", delay = 0, activator = null, caller = null) | Wrapper to handle PCapLib objects with EntFireByHandle.               |
-| GetPlayerEx           | pcapPlayer GetPlayerEx(index)                                | Retrieves a player entity with extended functionality.                |
-| pcapPlayer.EyePosition | Vector pcapPlayer::EyePosition()                         | Gets the eye position of the player entity.                           |
-| pcapPlayer.EyeAngles   | Vector pcapPlayer::EyeAngles()                           | Gets the eye angles of the player entity.                             |
-| pcapPlayer.EyeForwardVector | Vector pcapPlayer::EyeForwardVector()               | Gets the forward vector from the player entity's eye position.        |
+| GetPlayerEx           | pcapEntity GetPlayerEx(index)                                | Retrieves a player entity with extended functionality.                |
 
 #### [More info about *PCapture-Improvements* here](Improvements_module.md)
