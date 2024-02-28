@@ -235,7 +235,8 @@ if("arrayLib" in getroottable()) {
     * @returns {arrayLib} - The reversed array.
     */
     function reverse() {
-        return arr.reverse();
+        arr.reverse();
+        return this
     }
 
     /*
@@ -336,11 +337,8 @@ if("arrayLib" in getroottable()) {
     }
 
 
-    function Clone() {
-        local arr = clone this
-        arr.arr = clone arr.arr
-        arr.table = clone arr.table
-        return arr
+    function _cloned() {
+        return arrayLib(clone this.arr)
     }
 
     /*
