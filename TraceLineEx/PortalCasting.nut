@@ -39,8 +39,9 @@ local applyPortal = function (startPos, hitPos, portal, partner) {
             return tracedata
         
         local partner = portal.GetUserData("partner")
-        if (partner == null) 
+        if (partner == null) {
             return tracedata
+        }
 
         local ray = applyPortal(startPos, hitPos, portal, partner);
         startPos = ray.startPos + partner.GetForwardVector() // A small hack to keep tracing from getting stuck
@@ -89,26 +90,36 @@ local applyPortal = function (startPos, hitPos, portal, partner) {
 
 
 // TODO comment
-for(local portal; portal = entLib.FindByClassname("linked_portal_door", portal);) {
-    local partner = entLib.FromEntity(portal.GetPartnerInstance())
-    portal.SetUserData("partner", partner)
-
-    if(portal.GetModelName() == "")
-        continue
+::FindPartnersForPortals <- function() {
+    for(local portal; portal = entLib.FindByClassname("linked_portal_door", portal);) {
+        if(portal.GetUserData("partner"))
+            continue
     
-    local wpInfo = split(portal.GetModelName(), " ")
-    local wpBBox = math.rotateVector(Vector(5, wpInfo[0].tointeger(), wpInfo[1].tointeger()), portal.GetAngles())
-    wpBBox.x = abs(wpBBox.x); // TODO добавить abs для векторов
-    wpBBox.y = abs(wpBBox.y);
-    wpBBox.z = abs(wpBBox.z);
-    portal.SetBBox(wpBBox * -1, wpBBox) 
+        local partner = entLib.FromEntity(portal.GetPartnerInstance())
+        portal.SetUserData("partner", partner)
+    
+        if(portal.GetModelName() == "")
+            continue
+        
+        local wpInfo = split(portal.GetModelName(), " ")
+        local wpBBox = math.rotateVector(Vector(5, wpInfo[0].tointeger(), wpInfo[1].tointeger()), portal.GetAngles())
+        wpBBox.x = abs(wpBBox.x); // TODO добавить abs для векторов
+        wpBBox.y = abs(wpBBox.y);
+        wpBBox.z = abs(wpBBox.z);
+        portal.SetBBox(wpBBox * -1, wpBBox) 
+    }
+    
+    for(local portal; portal = entLib.FindByClassname("prop_portal", portal);) { // todo
+        if(portal.GetUserData("partner"))
+            continue
+    
+        local mdl = "models/portals/portal1.mdl"
+        if(portal.GetModelName().find("portal2") == null) 
+            mdl = "models/portals/portal2.mdl"
+        
+        local partner = entLib.FindByModel(mdl)
+        portal.SetUserData("partner", partner) 
+    }
 }
 
-for(local portal; portal = entLib.FindByClassname("prop_portal", portal);) { // todo
-    local mdl = "models/portals/portal1.mdl"
-    if(portal.GetModelName().find("portal2") == null) 
-        mdl = "models/portals/portal2.mdl"
-    
-    local partner = entLib.FindByModel(mdl)
-    portal.SetUserData("partner", partner) 
-}
+FindPartnersForPortals() // tood?
