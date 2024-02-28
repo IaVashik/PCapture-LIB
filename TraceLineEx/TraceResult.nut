@@ -38,6 +38,15 @@
         return this.portalEntryInfo
     }
 
+    function GetAggregatedPortalEntryInfo() {
+        local arr = arrayLib([])
+        arr.append(trace)
+        for(local trace = this; trace = trace.portalEntryInfo;) {
+            arr.append(trace)
+        }
+        return arr
+    }
+
     function GetImpactNormal() {
         // If the surface normal is already calculated, return it
         if(this.surfaceNormal)
@@ -48,6 +57,9 @@
     } 
 
     function _typeof() return "TraceResult"
+    function _tostring() {
+        return "TraceResult | startpos: " + GetStartPos() + ", endpos: " + GetEndPos() + ", fraction: " + GetFraction() + ", hitpos: " + GetHitpos()
+    }
 }
 
 
@@ -121,6 +133,15 @@
         return this.portalEntryInfo
     }
 
+    function GetAggregatedPortalEntryInfo() {
+        local arr = arrayLib([])
+        arr.append(this)
+        for(local trace = this; trace = trace.portalEntryInfo;) {
+            arr.append(trace)
+        }
+        return arr.reverse()
+    }
+
     // todo
     function GetImpactNormal() {
         // If the surface normal is already calculated, return it
@@ -132,4 +153,7 @@
     } 
 
     function _typeof() return "BboxTraceResult"
+    function _tostring() {
+        return "TraceResult | startpos: " + GetStartPos() + ", endpos: " + GetEndPos() + ", hitpos: " + GetHitpos() + ", entity: " + GetEntity()
+    }
 } 
