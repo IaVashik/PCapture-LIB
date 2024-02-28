@@ -30,3 +30,33 @@ IncludeScript("pcapture-lib/TraceLineEx/main")
 if(("dissolver" in getroottable()) == false) {
     ::dissolver <- entLib.CreateByClassname("env_entity_dissolver", {targetname = "@dissolver"})
 } 
+
+
+function AttachEyeControlToPlayers() {
+    for(local player; player = entLib.FindByClassname("player", player);) {
+        if(player.GetUserData("Eye")) return
+    
+        local controlName = "eyeControl" + UniqueString()
+        local eyeControlEntity = entLib.CreateByClassname("logic_measure_movement", {
+            targetname = controlName, measuretype = 1}
+        )
+    
+        local eyeName = "eyePoint" + UniqueString()
+        local eyePointEntity = entLib.CreateByClassname("info_target", {targetname = eyeName})
+    
+        local playerName = player.GetName() == "" ? "!player" : player.GetName()
+    
+        EntFireByHandle(eyeControlEntity, "setmeasuretarget", playerName)
+        EntFireByHandle(eyeControlEntity, "setmeasurereference", controlName);
+        EntFireByHandle(eyeControlEntity, "SetTargetReference", controlName);
+        EntFireByHandle(eyeControlEntity, "Settarget", eyeName);
+        EntFireByHandle(eyeControlEntity, "Enable")
+    
+        player.SetUserData("Eye", eyePointEntity)
+    }
+}
+
+AttachEyeControlToPlayers()
+if(IsMultiplayer()) {
+    RunScriptCode.setInterval(AttachEyeControlToPlayers, 5)
+} 
