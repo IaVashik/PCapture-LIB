@@ -50,7 +50,7 @@ local _getIntPointCostly = function(newStart, dir, traceResult) {
     local newStartsPos = GetNewStartsPos(startpos, dir)
     local intersectionPoints
 
-    if(typeof traceResult == "BboxTraceResult" && traceResult.GetEntity() && traceResult.GetTraceSettings().costlyNormal) {
+    if(typeof traceResult == "BboxTraceResult" && traceResult.GetEntity() && traceResult.GetTraceSettings().useCostlyNormalComputation) {
         intersectionPoints = {
             point1 = _getIntPointCostly(newStartsPos[0], dir, traceResult),
             point2 = _getIntPointCostly(newStartsPos[1], dir, traceResult)

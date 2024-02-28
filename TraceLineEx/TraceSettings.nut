@@ -1,112 +1,159 @@
 // todo нейминг и ещё одна user filter func!
 ::TraceSettings <- class {
-    ignoreClass = arrayLib.new("viewmodel", "weapon_", "info_particle_system",
-        "trigger_", "phys_", "env_", "point_", "info_", "vgui_", "physicsclonearea", "prop_portal", "portal_base2D"
+    ignoreClasses = arrayLib.new("viewmodel", "weapon_", "info_particle_system",
+        "trigger_", "phys_", "env_", "point_", "info_", "vgui_", 
+        "clone", "prop_portal", "portal_base2D"
     );
-    priorityClass = arrayLib.new();
-    errorCoefficient = 500;
-    costlyNormal = false; // UNSTABLE!
-    customFilter = null;
+    priorityClasses = arrayLib.new();
+    ignoredModels = arrayLib.new();
 
-    // portalTracing = false;
+    errorTolerance = 500; // units
+    useCostlyNormalComputation = false; // UNSTABLE!
 
-    constructor(ignoreClass, priorityClass, errorCoefficient, customFilter, costlyNormal) {
-        this.ignoreClass = ignoreClass
-        this.priorityClass = priorityClass
-        this.errorCoefficient = errorCoefficient
-        this.customFilter = customFilter
-        this.costlyNormal = costlyNormal
+    shouldRayHitEntity = null;
+    shouldIgnoreEntity = null;
+
+
+    constructor(ignoreClasses, priorityClasses, ignoredModels, errorTolerance, shouldRayHitEntity, shouldIgnoreEntity) {
+        this.ignoreClasses = ignoreClasses
+        this.priorityClasses = priorityClasses
+        this.ignoredModels = ignoredModels
+        this.errorTolerance = errorTolerance
+        this.shouldRayHitEntity = shouldRayHitEntity
+        this.shouldIgnoreEntity = shouldRayHitEntity
     }
 
     function new(table) TraceSettings
 
-    function SetIgnoreClass(array) null
-    function SetPriorityClass(array) null
-    function SetErrorCoefficient(int) null
-    function SetCustomFilter(func) null
+    function SetIgnoredClasses(array) null
+    function SetPriorityClasses(array) null
+    function SetIgnoredModels(array) null
+    function SetErrorTolerance(int) null
 
-    function GetIgnoreClass() array
-    function GetPriorityClass() array
-    function GetErrorCoefficient() int
-    function GetCustomFilter() func
+    function AppendIgnoredClass(string) null
+    function AppendPriorityClasses(string) null
+    function AppendIgnoredMode(string) null
 
-    function ToggleCostlyNormal(bool) null
+    function GetIgnoreClasses() array
+    function GetPriorityClasses() array
+    function GetIgnoredModels() array
+    function GetErrorTolerance() int
 
-    function EnablePortalTracing() null
-    function DisablePortalTracing() null
-    function TogglePortalTracing() null
+    function SetCollisionFilter(func) null
+    function SetIgnoreFilter(func) null
+    function GetCollisionFilter() func
+    function GetIgnoreFilter() func
+    function ApplyCollisionFilter(entity, note) bool
+    function ApplyIgnoreFilter(entity, note) bool
 
-    function RunUserFilter() bool
+    function ToggleUseCostlyNormal(bool) null
 
-    function _toArrayLib(array) arrayLib
+    function _typeof() return "TraceSettings"
+    function _cloned() {
+        return TraceSettings(
+            clone this.ignoreClasses, clone this.priorityClasses, clone this.ignoredModels, 
+            this.errorTolerance, this.shouldRayHitEntity, this.shouldIgnoreEntity
+        )
+    }
 }
 
 
 // TODO
 function TraceSettings::new(settings = {}) {
-    local _ignoreClass = toArrayLib(GetFromTable(settings, "ignoreClass", TraceSettings.ignoreClass))
-    local _priorityClass = toArrayLib(GetFromTable(settings, "priorityClass", TraceSettings.priorityClass))
-    local _errorCoefficient = GetFromTable(settings, "errorCoefficient", TraceSettings.errorCoefficient)
-    local _customFilter = GetFromTable(settings, "customFilter", TraceSettings.customFilter)
-    local _costlyNormal = GetFromTable(settings, "costlyNormal", false)
+    local _ignoreClasses = toArrayLib(GetFromTable(settings, "ignoreClasses", clone TraceSettings.ignoreClasses))
+    local _priorityClasses = toArrayLib(GetFromTable(settings, "priorityClasses", clone TraceSettings.priorityClasses))
+    local _ignoredModels = toArrayLib(GetFromTable(settings, "ignoredModels", clone TraceSettings.ignoredModels))
+    local _errorTolerance = GetFromTable(settings, "errorTolerance", TraceSettings.errorTolerance)
+    local _shouldRayHitEntity = GetFromTable(settings, "shouldRayHitEntity", null)
+    local _shouldIgnoreEntity = GetFromTable(settings, "shouldIgnoreEntity", null)
     
-    return TraceSettings(_ignoreClass, _priorityClass, _errorCoefficient, _customFilter, _costlyNormal)
+    return TraceSettings(
+        _ignoreClasses, _priorityClasses, _ignoredModels, 
+        _errorTolerance, _shouldRayHitEntity, _shouldIgnoreEntity
+    )
 }
 
 
 // TODO
-function TraceSettings::SetIgnoreClass(array) {
-    this.ignoreClass = this._toArrayLib(array)
+function TraceSettings::SetIgnoredClasses(array) {
+    this.ignoreClasses = this.toArrayLib(array)
 }
 
-function TraceSettings::SetPriorityClass(array) {
-    this.priorityClass = this._toArrayLib(array)
+function TraceSettings::SetPriorityClasses(array) {
+    this.priorityClasses = this.toArrayLib(array)
 }
 
-function TraceSettings::SetErrorCoefficient(units) {
-    this.errorCoefficient = units
+function TraceSettings::SetIgnoredModels(array) {
+    this.ignoredModels = this.toArrayLib(array)
 }
 
-function TraceSettings::SetCustomFilter(func) {
-    this.ignoreClass = func
+function TraceSettings::SetErrorTolerance(units) {
+    this.errorTolerance = units
 }
 
 
 // TODO
-function TraceSettings::GetIgnoreClass() {
-    return this.ignoreClass
+function TraceSettings::AppendIgnoredClass(string) {
+    this.ignoreClasses.append(string)
 }
 
-function TraceSettings::GetPriorityClass() {
-    return this.priorityClass
+function TraceSettings::AppendpriorityClasses(string) {
+    this.priorityClasses.append(string)
 }
 
-function TraceSettings::GetErrorCoefficient() {
-    return this.errorCoefficient
+function TraceSettings::AppendIgnoredMode(string) {
+    this.ignoredModels.append(string)
 }
 
-function TraceSettings::GetCustomFilter() {
-    return this.customFilter
+
+
+// TODO
+function TraceSettings::GetIgnoreClasses() {
+    return this.ignoreClasses
+}
+
+function TraceSettings::GetPriorityClasses() {
+    return this.priorityClasses
+}
+
+function TraceSettings::GetIgnoredModels() {
+    return this.ignoredModels
+}
+
+function TraceSettings::GetErrorTolerance() {
+    return this.errorTolerance
+}
+
+
+// TODO
+function TraceSettings::SetCollisionFilter(func) {
+    this.shouldRayHitEntity = func
+}
+
+function TraceSettings::SetIgnoreFilter(func) {
+    this.shouldIgnoreEntity = func
+}
+
+function TraceSettings::GetCollisionFilter() {
+    return this.shouldRayHitEntity
+}
+
+function TraceSettings::GetIgnoreFilter() {
+    return this.shouldIgnoreEntity
+}
+
+function TraceSettings::ApplyCollisionFilter(entity, note) {
+    return this.shouldRayHitEntity ? this.shouldRayHitEntity(entity, note) : false
+}
+
+function TraceSettings::ApplyIgnoreFilter(entity, note) {
+    return this.shouldIgnoreEntity ? this.shouldIgnoreEntity(entity, note) : false
 }
 
 
 //TODO
-function TraceSettings::ToggleCostlyNormal(bool) {
-    this.costlyNormal = bool
-}
-
-
-// TODO
-function TraceSettings::EnablePortalTracing() {
-    this.portalTracing = true
-}
-
-function TraceSettings::DisablePortalTracing() {
-    this.portalTracing = false
-}
-
-function TraceSettings::TogglePortalTracing() {
-    this.portalTracing = !this.portalTracing
+function TraceSettings::ToggleUseCostlyNormal(bool) {
+    this.useCostlyNormalComputation = bool
 }
 
 

@@ -33,7 +33,7 @@ function TraceLineAnalyzer::Trace(startpos, endpos, ignoreEnts, note) {
     // Calculate the distance between start and hit positions
     local dist = hitpos - startpos
     // Calculate a distance coefficient for more precise tracing based on distance and error coefficient
-    local dist_coeff = abs(dist.Length() / settings.GetErrorCoefficient()) + 1
+    local dist_coeff = abs(dist.Length() / settings.GetErrorTolerance()) + 1
     // Calculate the number of steps based on distance and distance coefficient
     local step = dist.Length() / 14 / dist_coeff
 
@@ -61,7 +61,11 @@ function TraceLineAnalyzer::Trace(startpos, endpos, ignoreEnts, note) {
 * @returns {boolean} True if priority.
 */
 function TraceLineAnalyzer::_isPriorityEntity(entityClass) {
-    return settings.GetPriorityClass().find(entityClass) // todo!
+    if(settings.GetPriorityClasses().len() == 0) 
+        return false
+    return settings.GetPriorityClasses().search(function(val):(entityClass) {
+        return entityClass.find(val) >= 0
+    })
 }
 
 /* 
@@ -71,7 +75,19 @@ function TraceLineAnalyzer::_isPriorityEntity(entityClass) {
 * @returns {boolean} True if ignored.
 */
 function TraceLineAnalyzer::_isIgnoredEntity(entityClass) {
-    return settings.GetIgnoreClass().find(entityClass)
+    if(settings.GetIgnoreClasses().len() == 0) 
+        return false
+    return settings.GetIgnoreClasses().search(function(val):(entityClass) {
+        return entityClass.find(val) >= 0
+    })
+}
+
+function TraceLineAnalyzer::_isIgnoredModels(entityModel) {
+    if(settings.GetIgnoredModels().len() == 0 || entityModel == "") 
+        return false
+    return settings.GetIgnoredModels().search(function(val):(entityClass) {
+        return entityClass.find(val) >= 0
+    })
 }
 
 /*
@@ -81,41 +97,41 @@ function TraceLineAnalyzer::_isIgnoredEntity(entityClass) {
 * @param {Entity|array} ignoreEnts - Entities being ignored. 
 * @returns {boolean} True if should ignore.
 */
-function TraceLineAnalyzer::_hitEntity(ent, ignoreEnts, note) {
-    local classname = ent.GetClassname()
-
+function TraceLineAnalyzer::_hitEntity(ent, ignoreEnts, note) { // todo rename
     // todo
-    if(settings.customFilter && settings.customFilter(ent, note))
+    if(settings.ApplyIgnoreFilter(ent, note))
+        return false
+
+    if(settings.ApplyCollisionFilter(ent, note))
         return true
 
-    // todo
-    // if(settings.RunUserFilter2(ent, note))
-    //     return false
-    if(ignoreEnts) {
-        if (typeof ignoreEnts == "array" || typeof ignoreEnts == "arrayLib") { // todo
+
+    if(ignoreEnts) { // TODO пускай всегда будет массивом, а трейсеры будут оборачивать одиночек, хуле нет)
+        // Processing for arrays
+        local type = typeof ignoreEnts
+        if (type == "array" || type == "arrayLib") {
             foreach (mask in ignoreEnts) {
-                if(typeof mask == "pcapEntity")
-                    mask = mask.CBaseEntity
-                if (mask == ent) {
-                    return false;
-                }
+                if(this._eqEnts(mask, ent)) return false
             }
         } 
-        else if (typeof ignoreEnts == "pcapEntity" && ent == ignoreEnts.CBaseEntity) {
-            return false;
-        } else if (ent == ignoreEnts) {
-            return false
-        }
+        
+        else if(this._eqEnts(ignoreEnts, ent)) return false
     }
 
+    local classname = ent.GetClassname()
     if (_isIgnoredEntity(classname) && !_isPriorityEntity(classname)) {
         return false
     }
-    else {  //! critical todo
-        local classType = split(classname, "_")[0] + "_"
-        if(_isIgnoredEntity(classType) && !_isPriorityEntity(classname))
-            return false
+    
+    if(_isIgnoredModels(ent.GetModelName())) {
+        return false
     }
 
     return true
+}
+
+function TraceLineAnalyzer::_eqEnts(ent1, ent2) {
+    if(typeof ent1 == "pcapEntity")
+        ent1 = ent1.CBaseEntity
+    return ent1 == ent2
 }
