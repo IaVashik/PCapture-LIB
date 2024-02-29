@@ -65,7 +65,7 @@ function TraceLineAnalyzer::_isPriorityEntity(entityClass) {
         return false
     return settings.GetPriorityClasses().search(function(val):(entityClass) {
         return entityClass.find(val) >= 0
-    })
+    }) != null
 }
 
 /* 
@@ -79,15 +79,15 @@ function TraceLineAnalyzer::_isIgnoredEntity(entityClass) {
         return false
     return settings.GetIgnoreClasses().search(function(val):(entityClass) {
         return entityClass.find(val) >= 0
-    })
+    }) != null
 }
 
 function TraceLineAnalyzer::_isIgnoredModels(entityModel) {
     if(settings.GetIgnoredModels().len() == 0 || entityModel == "") 
         return false
-    return settings.GetIgnoredModels().search(function(val):(entityClass) {
-        return entityClass.find(val) >= 0
-    })
+    return settings.GetIgnoredModels().search(function(val):(entityModel) {
+        return entityModel.find(val) >= 0
+    }) != null
 }
 
 /*

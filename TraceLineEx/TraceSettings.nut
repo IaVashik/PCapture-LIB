@@ -1,7 +1,7 @@
 // todo нейминг и ещё одна user filter func!
 ::TraceSettings <- class {
-    ignoreClasses = arrayLib.new("viewmodel", "weapon_", "info_particle_system",
-        "trigger_", "phys_", "env_", "point_", "info_", "vgui_", 
+    ignoreClasses = arrayLib.new("viewmodel", "weapon_", "beam"
+        "trigger_", "phys_", "env_", "point_", "info_", "vgui_", "logic_"
         "clone", "prop_portal", "portal_base2D"
     );
     priorityClasses = arrayLib.new();
@@ -32,7 +32,7 @@
 
     function AppendIgnoredClass(string) null
     function AppendPriorityClasses(string) null
-    function AppendIgnoredMode(string) null
+    function AppendIgnoredModel(string) null
 
     function GetIgnoreClasses() array
     function GetPriorityClasses() array
@@ -97,11 +97,11 @@ function TraceSettings::AppendIgnoredClass(string) {
     this.ignoreClasses.append(string)
 }
 
-function TraceSettings::AppendpriorityClasses(string) {
+function TraceSettings::AppendPriorityClasses(string) {
     this.priorityClasses.append(string)
 }
 
-function TraceSettings::AppendIgnoredMode(string) {
+function TraceSettings::AppendIgnoredModel(string) {
     this.ignoredModels.append(string)
 }
 
