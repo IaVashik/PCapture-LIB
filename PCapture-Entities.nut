@@ -14,6 +14,7 @@ if("entLib" in getroottable()) {
     return
 }
 
+::pcapEntityCache <- {}
 
 ::entLib <- class {
     /* Creates an entity of the specified classname with the provided keyvalues.
@@ -23,15 +24,16 @@ if("entLib" in getroottable()) {
     * @returns {pcapEntity} - The created entity object.
     */
     function CreateByClassname(classname, keyvalues = {}) {
-        local new_entity = pcapEntity(Entities.CreateByClassname(classname))
+        local new_entity = entLib.FromEntity(Entities.CreateByClassname(classname))
         foreach(key, value in keyvalues) {
             new_entity.SetKeyValue(key, value)
         }
+        pcapEntityCache[CBaseEntity] <- new_entity
         return new_entity
     }
 
     function CreateProp(classname, origin, modelname, activity = 1, keyvalues = {}) {
-        local new_entity = pcapEntity(CreateProp(classname, origin, modelname, activity))
+        local new_entity = entLib.FromEntity(CreateProp(classname, origin, modelname, activity))
         foreach(key, value in keyvalues) {
             new_entity.SetKeyValue(key, value)
         }
@@ -167,29 +169,35 @@ if("entLib" in getroottable()) {
     function __init(CBaseEntity) {
         if(!CBaseEntity)
             return null
-        return pcapEntity(CBaseEntity)
+
+        if(CBaseEntity in pcapEntityCache) {
+            return pcapEntityCache[CBaseEntity]
+        } else {
+            local pcapEnt = pcapEntity(CBaseEntity)
+            pcapEntityCache[CBaseEntity] <- pcapEnt
+            return pcapEnt
+        }
     }
 }
 
 
-
-
 ::pcapEntity <- class {
     CBaseEntity = null;
-    Scope = {}
+    EntityScope = null;
 
     /* Constructor for the entity object.
     *
     * @param {CBaseEntity} entity - The entity object.
     */
-    constructor(entity = null) {
-        if(typeof entity == "pcapEntity")
-            entity = entity.CBaseEntity
-            
+    constructor(entity = null) { 
         if(entity == null) return null
 
+        if(typeof entity == "pcapEntity")
+            entity = entity.CBaseEntity
+
         this.CBaseEntity = entity
-        entity.ValidateScriptScope()
+        this.EntityScope = {}
+        entity.ValidateScriptScope() // todo we need this shit?
     }
 
 
@@ -241,7 +249,7 @@ if("entLib" in getroottable()) {
     * @returns {bool} - True if the entity is valid, false otherwise.
     */
     function IsValid() {
-        return this.CBaseEntity && this.CBaseEntity.IsValid() && this.GetUserData("Dissolved") != true
+        return this.CBaseEntity && this.CBaseEntity.IsValid() && !this.GetUserData("Dissolved")
     }
 
 
@@ -510,7 +518,7 @@ if("entLib" in getroottable()) {
     * @param {any} value - The value to store.
     */
     function SetUserData(name, value) {
-        this.CBaseEntity.GetScriptScope()[name.tolower()] <- value
+        this.EntityScope[name.tolower()] <- value
     }
 
 
@@ -520,10 +528,9 @@ if("entLib" in getroottable()) {
     * @returns {any} - The stored value, or null if not found.
     */ 
     function GetUserData(name) {
-        local Scope = this.CBaseEntity.GetScriptScope()
         name = name.tolower()
-        if(name in Scope)
-            return Scope[name]
+        if(name in this.EntityScope)
+            return this.EntityScope[name]
         return null
     }
 

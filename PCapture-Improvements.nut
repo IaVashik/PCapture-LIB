@@ -70,5 +70,5 @@ local _EntFireByHandle = EntFireByHandle
         return null
     }
 
-    return pcapEntity(GetPlayer()) 
+    return entLib.FromEntity(GetPlayer()) 
 }

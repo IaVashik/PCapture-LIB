@@ -54,7 +54,7 @@ local _GetValidEntitiy = function(entities) {
     }
             
     if (typeof entities != "pcapEntity")
-            return [pcapEntity(entities)]
+            return [entLib.FromEntity(entities)]
     
     return [entities]
 }
