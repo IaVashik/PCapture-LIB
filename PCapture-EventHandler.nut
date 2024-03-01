@@ -15,6 +15,40 @@ if("CreateScheduleEvent" in getroottable()) {
     return
 }
 
+::ScheduleEvent <- class {
+    caller = null;
+    action = null;
+    timeDelay = null;
+    note = null;
+    args = null;
+
+    constructor(caller, action, timeDelay, note = null, args = null) {
+        this.caller = caller
+
+        this.action = action
+        this.timeDelay = timeDelay
+        this.note = note
+
+        this.args = args
+    }
+
+    function run() {
+        if(type(action) == "string")
+            action = compilestring(action)
+
+        if(!args) {
+            return action.call(caller)
+        }
+
+        local actionArgs = [caller]
+        actionArgs.extend(args)
+        return action.acall(actionArgs)
+    }
+
+    function _typeof() return "ScheduleEvent"
+    function _tostring() return "[Caller] " + caller + "\n[Action] " + action + "\n[TimeDelay] " + timeDelay + "\n[Note] " + note 
+}
+
 // Object to store scheduled events 
 ::scheduledEventsList <- {global = []}
 // Var to track if event loop is running
@@ -29,15 +63,15 @@ if("CreateScheduleEvent" in getroottable()) {
  * @param {int|float} timeDelay - Delay in seconds before executing event.
  * @param {string} note - Optional note about the event, if needed.
 */
-::CreateScheduleEvent <- function(eventName, action, timeDelay, note = null) {
-    if(!isEventLoopRunning) {
-        isEventLoopRunning = true
-        ExecuteScheduledEvents()
-    }
-
+::CreateScheduleEvent <- function(eventName, action, timeDelay, note = null, args = null) {
     if ( !(eventName in scheduledEventsList) ) {
         scheduledEventsList[eventName] <- [[]]
         // dev.log("Created new Event - " + eventName)
+    }
+
+    if(!isEventLoopRunning) {
+        isEventLoopRunning = true
+        ExecuteScheduledEvents()
     }
 
     local eventList = scheduledEventsList[eventName]
@@ -46,7 +80,7 @@ if("CreateScheduleEvent" in getroottable()) {
     }
 
     timeDelay += Time()
-    local newScheduledEvent = {action = action, timeDelay = timeDelay, note = note}
+    local newScheduledEvent = ScheduleEvent(this, action, timeDelay, note, args)
     local currentEventList = eventList.top()
     // printl("eventName: "+eventName+",  - "+eventList.len()+", currentEventList: "+currentEventList.len())
 
@@ -93,20 +127,23 @@ if("CreateScheduleEvent" in getroottable()) {
                 local event = eventInfo[0]
                 // printl(("eventName : "+eventName+", enclosure: "+idx+", event: "+event.action+", timeDelay: "+event.timeDelay+", Time(): "+Time())) //DEV CODE
                 try {
-                    if(typeof event.action == "string") {
-                        compilestring( event.action )()
-                    }
-                    else if(typeof event.action == "function" || typeof event.action == "native function"){
-                        event.action() 
-                    }
-                    else {
-                        dev.warning("Unable to process event " + event.action + " in event " + eventName)
-                    }
+                    event.run() 
                 }
+
                 catch(exception) {
-                    dev.error(eventName + " error! Event action: " + event.action)
-                    throw exception
+                    SendToConsole("playvol resource/warning.wav 1")
+                    printl("\nSCHEDULED EVENT\n[Name] " + eventName + "\n" + event)
+
+                    if(type(event.action) == "function") {
+                        local info = ""
+                        foreach(key, val in event.action.getinfos()) {
+                            if(type(val) == "array") val = arrayLib(val)
+                            info += "[" + key.toupper() + "] " + val + "\n"
+                        }
+                        printl("\nFUNCTION INFO\n" + info)
+                    }
                 }
+
                 eventInfo.remove(0) 
                 if(eventInfo.len() == 0) 
                     eventArray.remove(idx)
