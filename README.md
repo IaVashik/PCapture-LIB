@@ -2,11 +2,11 @@
 <img src="other\logo.png" alt="Logo"> <!-- width="660" height="350" -->
 
 <h2 align="center">
-    PCapture-Lib - The library that you need!
+    PCapture-Lib (a.k.a. <b>ApertureKit</b>) - The library that you need!
 </h2>
 </div>
 
-![version](https://img.shields.io/badge/Pcapture--Lib-v1.0.0-informational)
+![version](https://img.shields.io/badge/Pcapture--Lib-v1.1.0-informational)
 
 VScripts library for Portal 2 that provides various features and enhancements. It aims to help modders build advanced and complex custom mechanics more easily.
 
@@ -19,9 +19,10 @@ VScripts library for Portal 2 that provides various features and enhancements. I
   - Added methods like SetBBox, GetAABB
   - Easy manipulation
 - Advanced TraceLine
-  - bboxcast with surface normal calculation
+  - BboxCast with surface normal calculation
   - Custom trace settings
-  - Portal tracing
+  - TraceLine presets
+  - !!Portal tracing!!
 - Event scheduler system
 - Smooth property animations
   - Color, alpha, position, angles
