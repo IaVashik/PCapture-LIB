@@ -1,12 +1,12 @@
 # PCapture VScripts Library documentation
 This library consists of several modules that can be extremely useful for you
 
-## 1. [`PCapture-Lib`](/PCapture-Lib.nut)
+## 1. [`PCapture-Lib`](/SRC/PCapture-Lib.nut)
 
 The main file in the library. Initializes required parts of the library
 
 
-## 2. [`PCapture-Utils`](/PCapture-Utils.nut)
+## 2. [`PCapture-Utils`](/SRC/PCapture-Utils.nut)
 
 A collection of utility functions for script execution and debugging. It's a Swiss army knife for developers working with Squirrel :D
 
@@ -47,7 +47,7 @@ Other utility functions.
 
 #### [More info about *PCapture-Utils* here](Utils_module.md)
 
-## 3. [`PCapture-Entities`](/PCapture-Entities.nut)
+## 3. [`PCapture-Entities`](/SRC/PCapture-Entities.nut)
 
 Improved Entities Module. Contains A VERY LARGE number of different functions that you just missed later!
 
@@ -104,7 +104,7 @@ Improved Entities Module. Contains A VERY LARGE number of different functions th
 
 #### [More info about *PCapture-Entities* here](Entities_module.md)
 
-## 4. [`PCapture-Math`](/PCapture-Math.nut)  
+## 4. [`PCapture-Math`](/SRC/PCapture-Math.nut)  
 
 Mathematical module. Contains many different functions including lerp functions, quaternions and more
 
@@ -149,7 +149,7 @@ Mathematical module. Contains many different functions including lerp functions,
 
 #### [More info about *PCapture-Math* here](Math_module.md)
 
-## 5. [`PCapture-EventHandler`](/PCapture-EventHandler.nut)  
+## 5. [`PCapture-EventHandler`](/SRC/PCapture-EventHandler.nut)  
 
 Improved EntFire/logic_relay/loop module. Allows you to create whole events from many different events and cancel them at any time, unlike EntFireByHandler. Able to take not only string, but also full-fledged functions:
 
@@ -163,7 +163,7 @@ Improved EntFire/logic_relay/loop module. Allows you to create whole events from
 
 #### [More info about *PCapture-EventHandler* here](EventHandler_module.md)
 
-## 6. [`PCapture-Array`](/PCapture-Arrays.nut ) 
+## 6. [`PCapture-Array`](/SRC/PCapture-Arrays.nut ) 
 
 Improved arrays module. Contains easy output in the console and additional features to simplify life:
 
@@ -197,12 +197,12 @@ Improved arrays module. Contains easy output in the console and additional featu
 
 #### [More info about *PCapture-Arrays* here](Arrays_module.md)
 
-## 7. [`PCapture-BBoxCast`](/PCapture-Bboxcast.nut)  
+## 7. [`PCapture-BBoxCast`](/SRC/PCapture-Bboxcast.nut)  
 #### TODO
 Improved [BBoxCast](https://github.com/IaVashik/portal2-BBoxCast) for BBox-based ray tracing in Portal 2, more optimized.
 
 
-## 8. [`PCapture-Anims`](/PCapture-Anims.nut) 
+## 8. [`PCapture-Anims`](/SRC/PCapture-Anims.nut) 
 
 Animation module, used to quickly create animation events related to alpha, color, object moving
 
@@ -216,7 +216,7 @@ Animation module, used to quickly create animation events related to alpha, colo
 
 #### [More info about *PCapture-Anims* here](Anims_module.md)
 
-## 9. [`PCapture-Improvements`](/PCapture-Improvements.nut)
+## 9. [`PCapture-Improvements`](/SRC/PCapture-Improvements.nut)
 
 Overrides and improves existing standard VScripts functions.
 | Name | Usage | Description |
