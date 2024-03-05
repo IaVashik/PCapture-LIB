@@ -1,5 +1,5 @@
 // Include the main PCapture library script, which contains utility functions and event handling.
-IncludeScript("PCapture-Lib/pcapture-lib")
+IncludeScript("pcapture-lib/SRC/pcapture-lib")
 
 // Define a function that prints an incrementing integer and reschedules itself with the incremented value.
 function addOne(loopDelay, int = 0) {

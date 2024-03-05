@@ -1,5 +1,5 @@
 // Include the PCapture-Lib which provides the arrayLib class.
-IncludeScript("PCapture-Lib/pcapture-lib")
+IncludeScript("pcapture-lib/SRC/pcapture-lib")
 
 // Assuming 'arrayLib' is already included and initialized with some elements.
 local myArray = arrayLib.new("apple", "banana", "cherry");

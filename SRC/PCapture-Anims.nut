@@ -160,10 +160,11 @@ local _GetValidEntitiy = function(entities) {
         local globalDelay = "globalDelay" in EventSetting ? EventSetting.globalDelay : 0
 
         local steps = abs(time / FrameTime())
-        local coordStep = (endPos - startPos) / steps
+        local dist = endPos - startPos
+        local coordStep = dist.Length() / steps
 
         for (local tick = 1; tick <= steps; tick++) {
-            local newPosition = startPos + (coordStep * tick)
+            local newPosition = startPos + dist * (tick / coordStep)
             local elapsed = (FrameTime() * tick) + globalDelay
             local note = "note" in EventSetting ? EventSetting.note : newPosition
 

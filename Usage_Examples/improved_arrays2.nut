@@ -1,5 +1,5 @@
 // Include the PCapture-Lib which provides the arrayLib class.
-IncludeScript("PCapture-Lib/pcapture-lib")
+IncludeScript("pcapture-lib/SRC/pcapture-lib")
 
 
 // Create a new array using arrayLib with a variety of different data types.

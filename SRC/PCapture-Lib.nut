@@ -16,16 +16,28 @@ if (!("self" in this)) {
 }
 
 // Library files
-IncludeScript("pcapture-lib/PCapture-Math")
-IncludeScript("pcapture-lib/PCapture-Arrays")
-IncludeScript("pcapture-lib/PCapture-Utils")
-IncludeScript("pcapture-lib/PCapture-Entities")
-IncludeScript("pcapture-lib/PCapture-EventHandler")
-IncludeScript("pcapture-lib/PCapture-Anims")
-IncludeScript("pcapture-lib/PCapture-Improvements")
+IncludeScript("pcapture-lib/SRC/PCapture-Math")
+IncludeScript("pcapture-lib/SRC/PCapture-Arrays")
+IncludeScript("pcapture-lib/SRC/PCapture-Utils")
+IncludeScript("pcapture-lib/SRC/PCapture-Entities")
+IncludeScript("pcapture-lib/SRC/PCapture-EventHandler")
+IncludeScript("pcapture-lib/SRC/PCapture-Anims")
+IncludeScript("pcapture-lib/SRC/PCapture-Improvements")
+// TracePlus files:
+IncludeScript("pcapture-lib/SRC/TracePlus/TraceSettings")
+IncludeScript("pcapture-lib/SRC/TracePlus/TraceResult")
+IncludeScript("pcapture-lib/SRC/TracePlus/CheapTrace")
+IncludeScript("pcapture-lib/SRC/TracePlus/TraceLineAnalyzer")
+IncludeScript("pcapture-lib/SRC/TracePlus/BboxCasting")
+IncludeScript("pcapture-lib/SRC/TracePlus/PortalCasting")
+IncludeScript("pcapture-lib/SRC/TracePlus/Presets")
+IncludeScript("pcapture-lib/SRC/TracePlus/utils/ImpactNormal")
+IncludeScript("pcapture-lib/SRC/TracePlus/utils/BBoxDisabler")
 
-// TODO delete?
-IncludeScript("pcapture-lib/TraceLineEx/main")
+
+// Other stuff
+//* Default settings for bboxcast traces.
+::defaultSettings <- TraceSettings.new()
 
 if(("dissolver" in getroottable()) == false) {
     ::dissolver <- entLib.CreateByClassname("env_entity_dissolver", {targetname = "@dissolver"})

@@ -1,5 +1,5 @@
 // Include the main PCapture library script, which contains utility functions and event handling.
-IncludeScript("PCapture-Lib/pcapture-lib")
+IncludeScript("pcapture-lib/SRC/pcapture-lib")
 
 // Define a function that logs "Hello world!" and reschedules itself to run again after a specified delay.
 function helloLoop(loopDelay) {

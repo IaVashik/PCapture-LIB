@@ -1,5 +1,5 @@
 // Include the PCapture-Lib which contains the arrayLib class.
-IncludeScript("PCapture-Lib/pcapture-lib")
+IncludeScript("pcapture-lib/SRC/pcapture-lib")
 
 
 // Initialize a new arrayLib instance with a range of integers from 1 to 10.

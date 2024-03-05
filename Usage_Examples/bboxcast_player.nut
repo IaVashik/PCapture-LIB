@@ -1,4 +1,4 @@
-IncludeScript("PCapture-Lib/pcapture-lib")
+IncludeScript("pcapture-lib/SRC/pcapture-lib")
 
 // Custom settings for ignoring certain classes of entities
 customSettings <- TraceSettings.new({ignoreClass = ["viewmodel", "weapon_", "info_target", "func_illusionary"]})

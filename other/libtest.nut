@@ -1,4 +1,4 @@
-IncludeScript("pcapture-lib/PCapture-Lib.nut")
+IncludeScript("pcapture-lib/SRC/PCapture-Lib.nut")
 
 ::assertEq <- function(a, b) {
     if (a != b) {

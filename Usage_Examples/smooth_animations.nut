@@ -1,5 +1,5 @@
 // Include the PCapture library
-IncludeScript("PCapture-Lib/pcapture-lib") 
+IncludeScript("pcapture-lib/SRC/pcapture-lib") 
 
 // Find a weighted cube entity
 local cargo = entLib.FindByClassname("prop_weighted_cube")
