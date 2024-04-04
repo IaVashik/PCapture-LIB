@@ -9,11 +9,6 @@
 |       and additional features to simplify life                                     |
 +----------------------------------------------------------------------------------+ */
 
-if("arrayLib" in getroottable()) {
-    dev.warning("Enhanced arrays module initialization skipped. Module already initialized.")
-    return
-}
-
 /*
 * Enhanced arrays module.
 */
@@ -24,8 +19,6 @@ if("arrayLib" in getroottable()) {
     
     /* The internal table representation. */
     table = null;
-    
-    /* Whether the internal table is valid. */
     tableIsValid = false
     
     /*
@@ -122,7 +115,7 @@ if("arrayLib" in getroottable()) {
     * @param {any} match - The value to find.
     * @returns {boolean} - Whether the value is found.
     */
-    function find(match) {
+    function find(match) { // todo rename this
         if(!this.tableIsValid) this.totable()
         return match in this.table
     }
