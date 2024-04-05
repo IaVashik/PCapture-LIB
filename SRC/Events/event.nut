@@ -31,4 +31,13 @@
 
     function _typeof() return "ScheduleEvent"
     function _tostring() return "[Caller] " + caller + "\n[Action] " + action + "\n[TimeDelay] " + timeDelay + "\n[Note] " + note 
+    function _cmp(other) {    
+        if (this.timeDelay > other.timeDelay) {
+            return 1;
+        } else if (this.timeDelay < other.timeDelay) {
+            return -1;
+        } else {
+            return 0; 
+        }
+    }
 }
