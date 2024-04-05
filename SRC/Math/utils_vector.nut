@@ -1,12 +1,20 @@
 math["vector"] <- {}
 local vector = math["vector"]
 
+vector["isEqually"] <- function(vector, other) {
+    vector = math.vector.round(vector)
+    other = math.vector.round(other)
+    return vector.x == other.x && 
+            vector.y == other.y && 
+            vector.z == other.z
+}
+
 vector["rotate"] <- function(vector, angle) {
-    return math.Quaternion.new(angle).rotate(vector)
+    return math.Quaternion.fromEuler(angle).rotateVector(vector)
 }
 
 vector["unrotate"] <- function(vector, angle) {
-    return math.Quaternion.new(angle).unrotate(vector)
+    return math.Quaternion.fromEuler(angle).rotateVector(vector)
 }
 
 vector["random"] <- function(min, max) {
@@ -26,4 +34,17 @@ vector["clamp"] <- function(vector, min = 0, max = 255) { // todo
 vector["resize"] <- function(vector, element) {
     local tx = sqrt((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z)) // todo lenght?
     return vector * (element / tx)
+}
+
+/* Rounds the elements of a vector to the specified precision.
+*
+* @param {Vector} vec - The vector to round.
+* @param {int} int - The precision (e.g., 1000 for rounding to three decimal places).
+* @returns {Vector} - The rounded vector.
+*/
+vector["round"] <- function(vec, int = 1000) {
+    vec.x = floor(vec.x * int + 0.5) / int
+    vec.y = floor(vec.y * int + 0.5) / int
+    vec.z = floor(vec.z * int + 0.5) / int
+    return vec
 }

@@ -34,17 +34,8 @@ math["clamp"] <- function(int, min, max = 99999) {
 }
 
 
-/* Rounds the elements of a vector to the specified precision.
-*
-* @param {Vector} vec - The vector to round.
-* @param {int} int - The precision (e.g., 1000 for rounding to three decimal places).
-* @returns {Vector} - The rounded vector.
-*/
-math["roundVector"] <- function(vec, int = 1000) {
-    vec.x = floor(vec.x * int + 0.5) / int
-    vec.y = floor(vec.y * int + 0.5) / int
-    vec.z = floor(vec.z * int + 0.5) / int
-    return vec
+math["round"] <- function(val, int = 1000) {
+    return floor(val * int + 0.5) / int
 }
 
 
@@ -71,11 +62,10 @@ math["Sign"] <- function(x) {
 * @returns {int|float} - The value with the copied sign.
 */
 math["copysign"] <- function(value, sign) {
-    if (sign < 0) {
+    if (sign < 0 || value < 0) {
         return -value;
-    } else {
-        return value;
     }
+    return value
 }
 
 

@@ -3,9 +3,9 @@ math["Matrix"] <- class {
     d = 0; e = 1; f = 0;
     g = 0; h = 0; k = 1;
 
-    constructor(a, b, c,
-                d, e, f
-                g, h, k
+    constructor(a = 1, b = 0, c = 0,
+                d = 0, e = 1, f = 0,
+                g = 0, h = 0, k = 1
         ) {
             this.a = a; this.b = b; this.c = c;
             this.d = d; this.e = e; this.f = f;
@@ -197,5 +197,36 @@ math["Matrix"] <- class {
             this.d - other.d, this.e - other.e, this.f - other.f,
             this.g - other.g, this.h - other.h, this.k - other.k
         );
+    }
+
+    function isEqually(other) {
+        return this.cmp(other) == 0
+    }
+
+    function cmp(other) {
+        if (typeof other != "Matrix") {
+            throw "Cannot compare matrix with non-matrix type";
+        }
+    
+        local thisSum = a + b - c + d + e + f - g + h - k;
+        local otherSum = other.a + other.b - other.c + other.d + other.e + other.f - other.g + other.h - other.k;
+        
+        if (thisSum > otherSum) {
+            return 1;
+        } else if (thisSum < otherSum) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
+
+    function _cmp(other) return this.cmp(other)
+
+    function _tostring() {
+        return "Matrix: {" + a + ", " + b + ", " + c + "\n\t " + d + ", " + e + ", " + f + "\n\t " + g + ", " + h + ", " + k + "}"
+    }
+
+    function _typeof() {
+        return "Matrix"
     }
 }

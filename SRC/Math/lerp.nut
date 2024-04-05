@@ -41,13 +41,13 @@ lerp["color"] <- function(start, end, t) {
         end = macros.StrToVec(end)
     }
 
-    return abs(int(start.x, end.x, t)) + " " + abs(int(start.y, end.y, t)) + " " + abs(int(start.z, end.z, t))
+    return floor(int(start.x, end.x, t)) + " " + floor(int(start.y, end.y, t)) + " " + floor(int(start.z, end.z, t))
 }
 
 /* SLERP for vector */
 lerp["sVector"] <- function(start, end, t) {
-    local q1 = math.Quaternion().new(start)
-    local q2 = math.Quaternion().new(end)
+    local q1 = math.Quaternion.fromEuler(start)
+    local q2 = math.Quaternion.fromEuler(end)
     return q1.slerp(q2, t).toVector()
 }
 
@@ -95,7 +95,7 @@ lerp["SmoothCurve"] <- function( x ) {
 }
 
 lerp["SmoothProgress"] <- function( progress ) {
-    progress = lerp(-PI/2, PI/2, progress)
+    progress = this.int(-PI/2, PI/2, progress)
     progress = sin(progress)
     progress = (progress / 2.0) + 0.5
     return progress

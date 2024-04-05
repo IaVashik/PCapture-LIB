@@ -173,7 +173,7 @@ math["Quaternion"] <- class {
     */
     function inverse() {
         local lengthSquared = this.length() * this.length();
-        return math.Quaternion(-this.x / lengthSquared, -this.y / lengthSquared, -this.z / lengthSquared, this.w / lengthSquared);
+        return math.Quaternion(this.x / lengthSquared, -this.y / lengthSquared, -this.z / lengthSquared, -this.w / lengthSquared);
     }
 
     /*
@@ -235,6 +235,29 @@ math["Quaternion"] <- class {
         return Vector( x, y, z )
     }
 
+    function isEqually(other) {
+        return this.cmp(other) == 0
+    }
+
+    function cmp(other) {
+        if (typeof other != "Quaternion") {
+            throw "Cannot compare quaternion with non-quaternion type";
+        }
+    
+        local thisMagnitude = this.length();
+        local otherMagnitude = other.length();
+    
+        if (thisMagnitude > otherMagnitude) {
+            return 1;
+        } else if (thisMagnitude < otherMagnitude) {
+            return -1;
+        } else {
+            return 0; 
+        }
+    }
+
+    function _cmp(other) return this.cmp(other)
+
 
     function _add(other) {
         return math.Quaternion(
@@ -254,7 +277,6 @@ math["Quaternion"] <- class {
             this.w - other.w
         )
     }
-
     
     /* Multiplies two quaternions.
     *
@@ -263,11 +285,20 @@ math["Quaternion"] <- class {
     * @returns {Quaternion} - The multiplication result.
     */
     function _mul(other) {
-        return math.Quaternion(
-            this.w * other.x + this.x * other.w + this.y * other.z - this.z * other.y,
-            this.w * other.y - this.x * other.z + this.y * other.w + this.z * other.x,
-            this.w * other.z + this.x * other.y - this.y * other.x + this.z * other.w,
-            this.w * other.w - this.x * other.x - this.y * other.y - this.z * other.z
+        if(typeof other == "Quaternion") {
+            return math.Quaternion(
+                this.w * other.x + this.x * other.w + this.y * other.z - this.z * other.y,
+                this.w * other.y - this.x * other.z + this.y * other.w + this.z * other.x,
+                this.w * other.z + this.x * other.y - this.y * other.x + this.z * other.w,
+                this.w * other.w - this.x * other.x - this.y * other.y - this.z * other.z
+            )
+        }
+
+        return math.Quaternion( // todo meh :d 
+            this.X * other,
+            this.Y * other,
+            this.Z * other,
+            this.w * other
         )
     }
 
