@@ -34,6 +34,12 @@ macros["StrToVec"] <- function(str) {
     return vec
 }
 
+
+macros["VecToStr"] <- function(vec) {
+    return vec.x + " " + vec.y + " " + vec.z 
+}
+
+
 /* Gets the prefix of the entity name.
 *
 * @returns {string} - The prefix of the entity name.
