@@ -309,6 +309,14 @@
         return this.table
     }
 
+    function tolist() {
+        local list = List()
+        foreach(idx, value in this.arr) {
+            list.append(value)
+        }
+        return list
+    }
+
     /*
     * Delete a value from the internal table.
     *
@@ -370,4 +378,20 @@
         if (previdx == null) return 0;
 		return previdx < this.len() - 1 ? previdx + 1 : null;
 	}
+
+    function cmp(other) { // lmao, why? :O
+        local thisSum = 0;
+        local otherSum = 0;
+        foreach (val in this) { thisSum += val; }
+        foreach (val in other) { otherSum += val; }
+
+    
+        if (thisSum > otherSum) {
+            return 1;
+        } else if (thisSum < otherSum) {
+            return -1;
+        } else {
+            return 0; 
+        }
+    }
 }

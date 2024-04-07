@@ -38,11 +38,17 @@
         return this.size;
     }
 
-    function toArray() {
+    function toArray() { // todo rename this met
         if(this.inorderCache == null) 
             this.inorderCache = this.inorderTraversal()
 
         return this.inorderCache
+    }
+
+    function tolist() {
+        local result = List();
+        this._inorder(this.root, result);
+        return result;
     }
 
     function _tostring() {
@@ -252,8 +258,8 @@
 
     // --- Min/Max Methods ---
 
-    function GetMin() return this.min(this.root)
-    function GetMax() return this.max(this.root)
+    function GetMin() return this.min(this.root).value
+    function GetMax() return this.max(this.root).value
 
     function min(node) { // todo mb fix that?
         local current = node;
