@@ -1,19 +1,21 @@
-local print_info = function(pattern, msg) {
+::_printInfo <- function(pattern, msg) {
     if (developer() == 0)
         return
 
-    local info
+    local last_info
     for(local i = 0; getstackinfos(i); i++){
-        info = i
+        last_info = i 
     }
-    local func_name = info.func
-    if (func_name == "main" || func_name == "unknown")
-        func_name = "file " + info.src
 
+    local info = getstackinfos(last_info)
+    
+    local funcName = getstackinfos(last_info).func
+    if (funcName == "main" || funcName == "unknown")
+        funcName = "file " + info.src
+        
     local line = info.line 
-    printl(format(pattern, func_name, line, msg))
+    dev.fprint(pattern, funcName, line, msg)
 }
-
 
 ::dev <- {
     /* Draws the bounding box of an entity for the specified time.
@@ -36,6 +38,12 @@ local print_info = function(pattern, msg) {
     },
 
 
+    debug = function(msg) {
+        if (LibDebugInfo)
+            printl("~ " + msg)
+    },
+
+
     /* Logs a message to the console only if developer mode is enabled.
     * 
     * @param {string} msg - The message to log.
@@ -49,16 +57,18 @@ local print_info = function(pattern, msg) {
     * 
     * @param {string} msg - The warning message.
     */
-    warning = function(msg) : (print_info) {
-        print_info("► Warning (%s [%d]): %s", msg)
+    warning = function(msg) {
+        cwar.append(msg)
+        _printInfo("► Warning ({} [{}]): {}", msg)
     },
 
     /* Displays an error message in a specific format.
     * 
     * @param {string} msg - The error message.
     */
-    error = function(msg) : (print_info) {
-        print_info("▄▀ *ERROR*: [func = %s; line = %d] | %s", msg)
+    error = function(msg) {
+        cerr.append(msg)
+        _printInfo("▄▀ *ERROR*: [func = {}; line = {}] | {}", msg)
         SendToConsole("playvol resource/warning.wav 1")
     },
 
@@ -68,7 +78,7 @@ local print_info = function(pattern, msg) {
     * @param {string} msg - The message string containing `{}` placeholders.
     * @param {any} vargs... - Additional arguments to substitute into the placeholders.
     */
-    fprint = function(msg, ...) {
+    format = function(msg, ...) {
 
         // If you are sure of what you are doing, you don't have to use it
         local subst_count = 0;
@@ -77,6 +87,7 @@ local print_info = function(pattern, msg) {
                 subst_count++; 
             }
         }
+
         if (subst_count != vargc) {
             throw("Discrepancy between the number of arguments and substitutions")
         }
@@ -102,6 +113,18 @@ local print_info = function(pattern, msg) {
             }
         }
 
-        printl(result)
+        return result
     },
+
+    fprint = function(msg, ...) {
+        local args = array(vargc + 2)
+        args[0] = this
+        args[1] = msg
+
+        for(local i = 0; i< vargc; i++) {
+            args[i + 2] = vargv[i]
+        }
+
+        printl(this.format.acall(args))
+    }
 }
