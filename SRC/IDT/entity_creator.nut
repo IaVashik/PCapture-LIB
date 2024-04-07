@@ -14,6 +14,7 @@
         return new_entity
     }
 
+
     function CreateProp(classname, origin, modelname, activity = 1, keyvalues = {}) {
         local new_entity = entLib.FromEntity(CreateProp(classname, origin, modelname, activity))
         foreach(key, value in keyvalues) {
@@ -21,9 +22,15 @@
         }
         return new_entity
     }
+    
 
+    function FromEntity(CBaseEntity) {
+        if(typeof CBaseEntity == "pcapEntity")
+            return CBaseEntity
+        return entLib.__init(CBaseEntity)
+    }
 
-
+    
     /* Finds an entity with the specified classname.
     *
     * @param {string} classname - The classname to search for.
@@ -52,8 +59,8 @@
         local new_entity = Entities.FindByClassnameWithin(start_ent, classname, origin, radius)
         return entLib.__init(new_entity)
     }
-
-
+    
+    
     /* Finds an entity with the specified targetname within the given starting entity.
     *
     * @param {string} targetname - The targetname to search for.
@@ -136,11 +143,6 @@
     }
 
 
-    function FromEntity(CBaseEntity) {
-        if(typeof CBaseEntity == "pcapEntity")
-            return CBaseEntity
-        return entLib.__init(CBaseEntity)
-    }
 
     /* Initializes an entity object.
     *

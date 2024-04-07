@@ -181,8 +181,8 @@
     *
     * @param {string} prefix - The prefix to be set.
     */
-    function SetUniqueName(prefix = "a") {
-        this.SetKeyValue("targetname", prefix + UniqueString())
+    function SetUniqueName(prefix = "u") {
+        this.SetKeyValue("targetname", UniqueString(prefix))
     }
 
 
@@ -193,14 +193,18 @@
     */
     function SetParent(parentEnt, fireDelay = 0) {
         this.SetUserData("parent", parentEnt)
-        if(typeof parentEnt == "pcapEntity" || typeof parentEnt == "instance") {
+        if(typeof parentEnt != "string") {
             if(parentEnt.GetName() == "") {
-                parentEnt.SetName(UniqueString("parent"))
+                parentEnt.SetUniqueName("parent")
             }
             parentEnt = parentEnt.GetName()
         }
         
         EntFireByHandle(this.CBaseEntity, "SetParent", parentEnt, fireDelay)
+    }
+
+    function GetParent() {
+        return this.GetUserData("parent")
     }
 
 
@@ -255,7 +259,7 @@
     */
     function SetColor(colorValue, fireDelay = 0) {
         if(typeof colorValue == "Vector") 
-            colorValue = colorValue.toString()
+            colorValue = macros.VecToStr(colorValue)
         EntFireByHandle(this.CBaseEntity, "Color", colorValue, fireDelay, null, null)
         this.SetUserData("color", colorValue)
     }
@@ -280,11 +284,16 @@
     function SetDrawEnabled(isEnabled, fireDelay = 0) {
         if(isEnabled) {
             EntFireByHandle(this.CBaseEntity, "EnableDraw", "", fireDelay)
+            this.SetUserData("IsDraw", true)
         }
         else {
             EntFireByHandle(this.CBaseEntity, "DisableDraw", "", fireDelay)
+            this.SetUserData("IsDraw", false)
         }
-        
+    }
+
+    function IsDrawEnabled() {
+        return this.GetUserData("IsDraw")
     }
 
     /* Sets the spawnflags for the entity.
@@ -305,6 +314,11 @@
     function SetModelScale(scaleValue, fireDelay = 0) {
         EntFireByHandle(this.CBaseEntity, "addoutput", "ModelScale " + scaleValue, fireDelay, null, null)
         this.SetUserData("ModelScale", scaleValue)
+    }
+
+    function GetModelScale() {
+        local res = this.GetUserData("ModelScale")
+        return res ? res : 1
     }
 
 
@@ -557,7 +571,7 @@
     */
     function _GetVertex(x, y, z, ang) {
         // return rotate(Vector(x.x, y.y, z.z), ang)
-        return math.rotateVector(Vector(x.x, y.y, z.z), ang)
+        return math.vector.rotate(Vector(x.x, y.y, z.z), ang)
     }
 }
 
