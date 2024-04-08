@@ -68,3 +68,10 @@ macros["GetPostfix"] <- function(name) {
     local prefix = name.slice(lastPartLength);
     return prefix;
 }
+
+macros["GetEyeEndpos"] <- function(player, distance) {
+    if(typeof player != "pcapEntity") 
+        player = entLib.FromEntity(player)
+
+    return player.EyePosition() + player.EyeForwardVector() * distance
+}
