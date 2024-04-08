@@ -1,5 +1,5 @@
 // todo нейминг и ещё одна user filter func!
-::TraceSettings <- class {
+TracePlus["Settings"] <- class {
     ignoreClasses = arrayLib.new("viewmodel", "weapon_", "beam"
         "trigger_", "phys_", "env_", "point_", "info_", "vgui_", "logic_"
         "clone", "prop_portal", "portal_base2D"
@@ -23,7 +23,7 @@
         this.shouldIgnoreEntity = shouldRayHitEntity
     }
 
-    function new(table) TraceSettings
+    function new(table) Self
 
     function SetIgnoredClasses(array) null
     function SetPriorityClasses(array) null
@@ -48,9 +48,11 @@
 
     function ToggleUseCostlyNormal(bool) null
 
+    function UpdateIgnoreEnts(ignoreEnts, newEnt) array
+
     function _typeof() return "TraceSettings"
     function _cloned() {
-        return TraceSettings(
+        return Settings(
             clone this.ignoreClasses, clone this.priorityClasses, clone this.ignoredModels, 
             this.errorTolerance, this.shouldRayHitEntity, this.shouldIgnoreEntity
         )
@@ -59,15 +61,16 @@
 
 
 // TODO
-function TraceSettings::new(settings = {}) {
-    local _ignoreClasses = toArrayLib(GetFromTable(settings, "ignoreClasses", clone TraceSettings.ignoreClasses))
-    local _priorityClasses = toArrayLib(GetFromTable(settings, "priorityClasses", clone TraceSettings.priorityClasses))
-    local _ignoredModels = toArrayLib(GetFromTable(settings, "ignoredModels", clone TraceSettings.ignoredModels))
-    local _errorTolerance = GetFromTable(settings, "errorTolerance", TraceSettings.errorTolerance)
-    local _shouldRayHitEntity = GetFromTable(settings, "shouldRayHitEntity", null)
-    local _shouldIgnoreEntity = GetFromTable(settings, "shouldIgnoreEntity", null)
+function TracePlus::Settings::new(settings = {}) {
+    local _ignoreClasses = arrayLib(macros.GetFromTable(settings, "ignoreClasses", clone(this.Settings.ignoreClasses)))
+    local _priorityClasses = arrayLib(macros.GetFromTable(settings, "priorityClasses", clone(this.Settings.priorityClasses)))
+    local _ignoredModels = arrayLib(macros.GetFromTable(settings, "ignoredModels", clone(this.Settings.ignoredModels)))
     
-    return TraceSettings(
+    local _errorTolerance = macros.GetFromTable(settings, "errorTolerance", this.Settings.errorTolerance)
+    local _shouldRayHitEntity = macros.GetFromTable(settings, "shouldRayHitEntity", null)
+    local _shouldIgnoreEntity = macros.GetFromTable(settings, "shouldIgnoreEntity", null)
+    
+    return this.Settings(
         _ignoreClasses, _priorityClasses, _ignoredModels, 
         _errorTolerance, _shouldRayHitEntity, _shouldIgnoreEntity
     )
@@ -75,91 +78,103 @@ function TraceSettings::new(settings = {}) {
 
 
 // TODO
-function TraceSettings::SetIgnoredClasses(array) {
-    this.ignoreClasses = this.toArrayLib(array)
+function TracePlus::Settings::SetIgnoredClasses(array) {
+    this.ignoreClasses = arrayLib(array)
 }
 
-function TraceSettings::SetPriorityClasses(array) {
-    this.priorityClasses = this.toArrayLib(array)
+function TracePlus::Settings::SetPriorityClasses(array) {
+    this.priorityClasses = arrayLib(array)
 }
 
-function TraceSettings::SetIgnoredModels(array) {
-    this.ignoredModels = this.toArrayLib(array)
+function TracePlus::Settings::SetIgnoredModels(array) {
+    this.ignoredModels = arrayLib(array)
 }
 
-function TraceSettings::SetErrorTolerance(units) {
+function TracePlus::Settings::SetErrorTolerance(units) {
     this.errorTolerance = units
 }
 
 
 // TODO
-function TraceSettings::AppendIgnoredClass(string) {
+function TracePlus::Settings::AppendIgnoredClass(string) {
     this.ignoreClasses.append(string)
 }
 
-function TraceSettings::AppendPriorityClasses(string) {
+function TracePlus::Settings::AppendPriorityClasses(string) {
     this.priorityClasses.append(string)
 }
 
-function TraceSettings::AppendIgnoredModel(string) {
+function TracePlus::Settings::AppendIgnoredModel(string) {
     this.ignoredModels.append(string)
 }
 
 
 
 // TODO
-function TraceSettings::GetIgnoreClasses() {
+function TracePlus::Settings::GetIgnoreClasses() {
     return this.ignoreClasses
 }
 
-function TraceSettings::GetPriorityClasses() {
+function TracePlus::Settings::GetPriorityClasses() {
     return this.priorityClasses
 }
 
-function TraceSettings::GetIgnoredModels() {
+function TracePlus::Settings::GetIgnoredModels() {
     return this.ignoredModels
 }
 
-function TraceSettings::GetErrorTolerance() {
+function TracePlus::Settings::GetErrorTolerance() {
     return this.errorTolerance
 }
 
 
 // TODO
-function TraceSettings::SetCollisionFilter(func) {
+function TracePlus::Settings::SetCollisionFilter(func) {
     this.shouldRayHitEntity = func
 }
 
-function TraceSettings::SetIgnoreFilter(func) {
+function TracePlus::Settings::SetIgnoreFilter(func) {
     this.shouldIgnoreEntity = func
 }
 
-function TraceSettings::GetCollisionFilter() {
+function TracePlus::Settings::GetCollisionFilter() {
     return this.shouldRayHitEntity
 }
 
-function TraceSettings::GetIgnoreFilter() {
+function TracePlus::Settings::GetIgnoreFilter() {
     return this.shouldIgnoreEntity
 }
 
-function TraceSettings::ApplyCollisionFilter(entity, note) {
+function TracePlus::Settings::ApplyCollisionFilter(entity, note) {
     return this.shouldRayHitEntity ? this.shouldRayHitEntity(entity, note) : false
 }
 
-function TraceSettings::ApplyIgnoreFilter(entity, note) {
+function TracePlus::Settings::ApplyIgnoreFilter(entity, note) {
     return this.shouldIgnoreEntity ? this.shouldIgnoreEntity(entity, note) : false
 }
 
 
 //TODO
-function TraceSettings::ToggleUseCostlyNormal(bool) {
+function TracePlus::Settings::ToggleUseCostlyNormal(bool) {
     this.useCostlyNormalComputation = bool
 }
 
+ function TracePlus::Settings::UpdateIgnoreEnts(ignoreEnts, newEnt) {
+    // Check if any entities should be ignored during the trace
+    if (ignoreEnts) {
+        // If ignoreEnts is an array, append the player entity to it
+        if (typeof ignoreEnts == "array" || typeof ignoreEnts == "arrayLib") {
+            ignoreEnts.append(newEnt)
+        }
+        // If ignoreEnts is a single entity, create a new array with both the player and ignoreEnts
+        else {
+            ignoreEnts = [newEnt, ignoreEnts]
+        }
+    }
+    // If no ignoreEnts is provided, ignore the player only
+    else {
+        ignoreEnts = newEnt
+    }
 
-//! BIG TODO
-::toArrayLib <- function(array) {
-    if(typeof array == "array")
-        return arrayLib(array)
-    return array
+    return ignoreEnts
 }

@@ -1,4 +1,6 @@
-::TraceResult <- class {
+local results = TracePlus["Result"]
+
+results["Cheap"] <- class {
     traceHandler = null;
     hitpos = null;
 
@@ -66,7 +68,7 @@
 
 // Don't forget, the class extension is broken in VScripts
 // Valvo's, I hate u :<
-::BboxTraceResult <- class {
+results["Bbox"] <- class {
     traceHandler = null;
     hitpos = null;
     hitent = null;
@@ -122,7 +124,7 @@
     }
 
     function GetFraction() {
-        return GetDist(this.GetStartPos(), this.GetHitpos()) / GetDist(this.GetStartPos(), this.GetEndPos())
+        return macros.GetDist(this.GetStartPos(), this.GetHitpos()) / macros.GetDist(this.GetStartPos(), this.GetEndPos())
     }
 
     function GetDir() {

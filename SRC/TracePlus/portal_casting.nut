@@ -1,4 +1,4 @@
-local applyPortal = function (startPos, hitPos, portal, partner) {
+local applyPortal = function(startPos, hitPos, portal, partner) {
     local portalAngles = portal.GetAngles();
     local partnerAngles = partner.GetAngles();
     local offset = math.unrotateVector(hitPos - portal.GetOrigin(), portalAngles);
@@ -7,10 +7,10 @@ local applyPortal = function (startPos, hitPos, portal, partner) {
     offset = Vector(offset.x * -1, offset.y * -1, offset.z)
     dir = Vector(dir.x * -1, dir.y * -1, dir.z)
 
-    dir = math.rotateVector(dir, partnerAngles)
+    dir = math.vector.rotate(dir, partnerAngles)
     dir.Norm()
 
-    local newStart = partner.GetOrigin() + math.rotateVector(offset, partnerAngles)
+    local newStart = partner.GetOrigin() + math.vector.rotate(offset, partnerAngles)
     return {
         startPos = newStart,
         endPos = newStart + dir * 4096
@@ -18,12 +18,11 @@ local applyPortal = function (startPos, hitPos, portal, partner) {
 }
 
 
-
-::PortalTrace <- function(startPos, endPos) : (applyPortal) {
+TracePlus["PortalCheap"] <- function(startPos, endPos) : (applyPortal) {
     local previousTracedata
     // Portal castings
     for (local i = 0; i < 10; i++) { // todo?
-        local tracedata = CheapTrace(startPos, endPos)
+        local tracedata = this.Cheap(startPos, endPos)
         tracedata.portalEntryInfo = previousTracedata
 
         local hitPos = tracedata.GetHitpos()
@@ -52,7 +51,7 @@ local applyPortal = function (startPos, hitPos, portal, partner) {
 }
 
 
-::PortalBboxCast <- function(startPos, endPos, ignoreEnts = null, settings = defaultSettings, note = null) : (applyPortal) {
+TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEnts = null, settings = defaultSettings, note = null) : (applyPortal) {
     local previousTracedata
     // Portal castings
     for (local i = 0; i < 10; i++) { // todo?
@@ -89,7 +88,7 @@ local applyPortal = function (startPos, hitPos, portal, partner) {
 
 
 
-// TODO comment
+//! TODO comment
 ::FindPartnersForPortals <- function() {
     for(local portal; portal = entLib.FindByClassname("linked_portal_door", portal);) {
         if(portal.GetUserData("partner"))
@@ -102,7 +101,7 @@ local applyPortal = function (startPos, hitPos, portal, partner) {
             continue
         
         local wpInfo = split(portal.GetModelName(), " ")
-        local wpBBox = math.rotateVector(Vector(5, wpInfo[0].tointeger(), wpInfo[1].tointeger()), portal.GetAngles())
+        local wpBBox = math.vector.rotateVector(Vector(5, wpInfo[0].tointeger(), wpInfo[1].tointeger()), portal.GetAngles())
         wpBBox.x = abs(wpBBox.x); // TODO добавить abs для векторов
         wpBBox.y = abs(wpBBox.y);
         wpBBox.z = abs(wpBBox.z);

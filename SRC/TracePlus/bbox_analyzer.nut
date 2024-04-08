@@ -1,3 +1,4 @@
+// Expensive/Precise TraceLine logic
 ::TraceLineAnalyzer <- class {
     settings = null;
     hitpos = null;
@@ -29,7 +30,7 @@
 
 function TraceLineAnalyzer::Trace(startpos, endpos, ignoreEnts, note) {
     // Get the hit position from the fast trace
-    local hitpos = CheapTrace(startpos, endpos).GetHitpos()
+    local hitpos = TracePlus.Cheap(startpos, endpos).GetHitpos()
     // Calculate the distance between start and hit positions
     local dist = hitpos - startpos
     // Calculate a distance coefficient for more precise tracing based on distance and error coefficient
@@ -43,7 +44,7 @@ function TraceLineAnalyzer::Trace(startpos, endpos, ignoreEnts, note) {
         local rayPart = startpos + dist * (i / step)
         // Find the entity at the ray point
         // TODO!!! separate code! "*"
-        for (local ent;ent = Entities.FindByClassnameWithin(ent, "*", rayPart, 5 * dist_coeff);) { // todo what about this shit?
+        for (local ent;ent = Entities.FindByClassnameWithin(ent, "*", rayPart, 5 * dist_coeff);) { // todo potential place for improvement
             if (ent && this._hitEntity(ent, ignoreEnts, note)) {
                 return [rayPart, ent] // no tuple? :>
             }
