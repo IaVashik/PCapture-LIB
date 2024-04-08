@@ -106,17 +106,20 @@ function TraceLineAnalyzer::_hitEntity(ent, ignoreEnts, note) { // todo rename
     if(settings.ApplyCollisionFilter(ent, note))
         return true
 
+    if(ent.GetUserData("TracePlusIgnore"))
+        return false
+
 
     if(ignoreEnts) { // TODO пускай всегда будет массивом, а трейсеры будут оборачивать одиночек, хуле нет)
         // Processing for arrays
         local type = typeof ignoreEnts
         if (type == "array" || type == "arrayLib") {
             foreach (mask in ignoreEnts) {
-                if(this._eqEnts(mask, ent)) return false
+                if(ent.isEqually(mask)) return false
             }
         } 
         
-        else if(this._eqEnts(ignoreEnts, ent)) return false
+        else if(ent.isEqually(ignoreEnts)) return false
     }
 
     local classname = ent.GetClassname()
@@ -129,10 +132,4 @@ function TraceLineAnalyzer::_hitEntity(ent, ignoreEnts, note) { // todo rename
     }
 
     return true
-}
-
-function TraceLineAnalyzer::_eqEnts(ent1, ent2) {
-    if(typeof ent1 == "pcapEntity")
-        ent1 = ent1.CBaseEntity
-    return ent1 == ent2
 }

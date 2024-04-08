@@ -282,18 +282,17 @@
     * @param {int|float} fireDelay - Delay in seconds before applying.
     */
     function SetDrawEnabled(isEnabled, fireDelay = 0) {
-        if(isEnabled) {
-            EntFireByHandle(this.CBaseEntity, "EnableDraw", "", fireDelay)
-            this.SetUserData("IsDraw", true)
-        }
-        else {
-            EntFireByHandle(this.CBaseEntity, "DisableDraw", "", fireDelay)
-            this.SetUserData("IsDraw", false)
-        }
+        local action = isEnabled ? "EnableDraw" : "DisableDraw"
+        EntFireByHandle(this.CBaseEntity, action, "", fireDelay)
+        this.SetUserData("IsDraw", isEnabled)
     }
 
     function IsDrawEnabled() {
         return this.GetUserData("IsDraw")
+    }
+
+    function SetTraceIgnore(isEnabled) {
+        this.SetUserData("TracePlusIgnore", isEnabled)
     }
 
     /* Sets the spawnflags for the entity.
@@ -560,6 +559,11 @@
         ]
     }
 
+    function isEqually(other) {
+        if(typeof other == "pcapEntity")
+            other = other.CBaseEntity
+        return this.CBaseEntity == other
+    }
 
     /* Gets one vertex of the bounding box based on x, y, z bounds.
     * 
