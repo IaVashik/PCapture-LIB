@@ -9,7 +9,7 @@
 |                                                                                   |
 +----------------------------------------------------------------------------------+ */
 
-if("_EntFireByHandle" in getroottable()) {
+if("GetPlayerEx" in getroottable()) {
     return
 }
 
@@ -28,7 +28,7 @@ local _frametime = FrameTime
 
 local _UniqueString = UniqueString
 ::UniqueString <- function(prefix = "u") : (_UniqueString) {
-    return prefix + "_" + _UniqueString()
+    return prefix + "_" + _UniqueString().slice(0, -1)
 }
 
 /*

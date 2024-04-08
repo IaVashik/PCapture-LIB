@@ -13,7 +13,6 @@
 * Enhanced arrays module.
 */
 ::arrayLib <- class {
-
     /* The internal array. */
     arr = null
     
@@ -27,6 +26,8 @@
     * @param {array} array - The initial array.
     */
     constructor(array = []) {
+        if(typeof array == "arrayLib")
+            array = array.arr
         this.arr = array
         this.table = {}
     }
