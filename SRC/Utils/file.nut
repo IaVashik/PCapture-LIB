@@ -1,4 +1,4 @@
-class File {
+::File <- class {
     path = null;
     name = null;
 

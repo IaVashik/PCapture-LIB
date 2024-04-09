@@ -109,7 +109,12 @@
         for (local i = 0; i < parts.len(); i++) {
             result += parts[i];
             if (i < args.len()) {
-                result += args[i].tostring();
+                local txt = args[i]
+                try{
+                    txt = txt.tostring()
+                } catch(_) {}
+
+                result += txt;
             }
         }
 
