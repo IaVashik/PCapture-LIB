@@ -18,6 +18,11 @@ macros["GetFromTable"] <- function(table, key, defaultValue = null) {
     return defaultValue
 }
 
+macros["PrintIter"] <- function(iterable) {
+    foreach(k, i in iterable) 
+        dev.fprint("{}: {}", k, i)
+}
+
 
 macros["GetDist"] <- function(vec1, vec2) {
     return (vec2 - vec1).Length()
@@ -39,6 +44,22 @@ macros["VecToStr"] <- function(vec) {
     return vec.x + " " + vec.y + " " + vec.z 
 }
 
+macros["isEqually"] <- function(val1, val2) {
+    switch (typeof val1) {
+        case "integer": 
+            return val1 == val2 
+        case "float": 
+            return math.round(val1) == math.round(val2)
+        case "Vector": 
+            return math.vector.isEqually(val1, val2)
+        case "instance": 
+            return val1 == val2; 
+        case "Quaternion": 
+        case "Matrix": 
+        case "pcapEntity": 
+            return val1.isEqually(val2)  
+    }
+}
 
 /* Gets the prefix of the entity name.
 *

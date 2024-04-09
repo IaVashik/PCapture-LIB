@@ -560,9 +560,7 @@
     }
 
     function isEqually(other) {
-        if(typeof other == "pcapEntity")
-            other = other.CBaseEntity
-        return this.CBaseEntity == other
+        return this.entindex() == other.entindex()
     }
 
     /* Gets one vertex of the bounding box based on x, y, z bounds.
@@ -606,6 +604,7 @@ function pcapEntity::GetPartnername() return this.CBaseEntity.GetPartnername()
 function pcapEntity::GetPartnerInstance() return this.CBaseEntity.GetPartnerInstance()
 function pcapEntity::ValidateScriptScope() return this.CBaseEntity.ValidateScriptScope()
 function pcapEntity::EyePosition() return this.CBaseEntity.EyePosition()
+function pcapEntity::entindex() return this.CBaseEntity.entindex()
 
 function pcapEntity::SetAbsOrigin(vector) this.CBaseEntity.SetAbsOrigin(vector)
 function pcapEntity::SetForwardVector(vector) this.CBaseEntity.SetForwardVector(vector)
