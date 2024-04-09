@@ -244,9 +244,9 @@ math["Quaternion"] <- class {
             throw "Cannot compare quaternion with non-quaternion type";
         }
     
-        local thisMagnitude = this.length();
-        local otherMagnitude = other.length();
-    
+        local thisMagnitude = math.round(this.length(), 10000);
+        local otherMagnitude = math.round(other.length(), 10000);
+
         if (thisMagnitude > otherMagnitude) {
             return 1;
         } else if (thisMagnitude < otherMagnitude) {
@@ -295,9 +295,9 @@ math["Quaternion"] <- class {
         }
 
         return math.Quaternion( // todo meh :d 
-            this.X * other,
-            this.Y * other,
-            this.Z * other,
+            this.x * other,
+            this.y * other,
+            this.z * other,
             this.w * other
         )
     }

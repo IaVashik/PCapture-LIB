@@ -122,20 +122,6 @@ math["Matrix"] <- class {
     }
 
     /*
-    * Сдвигает матрицу на заданный вектор.
-    *
-    * @param {Vector} vector - Вектор сдвига.
-    * @returns {Matrix} - Сдвинутая матрица.
-    */
-    function translate(vector) {
-        return math.Matrix(
-            this.a, this.b, this.c,
-            this.d, this.e, this.f,
-            this.g + vector.x, this.h + vector.y, this.k + vector.z
-        );
-    }
-
-    /*
     * Вращает матрицу вокруг оси X на заданный угол.
     *
     * @param {number} angle - Угол поворота в радианах.

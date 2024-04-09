@@ -14,7 +14,7 @@ vector["rotate"] <- function(vector, angle) {
 }
 
 vector["unrotate"] <- function(vector, angle) {
-    return math.Quaternion.fromEuler(angle).rotateVector(vector)
+    return math.Quaternion.fromEuler(angle).unrotateVector(vector)
 }
 
 vector["random"] <- function(min, max) {
@@ -32,7 +32,7 @@ vector["clamp"] <- function(vector, min = 0, max = 255) { // todo
 }
 
 vector["resize"] <- function(vector, element) {
-    local tx = sqrt((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z)) // todo lenght?
+    local tx = vector.Length()
     return vector * (element / tx)
 }
 
