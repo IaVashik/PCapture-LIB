@@ -9,7 +9,9 @@
 |    GitHud repo: https://github.com/IaVashik/PCapture-LIB                          |
 +----------------------------------------------------------------------------------+ */
 
+::LibDebugInfo <- false
 ::VSEventLogs <- false
+
 local version = "PCapture-Lib 2.0 experimental"
 
 // `Self` must be in any case, even if the script is run directly by the interpreter
@@ -30,16 +32,17 @@ IncludeScript("SRC/Utils/init.nut")
 IncludeScript("SRC/Math/init.nut")
 IncludeScript("SRC/IDT/init.nut")
 
-// IncludeScript("SRC/TracePlus/init.nut")
+IncludeScript("SRC/TracePlus/init.nut")
 IncludeScript("SRC/Animations/init.nut")
 IncludeScript("SRC/Events/init.nut")
 IncludeScript("SRC/GameEvents/init.nut")
 IncludeScript("SRC/HUD/init.nut")
 
 
+::cwar <- List() // todo
+::cerr <- List()
 
 //* Default settings for bboxcast traces.
-// ::defaultSettings <- TraceSettings.new()
 
 if(("dissolver" in getroottable()) == false) {
     ::dissolver <- entLib.CreateByClassname("env_entity_dissolver", {targetname = "@dissolver"})
