@@ -12,7 +12,7 @@
 ::LibDebugInfo <- false
 ::VSEventLogs <- false
 
-local version = "PCapture-Lib 2.0 experimental"
+local version = "PCapture-Lib 2.0 alpha"
 
 // `Self` must be in any case, even if the script is run directly by the interpreter
 if (!("self" in this)) {
@@ -22,8 +22,12 @@ if (!("self" in this)) {
 }
 
 if("_lib_version_" in getroottable()) {
+    printl("\n")
     dev.warning("PCapture-Lib already initialized.")
-    if(_lib_version_ != version) dev.error("Attempting to initialize different versions of the PCapture-Lib library!\nVersion " + _lib_version_ + " != " + version)
+    if(_lib_version_ != version) {
+        dev.error("Attempting to initialize different versions of the PCapture-Lib library!")
+        dev.fprint("Version \"{}\" != \"{}\"", _lib_version_, version)
+    }
     return
 }
 
