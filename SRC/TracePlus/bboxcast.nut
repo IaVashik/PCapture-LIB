@@ -1,4 +1,4 @@
-TracePlus["Bbox"] <- function(startpos, endpos, ignoreEnts = null, settings = defaultSettings, note = null) {
+TracePlus["Bbox"] <- function(startpos, endpos, ignoreEnts = null, settings = TracePlus.defaultSettings, note = null) {
     local SCOPE = {} // TODO potential place for improvement
     
     SCOPE.startpos <- startpos;
@@ -13,7 +13,7 @@ TracePlus["Bbox"] <- function(startpos, endpos, ignoreEnts = null, settings = de
     return TracePlus.Result.Bbox(SCOPE, result.GetHitpos(), result.GetEntity())
 }
 
-TracePlus["FromEyes"]["Bbox"] <- function(distance, player, ignoreEnts = null, settings = ::defaultSettings) { //! BUG TODO: defaultSettings
+TracePlus["FromEyes"]["Bbox"] <- function(distance, player, ignoreEnts = null, settings = TracePlus.defaultSettings) {
     // Calculate the start and end positions of the trace
     local startpos = player.EyePosition()
     local endpos = macros.GetEyeEndpos(player, distance)
@@ -24,7 +24,7 @@ TracePlus["FromEyes"]["Bbox"] <- function(distance, player, ignoreEnts = null, s
     return BboxCast(startpos, endpos, ignoreEnts, settings)
 }
 
-TracePlus["FromEyes"]["PortalBbox"] <- function(distance, player, ignoreEnts = null, settings = ::defaultSettings) {
+TracePlus["FromEyes"]["PortalBbox"] <- function(distance, player, ignoreEnts = null, settings = TracePlus.defaultSettings) {
     // Calculate the start and end positions of the trace
     local startpos = player.EyePosition()
     local endpos = macros.GetEyeEndpos(player, distance)

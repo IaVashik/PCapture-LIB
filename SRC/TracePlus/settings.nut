@@ -62,15 +62,15 @@ TracePlus["Settings"] <- class {
 
 // TODO
 function TracePlus::Settings::new(settings = {}) {
-    local _ignoreClasses = arrayLib(macros.GetFromTable(settings, "ignoreClasses", clone(this.Settings.ignoreClasses)))
-    local _priorityClasses = arrayLib(macros.GetFromTable(settings, "priorityClasses", clone(this.Settings.priorityClasses)))
-    local _ignoredModels = arrayLib(macros.GetFromTable(settings, "ignoredModels", clone(this.Settings.ignoredModels)))
+    local _ignoreClasses = arrayLib(macros.GetFromTable(settings, "ignoreClasses", clone(TracePlus.Settings.ignoreClasses)))
+    local _priorityClasses = arrayLib(macros.GetFromTable(settings, "priorityClasses", clone(TracePlus.Settings.priorityClasses)))
+    local _ignoredModels = arrayLib(macros.GetFromTable(settings, "ignoredModels", clone(TracePlus.Settings.ignoredModels)))
     
-    local _errorTolerance = macros.GetFromTable(settings, "errorTolerance", this.Settings.errorTolerance)
+    local _errorTolerance = macros.GetFromTable(settings, "errorTolerance", TracePlus.Settings.errorTolerance)
     local _shouldRayHitEntity = macros.GetFromTable(settings, "shouldRayHitEntity", null)
     local _shouldIgnoreEntity = macros.GetFromTable(settings, "shouldIgnoreEntity", null)
     
-    return this.Settings(
+    return TracePlus.Settings(
         _ignoreClasses, _priorityClasses, _ignoredModels, 
         _errorTolerance, _shouldRayHitEntity, _shouldIgnoreEntity
     )

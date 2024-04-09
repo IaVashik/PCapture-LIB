@@ -51,7 +51,7 @@ TracePlus["PortalCheap"] <- function(startPos, endPos) : (applyPortal) {
 }
 
 
-TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEnts = null, settings = defaultSettings, note = null) : (applyPortal) {
+TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEnts = null, settings = TracePlus.defaultSettings, note = null) : (applyPortal) {
     local previousTracedata
     // Portal castings
     for (local i = 0; i < 10; i++) { // todo?
