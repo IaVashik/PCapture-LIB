@@ -22,7 +22,7 @@
 
 
 IncludeScript("SRC/TracePlus/results")
-IncludeScript("SRC/TracePlus/settings")
+IncludeScript("SRC/TracePlus/trace_settings")
 TracePlus.defaultSettings = TracePlus.Settings.new()
 
 IncludeScript("SRC/TracePlus/cheap_trace")

@@ -51,14 +51,14 @@
      */
     function new(settingsTable = {}) {
         // Get the ignoreClasses setting from the settings table or use the default. 
-        local ignoreClasses = arrayLib(macros.GetFromTable(settingsTable, "ignoreClasses", clone(this.ignoreClasses)))
+        local ignoreClasses = arrayLib(macros.GetFromTable(settingsTable, "ignoreClasses", clone(TracePlus.Settings.ignoreClasses)))
         // Get the priorityClasses setting from the settings table or use the default. 
-        local priorityClasses = arrayLib(macros.GetFromTable(settingsTable, "priorityClasses", clone(this.priorityClasses)))
+        local priorityClasses = arrayLib(macros.GetFromTable(settingsTable, "priorityClasses", clone(TracePlus.Settings.priorityClasses)))
         // Get the ignoredModels setting from the settings table or use the default. 
-        local ignoredModels = arrayLib(macros.GetFromTable(settingsTable, "ignoredModels", clone(this.ignoredModels)))
+        local ignoredModels = arrayLib(macros.GetFromTable(settingsTable, "ignoredModels", clone(TracePlus.Settings.ignoredModels)))
         
         // Get the errorTolerance setting from the settings table or use the default. 
-        local errorTolerance = macros.GetFromTable(settingsTable, "errorTolerance", this.errorTolerance)
+        local errorTolerance = macros.GetFromTable(settingsTable, "errorTolerance", TracePlus.Settings.errorTolerance)
         // Get the shouldRayHitEntity setting from the settings table or use the default.  
         local shouldRayHitEntity = macros.GetFromTable(settingsTable, "shouldRayHitEntity", null)
         // Get the shouldIgnoreEntity setting from the settings table or use the default. 

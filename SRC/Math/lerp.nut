@@ -24,7 +24,7 @@ lerp["number"] <- function(start, end, t) {
  * @returns {Vector} - The interpolated vector.
  */
 lerp["vector"] <- function(start, end, t) {
-    return Vector(int(start.x, end.x, t), int(start.y, end.y, t), int(start.z, end.z, t));
+    return Vector(this.number(start.x, end.x, t), this.number(start.y, end.y, t), this.number(start.z, end.z, t));
 }
 
 
@@ -44,7 +44,7 @@ lerp["color"] <- function(start, end, t) {
         end = macros.StrToVec(end)
     }
 
-    return floor(int(start.x, end.x, t)) + " " + floor(int(start.y, end.y, t)) + " " + floor(int(start.z, end.z, t))
+    return floor(this.number(start.x, end.x, t)) + " " + floor(this.number(start.y, end.y, t)) + " " + floor(this.number(start.z, end.z, t))
 }
 
 // SLERP for vector 
@@ -101,7 +101,7 @@ lerp["SmoothCurve"] <- function( x ) {
 }
 
 lerp["SmoothProgress"] <- function( progress ) {
-    progress = this.int(-PI/2, PI/2, progress)
+    progress = this.number(-PI/2, PI/2, progress)
     progress = sin(progress)
     progress = (progress / 2.0) + 0.5
     return progress

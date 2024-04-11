@@ -15,7 +15,7 @@
     *
     * @param {array} array - The initial array.
     */
-    constructor(array = array(4)) {
+    constructor(array = []) {
         if(typeof array == "arrayLib")
             array = array.arr
         this.arr = array
@@ -43,9 +43,6 @@
     * @returns {arrayLib} - The arrayLib instance for chaining.
     */
     function append(val) {
-        if(this.arr.len() >= this.length)
-            this.resize(this.arr.len() * 2)
-
         this._pushToTable(val)
         arr.append(val);
         return this
@@ -90,10 +87,6 @@
 
         arr.extend(other);
         this.totable(true)
-
-        if(this.arr.len() >= this.length)
-            this.resize(this.arr.len() * 2)
-        this.length = this.arr.len()
          
         return this
     }
@@ -164,7 +157,7 @@
     * @returns {int} - The array length.
     */
     function len() {
-        return this.length
+        return this.arr.len()
     }
 
     /*
@@ -174,7 +167,7 @@
     * @returns {arrayLib} - The mapped array.
     */
     function map(func) {
-        local newArray = array(this.length)
+        local newArray = array(this.len())
         foreach(idx, value in arr) {
             newArray[idx] = func(value)
         }
@@ -244,7 +237,7 @@
     * @returns {arrayLib} - The sliced array.
     */
     function slice(start, end = null) {
-        return arrayLib(arr.slice(start, end || this.length))
+        return arrayLib(arr.slice(start, end || this.len()))
     }
 
     /*
@@ -274,7 +267,7 @@
     * @returns {string} - The joined string.
     */
     function join(joinstr = "") {
-        if(this.length == 0) return ""
+        if(this.len() == 0) return ""
         
         local string = ""
         foreach(elem in this.arr) {
@@ -291,7 +284,7 @@
     * @returns {any} - The element at the specified index or the default value if the index is out of bounds.
     */
     function get(idx, defaultVal = null) {
-        if(this.length > idx)
+        if(this.len() > idx)
             return this.arr[idx]
         return defaultVal
     }
@@ -308,7 +301,7 @@
         tableIsValid = true
         this.table.clear()
         foreach(element in arr) {
-            this.table[element] <- null
+            if(element) this.table[element] <- null
         }
         return this.table
     }
@@ -378,9 +371,9 @@
 
 
     function _nexti(previdx) {
-        if(this.length == 0) return null
+        if(this.len() == 0) return null
         if (previdx == null) return 0;
-		return previdx < this.length - 1 ? previdx + 1 : null;
+		return previdx < this.len() - 1 ? previdx + 1 : null;
 	}
 
     function cmp(other) { // lmao, why? :O
