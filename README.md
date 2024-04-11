@@ -2,11 +2,11 @@
 <img src="other\logo.png" alt="Logo"> <!-- width="660" height="350" -->
 
 <h2 align="center">
-    PCapture-Lib (a.k.a. <b>ApertureKit</b>) - The library that you need!
+    PCapture-Lib - The library that you need!
 </h2>
 </div>
 
-![version](https://img.shields.io/badge/Pcapture--Lib-v1.1.0-informational)
+![version](https://img.shields.io/badge/Pcapture--Lib-v2.0.0.alpha-informational)
 
 VScripts library for Portal 2 that provides various features and enhancements. It aims to help modders build advanced and complex custom mechanics more easily.
 
