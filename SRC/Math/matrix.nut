@@ -3,6 +3,19 @@ math["Matrix"] <- class {
     d = 0; e = 1; f = 0;
     g = 0; h = 0; k = 1;
 
+    /*
+    * Creates a new matrix.
+    *
+    * @param {number} a - The value at row 1, column 1.
+    * @param {number} b - The value at row 1, column 2.
+    * @param {number} c - The value at row 1, column 3.
+    * @param {number} d - The value at row 2, column 1.
+    * @param {number} e - The value at row 2, column 2.
+    * @param {number} f - The value at row 2, column 3.
+    * @param {number} g - The value at row 3, column 1.
+    * @param {number} h - The value at row 3, column 2.
+    * @param {number} k - The value at row 3, column 3.
+    */
     constructor(a = 1, b = 0, c = 0,
                 d = 0, e = 1, f = 0,
                 g = 0, h = 0, k = 1
@@ -60,9 +73,9 @@ math["Matrix"] <- class {
     }
 
     /*
-    * Транспонирует матрицу.
+    * Transposes the matrix.
     *
-    * @returns {Matrix} - Транспонированная матрица.
+    * @returns {Matrix} - The transposed matrix.
     */
     function transpose() {
         return math.Matrix(
@@ -73,9 +86,10 @@ math["Matrix"] <- class {
     }
 
     /*
-    * Вычисляет обратную матрицу.
+    * Calculates the inverse of the matrix.
     *
-    * @returns {Matrix} - Обратная матрица.
+    * @returns {Matrix} - The inverse matrix.
+    * @throws {Error} - If the matrix is singular (determinant is zero).
     */
     function inverse() {
         local det = this.determinant();
@@ -97,9 +111,9 @@ math["Matrix"] <- class {
     }
 
     /*
-    * Вычисляет детерминант матрицы.
+    * Calculates the determinant of the matrix.
     *
-    * @returns {number} - Детерминант матрицы.
+    * @returns {number} - The determinant of the matrix.
     */
     function determinant() {
         return this.a * (this.e * this.k - this.f * this.h) -
@@ -108,10 +122,10 @@ math["Matrix"] <- class {
     }
 
     /*
-    * Масштабирует матрицу на заданный коэффициент.
+    * Scales the matrix by a given factor.
     *
-    * @param {number} factor - Коэффициент масштабирования.
-    * @returns {Matrix} - Масштабированная матрица.
+    * @param {number} factor - The scaling factor.
+    * @returns {Matrix} - The scaled matrix.
     */
     function scale(factor) {
         return math.Matrix(
@@ -122,10 +136,10 @@ math["Matrix"] <- class {
     }
 
     /*
-    * Вращает матрицу вокруг оси X на заданный угол.
+    * Rotates the matrix around the X axis by a given angle.
     *
-    * @param {number} angle - Угол поворота в радианах.
-    * @returns {Matrix} - Повернутая матрица.
+    * @param {number} angle - The angle of rotation in radians.
+    * @returns {Matrix} - The rotated matrix.
     */
     function rotateX(angle) {
         local sinAngle = sin(angle);
@@ -158,10 +172,10 @@ math["Matrix"] <- class {
     }
 
     /*
-    * Складывает две матрицы.
+    * Adds two matrices.
     *
-    * @param {Matrix} other - Другая матрица.
-    * @returns {Matrix} - Результат сложения.
+    * @param {Matrix} other - The other matrix.
+    * @returns {Matrix} - The result of the addition.
     */
     function _add(other) {
         return math.Matrix(
@@ -172,10 +186,10 @@ math["Matrix"] <- class {
     }
 
     /*
-    * Вычитает две матрицы.
+    * Subtracts two matrices.
     *
-    * @param {Matrix} other - Другая матрица.
-    * @returns {Matrix} - Результат вычитания.
+    * @param {Matrix} other - The other matrix.
+    * @returns {Matrix} - The result of the subtraction.
     */
     function _sub(other) {
         return math.Matrix(
@@ -185,10 +199,22 @@ math["Matrix"] <- class {
         );
     }
 
+    /*
+     * Checks if two matrices are equal based on their components and sum.
+     *
+     * @param {Matrix} other - The other matrix to compare.
+     * @returns {boolean} - True if the matrices are equal, false otherwise.
+     */
     function isEqually(other) {
         return this.cmp(other) == 0
     }
 
+    /*
+     * Compares two matrices based on the sum of their components.
+     *
+     * @param {Matrix} other - The other matrix to compare.
+     * @returns {number} - 1 if this matrix's sum is greater, -1 if less, 0 if equal.
+     */
     function cmp(other) {
         if (typeof other != "Matrix") {
             throw "Cannot compare matrix with non-matrix type";

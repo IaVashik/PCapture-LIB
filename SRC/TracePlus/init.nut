@@ -1,3 +1,13 @@
+/*+--------------------------------------------------------------------------------+
+|                           PCapture Vscripts Library                              |
++----------------------------------------------------------------------------------+
+| Author:                                                                          |
+|     Ray Tracing Virtuoso - laVashik ˙▿˙                                          |
++----------------------------------------------------------------------------------+
+|       The TracePlus module, taking ray tracing to the next level with advanced   |
+|       features like portal support and precise collision detection algorithms.   |
++----------------------------------------------------------------------------------+ */
+
 ::TracePlus <- {
     Result = {},
     Portals = {},

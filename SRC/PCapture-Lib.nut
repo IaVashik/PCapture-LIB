@@ -2,7 +2,7 @@
 |                           PCapture Vscripts Library                               |
  +---------------------------------------------------------------------------------+
 | Author:                                                                           |
-|     One-of-a-Kind - laVashik :D                                                   |
+|     One-of-a-Kind - laVashik                                                      |
  +---------------------------------------------------------------------------------+
 | pcapture-lib.nut                                                                  |
 |       The main file in the library. initializes required parts of the library     |

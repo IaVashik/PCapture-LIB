@@ -1,12 +1,11 @@
 /*+--------------------------------------------------------------------------------+
-|                           PCapture Vscripts Library                               |
- +---------------------------------------------------------------------------------+
-| Author:                                                                           |
-|     One-of-a-Kind - laVashik :D                                                   |
- +---------------------------------------------------------------------------------+
-| PCapture-anims.nut                                                                 |
-|       Animation module, used to quickly create animation events                    |
-|       related to alpha, color, object moving                                       |
+|                           PCapture Vscripts Library                              |
++----------------------------------------------------------------------------------+
+| Author:                                                                          |
+|     Animation Alchemist - laVashik ¬_¬                                           |
++----------------------------------------------------------------------------------+ 
+|       The Animations module, simplifying the creation of smooth and dynamic      |
+|       animations for alpha, color, and object movement in your VScripts.         |
 +----------------------------------------------------------------------------------+ */
 
 ::animate <- {}
@@ -19,6 +18,13 @@
     outputs = null
     entities = []
 
+    /*
+     * Constructor for an AnimEvent object. 
+     *
+     * @param {table} settings - A table containing animation settings.
+     * @param {array} entities - An array of entities to animate.
+     * @param {number} time - The duration of the animation in seconds.
+     */
     constructor(table, ents, time) {
         this.entities = ents
         this.delay = time
@@ -29,12 +35,22 @@
         this.outputs = macros.GetFromTable(table, "outputs", null)
     }
 
+    /* 
+     * Calls the outputs associated with the animation event. 
+     */
     function callOutputs() {
         if (this.outputs)
             CreateScheduleEvent(this.eventName, this.outputs, this.time)
     }
 }
 
+/*
+ * Applies an animation over a specified duration, calculating and setting new values for a property at each frame.
+ * 
+ * @param {AnimEvent} animSetting - The AnimEvent object containing animation settings and entities.
+ * @param {function} valueCalculator - A function that calculates the new value for the property at each frame.
+ * @param {function} propertySetter - A function that sets the new value for the property on each entity. 
+ */
 animate["applyAnimation"] <- function(animSetting, valueCalculator, propertySetter) {
     local transitionFrames = animSetting.time / FrameTime();
     for (local step = 0; step < transitionFrames; step++) {

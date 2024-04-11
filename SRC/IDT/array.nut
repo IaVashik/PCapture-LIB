@@ -1,31 +1,21 @@
-/*+--------------------------------------------------------------------------------+
-|                           PCapture Vscripts Library                               |
- +---------------------------------------------------------------------------------+
-| Author:                                                                           |
-|     One-of-a-Kind - laVashik :D                                                   |
- +---------------------------------------------------------------------------------+
-| PCapture-array.nut                                                                 |
-|       Improved arrays module. Contains easy output in the console                  |
-|       and additional features to simplify life                                     |
-+----------------------------------------------------------------------------------+ */
-
 /*
 * Enhanced arrays module.
 */
 ::arrayLib <- class {
-    /* The internal array. */
+    // The internal array. 
     arr = null
+    length = 0;
     
-    /* The internal table representation. */
+    // The internal table representation. 
     table = null;
-    tableIsValid = false
+    tableIsValid = false;
     
     /*
     * Constructor.
     *
     * @param {array} array - The initial array.
     */
-    constructor(array = []) {
+    constructor(array = array(4)) {
         if(typeof array == "arrayLib")
             array = array.arr
         this.arr = array
@@ -50,18 +40,22 @@
     * Append a value to the array.
     *
     * @param {any} val - The value to append.
-    * @returns {int} - The new array length.
+    * @returns {arrayLib} - The arrayLib instance for chaining.
     */
     function append(val) {
+        if(this.arr.len() >= this.length)
+            this.resize(this.arr.len() * 2)
+
         this._pushToTable(val)
         arr.append(val);
         return this
     }
 
     /*
-    * Apply a function to each element.
+    * Apply a function to each element and modify the array in-place.
     *
     * @param {Function} func - The function to apply.
+    * @returns {arrayLib} - The arrayLib instance for chaining.
     */
     function apply(func) {
         foreach(idx, value in arr) {
@@ -73,6 +67,8 @@
 
     /*
     * Clear the array and table.
+    *
+    * @returns {arrayLib} - The arrayLib instance for chaining.
     */
     function clear() {
         this.arr.clear()
@@ -84,21 +80,28 @@
     /*
     * Extend the array with another array.
     *
-    * @param {array} other - The array to extend from.
+    * @param {array|arrayLib} other - The array to extend from.
+    * @returns {arrayLib} - The arrayLib instance for chaining.
     */
     function extend(other) {
         if(typeof other == "arrayLib") {
             other = other.arr
         }
+
         arr.extend(other);
         this.totable(true)
+
+        if(this.arr.len() >= this.length)
+            this.resize(this.arr.len() * 2)
+        this.length = this.arr.len()
+         
         return this
     }
 
     /*
     * Filter the array by a predicate function.
     *
-    * @param {Function} func(inx, val, newArr) - The predicate function. 
+    * @param {Function} func(index, value, newArray) - The predicate function. 
     * @returns {arrayLib} - The filtered array.
     */
     function filter(func) {
@@ -116,7 +119,7 @@
     * @param {any} match - The value to find.
     * @returns {boolean} - Whether the value is found.
     */
-    function find(match) { // todo rename this
+    function contains(match) { 
         if(!this.tableIsValid) this.totable()
         return match in this.table
     }
@@ -161,7 +164,7 @@
     * @returns {int} - The array length.
     */
     function len() {
-        return arr.len()
+        return this.length
     }
 
     /*
@@ -171,7 +174,7 @@
     * @returns {arrayLib} - The mapped array.
     */
     function map(func) {
-        local newArray = array(this.len())
+        local newArray = array(this.length)
         foreach(idx, value in arr) {
             newArray[idx] = func(value)
         }
@@ -241,7 +244,7 @@
     * @returns {arrayLib} - The sliced array.
     */
     function slice(start, end = null) {
-        return arrayLib(arr.slice(start, end || this.len()))
+        return arrayLib(arr.slice(start, end || this.length))
     }
 
     /*
@@ -271,7 +274,7 @@
     * @returns {string} - The joined string.
     */
     function join(joinstr = "") {
-        if(this.len() == 0) return ""
+        if(this.length == 0) return ""
         
         local string = ""
         foreach(elem in this.arr) {
@@ -288,7 +291,7 @@
     * @returns {any} - The element at the specified index or the default value if the index is out of bounds.
     */
     function get(idx, defaultVal = null) {
-        if(this.len() > idx)
+        if(this.length > idx)
             return this.arr[idx]
         return defaultVal
     }
@@ -375,9 +378,9 @@
 
 
     function _nexti(previdx) {
-        if(this.len() == 0) return null
+        if(this.length == 0) return null
         if (previdx == null) return 0;
-		return previdx < this.len() - 1 ? previdx + 1 : null;
+		return previdx < this.length - 1 ? previdx + 1 : null;
 	}
 
     function cmp(other) { // lmao, why? :O

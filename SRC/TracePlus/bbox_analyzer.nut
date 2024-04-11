@@ -1,38 +1,105 @@
 // Expensive/Precise TraceLine logic
-::TraceLineAnalyzer <- class {
+/*
+ * A class for performing precise trace line analysis. 
+ * 
+ * This class provides methods for tracing lines with more precision and considering entity priorities and ignore settings. 
+ */
+ ::TraceLineAnalyzer <- class {
     settings = null;
     hitpos = null;
     hitent = null;
 
-    constructor(startpos, endpos, ignoreEnts, settings, note) {
+    /*
+     * Constructor for TraceLineAnalyzer.
+     *
+     * @param {Vector} startpos - The start position of the trace.
+     * @param {Vector} endpos - The end position of the trace.
+     * @param {array|CBaseEntity|null} ignoreEntities - A list of entities or a single entity to ignore during the trace. 
+     * @param {TraceSettings} settings - The settings to use for the trace. 
+     * @param {string|null} note - An optional note associated with the trace. 
+     */ 
+    constructor(startpos, endpos, ignoreEntities, settings, note) {
         this.settings = settings // todo
         
-        local result = this.Trace(startpos, endpos, ignoreEnts, note)
+        local result = this.Trace(startpos, endpos, ignoreEntities, note)
         this.hitpos = result[0]
         this.hitent = result[1]
     }
 
+    /*
+     * Gets the hit position of the trace. 
+     *
+     * @returns {Vector} - The hit position. 
+     */
     function GetHitpos() {
         return this.hitpos
     }
 
+    /* 
+     * Gets the entity hit by the trace. 
+     *
+     * @returns {CBaseEntity|null} - The hit entity, or null if no entity was hit.
+     */
     function GetEntity() {
         return this.hitent
     }
 
-    // todo add args
-    function Trace(startpos, endpos, ignoreEnts, note) array(hitpos, hitent) 
+    /* 
+     * Performs a precise trace line analysis. 
+     *
+     * This method subdivides the trace into smaller segments and checks for entity collisions along the way, 
+     * considering entity priorities and ignore settings.
+     * 
+     * @param {Vector} startPos - The start position of the trace.
+     * @param {Vector} endPos - The end position of the trace.
+     * @param {array|CBaseEntity|null} ignoreEntities - A list of entities or a single entity to ignore during the trace. 
+     * @param {string|null} note - An optional note associated with the trace. 
+     * @returns {array} - An array containing the hit position and the hit entity (or null). 
+     */
+    function Trace(startPos, endPos, ignoreEntities, note) array(hitPos, hitEnt) 
+    /* 
+     * Checks if an entity is a priority entity based on the trace settings.
+     *
+     * @param {string} entityClass - The classname of the entity. 
+     * @returns {boolean} - True if the entity is a priority entity, false otherwise. 
+     */
     function _isPriorityEntity() bool
+    /* 
+     * Checks if an entity should be ignored based on the trace settings. 
+     *
+     * @param {string} entityClass - The classname of the entity. 
+     * @returns {boolean} - True if the entity should be ignored, false otherwise. 
+     */
     function _isIgnoredEntity() bool
-    function _hitEntity() bool
+    /* 
+     * Checks if the trace should consider a hit with the given entity.
+     * 
+     * @param {CBaseEntity} ent - The entity to check.
+     * @param {array|CBaseEntity|null} ignoreEntities - A list of entities or a single entity to ignore during the trace. 
+     * @param {string|null} note - An optional note associated with the trace. 
+     * @returns {boolean} - True if the trace should consider the hit, false otherwise. 
+     */
+    function shouldHitEntity() bool
 }
 
 
-function TraceLineAnalyzer::Trace(startpos, endpos, ignoreEnts, note) {
+/*
+ * Performs a precise trace line analysis. 
+ *
+ * This method subdivides the trace into smaller segments and checks for entity collisions along the way, 
+ * considering entity priorities and ignore settings.
+ * 
+ * @param {Vector} startPos - The start position of the trace.
+ * @param {Vector} endPos - The end position of the trace.
+ * @param {array|CBaseEntity|null} ignoreEntities - A list of entities or a single entity to ignore during the trace. 
+ * @param {string|null} note - An optional note associated with the trace. 
+ * @returns {array} - An array containing the hit position and the hit entity (or null). 
+ */
+function TraceLineAnalyzer::Trace(startPos, endPos, ignoreEntities, note) {
     // Get the hit position from the fast trace
-    local hitpos = TracePlus.Cheap(startpos, endpos).GetHitpos()
+    local hitPos = TracePlus.Cheap(startPos, endPos).GetHitpos()
     // Calculate the distance between start and hit positions
-    local dist = hitpos - startpos
+    local dist = hitPos - startPos
     // Calculate a distance coefficient for more precise tracing based on distance and error coefficient
     local dist_coeff = abs(dist.Length() / settings.GetErrorTolerance()) + 1
     // Calculate the number of steps based on distance and distance coefficient
@@ -41,17 +108,17 @@ function TraceLineAnalyzer::Trace(startpos, endpos, ignoreEnts, note) {
     // Iterate through each step
     for (local i = 0.0; i < step; i++) {
         // Calculate the ray position for the current step
-        local rayPart = startpos + dist * (i / step)
+        local rayPart = startPos + dist * (i / step)
         // Find the entity at the ray point
         // TODO!!! separate code! "*"
         for (local ent;ent = Entities.FindByClassnameWithin(ent, "*", rayPart, 5 * dist_coeff);) { // todo potential place for improvement
-            if (ent && this._hitEntity(ent, ignoreEnts, note)) {
+            if (ent && this.shouldHitEntity(ent, ignoreEntities, note)) {
                 return [rayPart, ent] // no tuple? :>
             }
         }
     }
 
-    return [hitpos, null]
+    return [hitPos, null]
 }
 
 // Check if an entity should be ignored based on the provided settings
@@ -83,6 +150,12 @@ function TraceLineAnalyzer::_isIgnoredEntity(entityClass) {
     }) != null
 }
 
+/* 
+* Check if the entity model is in the list of ignored models.
+*
+* @param {string} entityModel - The model name of the entity.
+* @returns {boolean} True if the model is ignored, false otherwise. 
+*/
 function TraceLineAnalyzer::_isIgnoredModels(entityModel) {
     if(settings.GetIgnoredModels().len() == 0 || entityModel == "") 
         return false
@@ -95,10 +168,10 @@ function TraceLineAnalyzer::_isIgnoredModels(entityModel) {
 * Check if entity should be ignored.
 *
 * @param {Entity} ent - Entity to check.
-* @param {Entity|array} ignoreEnts - Entities being ignored. 
+* @param {Entity|array} ignoreEntities - Entities being ignored. 
 * @returns {boolean} True if should ignore.
 */
-function TraceLineAnalyzer::_hitEntity(ent, ignoreEnts, note) { // todo rename
+function TraceLineAnalyzer::shouldHitEntity(ent, ignoreEntities, note) { // todo rename
     // todo
     if(settings.ApplyIgnoreFilter(ent, note))
         return false
@@ -110,16 +183,16 @@ function TraceLineAnalyzer::_hitEntity(ent, ignoreEnts, note) { // todo rename
         return false
 
 
-    if(ignoreEnts) { // TODO пускай всегда будет массивом, а трейсеры будут оборачивать одиночек, хуле нет)
+    if(ignoreEntities) {
         // Processing for arrays
-        local type = typeof ignoreEnts
+        local type = typeof ignoreEntities 
         if (type == "array" || type == "arrayLib") {
-            foreach (mask in ignoreEnts) {
+            foreach (mask in ignoreEntities) {
                 if(ent.isEqually(mask)) return false
             }
         } 
         
-        else if(ent.isEqually(ignoreEnts)) return false
+        else if(ent.isEqually(ignoreEntities)) return false
     }
 
     local classname = ent.GetClassname()

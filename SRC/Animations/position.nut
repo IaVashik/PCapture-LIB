@@ -1,6 +1,14 @@
-
-animate["PositionTransitionByTime"] <- function(entities, startPos, endPos, time, animSetting = {}) {
-    local animSetting = AnimEvent(animSetting, _GetValidEntitiy(entities))
+/*
+ * Creates an animation that transitions the position of entities over time.
+ *
+ * @param {array|CBaseEntity|pcapEntity} entities - The entities to animate.
+ * @param {Vector} startPos - The starting position. 
+ * @param {Vector} endPos - The ending position. 
+ * @param {number} time - The duration of the animation in seconds. 
+ * @param {table} animSetting - A table containing additional animation settings. (optional) 
+ */
+ animate["PositionTransitionByTime"] <- function(entities, startPos, endPos, time, animSetting = {}) {
+    local animSetting = AnimEvent(animSetting, _GetValidEntitiy(entities), time)
     
     local dist = endPos - startPos
     local coordStep = dist.Length() / abs(time / FrameTime())

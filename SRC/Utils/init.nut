@@ -1,13 +1,12 @@
 /*+--------------------------------------------------------------------------------+
-|                           PCapture Vscripts Library                               |
- +---------------------------------------------------------------------------------+
-| Author:                                                                           |
-|     One-of-a-Kind - laVashik :D                                                   |
- +---------------------------------------------------------------------------------+
-| PCapture-utils.nut                                                                |
-|       A collection of utility functions for script execution and debugging.       |
-|       It's a Swiss army knife for developers working with Squirrel :D             |
-+----------------------------------------------------------------------------------+ */
+|                           PCapture Vscripts Library                              |
++----------------------------------------------------------------------------------+
+| Author:                                                                          |
+|     Squirrel Whisperer - laVashik :>                                             |
++----------------------------------------------------------------------------------+
+|       A toolbox of versatile utilities for script execution, debugging, file     |
+|       operations, and entity manipulation, empowering VScripts developers.       | 
++----------------------------------------------------------------------------------+ */ 
 
 IncludeScript("SRC/Utils/debug")
 IncludeScript("SRC/Utils/file")

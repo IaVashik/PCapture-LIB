@@ -1,22 +1,12 @@
-/*+--------------------------------------------------------------------------------+
-|                           PCapture Vscripts Library                               |
- +---------------------------------------------------------------------------------+
-| Author:                                                                           |
-|     One-of-a-Kind - laVashik :D                                                   |
- +---------------------------------------------------------------------------------+
-| PCapture-entities.nut                                                             |
-|       Improved Entities Module. Contains A VERY LARGE number                      |
-|       of different functions that you just missed later!                          |
-+----------------------------------------------------------------------------------+ */
-
 ::pcapEntity <- class {
     CBaseEntity = null;
     EntityScope = null;
 
-    /* Constructor for the entity object.
-    *
-    * @param {CBaseEntity} entity - The entity object.
-    */
+    /* 
+     * Constructor for the entity object.
+     *
+     * @param {CBaseEntity} entity - The entity object.
+     */
     constructor(entity = null) { 
         if(entity == null) return null
 
@@ -36,26 +26,28 @@
         this.CBaseEntity.SetAngles(x, y, z)
     }
 
-    /* Sets the angles of the entity.
-    *
-    * @param {Vector} vector - The angle vector.
-    */
-    function SetAbsAngles(vector) {
-        this.CBaseEntity.SetAngles(vector.x, vector.y, vector.z)
+    /*
+     * Sets the angles of the entity.
+     *
+     * @param {Vector} angles - The angle vector.
+     */
+    function SetAbsAngles(angles) {
+        this.CBaseEntity.SetAngles(angles.x, angles.y, angles.z)
     }
 
 
-    /* Destroys the entity. */
+    // Destroys the entity. 
     function Destroy() {
         this.CBaseEntity.Destroy()
         this.CBaseEntity = null
     }
 
 
-    /* Kills the entity.
-    *
-    * @param {int|float} fireDelay - Delay in seconds before applying.
-    */
+    /*
+     * Kills the entity.
+     *
+     * @param {number} fireDelay - Delay in seconds before applying.
+     */
     function Kill(fireDelay = 0) {
         EntFireByHandle(CBaseEntity, "kill", "", fireDelay)
         this.CBaseEntity = null // todo bug
@@ -72,19 +64,21 @@
     }
 
 
-    /* Checks if the entity is valid.
-    *
-    * @returns {bool} - True if the entity is valid, false otherwise.
-    */
+    /*
+     * Checks if the entity is valid.
+     *
+     * @returns {bool} - True if the entity is valid, false otherwise.
+     */
     function IsValid() {
         return this.CBaseEntity && this.CBaseEntity.IsValid() && !this.GetUserData("Dissolved")
     }
 
 
-    /* Checks if this entity is the player entity.
-    * 
-    * @returns {bool} - True if this entity is the player, false otherwise.
-    */
+    /*
+     * Checks if this entity is the player entity.
+     * 
+     * @returns {bool} - True if this entity is the player, false otherwise.
+     */
     function IsPlayer() {
         return this.CBaseEntity.GetClassname() == "player"  // todo
     }
@@ -103,11 +97,12 @@
     }
 
 
-    /* Sets the key-value pair of the entity.  
-    *
-    * @param {string} key - The key of the key-value pair.
-    * @param {int|float|Vector|string} value - The value of the key-value pair.
-    */
+    /*
+     * Sets the key-value pair of the entity.  
+     *
+     * @param {string} key - The key of the key-value pair.
+     * @param {int|float|Vector|string} value - The value of the key-value pair.
+     */
     function SetKeyValue(key, value) {
         switch (typeof value) {
             case "integer":
@@ -127,15 +122,16 @@
     }
 
 
-    /* Sets the outputs of the entity.  (TODO improve description)
-    *
-    * @param {string} outputName - Output named
-    * @param {string|CBaseEntity|pcapEntity} target - Targets entities named
-    * @param {string} input - Via this input
-    * @param {string} param - with a parameter ovveride of
-    * @param {int|float} delay - Delay in seconds before applying. // todo
-    * @param {int} fires - 
-    */
+    /*
+     * Sets the outputs of the entity.  (TODO improve description)
+     *
+     * @param {string} outputName - Output named
+     * @param {string|CBaseEntity|pcapEntity} target - Targets entities named
+     * @param {string} input - Via this input
+     * @param {string} param - with a parameter ovveride of
+     * @param {number} delay - Delay in seconds before applying. // todo
+     * @param {int} fires - 
+     */
     function addOutput(outputName, target, input, param = "", delay = 0, fires = -1) {
         if(typeof target == "instance" || typeof target == "pcapEntity")
             target = target.GetName()
@@ -146,7 +142,7 @@
     *
     * @param {string} outputName - Output named
     * @param {string} script - 
-    * @param {int|float} delay - Delay in seconds before applying. // todo
+    * @param {number} delay - Delay in seconds before applying. // todo
     * @param {int} fires - 
     */
     function ConnectOutputEx(outputName, script, delay = 0, fires = -1) {
@@ -160,37 +156,47 @@
     }
 
 
-    function EmitSoundEx(sound_name, timeDelay = 0, eventName = this) {
+    /* 
+     * Emits a sound with optional delay.
+     *
+     * @param {string} soundName - The name of the sound to play.
+     * @param {number} timeDelay - Delay in seconds before playing the sound. (optional)
+     * @param {string} eventName - The name of the event used for scheduling. (optional)
+     */
+    function EmitSoundEx(soundName, timeDelay = 0, eventName = this) {
         if(timeDelay == 0)
-            return this.CBaseEntity.EmitSound(sound_name)
-        CreateScheduleEvent(eventName, function():(CBaseEntity, sound_name) {
-            CBaseEntity.EmitSound(sound_name)
+            return this.CBaseEntity.EmitSound(soundName)
+        CreateScheduleEvent(eventName, function():(CBaseEntity, soundName) {
+            CBaseEntity.EmitSound(soundName)
         }, timeDelay)
     }
 
 
-    /* Sets the targetname of the entity.
-    *
-    * @param {string} name - The targetname to be set.
-    */
+    /*
+     * Sets the targetname of the entity.
+     *
+     * @param {string} name - The targetname to be set.
+     */
     function SetName(name) {
         this.SetKeyValue("targetname", name)
     }
 
-    /* Sets the Unique targetname of the entity.
-    *
-    * @param {string} prefix - The prefix to be set.
-    */
+    /*
+     * Sets a unique targetname for the entity using the provided prefix.
+     *
+     * @param {string} prefix - The prefix to be used for the unique targetname. (optional, default="u")
+     */
     function SetUniqueName(prefix = "u") {
         this.SetKeyValue("targetname", UniqueString(prefix))
     }
 
 
-    /* Sets the parent of the entity.
-    *
-    * @param {string|CBaseEntity|pcapEntity} parent - The parent entity object.
-    * @param {int|float} fireDelay - Delay in seconds before applying.
-    */
+    /*
+     * Sets the parent of the entity.
+     *
+     * @param {string|CBaseEntity|pcapEntity} parent - The parent entity object or its targetname.
+     * @param {number} fireDelay - Delay in seconds before applying.
+     */
     function SetParent(parentEnt, fireDelay = 0) {
         this.SetUserData("parent", parentEnt)
         if(typeof parentEnt != "string") {
@@ -203,60 +209,70 @@
         EntFireByHandle(this.CBaseEntity, "SetParent", parentEnt, fireDelay)
     }
 
+    /*
+     * Gets the parent of the entity.
+     *
+     * @returns {pcapEntity|null} - The parent entity object or null if no parent is set.
+     */
     function GetParent() {
         return this.GetUserData("parent")
     }
 
 
-    /* Sets the collision of the entity.
-    *
-    * @param {int} solid - The type of collision.
-    * @param {int|float} fireDelay - Delay in seconds before applying.
-    */
-    function SetCollision(solid, fireDelay = 0) {
-        EntFireByHandle(this.CBaseEntity, "SetSolidtype", solid.tostring(), fireDelay, null, null)
-        this.SetUserData("Solidtype", solid)
+    /*
+     * Sets the collision of the entity.
+     *
+     * @param {number} solidType - The type of collision.
+     * @param {number} fireDelay - Delay in seconds before applying.
+     */
+    function SetCollision(solidType, fireDelay = 0) {
+        EntFireByHandle(this.CBaseEntity, "SetSolidtype", solidType.tostring(), fireDelay, null, null)
+        this.SetUserData("Solidtype", solidType)
     }
 
 
-    /* Sets the collision group of the entity.
-    *
-    * @param {int} collisionGroup - The collision group.
-    */
+    /*
+     * Sets the collision group of the entity.
+     *
+     * @param {number} collisionGroup - The collision group.
+     */
     function SetCollisionGroup(collisionGroup) {
         this.SetKeyValue("CollisionGroup", collisionGroup)
         this.SetUserData("CollisionGroup", collisionGroup)
     }
     
 
-    /* Start playing animation
-    *
-    * @param {string} animationName - Animation name.
-    * @param {int|float} fireDelay - Delay in seconds before applying.
-    */
+    /* 
+     * Starts playing the specified animation.
+     *
+     * @param {string} animationName - The name of the animation to play.
+     * @param {number} fireDelay - Delay in seconds before starting the animation.
+     */
     function SetAnimation(animationName, fireDelay) {
         EntFireByHandle(this.CBaseEntity, "SetAnimation", animationName, fireDelay)
         this.SetUserData("animation", animationName)
     }
 
 
-    /* Sets the alpha of the entity.
-    *
-    * @param {int} opacity - The alpha value.
-    * @param {int|float} fireDelay - Delay in seconds before applying.
-    * Note: Don't forgot for "rendermode" use 5
-    */
+    /*
+     * Sets the alpha (opacity) of the entity.
+     *
+     * @param {number} opacity - The alpha value (0-255).
+     * @param {number} fireDelay - Delay in seconds before applying.
+     * Note: Don't forget to set "rendermode" to 5 for alpha to work.
+     */
     function SetAlpha(opacity, fireDelay = 0) {
         EntFireByHandle(this.CBaseEntity, "Alpha", opacity.tostring(), fireDelay, null, null)
         this.SetUserData("alpha", opacity)
     }
 
 
-    /* Sets the color of the entity.
-    *
-    * @param {string|Vector} colorValue - The color value.
-    * @param {int|float} fireDelay - Delay in seconds before applying.
-    */
+    /*
+     * Sets the color of the entity.
+     *
+     * @param {string|Vector} colorValue - The color value as a string (e.g., "255 0 0") or a Vector.
+     * @param {number} fireDelay - Delay in seconds before applying.
+     */
     function SetColor(colorValue, fireDelay = 0) {
         if(typeof colorValue == "Vector") 
             colorValue = macros.VecToStr(colorValue)
@@ -265,76 +281,97 @@
     }
 
 
-    /* Sets the skin of the entity.
-    *
-    * @param {int} skin - The skin number.
-    * @param {int|float} fireDelay - Delay in seconds before applying.
-    */
+    /*
+     * Sets the skin of the entity.
+     *
+     * @param {number} skin - The skin number.
+     * @param {number} fireDelay - Delay in seconds before applying.
+     */
     function SetSkin(skin, fireDelay = 0) {
         EntFireByHandle(this.CBaseEntity, "skin", skin.tostring(), fireDelay, null, null)
         this.SetUserData("skin", skin)
     }
 
 
-    /* Sets whether the entity should be drawn or not. 
-    *
-    * @param {bool} isEnabled - True to enable drawing, false to disable.
-    * @param {int|float} fireDelay - Delay in seconds before applying.
-    */
+    /*
+     * Sets whether the entity should be drawn or not. 
+     *
+     * @param {boolean} isEnabled - True to enable drawing, false to disable.
+     * @param {number} fireDelay - Delay in seconds before applying.
+     */
     function SetDrawEnabled(isEnabled, fireDelay = 0) {
         local action = isEnabled ? "EnableDraw" : "DisableDraw"
         EntFireByHandle(this.CBaseEntity, action, "", fireDelay)
         this.SetUserData("IsDraw", isEnabled)
     }
 
+    /*
+     * Checks if the entity is set to be drawn.
+     * 
+     * @returns {boolean} - True if the entity is set to be drawn, false otherwise.
+     */
     function IsDrawEnabled() {
         return this.GetUserData("IsDraw")
     }
 
+    /*
+     * Sets whether the entity should be ignored during traces.
+     * 
+     * @param {boolean} isEnabled - True to ignore the entity during traces, false otherwise.
+     */
     function SetTraceIgnore(isEnabled) {
         this.SetUserData("TracePlusIgnore", isEnabled)
     }
 
-    /* Sets the spawnflags for the entity.
-    *
-    * @param {int} flag - The spawnflags value to set.
-    */
+    /*
+     * Sets the spawnflags for the entity.
+     *
+     * @param {number} flag - The spawnflags value to set.
+     */
     function SetSpawnflags(flag) {
         this.SetKeyValue("CollisionGroup", flag)
         this.SetUserData("spawnflags", flag)
     }
 
 
-    /* Sets the scale of the entity.
-    *
-    * @param {int} scaleValue - The scale value.
-    * @param {int|float} fireDelay - Delay in seconds before applying.
-    */
+    /*
+     * Sets the scale of the entity's model.
+     *
+     * @param {number} scaleValue - The scale value.
+     * @param {number} fireDelay - Delay in seconds before applying.
+     */
     function SetModelScale(scaleValue, fireDelay = 0) {
         EntFireByHandle(this.CBaseEntity, "addoutput", "ModelScale " + scaleValue, fireDelay, null, null)
         this.SetUserData("ModelScale", scaleValue)
     }
 
+    /*
+     * Gets the current model scale of the entity.
+     *
+     * @returns {number} - The current model scale value.
+     */
     function GetModelScale() {
         local res = this.GetUserData("ModelScale")
         return res ? res : 1
     }
 
 
-    /* Sets the center of the entity.
-    *
-    * @param {Vector} vector - The center vector.
-    */
+    /*
+     * Sets the center of the entity.
+     *
+     * @param {Vector} vector - The center vector.
+     */
     function SetCenter(vector) {
         local offset = this.CBaseEntity.GetCenter() - this.CBaseEntity.GetOrigin()
         this.CBaseEntity.SetAbsOrigin( vector - offset )
     }
 
-    /* Sets the bounding box of the entity.
-    *
-    * @param {Vector|string} min - The minimum bounds vector or a string representation of the vector.
-    * @param {Vector|string} max - The maximum bounds vector or a string representation of the vector.
-    */
+    /*
+     * Sets the bounding box of the entity.
+     *
+     * @param {Vector|string} min - The minimum bounds vector or a string representation of the vector.
+     * @param {Vector|string} max - The maximum bounds vector or a string representation of the vector.
+     */
     function SetBBox(minBounds, maxBounds) {
         // Please specify the data type of `min` and `max` to improve the documentation accuracy.
         if (type(minBounds) == "string") {
@@ -348,26 +385,35 @@
     }
 
 
+    /*
+     * Sets a context value for the entity.
+     *
+     * @param {string} name - The name of the context value.
+     * @param {any} value - The value to set.
+     * @param {number} fireDelay - Delay in seconds before applying.
+     */
     function SetContext(name, value, fireDelay = 0) {
         EntFireByHandle(this.CBaseEntity, "AddContext", (name + ":" + value), fireDelay)
         this.SetUserData(name, value)
     }
     
-    /* Stores an arbitrary value associated with the entity.
-    *
-    * @param {string} name - The name of the value.  
-    * @param {any} value - The value to store.
-    */
+    /* 
+     * Stores an arbitrary value associated with the entity.
+     *
+     * @param {string} name - The name of the value.  
+     * @param {any} value - The value to store.
+     */
     function SetUserData(name, value) {
         this.EntityScope[name.tolower()] <- value
     }
 
 
-    /* Gets a stored user data value.
-    *
-    * @param {string} name - The name of the value to get.
-    * @returns {any} - The stored value, or null if not found.
-    */ 
+    /*
+     * Gets a stored user data value.
+     *
+     * @param {string} name - The name of the value to get.
+     * @returns {any} - The stored value, or null if not found.
+     */ 
     function GetUserData(name) {
         name = name.tolower()
         if(name in this.EntityScope)
@@ -376,10 +422,11 @@
     }
 
 
-    /* Gets the bounding box of the entity.
-    *
-    * @returns {table} - The minimum bounds and maximum bounds of the entity.
-    */
+    /*
+     * Gets the bounding box of the entity.
+     *
+     * @returns {table} - The minimum bounds and maximum bounds of the entity.
+     */
     function GetBBox() {
         local max = GetBoundingMaxs()
         local min = GetBoundingMins()
@@ -387,10 +434,11 @@
     }
 
 
-    /* Returns the axis-aligned bounding box (AABB) of the entity.
-    *
-    * @returns {table} - The minimum bounds, maximum bounds, and center of the entity.
-    */ 
+    /* 
+     * Returns the axis-aligned bounding box (AABB) of the entity.
+     *
+     * @returns {table} - The minimum bounds, maximum bounds, and center of the entity.
+     */ 
     function GetAABB() {
         local max = CreateAABB(7)
         local min = CreateAABB(0)
@@ -399,7 +447,8 @@
     }
 
 
-    /* Gets the index of the entity.
+    /* 
+     * Gets the index of the entity.
      *
      * @returns {int} - The index of the entity.
     */
@@ -408,12 +457,13 @@
     }
 
 
-    /* Gets the value of the key-value pair of the entity 
-    * Note: only works if you used the SetKeyValue function!
-    *
-    * @param {string} key - The key of the key-value pair.
-    * @returns {any} - The value of the key-value pair.
-    */
+    /*
+     * Gets the value of the key-value pair of the entity.
+     * Note: only works if you used the SetKeyValue function!
+     *
+     * @param {string} key - The key of the key-value pair.
+     * @returns {any} - The value of the key-value pair.
+     */
     function GetKeyValue(key) {
         local value = this.GetUserData(key)
         if(value != null)
@@ -435,85 +485,99 @@
     }
 
 
-    /* Gets the spawnflags for the entity.
-    * Note: only works if you used the SetKeyValue function!
-    *
-    * @returns {int|null} - The spawnflags value.
-    */ 
+    /*
+     * Gets the spawnflags for the entity.
+     * Note: only works if you used the SetKeyValue function!
+     *
+     * @returns {int|null} - The spawnflags value.
+     */ 
     function GetSpawnflags() {
         return this.GetUserData("spawnflags")
     }
 
 
-    /* Gets the alpha/opacity value of the entity.
-    * Note: only works if you used the SetKeyValue function!
-    * 
-    * @returns {int|null} - The alpha value.
-    */
+    /*
+     * Gets the alpha/opacity value of the entity.
+     * Note: only works if you used the SetKeyValue function!
+     * 
+     * @returns {int|null} - The alpha value.
+     */
     function GetAlpha() {
         local alpha = this.GetUserData("alpha")
         return alpha != null ? alpha : 255
     }
 
 
-    /* Gets the color value of the entity.
-    * Note: only works if you used the SetKeyValue function!
-    *
-    * @returns {string|null} - The color value.
-    */
+    /*
+     * Gets the color value of the entity.
+     * Note: only works if you used the SetKeyValue function!
+     *
+     * @returns {string|null} - The color value.
+     */
     function GetColor() {
         local color = this.GetUserData("color")
         return color ? color : "255 255 255"
     }
 
 
+    /*
+     * Gets the skin of the entity.
+     * Note: only works if you used the SetKeyValue function!
+     *
+     * @returns {number|null} - The skin number.
+     */
     function GetSkin() {
         local skin = this.GetUserData("skin")
         return skin ? skin : 0
     }
 
 
-    /* Gets the prefix of the entity name.
-    *
-    * @returns {string} - The prefix of the entity name.
-    */
+    /*
+     * Gets the prefix of the entity name.
+     *
+     * @returns {string} - The prefix of the entity name.
+     */
     function GetNamePrefix() {
         return macros.StrToVec(this.GetName())
     }
 
 
-    /* Gets the postfix of the entity name.
-    *
-    * @returns {string} - The postfix of the entity name.
-    */
+    /*
+     * Gets the postfix of the entity name.
+     *
+     * @returns {string} - The postfix of the entity name.
+     */
     function GetNamePostfix() {
         return macros.GetPostfix(this.GetName())
     }
 
 
-    /* Converts the entity object to a string.
-    *
-    * @returns {string} - The string representation of the entity.
-    */
+    /*
+     * Converts the entity object to a string.
+     *
+     * @returns {string} - The string representation of the entity.
+     */
     function _tostring() {
         return "pcapEntity: " + this.CBaseEntity + ""
     }
 
 
-    /* Returns the type of the entity object.
-    *
-    * @returns {string} - The type of the entity object.
-    */
+    /*
+     * Returns the type of the entity object.
+     *
+     * @returns {string} - The type of the entity object.
+     */
     function _typeof() {
         return "pcapEntity"
     }
 
 
-    /* Gets the oriented bounding box of the entity.
-    *
-    * @param {int} stat - 0 for min bounds, 7 for max bounds, 4 for center bounds. 
-    * @returns {Vector} - The bounds vector.
-    */
+    /*
+     * Gets the oriented bounding box of the entity.
+     *
+     * @param {number} stat - 0 for min bounds, 7 for max bounds, 4 for center bounds. 
+     * @returns {Vector} - The bounds vector.
+     */
     function CreateAABB(stat) { 
         local angles = this.GetAngles()
         if(stat == 4) 
@@ -542,11 +606,12 @@
     }
 
 
-    /* Gets the 8 vertices of the axis-aligned bounding box.
-    *
-    * @returns {Array<Vector>} - The 8 vertices of the bounding box.  
-    */
-    function getBBoxPoints() {
+    /*
+     * Gets the 8 vertices of the axis-aligned bounding box.
+     *
+     * @returns {Array<Vector>} - The 8 vertices of the bounding box.  
+     */
+     function getBBoxPoints() {
         local BBmax = this.GetBoundingMaxs();
         local BBmin = this.GetBoundingMins();
         local angles = this.GetAngles()
@@ -559,18 +624,25 @@
         ]
     }
 
+    /*
+     * Checks if this entity is equal to another entity based on their entity indices.
+     *
+     * @param {pcapEntity} other - The other entity to compare.
+     * @returns {boolean} - True if the entities are equal, false otherwise.
+     */
     function isEqually(other) {
         return this.entindex() == other.entindex()
     }
 
-    /* Gets one vertex of the bounding box based on x, y, z bounds.
-    * 
-    * @param {Vector} x - The x bounds.
-    * @param {Vector} y - The y bounds.  
-    * @param {Vector} z - The z bounds.
-    * @param {Vector} ang - The angle vector.
-    * @returns {Vector} - The vertex.
-    */
+    /*
+     * Gets one vertex of the bounding box based on x, y, z bounds.
+     * 
+     * @param {Vector} x - The x bounds.
+     * @param {Vector} y - The y bounds.  
+     * @param {Vector} z - The z bounds.
+     * @param {Vector} ang - The angle vector.
+     * @returns {Vector} - The vertex.
+     */
     function _GetVertex(x, y, z, ang) {
         // return rotate(Vector(x.x, y.y, z.z), ang)
         return math.vector.rotate(Vector(x.x, y.y, z.z), ang)

@@ -1,7 +1,14 @@
-
-
-animate["AnglesTransitionByTime"] <- function(entities, startAngles, endAngles, time, animSetting = {}) {
-    local animSetting = AnimEvent(animSetting, _GetValidEntitiy(entities))
+/*
+ * Creates an animation that transitions the angles of entities over time.
+ *
+ * @param {array|CBaseEntity|pcapEntity} entities - The entities to animate.
+ * @param {Vector} startAngles - The starting angles. 
+ * @param {Vector} endAngles - The ending angles. 
+ * @param {number} time - The duration of the animation in seconds. 
+ * @param {table} animSetting - A table containing additional animation settings. (optional) 
+ */
+ animate["AnglesTransitionByTime"] <- function(entities, startAngles, endAngles, time, animSetting = {}) {
+    local animSetting = AnimEvent(animSetting, _GetValidEntitiy(entities), time)
 
     animate.applyAnimation(
         animSetting, 

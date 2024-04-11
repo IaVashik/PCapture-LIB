@@ -9,8 +9,9 @@
  * 
  * @param {string} eventName - Name of the event. 
  * @param {string|function} action - Action to execute for event.
- * @param {int|float} timeDelay - Delay in seconds before executing event.
- * @param {string} note - Optional note about the event, if needed.
+ * @param {number} timeDelay - Delay in seconds before executing event.
+ * @param {string|null} note - Optional note about the event, if needed.
+ * @param {array|null} args - Optional arguments to pass to the action function. 
 */
 ::CreateScheduleEvent <- function(eventName, action, timeDelay, note = null, args = null) {
     if ( !(eventName in scheduledEventsList) ) {
@@ -35,7 +36,7 @@
 * Cancels a scheduled event with the given name.
 * 
 * @param {string} eventName - Name of event to cancel.
-* @param {int|float} delay - Delay in seconds before event cancelation
+* @param {number} delay - Delay in seconds before event cancelation
 */
 ::cancelScheduledEvent <- function(eventName, delay = 0) {
     if(eventName == "global")
@@ -65,7 +66,7 @@
  * Gets info about a scheduled event.
  * 
  * @param {string} eventName - Name of event to get info for.
- * @returns {table|null} - The event info object or null if not found.
+ * @returns {AVLTree|null} - The event info object or null if not found.
 */
 ::getEventInfo <- function(eventName) {
     return eventName in scheduledEventsList ? scheduledEventsList[eventName] : null
@@ -83,6 +84,12 @@
 }
 
 
+/* 
+ * Gets the note associated with the first scheduled event with the given name.
+ *
+ * @param {string} eventName - The name of the event. 
+ * @returns {string|null} - The note of the first event, or null if no note is found or the event doesn't exist. 
+ */
 ::getEventNote <- function(eventName) {
     local info = getEventInfo(eventName)
     if(!info || info.len() == 0) 

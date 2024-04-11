@@ -1,6 +1,15 @@
-local applyPortal = function(startPos, hitPos, portal, partner) {
+/*
+ * Applies portal transformations to a trace, calculating a new start and end position for the trace after passing through the portal. 
+ *
+ * @param {Vector} startPos - The original start position of the trace. 
+ * @param {Vector} hitPos - The hit position of the trace on the portal. 
+ * @param {pcapEntity} portal - The portal entity. 
+ * @param {pcapEntity} partnerPortal - The partner portal entity. 
+ * @returns {table} - A table containing the new startPos and endPos for the trace after passing through the portal. 
+ */ 
+ local applyPortal = function(startPos, hitPos, portal, partnerPortal) {
     local portalAngles = portal.GetAngles();
-    local partnerAngles = partner.GetAngles();
+    local partnerAngles = partnerPortal.GetAngles();
     local offset = math.unrotateVector(hitPos - portal.GetOrigin(), portalAngles);
     local dir = math.unrotateVector(hitPos - startPos, portalAngles);
 
@@ -10,7 +19,7 @@ local applyPortal = function(startPos, hitPos, portal, partner) {
     dir = math.vector.rotate(dir, partnerAngles)
     dir.Norm()
 
-    local newStart = partner.GetOrigin() + math.vector.rotate(offset, partnerAngles)
+    local newStart = partnerPortal.GetOrigin() + math.vector.rotate(offset, partnerAngles)
     return {
         startPos = newStart,
         endPos = newStart + dir * 4096
@@ -18,107 +27,156 @@ local applyPortal = function(startPos, hitPos, portal, partner) {
 }
 
 
+/*
+ * Performs a cheap trace with portal support. 
+ * 
+ * @param {Vector} startPos - The start position of the trace.
+ * @param {Vector} endPos - The end position of the trace.  
+ * @returns {CheapTraceResult} - The trace result object, including information about portal entries.
+ */
 TracePlus["PortalCheap"] <- function(startPos, endPos) : (applyPortal) {
-    local previousTracedata
+    local previousTraceData 
     // Portal castings
     for (local i = 0; i < 10; i++) { // todo?
-        local tracedata = this.Cheap(startPos, endPos)
-        tracedata.portalEntryInfo = previousTracedata
+        local traceData = this.Cheap(startPos, endPos)
+        traceData.portalEntryInfo = previousTraceData
 
-        local hitPos = tracedata.GetHitpos()
+        local hitPos = traceData.GetHitpos()
 
-        local portal = entLib.FindByClassnameWithin("prop_portal", hitPos, 1) // todo: i should optimize it...
+        // Find a nearby portal entity. 
+        local portal = entLib.FindByClassnameWithin("prop_portal", hitPos, 1) 
         if(!portal)
             portal = entLib.FindByClassnameWithin("linked_portal_door", hitPos, 1)
         if(!portal)
-            return tracedata
+            return traceData
 
-        local normal = tracedata.GetImpactNormal()
+        local normal = traceData.GetImpactNormal()
         if(normal.Dot(portal.GetForwardVector()) < 0.8)
-            return tracedata
+            return traceData
         
-        local partner = portal.GetUserData("partner")
-        if (partner == null) {
-            return tracedata
+        local partnerPortal = portal.GetUserData("partner")
+        if (partnerPortal == null) {
+            return traceData 
         }
 
-        local ray = applyPortal(startPos, hitPos, portal, partner);
-        startPos = ray.startPos + partner.GetForwardVector() // A small hack to keep tracing from getting stuck
+        // Calculate new start and end positions for the trace after passing through the portal. 
+        local ray = applyPortal(startPos, hitPos, portal, partnerPortal);
+        // Adjust the start position slightly to prevent the trace from getting stuck.  
+        startPos = ray.startPos + partnerPortal.GetForwardVector() 
         endPos = ray.endPos
-        previousTracedata = tracedata
+        previousTraceData = traceData
     }
-    return previousTracedata
+    return previousTraceData
 }
 
 
-TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEnts = null, settings = TracePlus.defaultSettings, note = null) : (applyPortal) {
-    local previousTracedata
+/*
+ * Performs a bbox cast with portal support. 
+ * 
+ * @param {Vector} startPos - The start position of the trace.
+ * @param {Vector} endPos - The end position of the trace.
+ * @param {array|CBaseEntity|null} ignoreEntities - A list of entities or a single entity to ignore during the trace. (optional) 
+ * @param {TraceSettings} settings - The settings to use for the trace. (optional, defaults to TracePlus.defaultSettings) 
+ * @param {string|null} note - An optional note associated with the trace. 
+ * @returns {BboxTraceResult} - The trace result object, including information about portal entries.
+ */
+TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, settings = TracePlus.defaultSettings, note = null) : (applyPortal) {
+    local previousTraceData 
     // Portal castings
     for (local i = 0; i < 10; i++) { // todo?
-        local tracedata = BboxCast(startPos, endPos, ignoreEnts, settings, note)
-        tracedata.portalEntryInfo = previousTracedata
+        local traceData = BboxCast(startPos, endPos, ignoreEntities, settings, note)
+        traceData.portalEntryInfo = previousTraceData 
 
-        local hitPos = tracedata.GetHitpos()
-        local portal = tracedata.GetEntity()
+        local hitPos = traceData.GetHitpos()
+        local portal = traceData.GetEntity()
 
         if(!portal || portal.GetClassname() != "linked_portal_door")
             portal = entLib.FindByClassnameWithin("prop_portal", hitPos, 1) // todo: i should optimize it...
-        if(!portal)
-            return tracedata
+        if(!portal) 
+            return traceData 
         
-        local partner = portal.GetUserData("partner")
-        if (partner == null) 
-            return tracedata
+        local partnerPortal = portal.GetUserData("partner")
+        if (partnerPortal == null) 
+            return traceData 
 
         if(portal.GetClassname() == "prop_portal") {
-            local normal = tracedata.GetImpactNormal()
+            local normal = traceData.GetImpactNormal()
             if(normal.Dot(portal.GetForwardVector()) < 0.8)
-                return tracedata
+                return traceData
         } else { // todo
-            ignoreEnts = addInIgnoreList(ignoreEnts, partner)
+            ignoreEntities = addInIgnoreList(ignoreEntities, partnerPortal)
         }
 
-        local ray = applyPortal(startPos, hitPos, portal, partner);
-        startPos = ray.startPos + partner.GetForwardVector() // A small hack to keep tracing from getting stuck
+        // Calculate new start and end positions for the trace after passing through the portal.  
+        local ray = applyPortal(startPos, hitPos, portal, partnerPortal);
+        // Adjust the start position slightly to prevent the trace from getting stuck. 
+        startPos = ray.startPos + partnerPortal.GetForwardVector() 
         endPos = ray.endPos
-        previousTracedata = tracedata
+        previousTraceData = traceData 
     }
-    return previousTracedata
+    return previousTraceData 
 }
 
 
 
-//! TODO comment
-::FindPartnersForPortals <- function() {
+
+/* 
+ * Finds and sets partner portals for linked portal doors and prop portals. 
+ * 
+ * This function iterates through all entities of class "linked_portal_door" and "prop_portal" and attempts to find their corresponding partner portals. 
+ * For linked portal doors, it retrieves the partner instance using GetPartnerInstance() and stores it as user data in both portals. 
+ * For prop portals, it assumes the partner portal is the other prop_portal entity in the map and stores it as user data. 
+ *
+ * Additionally, for linked portal doors, the function extracts bounding box information from the model name (assuming a specific naming convention) 
+ * and sets the bounding box of the portal accordingly. 
+ * 
+ * This function is called automatically at the initialization of the TracePlus module to ensure portal information is available for portal traces. 
+ * 
+ */
+ ::FindPartnersForPortals <- function() {
+    // Iterate through all linked_portal_door entities.  
     for(local portal; portal = entLib.FindByClassname("linked_portal_door", portal);) {
+        // Skip if the portal already has a partner set. 
         if(portal.GetUserData("partner"))
             continue
     
+        // Get the partner portal entity using GetPartnerInstance().  
         local partner = entLib.FromEntity(portal.GetPartnerInstance())
+        // Store the partner portal as user data in both portals.  
         portal.SetUserData("partner", partner)
     
+        // Skip if the portal model name is empty (no bounding box information available).  
         if(portal.GetModelName() == "")
             continue
         
+        // Extract bounding box dimensions from the model name (assuming a specific format). 
         local wpInfo = split(portal.GetModelName(), " ")
+        // Rotate the bounding box dimensions based on the portal's angles.  
         local wpBBox = math.vector.rotateVector(Vector(5, wpInfo[0].tointeger(), wpInfo[1].tointeger()), portal.GetAngles())
+        // Ensure bounding box dimensions are positive.  
         wpBBox.x = abs(wpBBox.x); // TODO добавить abs для векторов
         wpBBox.y = abs(wpBBox.y);
         wpBBox.z = abs(wpBBox.z);
+        // Set the bounding box of the portal using the calculated dimensions.  
         portal.SetBBox(wpBBox * -1, wpBBox) 
     }
     
-    for(local portal; portal = entLib.FindByClassname("prop_portal", portal);) { // todo
+    // Iterate through all prop_portal entities.  
+    for(local portal; portal = entLib.FindByClassname("prop_portal", portal);) { 
+        // Skip if the portal already has a partner set. 
         if(portal.GetUserData("partner"))
             continue
     
+        // Determine the model name of the partner portal based on the current portal's model. 
         local mdl = "models/portals/portal1.mdl"
         if(portal.GetModelName().find("portal2") == null) 
             mdl = "models/portals/portal2.mdl"
         
+        // Find the partner portal entity based on the determined model name.  
         local partner = entLib.FindByModel(mdl)
+        // Store the partner portal as user data in the current portal.  
         portal.SetUserData("partner", partner) 
     }
 }
 
-FindPartnersForPortals() // tood?
+FindPartnersForPortals()

@@ -1,12 +1,11 @@
 /*+--------------------------------------------------------------------------------+
-|                           PCapture Vscripts Library                               |
- +---------------------------------------------------------------------------------+
-| Author:                                                                           |
-|     One-of-a-Kind - laVashik :D                                                   |
- +---------------------------------------------------------------------------------+
-| PCapture-math.nut                                                                  |
-|       Mathematical module. Contains many different functions,                      |
-|       including lerp functions, quaternions and more                               |
+|                           PCapture Vscripts Library                              |
++----------------------------------------------------------------------------------+
+| Author:                                                                          |
+|     Visionary Mathematician - laVashik :O                                        |
++----------------------------------------------------------------------------------+
+|    The core mathematical module, providing essential functions and objects for   |
+|    performing calculations, transformations, and interpolations in VScripts.     |
 +----------------------------------------------------------------------------------+ */
 
 ::math <- {}

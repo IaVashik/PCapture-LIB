@@ -1,14 +1,12 @@
 /*+--------------------------------------------------------------------------------+
-|                           PCapture Vscripts Library                               |
- +---------------------------------------------------------------------------------+
-| Author:                                                                           |
-|     One-of-a-Kind - laVashik :D                                                   |
- +---------------------------------------------------------------------------------+
-| PCapture-EventHandler.nut                                                             |
-|       Improved EntFire/logic_relay/loop module. Allows you to create whole events     |
-|       from many different events and cancel them at any time, unlike EntFireByHandler.|
-|       Able to take not only string, but also full-fledged functions                   |
-+----------------------------------------------------------------------------------+ */
+|                           PCapture Vscripts Library                              |
++----------------------------------------------------------------------------------+
+| Author:                                                                          |
+|     Event Orchestrator - laVashik ・人・                                          |
++----------------------------------------------------------------------------------+
+|   The Events module, offering an advanced event scheduling and management system | 
+|   for creating complex, timed events with precision and control.                 |
++----------------------------------------------------------------------------------+ */ 
 
 IncludeScript("SRC/Events/event")
 IncludeScript("SRC/Events/event_manager")
