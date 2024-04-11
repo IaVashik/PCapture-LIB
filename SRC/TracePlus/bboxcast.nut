@@ -42,22 +42,3 @@ TracePlus["FromEyes"]["Bbox"] <- function(distance, player, ignoreEntities = nul
     // Perform the bboxcast trace and return the trace result
     return BboxCast(startPos, endPos, ignoreEntities, settings)
 }
-
-/* 
- * Performs a bbox cast with portal support from the player's eyes. 
- *
- * @param {number} distance - The distance of the trace. 
- * @param {CBaseEntity|pcapEntity} player - The player entity.
- * @param {array|CBaseEntity|null} ignoreEntities - A list of entities or a single entity to ignore during the trace. (optional)
- * @param {TraceSettings} settings - The settings to use for the trace. (optional, defaults to TracePlus.defaultSettings) 
- * @returns {BboxTraceResult} - The trace result object. 
- */
-TracePlus["FromEyes"]["PortalBbox"] <- function(distance, player, ignoreEntities = null, settings = TracePlus.defaultSettings) {
-    // Calculate the start and end positions of the trace
-    local startPos = player.EyePosition()
-    local endPos = macros.GetEyeEndpos(player, distance)
-    ignoreEntities = this.Settings.UpdateIgnoreEntities(ignoreEntities, player)
-
-    // Perform the bboxcast trace and return the trace result
-    return PortalBboxCast(startPos, endPos, ignoreEntities, settings)
-}

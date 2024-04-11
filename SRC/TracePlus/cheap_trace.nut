@@ -34,18 +34,3 @@ TracePlus["FromEyes"]["Cheap"] <- function(distance, player) {
 
     return this.Cheap(startpos, endpos)
 }
-
-/*
- * Performs a cheap trace with portal support from the player's eyes. 
- *
- * @param {number} distance - The distance of the trace. 
- * @param {CBaseEntity|pcapEntity} player - The player entity.
- * @returns {CheapTraceResult} - The trace result object.
- */
-TracePlus["FromEyes"]["PortalCheap"] <- function(distance, player) {
-    // Calculate the start and end positions of the trace
-    local startpos = player.EyePosition()
-    local endpos = macros.GetEyeEndpos(player, distance)
-
-    return this.PortalCheap(startpos, endpos)
-}
