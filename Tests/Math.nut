@@ -4,7 +4,7 @@ IncludeScript("Tests/test_exec")
 math_tests <- {
     // Test the lerp function for integers
     function lerp_int() {
-        local result = math.lerp.int(0, 100, 0.5)
+        local result = math.lerp.number(0, 100, 0.5)
         return assert(result == 50)
     },
 

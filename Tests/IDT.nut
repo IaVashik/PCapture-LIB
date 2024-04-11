@@ -41,9 +41,9 @@ idt_tests <- {
         return assert(filtered.len() == 2 && filtered[0] == 2 && filtered[1] == 4)
     },
 
-    function array_find_test() {
+    function array_contains_test() {
         local arr = arrayLib.new(1, 2, 3)
-        return assert(arr.find(2) && !arr.find(4))
+        return assert(arr.contains(2) && !arr.contains(4))
     },
 
     function array_search_test() {
