@@ -2,7 +2,7 @@
 
 The `IDT` module provides enhanced versions of standard VScripts data structures, including arrays, lists, and trees, with additional methods and functionality to improve efficiency and flexibility.
 
-## IDT/array.nut
+## [IDT/array.nut](array.nut)
 
 This file defines the `arrayLib` class, which is an enhanced version of the standard VScripts array. It provides various methods for manipulating, searching, sorting, and converting arrays, making them more versatile and easier to work with.
 
@@ -423,7 +423,7 @@ This method converts the array to a `List` object.
 local listRepr = myArrayLib.tolist() // Convert the array to a list
 ```
 
-## IDT/list.nut
+## [IDT/list.nut](list.nut)
 
 This file defines the `List` class, which represents a doubly linked list and provides methods for adding and removing elements, accessing elements by index, reversing the list, and converting the list to an array. **A doubly linked list is a linear data structure where each element (node) contains a value and references to the previous and next nodes in the list.**
 
@@ -693,7 +693,7 @@ Converts the list to an array.
 local myArray = myList.toarray()
 ```
 
-## IDT/tree_sort.nut
+## [IDT/tree_sort.nut](tree_sort.nut)
 
 This file defines the `AVLTree` class, which represents a self-balancing binary search tree (AVL tree). It provides methods for inserting and removing nodes, searching for nodes, and traversing the tree in different orders.
 
@@ -878,7 +878,7 @@ The choice between `array`, `List`, and `AVLTree` depends on the specific requir
 * **Complexity**: If you need a simple data structure with minimal overhead, an `array` or `List` might be preferable.
 
 
-## IDT/entity_creator.nut
+## [IDT/entity_creator.nut](entity_creator.nut)
 
 This file defines the `entLib` class, which provides helper functions for creating and finding entities.
 
@@ -1078,7 +1078,7 @@ local entitiesInSphere = entLib.FindInSphere(myPosition, 100)
 // Find entities within 100 units of myPosition
 ```
 
-## IDT/entity.nut
+## [IDT/entity.nut](entity.nut)
 
 This file defines the `pcapEntity` class, which extends the functionality of `CBaseEntity` with additional methods for manipulating entity properties, setting outputs, managing user data, and retrieving information about the entity's bounding box and other attributes. **Use entLib to create it**
 

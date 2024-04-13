@@ -2,7 +2,7 @@
 
 The `Math` module provides various mathematical functions and objects for use in VScripts, including those for linear interpolation, quaternions, vectors, and matrices. It aims to extend the standard mathematical capabilities of VScripts and simplify common mathematical operations.
 
-## Math/algebraic.nut
+## [Math/algebraic.nut](algebraic.nut)
 
 This file contains basic algebraic functions such as finding minimum and maximum values, clamping numbers, rounding, and remapping values.
 
@@ -146,7 +146,7 @@ This function remaps a value from one range to another. It takes a value `val` w
 local remappedValue = math.RemapVal(50, 0, 100, -1, 1) // remappedValue will be 0 (middle of the new range)
 ```
 
-## Math/utils_vector.nut
+## [Math/utils_vector.nut](utils_vector.nut)
 
 This file contains utility functions for working with vectors, including checking equality, rotating and un-rotating, generating random vectors, reflecting vectors, clamping components, and resizing vectors.
 
@@ -310,7 +310,7 @@ This function rounds the components of a vector to the specified precision.
 local roundedVec = math.vector.round(Vector(1.234, 5.678, 9.101), 100) // Round the vector components to two decimal places
 ```
 
-## Math/lerp.nut
+## [Math/lerp.nut](lerp.nut)
 
 This file provides functions for linear interpolation (lerp) between different data types, including numbers, vectors, and colors. It also includes functions for spline interpolation, smoothstep interpolation, and other interpolation techniques.
 
@@ -497,7 +497,7 @@ This function calculates smooth progress based on a progress value. It maps the 
 local smoothProgress = math.lerp.SmoothProgress(0.5) // Calculate the smooth progress at 50%
 ```
 
-## Math/quaternion.nut
+## [Math/quaternion.nut](quaternion.nut)
 
 This file defines the `math.Quaternion` class, which represents a quaternion (a mathematical object used for rotations in 3D space). The class provides methods for creating quaternions from Euler angles or vectors, rotating and un-rotating vectors, performing spherical linear interpolation, normalization, and conversion to other representations (axis-angle and Euler angles).
 
@@ -772,7 +772,7 @@ local q2 = math.Quaternion(2, 3, 4, 5)
 local comparisonResult = q1.cmp(q2) // comparisonResult will be -1 (q1's magnitude is less than q2's magnitude)
 ```
 
-## Math/matrix.nut
+## [Math/matrix.nut](matrix.nut)
 
 This file defines the `math.Matrix` class, which represents a 3x3 matrix (a mathematical object used for transformations in 3D space). The class provides methods for creating matrices from Euler angles, rotating and un-rotating vectors, transposing, inverting, calculating the determinant, scaling, rotating around the X axis, and performing matrix operations (multiplication, addition, and subtraction).
 

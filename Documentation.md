@@ -2,11 +2,11 @@
 
 This library consists of several modules that can be extremely useful for you when developing VScripts for Portal 2.
 
-## 1. Math
+## 1. [Math](SRC/Math/readme.md)
 
 The `Math` module provides various mathematical functions and objects, including those for linear interpolation, quaternions, vectors, and matrices.
 
-### `Math/algebraic.nut`
+### [`Math/algebraic.nut`](SRC/Math/algebraic.nut)
 
 This file contains basic algebraic functions such as finding minimum and maximum values, clamping numbers, rounding, and remapping values.
 
@@ -20,7 +20,7 @@ This file contains basic algebraic functions such as finding minimum and maximum
 | `math.copysign(value, sign)` | Copies the sign of one value to another. |
 | `math.RemapVal(val, A, B, C, D)` | Remaps a value from the range [A, B] to the range [C, D]. |
 
-### `Math/utils_vector.nut`
+### [`Math/utils_vector.nut`](SRC/Math/utils_vector.nut)
 
 This file contains utility functions for working with vectors, including checking equality, rotating and un-rotating, generating random vectors, reflecting vectors, clamping components, and resizing vectors.
 
@@ -35,7 +35,7 @@ This file contains utility functions for working with vectors, including checkin
 | `math.vector.resize(vec, newLength)` | Resizes a vector to a new length while maintaining its direction. |
 | `math.vector.round(vec, precision)`| Rounds the components of a vector to the specified precision. |
 
-### `Math/lerp.nut`
+### m`Math/lerp.nut`
 
 This file provides functions for linear interpolation (lerp) between different data types, including numbers, vectors, and colors. It also includes functions for spline interpolation, smoothstep interpolation, and other interpolation techniques.
 
@@ -51,7 +51,7 @@ This file provides functions for linear interpolation (lerp) between different d
 | `math.lerp.SmoothCurve(x)` | Applies a smooth curve function to a value. |
 | `math.lerp.SmoothProgress(progress)` | Calculates smooth progress based on a progress value. |
 
-### `Math/quaternion.nut`
+### [`Math/quaternion.nut`](SRC/Math/quaternion.nut)
 
 This file defines the `math.Quaternion` class, which represents a quaternion (a mathematical object used for rotations in 3D space). The class provides methods for creating quaternions from Euler angles or vectors, rotating and un-rotating vectors, performing spherical linear interpolation, normalization, and conversion to other representations (axis-angle and Euler angles).
 
@@ -73,7 +73,7 @@ This file defines the `math.Quaternion` class, which represents a quaternion (a 
 | `isEqually(other)` | Checks if this quaternion is equal to another quaternion based on their components and length. |
 | `cmp(other)` | Compares this quaternion to another quaternion based on their magnitudes. |
 
-### `Math/matrix.nut`
+### [`Math/matrix.nut`](SRC/Math/matrix.nut)
 
 This file defines the `math.Matrix` class, which represents a 3x3 matrix (a mathematical object used for transformations in 3D space). The class provides methods for creating matrices from Euler angles, rotating and un-rotating vectors, transposing, inverting, calculating the determinant, scaling, rotating around the X axis, and performing matrix operations (multiplication, addition, and subtraction).
 
@@ -94,11 +94,13 @@ This file defines the `math.Matrix` class, which represents a 3x3 matrix (a math
 | `isEqually(other)` | Checks if this matrix is equal to another matrix based on their components and sum. |
 | `cmp(other)` | Compares this matrix to another matrix based on the sum of their components. |
 
-## 2. IDT (Improved Data Types)
+#### [More info about *Math module* here](SRC/Math/readme.md)
+
+## 2. [IDT](SRC/IDT/readme.md) (Improved Data Types)
 
 The `IDT` module provides enhanced versions of standard VScripts data structures, including arrays, lists, and trees.
 
-### `IDT/array.nut`
+### [`IDT/array.nut`](SRC/IDT/array.nut)
 
 This file defines the `arrayLib` class, which is an enhanced version of the standard VScripts array with additional methods for manipulation, searching, sorting, and conversion.
 
@@ -129,7 +131,7 @@ This file defines the `arrayLib` class, which is an enhanced version of the stan
 | `totable(recreate)` | Converts the array to a table, optionally recreating the table if it already exists. |
 | `tolist()` | Converts the array to a list. |
 
-### `IDT/entity.nut`
+### [`IDT/entity.nut`](SRC/IDT/entity.nut)
 
 This file defines the `pcapEntity` class, which extends the functionality of `CBaseEntity` with additional methods for manipulating entity properties, setting outputs, managing user data, and retrieving information about the entity's bounding box and other attributes.
 
@@ -184,7 +186,7 @@ This file defines the `pcapEntity` class, which extends the functionality of `CB
 | `CreateAABB(stat)` | Returns a specific face of the entity's oriented bounding box (AABB) as a vector. |
 | `getBBoxPoints()` | Returns an array of vectors representing the 8 vertices of the entity's axis-aligned bounding box (AABB). |
 
-### `IDT/entity_creator.nut`
+### [`IDT/entity_creator.nut`](SRC/IDT/entity_creator.nut)
 
 This file defines the `entLib` class, which provides helper functions for creating and finding entities.
 
@@ -201,7 +203,7 @@ This file defines the `entLib` class, which provides helper functions for creati
 | `FindByModelWithin(model, origin, radius, start_ent)` | Finds an entity with the specified model within a given radius from the origin. |
 | `FindInSphere(origin, radius, start_ent)` | Finds entities within a sphere defined by the origin and radius. |
 
-### `IDT/list.nut`
+### [`IDT/list.nut`](SRC/IDT/list.nut)
 
 This file defines the `List` class, which represents a doubly linked list and provides methods for adding and removing elements, accessing elements by index, reversing the list, and converting the list to an array.
 
@@ -226,7 +228,7 @@ This file defines the `List` class, which represents a doubly linked list and pr
 | `map(func)` | Creates a new `List` by applying a function to each element of this list. |
 | `toarray()` | Converts the list to an array. |
 
-### `IDT/tree_sort.nut`
+### [`IDT/tree_sort.nut`](SRC/IDT/tree_sort.nut)
 
 This file defines the `AVLTree` class, which represents a self-balancing binary search tree (AVL tree). It provides methods for inserting and removing nodes, searching for nodes, and traversing the tree in different orders.
 
@@ -245,11 +247,13 @@ This file defines the `AVLTree` class, which represents a self-balancing binary 
 | `inorderTraversal()` | Performs an inorder traversal of the tree and returns an array of nodes in ascending order. |
 | `printTree()` | Prints a visual representation of the tree structure to the console. |
 
-## 3. Utils
+#### [More info about *IDT module* here](SRC/Math/readme.md)
+
+## 3. [Utils](SRC/Utils/readme.md)
 
 The `Utils` module provides various utility functions for script execution, debugging, file operations, and working with entities.
 
-### `Utils/debug.nut`
+### [`Utils/debug.nut`](SRC/Utils/debug.nut)
 
 This file contains functions for debugging and logging messages, including drawing bounding boxes, logging messages with different severity levels, and formatting messages.
 
@@ -264,7 +268,7 @@ This file contains functions for debugging and logging messages, including drawi
 | `dev.format(msg, ...)` | Formats a message string with placeholders and substitutes values from the provided arguments. |
 | `dev.fprint(msg, ...)` | Formats a message string and prints it to the console using `printl`. |
 
-### `Utils/file.nut`
+### [`Utils/file.nut`](SRC/Utils/file.nut)
 
 This file defines the `File` class, which provides methods for reading from and writing to files.
 
@@ -276,7 +280,7 @@ This file defines the `File` class, which provides methods for reading from and 
 | `read()` | Reads the entire contents of the file and returns it as a single string. |
 | `clear()` | Clears the contents of the file. |
 
-### `Utils/improvements.nut`
+### [`Utils/improvements.nut`](SRC/Utils/improvements.nut)
 
 This file contains functions that override and improve existing VScripts functions, such as `FrameTime` and `EntFireByHandle`, to provide additional functionality or prevent potential issues.
 
@@ -289,7 +293,7 @@ This file contains functions that override and improve existing VScripts functio
 | `GetPlayers()` | Returns an array of all players in the game as `pcapEntity` objects. |
 | `AttachEyeControlToPlayers()` | Attaches eye control entities to all players in the game to track their eye position and angles. |
 
-### `Utils/macros.nut`
+### [`Utils/macros.nut`](SRC/Utils/macros.nut)
 
 This file contains various macro functions that provide shortcuts for common operations, such as precaching sounds, retrieving values from tables, printing iterable objects, calculating distances, converting between strings and vectors, and getting entity name prefixes and postfixes.
 
@@ -306,7 +310,7 @@ This file contains various macro functions that provide shortcuts for common ope
 | `macros.GetPostfix(name)` | Gets the postfix of an entity name, or the original name if no "-" is found. |
 | `macros.GetEyeEndpos(player, distance)` | Calculates the end position of a ray cast from the player's eyes based on the given distance. |
 
-### `Utils/scripts.nut`
+### [`Utils/scripts.nut`](SRC/Utils/scripts.nut)
 
 This file provides functions for running scripts with delays, loops, and intervals.
 
@@ -317,15 +321,17 @@ This file provides functions for running scripts with delays, loops, and interva
 | `RunScriptCode.setInterval(script, interval, runDelay, eventName)` | Schedules the execution of a script recursively at a fixed interval. |
 | `RunScriptCode.fromStr(str)` | Executes a script from a string. |
 
-## 4. TracePlus
+#### [More info about *Utils module* here](SRC/Utils/readme.md)
+
+## 4. [TracePlus](SRC/TracePlus/readme.md)
 
 The `TracePlus` module provides advanced ray tracing capabilities, including portal support and more precise algorithms.
 
-### `TracePlus/init.nut`
+### [`TracePlus/init.nut`](SRC/TracePlus/init.nut)
 
 This file initializes the `TracePlus` module and includes the necessary script files for the module's functionality.
 
-### `TracePlus/results.nut`
+### [`TracePlus/results.nut`](SRC/TracePlus/results.nut)
 
 This file defines the `CheapTraceResult` and `BboxTraceResult` classes, which represent the results of cheap traces and bbox casts, respectively. These classes provide methods for retrieving information about the trace, such as the start and end positions, hit position, hit entity, impact normal, and portal entry information.
 
@@ -334,7 +340,7 @@ This file defines the `CheapTraceResult` and `BboxTraceResult` classes, which re
 | `CheapTraceResult` | Represents the result of a cheap (fast but less accurate) trace. |
 | `BboxTraceResult` | Represents the result of a bbox cast (trace with a bounding box). |
 
-### `TracePlus/settings.nut`
+### [`TracePlus/settings.nut`](SRC/TracePlus/settings.nut)
 
 This file defines the `TracePlus.Settings` class, which encapsulates settings for ray traces, including lists of entities and models to ignore or prioritize, error tolerance, and custom filter functions for determining collision and ignore behavior.
 
@@ -361,7 +367,7 @@ This file defines the `TracePlus.Settings` class, which encapsulates settings fo
 | `ToggleUseCostlyNormal(isEnabled)` | Toggles the use of a more costly but precise method for calculating impact normals. |
 | `UpdateIgnoreEntities(ignoreEntities, newEnt)`| Updates the list of entities to ignore during a trace, including the player entity. |
 
-### `TracePlus/cheap_trace.nut`
+### [`TracePlus/cheap_trace.nut`](SRC/TracePlus/cheap_trace.nut)
 
 This file provides functions for performing cheap (fast but less accurate) traces, including traces with portal support and traces from the player's eyes.
 
@@ -371,7 +377,7 @@ This file provides functions for performing cheap (fast but less accurate) trace
 | `TracePlus.FromEyes.Cheap(distance, player)` | Performs a cheap trace from the player's eyes. |
 | `TracePlus.FromEyes.PortalCheap(distance, player)` | Performs a cheap trace with portal support from the player's eyes. |
 
-### `TracePlus/bboxcast.nut`
+### [`TracePlus/bboxcast.nut`](SRC/TracePlus/bboxcast.nut)
 
 This file provides functions for performing bbox casts (traces with bounding boxes), including casts with portal support and casts from the player's eyes.
 
@@ -381,7 +387,7 @@ This file provides functions for performing bbox casts (traces with bounding box
 | `TracePlus.FromEyes.Bbox(distance, player, ignoreEntities, settings)` | Performs a bbox cast from the player's eyes. |
 | `TracePlus.FromEyes.PortalBbox(distance, player, ignoreEntities, settings)` | Performs a bbox cast with portal support from the player's eyes. |
 
-### `TracePlus/portal_casting.nut`
+### [`TracePlus/portal_casting.nut`](SRC/TracePlus/portal_casting.nut)
 
 This file contains functions for handling portal interactions during traces, including calculating new trace positions after passing through portals and finding partner portals for linked portal doors and prop portals.
 
@@ -391,74 +397,18 @@ This file contains functions for handling portal interactions during traces, inc
 | `TracePlus.PortalBbox(startPos, endPos, ignoreEntities, settings, note)` | Performs a bbox cast with portal support. |
 | `FindPartnersForPortals()` | Finds and sets partner portals for linked portal doors and prop portals. |
 
-### `TracePlus/bbox_analyzer.nut`
+#### [More info about *TracePlus module* here](SRC/TracePlus/readme.md)
 
-This file defines the `TraceLineAnalyzer` class, which provides methods for performing precise trace line analysis by subdividing the trace into smaller segments and checking for entity collisions along the way, considering entity priorities and ignore settings.
 
-| Method | Description |
-| ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `TraceLineAnalyzer(startPos, endPos, ignoreEntities, settings, note)` | Creates a new `TraceLineAnalyzer` object and performs a precise trace line analysis. |
-| `GetHitpos()` | Returns the hit position of the trace. |
-| `GetEntity()` | Returns the entity hit by the trace. |
-| `Trace(startPos, endPos, ignoreEntities, note)` | Performs a precise trace line analysis by subdividing the trace into smaller segments and checking for entity collisions, considering entity priorities and ignore settings. |
-
-### `TracePlus/calculate_normal.nut`
-
-This file provides functions for calculating the impact normal of a surface hit by a trace, including helper functions for finding intersection points and generating new trace start positions.
-
-| Function | Description |
-| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `CalculateImpactNormal(startPos, hitPos, traceResult)` | Calculates the impact normal of a surface hit by a trace using additional traces to find intersection points and calculate the normal vector. |
-
-## 5. Animations
-
-The `Animations` module provides functions for creating animations related to alpha (opacity), color, and object movement.
-
-### `Animations/init.nut`
-
-This file initializes the `Animations` module, defines the `AnimEvent` class for managing animation events, and includes the necessary script files for the module's functionality.
-
-### `Animations/alpha.nut`
-
-This file provides the `animate.AlphaTransition` function for creating animations that transition the alpha (opacity) of entities over time.
-
-| Function | Description |
-| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `animate.AlphaTransition(entities, startOpacity, endOpacity, time, animSetting)` | Creates an animation that smoothly transitions the alpha (opacity) of entities from the starting value to the ending value over a specified time. |
-
-### `Animations/color.nut`
-
-This file provides the `animate.ColorTransition` function for creating animations that transition the color of entities over time.
-
-| Function | Description |
-| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `animate.ColorTransition(entities, startColor, endColor, time, animSetting)` | Creates an animation that smoothly transitions the color of entities from the starting color to the ending color over a specified time. |
-
-### `Animations/position.nut`
-
-This file provides the `animate.PositionTransitionByTime` function for creating animations that transition the position of entities over time.
-
-| Function | Description |
-| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| `animate.PositionTransitionByTime(entities, startPos, endPos, time, animSetting)` | Creates an animation that moves entities from the starting position to the ending position over a specified time based on increments of time. |
-
-### `Animations/angles.nut`
-
-This file provides the `animate.AnglesTransitionByTime` function for creating animations that transition the angles of entities over time.
-
-| Function | Description |
-| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `animate.AnglesTransitionByTime(entities, startAngles, endAngles, time, animSetting)` | Creates an animation that changes the angles of entities from the starting angles to the ending angles over a specified time. |
-
-## 6. Events
+## 5. [Events](SRC/Events/readme.md)
 
 The `Events` module provides an improved system for creating and managing scheduled events in VScripts, offering more flexibility than standard mechanisms like `EntFireByHandle`.
 
-### `Events/init.nut`
+### [`Events/init.nut`](SRC/Events/init.nut)
 
 This file initializes the `Events` module and includes the necessary script files for the module's functionality.
 
-### `Events/event.nut`
+### [`Events/event.nut`](SRC/Events/event.nut)
 
 This file defines the `ScheduleEvent` class, which represents a scheduled event with information about its caller, action, execution time, optional note, and arguments.
 
@@ -467,7 +417,7 @@ This file defines the `ScheduleEvent` class, which represents a scheduled event 
 | `ScheduleEvent(caller, action, timeDelay, note, args)` | Creates a new `ScheduleEvent` object with the specified caller, action, execution time, optional note, and arguments. |
 | `run()` | Executes the scheduled action, compiling it if necessary and passing any provided arguments. Returns the result of the action function. |
 
-### `Events/event_manager.nut`
+### [`Events/event_manager.nut`](SRC/Events/event_manager.nut)
 
 This file provides functions for creating and managing scheduled events, including scheduling events, canceling events, and retrieving information about events.
 
@@ -479,7 +429,7 @@ This file provides functions for creating and managing scheduled events, includi
 | `eventIsValid(eventName)` | Checks if a scheduled event with the given name exists and has scheduled events. |
 | `getEventNote(eventName)` | Returns the note associated with the first scheduled event with the given name, or `null` if no note is found or the event doesn't exist. |
 
-### `Events/event_handler.nut`
+### [`Events/event_handler.nut`](SRC/Events/event_handler.nut)
 
 This file defines the `ExecuteScheduledEvents` function, which processes scheduled events when their execution time arrives.
 
@@ -487,15 +437,59 @@ This file defines the `ExecuteScheduledEvents` function, which processes schedul
 | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `ExecuteScheduledEvents()` | Iterates over all scheduled events and checks if their execution time has arrived. If so, it executes the event's action and removes it from the list of scheduled events. The function then schedules itself to run again to continue processing events. |
 
-## 7. GameEvents
+#### [More info about *ScheduledEvents module* here](SRC/Events/readme.md)
+
+## 6. [Animations](SRC/Animations/readme.md)
+
+The `Animations` module provides functions for creating animations related to alpha (opacity), color, and object movement.
+
+### [`Animations/init.nut`](SRC/Animations/init.nut)
+
+This file initializes the `Animations` module, defines the `AnimEvent` class for managing animation events, and includes the necessary script files for the module's functionality.
+
+### [`Animations/alpha.nut`](SRC/Animations/alpha.nut)
+
+This file provides the `animate.AlphaTransition` function for creating animations that transition the alpha (opacity) of entities over time.
+
+| Function | Description |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `animate.AlphaTransition(entities, startOpacity, endOpacity, time, animSetting)` | Creates an animation that smoothly transitions the alpha (opacity) of entities from the starting value to the ending value over a specified time. |
+
+### [`Animations/color.nut`](SRC/Animations/color.nut)
+
+This file provides the `animate.ColorTransition` function for creating animations that transition the color of entities over time.
+
+| Function | Description |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `animate.ColorTransition(entities, startColor, endColor, time, animSetting)` | Creates an animation that smoothly transitions the color of entities from the starting color to the ending color over a specified time. |
+
+### [`Animations/position.nut`](SRC/Animations/position.nut)
+
+This file provides the `animate.PositionTransitionByTime` function for creating animations that transition the position of entities over time.
+
+| Function | Description |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `animate.PositionTransitionByTime(entities, startPos, endPos, time, animSetting)` | Creates an animation that moves entities from the starting position to the ending position over a specified time based on increments of time. |
+
+### [`Animations/angles.nut`](SRC/Animations/angles.nut)
+
+This file provides the `animate.AnglesTransitionByTime` function for creating animations that transition the angles of entities over time.
+
+| Function | Description |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `animate.AnglesTransitionByTime(entities, startAngles, endAngles, time, animSetting)` | Creates an animation that changes the angles of entities from the starting angles to the ending angles over a specified time. |
+
+#### [More info about *Animations module* here](SRC/Animations/readme.md)
+
+## 7. [GameEvents](SRC/GameEvents/readme.md)
 
 The `GameEvents` module provides classes for creating and handling custom game events with triggers, filters, and actions. It offers more flexibility than standard VScripts game events.
 
-### `GameEvents/init.nut`
+### [`GameEvents/init.nut`](SRC/GameEvents/init.nut)
 
 This file initializes the `GameEvents` module and includes the necessary script files for the module's functionality.
 
-### `GameEvents/game_event.nut`
+### [`GameEvents/game_event.nut`](SRC/GameEvents/game_event.nut)
 
 This file defines the `GameEvent` class, which represents a custom game event with a name, trigger count, action to perform when triggered, and optional filter function.
 
@@ -507,7 +501,7 @@ This file defines the `GameEvent` class, which represents a custom game event wi
 | `Trigger(args)` | Triggers the event if the trigger count allows and the filter function (if set) returns true. The action function is executed with the provided arguments, and a VScript event message is logged if event logging is enabled. |
 | `ForceTrigger(args)` | Forces the event to trigger, ignoring the filter function and trigger count. The action function is executed with the provided arguments. |
 
-### `GameEvents/event_listener.nut`
+### [`GameEvents/event_listener.nut`](SRC/GameEvents/event_listener.nut)
 
 This file defines the `EventListener` object, which listens for and handles custom game events created using the `GameEvent` class.
 
@@ -516,15 +510,17 @@ This file defines the `EventListener` object, which listens for and handles cust
 | `Notify(eventName, args)` | Notifies the listener of a triggered event and calls the event's `Trigger` method with the provided arguments. Returns the result of the event's action or `null` if the event is not found or the filter fails. |
 | `GetEvent(EventName)` | Retrieves a `GameEvent` object by name. Returns `null` if the event is not found. |
 
-## 8. HUD
+#### [More info about *GameEvents module* here](SRC/GameEvents/readme.md)
+
+## 8. [HUD](SRC/HUD/readme.md)
 
 The `HUD` module provides classes for displaying text and hints on the screen using in-game entities.
 
-### `HUD/init.nut`
+### [`HUD/init.nut`](SRC/HUD/init.nut)
 
 This file initializes the `HUD` module and includes the necessary script files for the module's functionality.
 
-### `HUD/game_text.nut`
+### [`HUD/game_text.nut`](SRC/HUD/game_text.nut)
 
 This file defines the `HUD.ScreenText` class, which allows you to create and manage on-screen text displays using the "game_text" entity.
 
@@ -544,7 +540,7 @@ This file defines the `HUD.ScreenText` class, which allows you to create and man
 | `SetHoldTime(time)` | Sets the hold time (duration) of the text display. |
 | `SetPos(position)` | Sets the position of the text display. |
 
-### `HUD/hint_instructor.nut`
+### [`HUD/hint_instructor.nut`](SRC/HUD/hint_instructor.nut)
 
 This file defines the `HUD.HintInstructor` class, which allows you to create and manage hints using the "env_instructor_hint" entity.
 
@@ -563,3 +559,5 @@ This file defines the `HUD.HintInstructor` class, which allows you to create and
 | `SetHoldTime(time)` | Sets the hold time (duration) of the hint. |
 | `SetDistance(distance)` | Sets the distance at which the hint is visible. |
 | `SetEffects(sizePulsing, alphaPulsing, shaking)` | Sets the visual effects for the hint, including size pulsing, alpha pulsing, and shaking. |
+
+#### [More info about *HUD module* here](SRC/HUD/readme.md)

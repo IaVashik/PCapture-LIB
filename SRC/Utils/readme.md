@@ -2,7 +2,7 @@
 
 The `Utils` module provides a collection of utility functions for script execution, debugging, file operations, and working with entities in VScripts. It aims to simplify common tasks and enhance the development experience.
 
-## Utils/debug.nut
+## [Utils/debug.nut](debug.nut)
 
 This file contains functions for debugging and logging messages to the console, as well as visualizing entity bounding boxes.
 
@@ -136,7 +136,7 @@ local health = 100
 dev.fprint("Player health: {}", health) // Output: "Player health: 100"
 ```
 
-## Utils/file.nut
+## [Utils/file.nut](file.nut)
 
 This file defines the `File` class for reading from and writing to files. Due to the way file operations are handled in VScripts, there is a specific requirement when reading data from a file: **a one-tick delay is needed after calling `updateInfo()` before accessing the file contents.** This ensures that the file has been properly read and the data is available in the cache array.
 
@@ -234,7 +234,7 @@ local file = File("MyFile")
 file.updateInfo() // Update the file information
 ```
 
-## Utils/improvements.nut
+## [Utils/improvements.nut](improvements.nut)
 
 This file overrides and improves existing VScripts functions to provide additional functionality or prevent potential issues.
 
@@ -337,7 +337,7 @@ This function attaches eye control entities to all players in the game. It creat
 AttachEyeControlToPlayers() // Attach eye control entities to all players
 ```
 
-## Utils/macros.nut
+## [Utils/macros.nut](macros.nut)
 
 This file contains various macro functions that provide shortcuts for common operations, such as precaching sounds, retrieving values from tables, printing iterable objects, calculating distances, converting between strings and vectors, and getting entity name prefixes and postfixes. These macros aim to reduce code duplication and improve readability.
 
@@ -535,7 +535,7 @@ local player = GetPlayerEx()
 local endPos = macros.GetEyeEndpos(player, 100) // Calculate the end position of a ray cast 100 units in front of the player's eyes
 ```
 
-## Utils/scripts.nut
+## [Utils/scripts.nut](scripts.nut)
 
 This file provides functions for running scripts with delays, loops, and intervals, offering more flexibility and control over script execution compared to standard VScripts mechanisms.
 

@@ -2,7 +2,7 @@
 
 The `TracePlus` module enhances the ray tracing capabilities in VScripts by providing more precise and feature-rich tracing functions, including support for portals and custom trace settings. It aims to improve the accuracy and flexibility of ray tracing operations in VScripts development.
 
-## TracePlus/settings.nut
+## [TracePlus/settings.nut](settings.nut)
 
 This file defines the `TracePlus.Settings` class, which encapsulates settings for ray traces.
 
@@ -52,7 +52,7 @@ local traceSettings = TracePlus.Settings.new({
 })
 ```
 
-## TracePlus/results.nut
+## [TracePlus/results.nut](results.nut)
 
 This file defines classes representing the results of different types of traces, providing methods for accessing information about the trace and its outcome.
 
@@ -125,7 +125,7 @@ if (hitEntity) {
 }
 ```
 
-## TracePlus/cheap_trace.nut
+## [TracePlus/cheap_trace.nut](cheap_trace.nut)
 
 This file provides functions for performing cheap (fast but less accurate) traces.
 
@@ -171,7 +171,7 @@ local player = GetPlayerEx()
 local traceResult = TracePlus.FromEyes.Cheap(100, player) // Trace 100 units in front of the player
 ```
 
-## TracePlus/bboxcast.nut
+## [TracePlus/bboxcast.nut](bboxcast.nut)
 
 This file provides functions for performing bbox casts (traces with bounding boxes).
 
@@ -224,7 +224,7 @@ if (traceResult.DidHit()) {
 }
 ```
 
-## TracePlus/portal_casting.nut
+## [TracePlus/portal_casting.nut](portal_casting.nut)
 
 This file contains functions for handling portal interactions during traces.
 
@@ -328,7 +328,7 @@ if (traceResult.DidHit()) {
 
 This function finds and sets partner portals for linked portal doors and prop portals. It iterates through all entities of class "linked_portal_door" and "prop_portal" and attempts to find their corresponding partner portals. For linked portal doors, it retrieves the partner instance using `GetPartnerInstance()` and stores it as user data in both portals. For prop portals, it assumes the partner portal is the other prop_portal entity in the map and stores it as user data.
 
-## TracePlus/bbox_analyzer.nut
+## [TracePlus/bbox_analyzer.nut](bbox_analyzer.nut)
 
 This file defines the `TraceLineAnalyzer` class for precise trace line analysis.
 
@@ -349,7 +349,7 @@ This class provides methods for tracing lines with more precision and considerin
 * `_isIgnoredEntity(entityClass)`: Checks if an entity should be ignored based on the trace settings.
 * `_hitEntity(ent, ignoreEntities, note)`: Checks if the trace should consider a hit with the given entity, taking into account the trace settings and ignore list.
 
-## TracePlus/calculate_normal.nut
+## [TracePlus/calculate_normal.nut](calculate_normal.nut)
 
 This file provides functions for calculating the impact normal of a surface hit by a trace.
 

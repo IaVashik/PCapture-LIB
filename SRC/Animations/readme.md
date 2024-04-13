@@ -2,7 +2,7 @@
 
 The `Animations` module provides functions for creating various animations in VScripts, such as fading objects in or out, changing their colors, and moving them along paths. It simplifies the process of creating smooth and visually appealing animations.
 
-## Animations/init.nut
+## [Animations/init.nut](init.nut)
 
 This file initializes the `Animations` module, defines the `AnimEvent` class for managing animation events, and includes the necessary script files for the module's functionality.
 
@@ -48,7 +48,7 @@ The function should return the new value for the property.
 animate.applyAnimation(animSetting, valueCalculator, propertySetter) // Apply the animation
 ```
 
-## Animations/alpha.nut
+## [Animations/alpha.nut](alpha.nut)
 
 This file provides the `animate.AlphaTransition` function for creating animations that transition the alpha (opacity) of entities over time.
 
@@ -71,7 +71,7 @@ local myEntity = entLib.FindByClassname("prop_physics")
 animate.AlphaTransition(myEntity, 255, 0, 2) // Fade out the entity over 2 seconds
 ```
 
-## Animations/color.nut
+## [Animations/color.nut](color.nut)
 
 This file provides the `animate.ColorTransition` function for creating animations that transition the color of entities over time.
 
@@ -94,7 +94,7 @@ local myEntity = entLib.FindByClassname("prop_physics")
 animate.ColorTransition(myEntity, "255 0 0", "0 255 0", 3) // Change the entity's color from red to green over 3 seconds
 ```
 
-## Animations/position.nut (TODO)
+## [Animations/position.nut](position.nut) (TODO)
 
 This file provides the `animate.PositionTransitionByTime` function for creating animations that transition the position of entities over time.
 
@@ -119,7 +119,7 @@ local endPos = startPos + Vector(0, 100, 0) // Move 100 units along the Y axis
 animate.PositionTransitionByTime(myEntity, startPos, endPos, 5) // Move the entity over 5 seconds
 ```
 
-## Animations/angles.nut
+## [Animations/angles.nut](angles.nut)
 
 This file provides the `animate.AnglesTransitionByTime` function for creating animations that transition the angles of entities over time.
 
