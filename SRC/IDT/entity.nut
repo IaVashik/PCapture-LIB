@@ -8,8 +8,6 @@
      * @param {CBaseEntity} entity - The entity object.
     */
     constructor(entity = null) { 
-        if(entity == null) return null
-
         if(typeof entity == "pcapEntity")
             entity = entity.CBaseEntity
 
@@ -54,9 +52,15 @@
     }
 
 
+    /*
+     * Dissolves the entity using an env_entity_dissolver entity, creating a visual effect of the entity dissolving away.
+     *
+     * This method utilizes an env_entity_dissolver entity to create the dissolve effect. If the entity doesn't have a targetname, 
+     * a unique targetname is assigned to it before initiating the dissolve process. 
+     */
     function Dissolve() {
         if(this.GetName() == "")
-            this.SetName(UniqueString("targetname"))
+            this.SetUniqueName("targetname")
         dissolver.SetKeyValue("target", this.GetName())
         EntFireByHandle(dissolver, "dissolve")
 
@@ -83,15 +87,38 @@
         return this.CBaseEntity.GetClassname() == "player"
     }
 
-
-    function EyePosition() {
+    /*
+     * Gets the eye position of the player entity.
+     *
+     * @returns {Vector|null} - The eye position as a Vector, or null if the entity is not a player.
+     * 
+     * This method retrieves the position from which the player's view is rendered. It is important to note that this method only works with player entities.
+     * For non-player entities, it returns null. 
+    */
+     function EyePosition() {
         if(this.IsPlayer()) return this.CBaseEntity.EyePosition()
     }
 
+    /*
+     * Gets the eye angles of the player entity. 
+     *
+     * @returns {Vector|null} - The eye angles as a Vector representing pitch, yaw, and roll, or null if the entity is not a player.
+     *
+     * This method retrieves the orientation of the player's view. It is important to note that this method only works with player entities.
+     * For non-player entities, it returns null. 
+    */
     function EyeAngles() {
         if(this.IsPlayer()) return this.GetUserData("Eye").GetAngles()
     }
 
+    /* 
+     * Gets the forward vector from the player entity's eye position, indicating the direction the player is looking. 
+     *
+     * @returns {Vector|null} - The forward vector as a Vector, or null if the entity is not a player.
+     *
+     * This method retrieves the direction in which the player is facing. It is important to note that this method only works with player entities.
+     * For non-player entities, it returns null.
+    */
     function EyeForwardVector() {
         if(this.IsPlayer()) return this.GetUserData("Eye").GetForwardVector()
     }
@@ -104,46 +131,50 @@
      * @param {int|float|Vector|string} value - The value of the key-value pair.
     */
     function SetKeyValue(key, value) {
+        this.SetUserData(key, value)
+
         switch (typeof value) {
             case "integer":
-                this.CBaseEntity.__KeyValueFromInt(key, value);
-                break;
+                return this.CBaseEntity.__KeyValueFromInt(key, value);
             case "float":
-                this.CBaseEntity.__KeyValueFromFloat(key, value);
-                break;
+                return this.CBaseEntity.__KeyValueFromFloat(key, value);
             case "Vector":
-                this.CBaseEntity.__KeyValueFromVector(key, value);
-                break;
-            default:
-                this.CBaseEntity.__KeyValueFromString(key, value.tostring());
+                return this.CBaseEntity.__KeyValueFromVector(key, value);
+            case "string":
+                return this.CBaseEntity.__KeyValueFromString(key, value);
         }
-
-        this.SetUserData(key, value)
+        
+        return this.CBaseEntity.__KeyValueFromString(key, value.tostring());
     }
 
 
-    /*
-     * Sets the outputs of the entity.
+        /*
+     * Connects an output of the entity to a target entity and input, allowing for parameter overrides, delays, and limited trigger counts.
      *
-     * @param {string} outputName - Output named
-     * @param {string|CBaseEntity|pcapEntity} target - Targets entities named
-     * @param {string} input - Via this input
-     * @param {string} param - with a parameter ovveride of
-     * @param {number} delay - Delay in seconds before applying. // todo
-     * @param {int} fires - 
+     * @param {string} outputName - The name of the output to connect.
+     * @param {string|CBaseEntity|pcapEntity} target - The target entity or its targetname to connect the output to.
+     * @param {string} input - The name of the input on the target entity to connect to.
+     * @param {string} param - An optional parameter override for the input. (default: "")
+     * @param {number} delay - An optional delay in seconds before triggering the input. (default: 0) 
+     * @param {number} fires - The number of times the output should fire before becoming inactive. -1 indicates unlimited fires. (default: -1) 
+     * 
+     * This method provides a way to establish connections between entities, allowing them to trigger actions on each other based on outputs and inputs. 
     */
-    function addOutput(outputName, target, input, param = "", delay = 0, fires = -1) {
+     function addOutput(outputName, target, input, param = "", delay = 0, fires = -1) {
         if(typeof target == "instance" || typeof target == "pcapEntity")
             target = target.GetName()
         this.SetKeyValue(outputName, target + "\x001B" + input + "\x001B" + param + "\x001B" + delay + "\x001B" + fires)
     }
 
-    /* TODO
-    *
-    * @param {string} outputName - Output named
-    * @param {string} script - 
-    * @param {number} delay - Delay in seconds before applying. // todo
-    * @param {int} fires - 
+    /* 
+     * Connects an output of the entity to a script function or string, allowing for delays and limited trigger counts. 
+     * 
+     * @param {string} outputName - The name of the output to connect.
+     * @param {string|function} script - The VScripts code or function name to execute when the output is triggered.
+     * @param {number} delay - An optional delay in seconds before executing the script. (default: 0) 
+     * @param {number} fires - The number of times the output should fire before becoming inactive. -1 indicates unlimited fires. (default: -1) 
+     * 
+     * This method provides a way to connect entity outputs directly to script code, allowing for custom actions to be performed when the output is triggered.
     */
     function ConnectOutputEx(outputName, script, delay = 0, fires = -1) {
         if(typeof script == "function") {
@@ -551,24 +582,18 @@
         return macros.GetPostfix(this.GetName())
     }
 
-
     /*
-     * Converts the entity object to a string.
+     * Retrieves the partner instance of the entity, prioritizing the actual partner entity if available, and falling back to user-stored partner data if necessary.
      *
-     * @returns {string} - The string representation of the entity.
+     * @returns {Entity|null} - The partner entity, or null if no partner is found.
+     * 
+     * This method first attempts to retrieve the actual partner entity using the `GetPartnerInstance` method of the underlying CBaseEntity.
+     * If no partner entity is found, it then checks for a partner stored in the entity's user data under the key "partner". This can be useful in situations where the partner relationship is not directly established through entity properties but is managed through custom logic. 
     */
-    function _tostring() {
-        return "pcapEntity: " + this.CBaseEntity + ""
-    }
-
-
-    /*
-     * Returns the type of the entity object.
-     *
-     * @returns {string} - The type of the entity object.
-    */
-    function _typeof() {
-        return "pcapEntity"
+    function GetPartnerInstance() {
+        if(this.CBaseEntity instanceof CLinkedPortalDoor)
+            return entLib.FromEntity(this.CBaseEntity.GetPartnerInstance())
+        return this.GetUserData("partner")
     }
 
 
@@ -583,26 +608,20 @@
         if(stat == 4) 
             angles = Vector(45, 45, 45)
 
-        local all_vertex = {
-            v = this.getBBoxPoints()
-            x = []
-            y = []
-            z = []
-        }
+        local all_vertex = this.getBBoxPoints()
+        local x = AVLTree()
+        local y = AVLTree()
+        local z = AVLTree()
 
-        foreach(v in all_vertex.v)
-        {
-            all_vertex.x.append(v.x)
-            all_vertex.y.append(v.y)
-            all_vertex.z.append(v.z)
+        foreach(vec in all_vertex) {
+            x.insert(vec.x)
+            y.insert(vec.y)
+            z.insert(vec.z)
         }
-        all_vertex.x.sort()
-        all_vertex.y.sort()
-        all_vertex.z.sort()
-        
-        if(stat == 4)
-            return ( Vector(all_vertex.x[7], all_vertex.y[7], all_vertex.z[7]) - Vector(all_vertex.x[0], all_vertex.y[0], all_vertex.z[0]) ) * 0.5
-        return Vector(all_vertex.x[stat], all_vertex.y[stat], all_vertex.z[stat])
+ 
+        if(stat == 4) // centered
+            return ( Vector(x[7], y[7], z[7]) - Vector(x[0], y[0], z[0]) ) * 0.5
+        return Vector(x[stat], y[stat], z[stat])
     }
 
 
@@ -612,15 +631,19 @@
      * @returns {Array<Vector>} - The 8 vertices of the bounding box.  
     */
      function getBBoxPoints() {
-        local BBmax = this.GetBoundingMaxs();
-        local BBmin = this.GetBoundingMins();
+        local max = this.GetBoundingMaxs();
+        local min = this.GetBoundingMins();
         local angles = this.GetAngles()
     
         return [
-            _GetVertex(BBmin, BBmin, BBmin, angles), _GetVertex(BBmin, BBmin, BBmax, angles),
-            _GetVertex(BBmin, BBmax, BBmin, angles), _GetVertex(BBmin, BBmax, BBmax, angles),
-            _GetVertex(BBmax, BBmin, BBmin, angles), _GetVertex(BBmax, BBmin, BBmax, angles),
-            _GetVertex(BBmax, BBmax, BBmin, angles), _GetVertex(BBmax, BBmax, BBmax, angles)
+            macros.GetVertex(max, min, min, angles), // 0 - Right-Bottom-Front
+            macros.GetVertex(max, max, min, angles), // 1 - Right-Top-Front
+            macros.GetVertex(min, max, min, angles), // 2 - Left-Top-Front
+            macros.GetVertex(min, min, min, angles)  // 3 - Left-Bottom-Front 
+            macros.GetVertex(min, min, max, angles), // 4 - Left-Bottom-Back
+            macros.GetVertex(min, max, max, angles), // 5 - Left-Top-Back
+            macros.GetVertex(max, max, max, angles), // 6 - Right-Top-Back
+            macros.GetVertex(max, min, max, angles), // 7 - Right-Bottom-Back
         ]
     }
 
@@ -630,23 +653,21 @@
      * @param {pcapEntity} other - The other entity to compare.
      * @returns {boolean} - True if the entities are equal, false otherwise.
     */
-    function isEqually(other) {
-        return this.entindex() == other.entindex()
-    }
+    function isEqually(other) return this.entindex() == other.entindex()
 
     /*
-     * Gets one vertex of the bounding box based on x, y, z bounds.
-     * 
-     * @param {Vector} x - The x bounds.
-     * @param {Vector} y - The y bounds.  
-     * @param {Vector} z - The z bounds.
-     * @param {Vector} ang - The angle vector.
-     * @returns {Vector} - The vertex.
+     * Converts the entity object to a string.
+     *
+     * @returns {string} - The string representation of the entity.
     */
-    function _GetVertex(x, y, z, ang) {
-        // return rotate(Vector(x.x, y.y, z.z), ang)
-        return math.vector.rotate(Vector(x.x, y.y, z.z), ang)
-    }
+    function _tostring() return "pcapEntity: " + this.CBaseEntity + ""
+
+    /*
+     * Returns the type of the entity object.
+     *
+     * @returns {string} - The type of the entity object.
+    */
+    function _typeof() return "pcapEntity"
 }
 
 function pcapEntity::ConnectOutput(output, funcName) this.CBaseEntity.ConnectOutput(output, funcName)
@@ -673,7 +694,6 @@ function pcapEntity::GetOrigin() return this.CBaseEntity.GetOrigin()
 function pcapEntity::GetScriptId() return this.CBaseEntity.GetScriptId()
 function pcapEntity::GetUpVector() return this.CBaseEntity.GetUpVector()
 function pcapEntity::GetPartnername() return this.CBaseEntity.GetPartnername()
-function pcapEntity::GetPartnerInstance() return this.CBaseEntity.GetPartnerInstance()
 function pcapEntity::ValidateScriptScope() return this.CBaseEntity.ValidateScriptScope()
 function pcapEntity::EyePosition() return this.CBaseEntity.EyePosition()
 function pcapEntity::entindex() return this.CBaseEntity.entindex()
