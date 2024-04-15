@@ -25,11 +25,11 @@
      * @param {array} entities - An array of entities to animate.
      * @param {number} time - The duration of the animation in seconds.
      */
-    constructor(table, ents, time) {
+    constructor(table, ents, time = 0) {
         this.entities = ents
         this.delay = time
 
-        this.eventName = macros.GetFromTable(table, "eventName", UniqueString("anim")) //! mega bruh! Use link id, hash or str?
+        this.eventName = macros.GetFromTable(table, "eventName", UniqueString("anim")) //! todo mega bruh! Mb use link id, hash or str?
         this.globalDelay = macros.GetFromTable(table, "globalDelay", 0)
         this.note = macros.GetFromTable(table, "note", null)
         this.outputs = macros.GetFromTable(table, "outputs", null)
@@ -51,8 +51,10 @@
  * @param {function} valueCalculator - A function that calculates the new value for the property at each frame.
  * @param {function} propertySetter - A function that sets the new value for the property on each entity. 
  */
-animate["applyAnimation"] <- function(animSetting, valueCalculator, propertySetter) {
-    local transitionFrames = animSetting.time / FrameTime();
+animate["applyAnimation"] <- function(animSetting, valueCalculator, propertySetter, transitionFrames = 0) {
+    if(transitionFrames == 0)
+        local transitionFrames = animSetting.time / FrameTime();
+
     for (local step = 0; step < transitionFrames; step++) {
         local elapsed = (FrameTime() * step) + animSetting.globalDelay
 
@@ -64,7 +66,6 @@ animate["applyAnimation"] <- function(animSetting, valueCalculator, propertySett
     }
 }
 
-// todo test
 IncludeScript("SRC/Animations/alpha")
 IncludeScript("SRC/Animations/color")
 IncludeScript("SRC/Animations/position")
