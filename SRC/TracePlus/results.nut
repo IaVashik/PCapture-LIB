@@ -282,7 +282,13 @@ results["Bbox"] <- class {
         if(this.surfaceNormal)
             return this.surfaceNormal
 
-        this.surfaceNormal = CalculateImpactNormal(this.GetStartPos(), this.hitpos, this)
+        local hitEnt = this.GetEntity()
+        if(hitEnt) {
+            this.surfaceNormal = CalculateImpactNormalFromBbox(this.GetStartPos(), this.hitpos, hitEnt)
+        } else {
+            this.surfaceNormal = CalculateImpactNormal(this.GetStartPos(), this.hitpos, this)
+        }
+
         return this.surfaceNormal
     } 
 

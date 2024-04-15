@@ -65,3 +65,76 @@ local _getIntPoint = function(newStart, dir) {
 
     return normal
 }
+
+
+/*
+ * Finds the three closest vertices to a given point from a list of vertices. 
+ *
+ * @param {Vector} point - The point to find the closest vertices to.
+ * @param {array} vertices - An array of Vector objects representing the vertices. 
+ * @returns {array} - An array containing the three closest vertices as Vector objects.
+*/ 
+local _findClosestVertices = function(point, vertices) {
+    // Sort the vertices based on their distance to the point.
+    vertices.sort(function(a, b):(point) {
+        return (a - point).LengthSqr() - (b - point).LengthSqr() 
+    })
+
+    // Return the three closest vertices.
+    return vertices.slice(0, 3)  
+}
+
+/*
+ * Calculates the normal vector of a triangle face formed by three vertices.
+ * 
+ * @param {Vector} v1 - The first vertex of the triangle. 
+ * @param {Vector} v2 - The second vertex of the triangle.
+ * @param {Vector} v3 - The third vertex of the triangle. 
+ * @returns {Vector} - The normal vector of the triangle face. 
+*/
+local _calculateFaceNormal = function(v1, v2, v3) {
+    // Calculate two edge vectors of the triangle. 
+    local edge1 = v2 - v1
+    local edge2 = v3 - v1
+
+    // Calculate the normal vector using the cross product of the edge vectors.
+    local normal = edge1.Cross(edge2)
+    normal.Norm()
+
+    return normal 
+}
+
+/*
+ * Calculates the impact normal of a surface hit by a trace using the bounding box of the hit entity.
+ *
+ * @param {Vector} startPos - The start position of the trace.
+ * @param {Vector} hitPos - The hit position of the trace.
+ * @param {BboxTraceResult} traceResult - The trace result object.
+ * @returns {Vector} - The calculated impact normal vector. 
+*/
+ ::CalculateImpactNormalFromBbox <- function(startPos, hitPos, hitEntity)
+                                    : (_findClosestVertices, _calculateFaceNormal) {
+    // Get the entity bounding box vertices.
+    local bboxVertices = hitEntity.getBBoxPoints()
+
+    // Calculate the vector from the trace start position to the hit position.
+    local traceDir = (hitPos - startPos)
+    traceDir.Norm()
+
+    // Find the three closest vertices to the hit position.
+    local closestVertices = _findClosestVertices(hitPos - hitEntity.GetOrigin(), bboxVertices)
+
+    // foreach(k, i in closestVertices) { todo dev code
+    //     dev.drawbox(hitEntity.GetOrigin() + i, Vector(125,125,0), 0.03)
+    // }
+
+    // Calculate the normal vector of the face formed by the three closest vertices.
+    local faceNormal = _calculateFaceNormal(closestVertices[0], closestVertices[1], closestVertices[2])
+
+    // Ensure the normal vector points away from the trace direction.
+    if (faceNormal.Dot(traceDir) > 0) {
+        faceNormal = faceNormal * -1
+    }
+
+    return faceNormal 
+}
