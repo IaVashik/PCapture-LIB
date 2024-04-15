@@ -73,7 +73,7 @@ vector["reflect"] <- function(dir, normal) {
  * @param {number} max - The maximum value for each component.
  * @returns {Vector} - The clamped vector.
 */
-vector["clamp"] <- function(vector, min = 0, max = 255) { // todo
+vector["clamp"] <- function(vector, min = 0, max = 255) {
     return Vector(this.clamp(vector.x, min, max), this.clamp(vector.y, min, max), this.clamp(vector.z, max, max)) 
 }
 
@@ -101,4 +101,24 @@ vector["round"] <- function(vec, precision = 1000) {
     vec.y = floor(vec.y * precision + 0.5) / precision
     vec.z = floor(vec.z * precision + 0.5) / precision
     return vec
+}
+
+/* 
+ * Returns a vector with the signs (-1, 0, or 1) of each component of the input vector.
+ * 
+ * @param {Vector} vec - The input vector.
+ * @returns {Vector} - A new vector with the signs of the input vector's components.
+*/
+vector["sign"] <- function(vec) {
+    return Vector(math.Sign(vec.x), math.Sign(vec.y), math.Sign(vec.z))
+}
+
+/* 
+ * Calculates the absolute value of each component in a vector.
+ *
+ * @param {Vector} vector - The vector to calculate the absolute values for.
+ * @returns {Vector} - A new vector with the absolute values of the original vector's components.
+*/
+vector["abs"] <- function(vector) {
+    return Vector(abs(vector.x), abs(vector.y), abs(vector.z)) 
 }
