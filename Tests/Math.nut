@@ -90,6 +90,17 @@ math_tests <- {
         return assert(result1 == 5 && result2 == 0 && result3 == 10)
     },
 
+    // Test the vector clamp function
+    function vector_clamp() {
+        local result = math.vector.clamp(Vector(15,3,-5), 0, 10)
+        return assert(result.x == 10 && result.y == 3 && result.z == 0)
+    },
+
+    function vector_abs() {
+        local result = math.vector.abs(Vector(15,-3,-5))
+        return assert(result.x == 15 && result.y == 3 && result.z == 5)
+    },
+
     // Test the vector.round function
     function roundVector() {
         local vector = Vector(1.2345, 6.7890, -0.1234)
