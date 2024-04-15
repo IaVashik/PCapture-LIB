@@ -1,6 +1,6 @@
 /*
  * A class for displaying hints using the "env_instructor_hint" entity. 
- */
+*/
  HUD["HintInstructor"] <- class {
     // The underlying pcapEntity object representing the "env_instructor_hint" entity.  
     CPcapEntity = null;
@@ -13,7 +13,7 @@
      * @param {string} icon - The icon to display with the hint. (optional, default="icon_tip") 
      * @param {number} showOnHud - Whether to display the hint on the HUD or at the target entity's position (1 for HUD, 0 for target entity). (optional, default=1) 
      * @param {string} targetname - The targetname of the "env_instructor_hint" entity. (optional, default="hint") 
-     */
+    */
     constructor(message, holdtime = 5, icon = "icon_tip", showOnHud = 1, targetname = "hint") {
         this.CPcapEntity = entLib.CreateByClassname("env_instructor_hint", {
             // The text of your hint. 100 character limit.
@@ -65,7 +65,7 @@
 // Implementation of 'enable' to display the on-screen text
 /*
  * Displays the hint. 
- */
+*/
 function HUD::HintInstructor::Enable() {
     EntFireByHandle(this.CPcapEntity, "ShowHint")
 }
@@ -73,24 +73,23 @@ function HUD::HintInstructor::Enable() {
 // Implementation of 'disable' to hide the on-screen text
 /*
  * Hides the hint. 
- */
+*/
 function HUD::HintInstructor::Disable() {
     EntFireByHandle(this.CPcapEntity, "EndHint")
 }
 
 /*
  * Updates and redisplays the hint. 
- */
+*/
 function HUD::HintInstructor::Update() {
     this.CPcapEntity.Enable()
 }
 
-// TODO comments
 /*
  * Changes the message of the hint and redisplays it. 
  * 
  * @param {string} message - The new hint message to display. 
- */
+*/
 function HUD::HintInstructor::SetText(message) {
     this.CPcapEntity.SetKeyValue("hint_caption", message)
 }
@@ -99,7 +98,7 @@ function HUD::HintInstructor::SetText(message) {
  * Sets the bind to display with the hint icon and updates the icon to "use_binding". 
  *
  * @param {string} bind - The bind name to display. 
- */
+*/
 function HUD::HintInstructor::SetBind(bind) {
     this.CPcapEntity.SetKeyValue("hint_binding", bind)
     this.CPcapEntity.SetKeyValue("hint_icon_onscreen", "use_binding")
@@ -110,7 +109,7 @@ function HUD::HintInstructor::SetBind(bind) {
  *
  * @param {number} value - 1 to display the hint on the HUD, 0 to display it at the target entity's position.
  * @param {CBaseEntity|pcapEntity|null} entity - The target entity to position the hint at (only used if value is 0). (optional) 
- */
+*/
 function HUD::HintInstructor::SetPositioning(value, ent = null) { // showOnHud
     this.CPcapEntity.SetKeyValue("hint_static", value)
     this.CPcapEntity.SetKeyValue("hint_target", ent)
@@ -120,7 +119,7 @@ function HUD::HintInstructor::SetPositioning(value, ent = null) { // showOnHud
  * Sets the color of the hint text as a string. 
  *
  * @param {string} color - The color string, e.g., "255 0 0". 
- */
+*/
 function HUD::HintInstructor::SetColor(color) {
     this.CPcapEntity.SetKeyValue("hint_color", color)
 }
@@ -129,7 +128,7 @@ function HUD::HintInstructor::SetColor(color) {
  * Sets the icon to display when the hint is on-screen. 
  *
  * @param {string} icon - The icon name to display. 
- */
+*/
 function HUD::HintInstructor::SetIconOnScreen(icon) {
     this.CPcapEntity.SetKeyValue("hint_icon_onscreen", icon)
 }
@@ -138,7 +137,7 @@ function HUD::HintInstructor::SetIconOnScreen(icon) {
  * Sets the icon to display when the hint is off-screen. 
  *
  * @param {string} icon - The icon name to display. 
- */
+*/
 function HUD::HintInstructor::SetIconOffScreen(icon) {
     this.CPcapEntity.SetKeyValue("hint_icon_offscreen", icon)
 }   
@@ -147,7 +146,7 @@ function HUD::HintInstructor::SetIconOffScreen(icon) {
  * Sets the hold time (duration) of the hint. 
  *
  * @param {number} time - The hold time in seconds. 
- */
+*/
 function HUD::HintInstructor::SetHoldTime(time) {
     this.CPcapEntity.SetKeyValue("hint_timeout", time)
 }
@@ -156,7 +155,7 @@ function HUD::HintInstructor::SetHoldTime(time) {
  * Sets the distance at which the hint is visible.
  *
  * @param {number} distance - The distance in units.  
- */
+*/
 function HUD::HintInstructor::SetDistance(value) {
     this.CPcapEntity.SetKeyValue("hint_range", value)
 }
@@ -167,7 +166,7 @@ function HUD::HintInstructor::SetDistance(value) {
  * @param {number} sizePulsing - The size pulsing option (0 for no pulsing, 1 for pulsing). 
  * @param {number} alphaPulsing - The alpha pulsing option (0 for no pulsing, 1 for pulsing).
  * @param {number} shaking - The shaking option (0 for no shaking, 1 for shaking).  
- */
+*/
 function HUD::HintInstructor::SetEffects(sizePulsing, alphaPulsing, shaking) {
     this.CPcapEntity.SetKeyValue("hint_pulseoption", sizePulsing)
     this.CPcapEntity.SetKeyValue("hint_alphaoption", alphaPulsing)

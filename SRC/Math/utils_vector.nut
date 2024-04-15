@@ -7,7 +7,7 @@ local vector = math["vector"]
  * @param {Vector} vector - The first vector.
  * @param {Vector} other - The second vector.
  * @returns {boolean} - True if the vectors are equal, false otherwise.
- */
+*/
 vector["isEqually"] <- function(vector, other) {
     vector = math.vector.round(vector)
     other = math.vector.round(other)
@@ -22,7 +22,7 @@ vector["isEqually"] <- function(vector, other) {
  * @param {Vector} vector - The vector to rotate.
  * @param {Vector} angle - The Euler angles in degrees (pitch, yaw, roll) representing the rotation.
  * @returns {Vector} - The rotated vector. 
- */
+*/
 vector["rotate"] <- function(vector, angle) {
     return math.Quaternion.fromEuler(angle).rotateVector(vector)
 }
@@ -33,7 +33,7 @@ vector["rotate"] <- function(vector, angle) {
  * @param {Vector} vector - The vector to un-rotate.
  * @param {Vector} angle - The Euler angles in degrees (pitch, yaw, roll) representing the rotation to reverse.
  * @returns {Vector} - The un-rotated vector.
- */
+*/
 vector["unrotate"] <- function(vector, angle) {
     return math.Quaternion.fromEuler(angle).unrotateVector(vector)
 }
@@ -47,7 +47,7 @@ vector["unrotate"] <- function(vector, angle) {
  * @param {Vector|number} min - The minimum values for each component or a single minimum value for all components.
  * @param {Vector|number} max - The maximum values for each component or a single maximum value for all components.
  * @returns {Vector} - The generated random vector.
- */
+*/
 vector["random"] <- function(min, max) {
     if(typeof min == "Vector" && typeof max == "Vector") 
         return Vector(RandomFloat(min.x, max.x), RandomFloat(min.y, max.y), RandomFloat(min.z, max.z))
@@ -60,7 +60,7 @@ vector["random"] <- function(min, max) {
  * @param {Vector} dir - The direction vector to reflect.
  * @param {Vector} normal - The normal vector of the surface.
  * @returns {Vector} - The reflected direction vector.
- */
+*/
 vector["reflect"] <- function(dir, normal) {
     return dir - normal * (dir.Dot(normal) * 2)
 }
@@ -72,7 +72,7 @@ vector["reflect"] <- function(dir, normal) {
  * @param {number} min - The minimum value for each component.
  * @param {number} max - The maximum value for each component.
  * @returns {Vector} - The clamped vector.
- */
+*/
 vector["clamp"] <- function(vector, min = 0, max = 255) { // todo
     return Vector(this.clamp(vector.x, min, max), this.clamp(vector.y, min, max), this.clamp(vector.z, max, max)) 
 }
@@ -83,7 +83,7 @@ vector["clamp"] <- function(vector, min = 0, max = 255) { // todo
  * @param {Vector} vector - The vector to resize.
  * @param {number} newLength - The desired new length of the vector.
  * @returns {Vector} - The resized vector with the specified length.
- */
+*/
 vector["resize"] <- function(vector, newLength) {
     local currentLength = vector.Length()
     return vector * (newLength / currentLength)
@@ -95,7 +95,7 @@ vector["resize"] <- function(vector, newLength) {
  * @param {Vector} vec - The vector to round.
  * @param {int} precision - The precision (e.g., 1000 for rounding to three decimal places).
  * @returns {Vector} - The rounded vector.
- */
+*/
 vector["round"] <- function(vec, precision = 1000) {
     vec.x = floor(vec.x * precision + 0.5) / precision
     vec.y = floor(vec.y * precision + 0.5) / precision

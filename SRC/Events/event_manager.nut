@@ -89,7 +89,7 @@
  *
  * @param {string} eventName - The name of the event. 
  * @returns {string|null} - The note of the first event, or null if no note is found or the event doesn't exist. 
- */
+*/
 ::getEventNote <- function(eventName) {
     local info = getEventInfo(eventName)
     if(!info || info.len() == 0) 

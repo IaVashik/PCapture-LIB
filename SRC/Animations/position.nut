@@ -6,7 +6,7 @@
  * @param {Vector} endPos - The ending position. 
  * @param {number} time - The duration of the animation in seconds. 
  * @param {table} animSetting - A table containing additional animation settings. (optional) 
- */
+*/
  animate["PositionTransitionByTime"] <- function(entities, startPos, endPos, time, animSetting = {}) {
     local animSetting = AnimEvent(animSetting, _GetValidEntitiy(entities), time)
     
@@ -33,7 +33,7 @@
  * 
  * The animation will calculate the time it takes to travel from the start position to the end position based on the specified speed. 
  * It will then use this time to create a smooth transition of the entities' positions over that duration.
- */
+*/
 animate["PositionTransitionBySpeed"] <- function(entities, startPos, endPos, speed, animSetting = {}) {
     local animSetting = AnimEvent(animSetting, _GetValidEntitiy(entities))
     

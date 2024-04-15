@@ -24,7 +24,7 @@
      * @param {table} settings - A table containing animation settings.
      * @param {array} entities - An array of entities to animate.
      * @param {number} time - The duration of the animation in seconds.
-     */
+    */
     constructor(table, ents, time = 0) {
         this.entities = ents
         this.delay = time
@@ -37,7 +37,7 @@
 
     /* 
      * Calls the outputs associated with the animation event. 
-     */
+    */
     function callOutputs() {
         if (this.outputs)
             CreateScheduleEvent(this.eventName, this.outputs, this.time)
@@ -50,7 +50,7 @@
  * @param {AnimEvent} animSetting - The AnimEvent object containing animation settings and entities.
  * @param {function} valueCalculator - A function that calculates the new value for the property at each frame.
  * @param {function} propertySetter - A function that sets the new value for the property on each entity. 
- */
+*/
 animate["applyAnimation"] <- function(animSetting, valueCalculator, propertySetter, transitionFrames = 0) {
     if(transitionFrames == 0)
         local transitionFrames = animSetting.time / FrameTime();

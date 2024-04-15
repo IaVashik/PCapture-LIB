@@ -4,7 +4,7 @@
  * This function iterates over all scheduled events and checks if their scheduled execution time has arrived. 
  * If so, it executes the event's action and removes it from the list of scheduled events. 
  * The function then schedules itself to run again after a short delay to continue processing events.
- */
+*/
  ::ExecuteScheduledEvents <- function() {
     // If there are no events scheduled, stop the event loop. 
     if(scheduledEventsList.len() == 1 && scheduledEventsList.global.len() == 0) {

@@ -15,7 +15,7 @@ local _frametime = FrameTime
  * If the frame time is zero, it returns a small default value (0.016). 
  *
  * @returns {number} - The current frame time. 
- */
+*/
 ::FrameTime <- function() : (_frametime) {
     local tick = _frametime()
     if(tick == 0)
@@ -31,7 +31,7 @@ local _UniqueString = UniqueString
  *
  * @param {string} prefix - The prefix to use for the unique string. (optional, default="u") 
  * @returns {string} - The generated unique string. 
- */ 
+*/ 
 ::UniqueString <- function(prefix = "u") : (_UniqueString) {
     return prefix + "_" + _UniqueString().slice(0, -1)
 }
@@ -59,7 +59,7 @@ local _EntFireByHandle = EntFireByHandle
  * @param {number} delay - The delay in seconds before triggering the input. (optional)
  * @param {CBaseEntity|pcapEntity} activator - The activator entity (the entity that triggered the input). (optional)
  * @param {CBaseEntity|pcapEntity} caller - The caller entity (the entity that called the function). (optional) 
- */
+*/
 ::EntFireByHandle <- function(target, action, value = "", delay = 0, activator = null, caller = null) : (_EntFireByHandle) {
     // Extract the underlying entity from the pcapEntity wrapper 
     if (typeof target == "pcapEntity")
@@ -95,7 +95,7 @@ local _EntFireByHandle = EntFireByHandle
  * Gets an array of all players in the game. 
  *
  * @returns {array} - An array of pcapEntity objects representing the players. 
- */
+*/
 ::GetPlayers <- function() { // -> array
     return AllPlayers
 }
@@ -106,7 +106,7 @@ local _EntFireByHandle = EntFireByHandle
  *
  * This function creates logic_measure_movement and info_target entities for each player to track their eye position and angles. 
  * It is called automatically at the initialization of the library and periodically in multiplayer games. 
- */
+*/
 function AttachEyeControlToPlayers() {
     for(local player; player = entLib.FindByClassname("player", player);) {
         if(player.GetUserData("Eye")) return

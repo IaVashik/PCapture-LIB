@@ -1,6 +1,6 @@
 /*
  * A class for displaying on-screen text using the "game_text" entity.
- */
+*/
  HUD["ScreenText"] <- class {
     // The underlying pcapEntity object representing the "game_text" entity. 
     CPcapEntity = null;
@@ -12,7 +12,7 @@
      * @param {string} message - The text message to display. 
      * @param {number} holdtime - The duration in seconds to display the text. (optional, default=10)
      * @param {string} targetname - The targetname of the "game_text" entity. (optional) 
-     */
+    */
     constructor(position, message, holdtime = 10, targetname = "") {
         this.CPcapEntity = entLib.CreateByClassname("game_text", {
             // Set initial properties for the text display entity
@@ -62,21 +62,21 @@
 
 /*
  * Displays the on-screen text. 
- */
+*/
 function HUD::ScreenText::Enable() {
     EntFireByHandle(this.CPcapEntity, "Display")
 }
 
 /*
  * Hides the on-screen text. 
- */
+*/
 function HUD::ScreenText::Disable() {
     EntFireByHandle(this.CPcapEntity, "Disable")
 }
 
 /*
  * Updates and redisplays the on-screen text. 
- */
+*/
 function HUD::ScreenText::Update() {
     this.CPcapEntity.Enable()
 }
@@ -85,7 +85,7 @@ function HUD::ScreenText::Update() {
  * Changes the message of the text display and redisplays it.
  * 
  * @param {string} message - The new text message to display. 
- */
+*/
 function HUD::ScreenText::SetText(message) {
     this.CPcapEntity.SetKeyValue("message", message)
 }
@@ -94,7 +94,7 @@ function HUD::ScreenText::SetText(message) {
  * Sets the channel of the text display. 
  *
  * @param {number} channel - The channel to set.
- */
+*/
 function HUD::ScreenText::SetChannel(channel) {
     this.CPcapEntity.SetKeyValue("channel", channel)
 }
@@ -103,7 +103,7 @@ function HUD::ScreenText::SetChannel(channel) {
  * Sets the primary color of the text display as a string. 
  *
  * @param {string} color - The color string, e.g., "255 0 0". 
- */
+*/
 function HUD::ScreenText::SetColor(color) {
     this.CPcapEntity.SetKeyValue("color", color)
 }
@@ -112,7 +112,7 @@ function HUD::ScreenText::SetColor(color) {
  * Sets the secondary color of the text display as a string. 
  *
  * @param {string} color - The color string, e.g., "255 0 0". 
- */
+*/
 function HUD::ScreenText::SetColor2(color) {
     this.CPcapEntity.SetKeyValue("color2", color)
 }
@@ -121,7 +121,7 @@ function HUD::ScreenText::SetColor2(color) {
  * Sets the effect of the text display. 
  *
  * @param {number} index - The index of the effect to set. 
- */
+*/
 function HUD::ScreenText::SetEffect(idx) {
     this.CPcapEntity.SetKeyValue("effect", idx)
 }
@@ -130,7 +130,7 @@ function HUD::ScreenText::SetEffect(idx) {
  * Sets the fade-in time of the text display.
  *
  * @param {number} value - The fade-in time in seconds.  
- */ 
+*/ 
 function HUD::ScreenText::SetFadeIn(value) {
     this.CPcapEntity.SetKeyValue("fadein", value)
 }
@@ -139,7 +139,7 @@ function HUD::ScreenText::SetFadeIn(value) {
  * Sets the fade-out time of the text display.
  *
  * @param {number} value - The fade-out time in seconds.  
- */ 
+*/ 
 function HUD::ScreenText::SetFadeOut(value) {
     this.CPcapEntity.SetKeyValue("fadeout", value)
 }
@@ -148,7 +148,7 @@ function HUD::ScreenText::SetFadeOut(value) {
  * Sets the hold time (duration) of the text display. 
  *
  * @param {number} time - The hold time in seconds.  
- */
+*/
 function HUD::ScreenText::SetHoldTime(time) {
     this.CPcapEntity.SetKeyValue("holdtime", time)
 }
@@ -157,7 +157,7 @@ function HUD::ScreenText::SetHoldTime(time) {
  * Sets the position of the text display. 
  *
  * @param {Vector} position - The new position of the text. 
- */
+*/
 function HUD::ScreenText::SetPos(position) {
     this.CPcapEntity.SetKeyValue("x", position.x)
     this.CPcapEntity.SetKeyValue("y", position.y)

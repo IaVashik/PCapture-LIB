@@ -5,7 +5,7 @@
      * @param {string} classname - The classname of the entity.
      * @param {table} keyvalues - The key-value pairs for the entity.
      * @returns {pcapEntity} - The created entity object.
-     */
+    */
     function CreateByClassname(classname, keyvalues = {}) {
         local new_entity = entLib.FromEntity(Entities.CreateByClassname(classname))
         foreach(key, value in keyvalues) {
@@ -25,7 +25,7 @@
      * @param {number} activity - The initial activity of the prop. (optional, default=1)
      * @param {table} keyvalues - Additional key-value pairs for the prop. (optional)
      * @returns {pcapEntity} - The created prop entity object.
-     */
+    */
     function CreateProp(classname, origin, modelname, activity = 1, keyvalues = {}) {
         local new_entity = entLib.FromEntity(CreateProp(classname, origin, modelname, activity))
         foreach(key, value in keyvalues) {
@@ -40,7 +40,7 @@
      *
      * @param {CBaseEntity} CBaseEntity - The CBaseEntity object to wrap.
      * @returns {pcapEntity} - The wrapped entity object.
-     */
+    */
     function FromEntity(CBaseEntity) {
         if(typeof CBaseEntity == "pcapEntity")
             return CBaseEntity
@@ -54,7 +54,7 @@
      * @param {string} classname - The classname to search for.
      * @param {CBaseEntity|pcapEntity} start_ent - The starting entity to search within. (optional)
      * @returns {pcapEntity|null} - The found entity object, or null if not found.
-     */
+    */
     function FindByClassname(classname, start_ent = null) {
         if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
@@ -71,7 +71,7 @@
      * @param {number} radius - The search radius.
      * @param {CBaseEntity|pcapEntity} start_ent - The starting entity to search within. (optional)
      * @returns {pcapEntity|null} - The found entity object, or null if not found.
-     */
+    */
     function FindByClassnameWithin(classname, origin, radius, start_ent = null) {
         if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
@@ -86,7 +86,7 @@
      * @param {string} targetname - The targetname to search for.
      * @param {CBaseEntity|pcapEntity} start_ent - The starting entity to search within. (optional)
      * @returns {pcapEntity|null} - The found entity object, or null if not found.
-     */
+    */
     function FindByName(targetname, start_ent = null) {
         if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
@@ -103,7 +103,7 @@
      * @param {number} radius - The search radius.
      * @param {CBaseEntity|pcapEntity} start_ent - The starting entity to search within. (optional)
      * @returns {pcapEntity|null} - The found entity object, or null if not found.
-     */
+    */
     function FindByNameWithin(targetname, origin, radius, start_ent = null) {
         if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
@@ -118,7 +118,7 @@
      * @param {string} model - The model to search for.
      * @param {CBaseEntity|pcapEntity} start_ent - The starting entity to search within. (optional)
      * @returns {pcapEntity|null} - The found entity object, or null if not found.
-     */
+    */
     function FindByModel(model, start_ent = null) {
         if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
@@ -135,7 +135,7 @@
      * @param {number} radius - The search radius.
      * @param {CBaseEntity|pcapEntity} start_ent - The starting entity to search within. (optional)
      * @returns {pcapEntity|null} - The found entity object, or null if not found.
-     */
+    */
     function FindByModelWithin(model, origin, radius, start_ent = null) {
         if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
@@ -158,7 +158,7 @@
      * @param {number} radius - The radius of the sphere.
      * @param {CBaseEntity|pcapEntity} start_ent - The starting entity to search within. (optional)
      * @returns {pcapEntity|null} - The found entity object, or null if not found.
-     */
+    */
     function FindInSphere(origin, radius, start_ent = null) {
         if(start_ent && typeof start_ent == "pcapEntity")
             start_ent = start_ent.CBaseEntity
@@ -173,7 +173,7 @@
      *
      * @param {CBaseEntity} entity - The entity object.
      * @returns {pcapEntity} - A new entity object.
-     */
+    */
     function __init(CBaseEntity) {
         if(!CBaseEntity)
             return null

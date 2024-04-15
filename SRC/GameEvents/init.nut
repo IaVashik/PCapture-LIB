@@ -15,7 +15,7 @@
  * Logs a VScript event message to the console if event logging is enabled. 
  *
  * @param {string} msg - The event message to log. 
- */
+*/
 dev["VSEvent"] <- function(msg) if(VSEventLogs) printl("VScript Event Fired: " + msg)
 
 // TODO add support real game event

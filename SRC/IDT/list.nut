@@ -7,7 +7,7 @@
      * Constructor for a list node.
      *
      * @param {any} value - The value to store in the node.
-     */
+    */
     constructor(value) {
         this.value = value;
     }
@@ -26,7 +26,7 @@
      * Constructor for a list.
      *
      * @param {...any} vargv - The initial values to add to the list.
-     */
+    */
     constructor(...) {
         this.first_node = ListNode(0);
         this.last_node = this.first_node;
@@ -41,7 +41,7 @@
      * 
      * @param {array} array - The array to create the list from.
      * @returns {List} - The new list containing the elements from the array.
-     */
+    */
     function fromArray(array) {
         local list = List()
         foreach(val in array) 
@@ -53,7 +53,7 @@
      * Gets the length of the list.
      *
      * @returns {number} - The number of elements in the list.
-     */
+    */
     function len() {
         return this.lenght;
     }
@@ -62,7 +62,7 @@
      * Appends a value to the end of the list.
      * 
      * @param {any} value - The value to append.
-     */
+    */
     function append(value) {
         local next_node = ListNode(value);
         local current_node = this.last_node;
@@ -79,7 +79,7 @@
      * 
      * @param {number} index - The index to insert the value at.
      * @param {any} value - The value to insert.
-     */
+    */
     function insert(idx, value) {
         if(this.lenght == 0 || idx >= this.lenght) 
             return this.append(value)
@@ -102,7 +102,7 @@
      * @param {number} index - The index of the node to retrieve.
      * @returns {ListNode} - The node at the specified index.
      * @throws {Error} - If the index is out of bounds.
-     */
+    */
     function getNode(idx) {
         if (idx >= this.lenght) {
             throw("the index '" + idx + "' does not exist!");
@@ -121,7 +121,7 @@
      * @param {number} index - The index of the value to retrieve.
      * @param {any} defaultValue - The value to return if the index is out of bounds. (optional)
      * @returns {any} - The value at the specified index or the default value if the index is out of bounds.
-     */
+    */
     function get(idx, defaultValue = null) {
         if (idx >= this.lenght)
             return defaultValue
@@ -133,7 +133,7 @@
      * Removes the node at a specific index from the list.
      * 
      * @param {number} index - The index of the node to remove.
-     */
+    */
     function remove(idx) {
         local node = this.getNode(idx);
         local next = node.next_ref;
@@ -151,7 +151,7 @@
      * Removes the last element from the list and returns its value.
      * 
      * @returns {any} - The value of the removed element.
-     */
+    */
     function pop() {
         local current = this.last_node;
         this.last_node = current.prev_ref;
@@ -164,14 +164,14 @@
      * Gets the value of the last element in the list.
      * 
      * @returns {any} - The value of the last element.
-     */
+    */
     function top() {
         return this.last_node.value
     }
 
     /*
      * Reverses the order of the elements in the list in-place.
-     */
+    */
     function reverse() {
         local prev_node = null;
         local current_node = this.first_node.next_ref;
@@ -193,7 +193,7 @@
 
     /*
      * Removes all elements from the list.
-     */
+    */
     function clear() {
         this.first_node.next_ref = null;
         this.last_node = this.first_node;
@@ -205,7 +205,7 @@
      * 
      * @param {string} joinstr - The delimiter to use between elements. (optional, default="")
      * @returns {string} - The joined string.
-     */
+    */
     function join(joinstr = "") {
         if(this.lenght == 0) return ""
         
@@ -234,7 +234,7 @@
      * 
      * @param {iterable} other - The iterable to append elements from.
      * @returns {List} - The List instance for chaining.
-     */
+    */
     function extend(other) {
         foreach(val in other) 
             this.append(val)
@@ -246,7 +246,7 @@
      * 
      * @param {any|Function} match - The value to search for or a predicate function.
      * @returns {number|null} - The index of the match or null if not found.
-     */
+    */
     function search(match) {
         if(typeof match == "function") {
             foreach(idx, val in this) {
@@ -269,7 +269,7 @@
      * 
      * @param {Function} func - The function to apply to each element.
      * @returns {List} - The new list with the mapped values.
-     */
+    */
     function map(func) {
         local newList = List()
         foreach(value in this) {
@@ -282,7 +282,7 @@
      * Converts the list to an array.
      * 
      * @returns {array} - An array containing the elements of the list.
-     */
+    */
     function toarray() {
         local array = arrayLib(array(this.lenght))
         foreach(idx, value in this) {

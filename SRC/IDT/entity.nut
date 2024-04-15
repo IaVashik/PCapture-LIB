@@ -6,7 +6,7 @@
      * Constructor for the entity object.
      *
      * @param {CBaseEntity} entity - The entity object.
-     */
+    */
     constructor(entity = null) { 
         if(entity == null) return null
 
@@ -15,7 +15,7 @@
 
         this.CBaseEntity = entity
         this.EntityScope = {}
-        entity.ValidateScriptScope() // todo we need this shit?
+        entity.ValidateScriptScope()
     }
 
 
@@ -30,7 +30,7 @@
      * Sets the angles of the entity.
      *
      * @param {Vector} angles - The angle vector.
-     */
+    */
     function SetAbsAngles(angles) {
         this.CBaseEntity.SetAngles(angles.x, angles.y, angles.z)
     }
@@ -47,10 +47,10 @@
      * Kills the entity.
      *
      * @param {number} fireDelay - Delay in seconds before applying.
-     */
+    */
     function Kill(fireDelay = 0) {
         EntFireByHandle(CBaseEntity, "kill", "", fireDelay)
-        this.CBaseEntity = null // todo bug
+        this.CBaseEntity = null
     }
 
 
@@ -68,7 +68,7 @@
      * Checks if the entity is valid.
      *
      * @returns {bool} - True if the entity is valid, false otherwise.
-     */
+    */
     function IsValid() {
         return this.CBaseEntity && this.CBaseEntity.IsValid() && !this.GetUserData("Dissolved")
     }
@@ -78,9 +78,9 @@
      * Checks if this entity is the player entity.
      * 
      * @returns {bool} - True if this entity is the player, false otherwise.
-     */
+    */
     function IsPlayer() {
-        return this.CBaseEntity.GetClassname() == "player"  // todo
+        return this.CBaseEntity.GetClassname() == "player"
     }
 
 
@@ -102,7 +102,7 @@
      *
      * @param {string} key - The key of the key-value pair.
      * @param {int|float|Vector|string} value - The value of the key-value pair.
-     */
+    */
     function SetKeyValue(key, value) {
         switch (typeof value) {
             case "integer":
@@ -123,7 +123,7 @@
 
 
     /*
-     * Sets the outputs of the entity.  (TODO improve description)
+     * Sets the outputs of the entity.
      *
      * @param {string} outputName - Output named
      * @param {string|CBaseEntity|pcapEntity} target - Targets entities named
@@ -131,7 +131,7 @@
      * @param {string} param - with a parameter ovveride of
      * @param {number} delay - Delay in seconds before applying. // todo
      * @param {int} fires - 
-     */
+    */
     function addOutput(outputName, target, input, param = "", delay = 0, fires = -1) {
         if(typeof target == "instance" || typeof target == "pcapEntity")
             target = target.GetName()
@@ -162,7 +162,7 @@
      * @param {string} soundName - The name of the sound to play.
      * @param {number} timeDelay - Delay in seconds before playing the sound. (optional)
      * @param {string} eventName - The name of the event used for scheduling. (optional)
-     */
+    */
     function EmitSoundEx(soundName, timeDelay = 0, eventName = this) {
         if(timeDelay == 0)
             return this.CBaseEntity.EmitSound(soundName)
@@ -176,7 +176,7 @@
      * Sets the targetname of the entity.
      *
      * @param {string} name - The targetname to be set.
-     */
+    */
     function SetName(name) {
         this.SetKeyValue("targetname", name)
     }
@@ -185,7 +185,7 @@
      * Sets a unique targetname for the entity using the provided prefix.
      *
      * @param {string} prefix - The prefix to be used for the unique targetname. (optional, default="u")
-     */
+    */
     function SetUniqueName(prefix = "u") {
         this.SetKeyValue("targetname", UniqueString(prefix))
     }
@@ -196,7 +196,7 @@
      *
      * @param {string|CBaseEntity|pcapEntity} parent - The parent entity object or its targetname.
      * @param {number} fireDelay - Delay in seconds before applying.
-     */
+    */
     function SetParent(parentEnt, fireDelay = 0) {
         this.SetUserData("parent", parentEnt)
         if(typeof parentEnt != "string") {
@@ -213,7 +213,7 @@
      * Gets the parent of the entity.
      *
      * @returns {pcapEntity|null} - The parent entity object or null if no parent is set.
-     */
+    */
     function GetParent() {
         return this.GetUserData("parent")
     }
@@ -224,7 +224,7 @@
      *
      * @param {number} solidType - The type of collision.
      * @param {number} fireDelay - Delay in seconds before applying.
-     */
+    */
     function SetCollision(solidType, fireDelay = 0) {
         EntFireByHandle(this.CBaseEntity, "SetSolidtype", solidType.tostring(), fireDelay, null, null)
         this.SetUserData("Solidtype", solidType)
@@ -235,7 +235,7 @@
      * Sets the collision group of the entity.
      *
      * @param {number} collisionGroup - The collision group.
-     */
+    */
     function SetCollisionGroup(collisionGroup) {
         this.SetKeyValue("CollisionGroup", collisionGroup)
         this.SetUserData("CollisionGroup", collisionGroup)
@@ -247,7 +247,7 @@
      *
      * @param {string} animationName - The name of the animation to play.
      * @param {number} fireDelay - Delay in seconds before starting the animation.
-     */
+    */
     function SetAnimation(animationName, fireDelay) {
         EntFireByHandle(this.CBaseEntity, "SetAnimation", animationName, fireDelay)
         this.SetUserData("animation", animationName)
@@ -260,7 +260,7 @@
      * @param {number} opacity - The alpha value (0-255).
      * @param {number} fireDelay - Delay in seconds before applying.
      * Note: Don't forget to set "rendermode" to 5 for alpha to work.
-     */
+    */
     function SetAlpha(opacity, fireDelay = 0) {
         EntFireByHandle(this.CBaseEntity, "Alpha", opacity.tostring(), fireDelay, null, null)
         this.SetUserData("alpha", opacity)
@@ -272,7 +272,7 @@
      *
      * @param {string|Vector} colorValue - The color value as a string (e.g., "255 0 0") or a Vector.
      * @param {number} fireDelay - Delay in seconds before applying.
-     */
+    */
     function SetColor(colorValue, fireDelay = 0) {
         if(typeof colorValue == "Vector") 
             colorValue = macros.VecToStr(colorValue)
@@ -286,7 +286,7 @@
      *
      * @param {number} skin - The skin number.
      * @param {number} fireDelay - Delay in seconds before applying.
-     */
+    */
     function SetSkin(skin, fireDelay = 0) {
         EntFireByHandle(this.CBaseEntity, "skin", skin.tostring(), fireDelay, null, null)
         this.SetUserData("skin", skin)
@@ -298,7 +298,7 @@
      *
      * @param {boolean} isEnabled - True to enable drawing, false to disable.
      * @param {number} fireDelay - Delay in seconds before applying.
-     */
+    */
     function SetDrawEnabled(isEnabled, fireDelay = 0) {
         local action = isEnabled ? "EnableDraw" : "DisableDraw"
         EntFireByHandle(this.CBaseEntity, action, "", fireDelay)
@@ -309,7 +309,7 @@
      * Checks if the entity is set to be drawn.
      * 
      * @returns {boolean} - True if the entity is set to be drawn, false otherwise.
-     */
+    */
     function IsDrawEnabled() {
         return this.GetUserData("IsDraw")
     }
@@ -318,7 +318,7 @@
      * Sets whether the entity should be ignored during traces.
      * 
      * @param {boolean} isEnabled - True to ignore the entity during traces, false otherwise.
-     */
+    */
     function SetTraceIgnore(isEnabled) {
         this.SetUserData("TracePlusIgnore", isEnabled)
     }
@@ -327,7 +327,7 @@
      * Sets the spawnflags for the entity.
      *
      * @param {number} flag - The spawnflags value to set.
-     */
+    */
     function SetSpawnflags(flag) {
         this.SetKeyValue("CollisionGroup", flag)
         this.SetUserData("spawnflags", flag)
@@ -339,7 +339,7 @@
      *
      * @param {number} scaleValue - The scale value.
      * @param {number} fireDelay - Delay in seconds before applying.
-     */
+    */
     function SetModelScale(scaleValue, fireDelay = 0) {
         EntFireByHandle(this.CBaseEntity, "addoutput", "ModelScale " + scaleValue, fireDelay, null, null)
         this.SetUserData("ModelScale", scaleValue)
@@ -349,7 +349,7 @@
      * Gets the current model scale of the entity.
      *
      * @returns {number} - The current model scale value.
-     */
+    */
     function GetModelScale() {
         local res = this.GetUserData("ModelScale")
         return res ? res : 1
@@ -360,7 +360,7 @@
      * Sets the center of the entity.
      *
      * @param {Vector} vector - The center vector.
-     */
+    */
     function SetCenter(vector) {
         local offset = this.CBaseEntity.GetCenter() - this.CBaseEntity.GetOrigin()
         this.CBaseEntity.SetAbsOrigin( vector - offset )
@@ -371,7 +371,7 @@
      *
      * @param {Vector|string} min - The minimum bounds vector or a string representation of the vector.
      * @param {Vector|string} max - The maximum bounds vector or a string representation of the vector.
-     */
+    */
     function SetBBox(minBounds, maxBounds) {
         // Please specify the data type of `min` and `max` to improve the documentation accuracy.
         if (type(minBounds) == "string") {
@@ -391,7 +391,7 @@
      * @param {string} name - The name of the context value.
      * @param {any} value - The value to set.
      * @param {number} fireDelay - Delay in seconds before applying.
-     */
+    */
     function SetContext(name, value, fireDelay = 0) {
         EntFireByHandle(this.CBaseEntity, "AddContext", (name + ":" + value), fireDelay)
         this.SetUserData(name, value)
@@ -402,7 +402,7 @@
      *
      * @param {string} name - The name of the value.  
      * @param {any} value - The value to store.
-     */
+    */
     function SetUserData(name, value) {
         this.EntityScope[name.tolower()] <- value
     }
@@ -413,7 +413,7 @@
      *
      * @param {string} name - The name of the value to get.
      * @returns {any} - The stored value, or null if not found.
-     */ 
+    */ 
     function GetUserData(name) {
         name = name.tolower()
         if(name in this.EntityScope)
@@ -426,7 +426,7 @@
      * Gets the bounding box of the entity.
      *
      * @returns {table} - The minimum bounds and maximum bounds of the entity.
-     */
+    */
     function GetBBox() {
         local max = GetBoundingMaxs()
         local min = GetBoundingMins()
@@ -438,7 +438,7 @@
      * Returns the axis-aligned bounding box (AABB) of the entity.
      *
      * @returns {table} - The minimum bounds, maximum bounds, and center of the entity.
-     */ 
+    */ 
     function GetAABB() {
         local max = CreateAABB(7)
         local min = CreateAABB(0)
@@ -463,7 +463,7 @@
      *
      * @param {string} key - The key of the key-value pair.
      * @returns {any} - The value of the key-value pair.
-     */
+    */
     function GetKeyValue(key) {
         local value = this.GetUserData(key)
         if(value != null)
@@ -490,7 +490,7 @@
      * Note: only works if you used the SetKeyValue function!
      *
      * @returns {int|null} - The spawnflags value.
-     */ 
+    */ 
     function GetSpawnflags() {
         return this.GetUserData("spawnflags")
     }
@@ -501,7 +501,7 @@
      * Note: only works if you used the SetKeyValue function!
      * 
      * @returns {int|null} - The alpha value.
-     */
+    */
     function GetAlpha() {
         local alpha = this.GetUserData("alpha")
         return alpha != null ? alpha : 255
@@ -513,7 +513,7 @@
      * Note: only works if you used the SetKeyValue function!
      *
      * @returns {string|null} - The color value.
-     */
+    */
     function GetColor() {
         local color = this.GetUserData("color")
         return color ? color : "255 255 255"
@@ -525,7 +525,7 @@
      * Note: only works if you used the SetKeyValue function!
      *
      * @returns {number|null} - The skin number.
-     */
+    */
     function GetSkin() {
         local skin = this.GetUserData("skin")
         return skin ? skin : 0
@@ -536,7 +536,7 @@
      * Gets the prefix of the entity name.
      *
      * @returns {string} - The prefix of the entity name.
-     */
+    */
     function GetNamePrefix() {
         return macros.StrToVec(this.GetName())
     }
@@ -546,7 +546,7 @@
      * Gets the postfix of the entity name.
      *
      * @returns {string} - The postfix of the entity name.
-     */
+    */
     function GetNamePostfix() {
         return macros.GetPostfix(this.GetName())
     }
@@ -556,7 +556,7 @@
      * Converts the entity object to a string.
      *
      * @returns {string} - The string representation of the entity.
-     */
+    */
     function _tostring() {
         return "pcapEntity: " + this.CBaseEntity + ""
     }
@@ -566,7 +566,7 @@
      * Returns the type of the entity object.
      *
      * @returns {string} - The type of the entity object.
-     */
+    */
     function _typeof() {
         return "pcapEntity"
     }
@@ -577,7 +577,7 @@
      *
      * @param {number} stat - 0 for min bounds, 7 for max bounds, 4 for center bounds. 
      * @returns {Vector} - The bounds vector.
-     */
+    */
     function CreateAABB(stat) { 
         local angles = this.GetAngles()
         if(stat == 4) 
@@ -610,7 +610,7 @@
      * Gets the 8 vertices of the axis-aligned bounding box.
      *
      * @returns {Array<Vector>} - The 8 vertices of the bounding box.  
-     */
+    */
      function getBBoxPoints() {
         local BBmax = this.GetBoundingMaxs();
         local BBmin = this.GetBoundingMins();
@@ -629,7 +629,7 @@
      *
      * @param {pcapEntity} other - The other entity to compare.
      * @returns {boolean} - True if the entities are equal, false otherwise.
-     */
+    */
     function isEqually(other) {
         return this.entindex() == other.entindex()
     }
@@ -642,7 +642,7 @@
      * @param {Vector} z - The z bounds.
      * @param {Vector} ang - The angle vector.
      * @returns {Vector} - The vertex.
-     */
+    */
     function _GetVertex(x, y, z, ang) {
         // return rotate(Vector(x.x, y.y, z.z), ang)
         return math.vector.rotate(Vector(x.x, y.y, z.z), ang)

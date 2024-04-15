@@ -3,7 +3,7 @@
  * A class for performing precise trace line analysis. 
  * 
  * This class provides methods for tracing lines with more precision and considering entity priorities and ignore settings. 
- */
+*/
  ::TraceLineAnalyzer <- class {
     settings = null;
     hitpos = null;
@@ -17,7 +17,7 @@
      * @param {array|CBaseEntity|null} ignoreEntities - A list of entities or a single entity to ignore during the trace. 
      * @param {TraceSettings} settings - The settings to use for the trace. 
      * @param {string|null} note - An optional note associated with the trace. 
-     */ 
+    */ 
     constructor(startpos, endpos, ignoreEntities, settings, note) {
         this.settings = settings // todo
         
@@ -30,7 +30,7 @@
      * Gets the hit position of the trace. 
      *
      * @returns {Vector} - The hit position. 
-     */
+    */
     function GetHitpos() {
         return this.hitpos
     }
@@ -39,7 +39,7 @@
      * Gets the entity hit by the trace. 
      *
      * @returns {CBaseEntity|null} - The hit entity, or null if no entity was hit.
-     */
+    */
     function GetEntity() {
         return this.hitent
     }
@@ -55,21 +55,21 @@
      * @param {array|CBaseEntity|null} ignoreEntities - A list of entities or a single entity to ignore during the trace. 
      * @param {string|null} note - An optional note associated with the trace. 
      * @returns {array} - An array containing the hit position and the hit entity (or null). 
-     */
+    */
     function Trace(startPos, endPos, ignoreEntities, note) array(hitPos, hitEnt) 
     /* 
      * Checks if an entity is a priority entity based on the trace settings.
      *
      * @param {string} entityClass - The classname of the entity. 
      * @returns {boolean} - True if the entity is a priority entity, false otherwise. 
-     */
+    */
     function _isPriorityEntity() bool
     /* 
      * Checks if an entity should be ignored based on the trace settings. 
      *
      * @param {string} entityClass - The classname of the entity. 
      * @returns {boolean} - True if the entity should be ignored, false otherwise. 
-     */
+    */
     function _isIgnoredEntity() bool
     /* 
      * Checks if the trace should consider a hit with the given entity.
@@ -78,7 +78,7 @@
      * @param {array|CBaseEntity|null} ignoreEntities - A list of entities or a single entity to ignore during the trace. 
      * @param {string|null} note - An optional note associated with the trace. 
      * @returns {boolean} - True if the trace should consider the hit, false otherwise. 
-     */
+    */
     function shouldHitEntity() bool
 }
 
@@ -94,7 +94,7 @@
  * @param {array|CBaseEntity|null} ignoreEntities - A list of entities or a single entity to ignore during the trace. 
  * @param {string|null} note - An optional note associated with the trace. 
  * @returns {array} - An array containing the hit position and the hit entity (or null). 
- */
+*/
 function TraceLineAnalyzer::Trace(startPos, endPos, ignoreEntities, note) {
     // Get the hit position from the fast trace
     local hitPos = TracePlus.Cheap(startPos, endPos).GetHitpos()

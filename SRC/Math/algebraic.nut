@@ -3,7 +3,7 @@
  *
  * @param {...number} vargv - The numbers to compare.
  * @returns {number} - The minimum value.
- */
+*/
 math["min"] <- function(...) {
     local min = vargv[0]
     for(local i = 0; i< vargc; i++) {
@@ -20,7 +20,7 @@ math["min"] <- function(...) {
  *
  * @param {...number} vargv - The numbers to compare.
  * @returns {number} - The maximum value.
- */
+*/
 math["max"] <- function(...) {
     local max = vargv[0]
     for(local i = 0; i< vargc; i++) {
@@ -39,7 +39,7 @@ math["max"] <- function(...) {
  * @param {number} min - The minimum value.
  * @param {number} max - The maximum value (optional).
  * @returns {number} - The clamped value.
- */
+*/
 math["clamp"] <- function(number, min, max = 99999) { 
     if ( number < min ) return min;
     if ( number > max ) return max;
@@ -53,7 +53,7 @@ math["clamp"] <- function(number, min, max = 99999) {
  * @param {number} value - The number to round.
  * @param {int} precision - The precision (e.g., 1000 for rounding to three decimal places).
  * @returns {number} - The rounded value.
- */
+*/
 math["round"] <- function(value, precision = 1000) {
     return floor(value * precision + 0.5) / precision
 }
@@ -64,7 +64,7 @@ math["round"] <- function(value, precision = 1000) {
  *
  * @param {number} x - The number.
  * @returns {number} - The sign of the number (-1, 0, or 1).
- */
+*/
 math["Sign"] <- function(x) {
     if (x > 0) {
         return 1;
@@ -82,7 +82,7 @@ math["Sign"] <- function(x) {
  * @param {number} value - The value to copy the sign to.
  * @param {number} sign - The sign to copy.
  * @returns {number} - The value with the copied sign.
- */
+*/
 math["copysign"] <- function(value, sign) {
     if (sign < 0 || value < 0) {
         return -value;
@@ -102,7 +102,7 @@ math["copysign"] <- function(value, sign) {
  * @param {number} C - The start of the output range.
  * @param {number} D - The end of the output range.
  * @returns {number} - The remapped value.
- */
+*/
 math["RemapVal"] <- function( value, A, B, C, D )
 {
     if ( A == B )

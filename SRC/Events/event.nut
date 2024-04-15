@@ -2,7 +2,7 @@
  * Represents a scheduled event. 
  *
  * This class encapsulates information about an event that is scheduled to be executed at a later time. 
- */
+*/
  ::ScheduleEvent <- class {
     //  The entity that created the event. * 
     caller = null;
@@ -23,7 +23,7 @@
      * @param {number} timeDelay - The time at which the event is scheduled to be executed.
      * @param {string|null} note - An optional note describing the event. 
      * @param {array|null} args - Optional arguments to pass to the action function. 
-     */
+    */
     constructor(caller, action, timeDelay, note = null, args = null) {
         this.caller = caller
 
@@ -41,7 +41,7 @@
      * If arguments are provided, they are passed to the action function. 
      *
      * @returns {any} - The result of the action function. 
-     */
+    */
     function run() {
         if(type(action) == "string")
             action = compilestring(action)

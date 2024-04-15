@@ -4,7 +4,7 @@
  * @param {Vector} startPos - The original start position of the trace. 
  * @param {Vector} dir - The direction vector of the trace. 
  * @returns {array} - An array containing two new start positions as Vectors. 
- */
+*/
  local GetNewStartsPos = function(startPos, dir) {
     // Calculate offset vectors perpendicular to the trace direction
     local perpDir = Vector(-dir.y, dir.x, 0)
@@ -27,7 +27,7 @@
  * @param {Vector} newStart - The new start position for the trace. 
  * @param {Vector} dir - The direction vector of the trace. 
  * @returns {Vector} - The hit position of the trace.
- */
+*/
 local _getIntPoint = function(newStart, dir) {    
     return TracePlus.Cheap(newStart, (newStart + dir * 8000)).GetHitpos()
 }
@@ -39,7 +39,7 @@ local _getIntPoint = function(newStart, dir) {
  * @param {Vector} hitPos - The hit position of the trace.
  * @param {TraceResult} traceResult - The trace result object.
  * @returns {Vector} - The calculated impact normal vector. 
- */
+*/
 ::CalculateImpactNormal <- function(startPos, hitPos, traceResult) 
                         : (GetNewStartsPos, _getIntPoint) {
     // Calculate the normalized direction vector from startpos to hitpos

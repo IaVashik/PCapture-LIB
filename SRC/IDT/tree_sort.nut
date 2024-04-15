@@ -1,6 +1,6 @@
 /*
  * A node in an AVL tree.
- */
+*/
  ::treeNode <- class {
     // The value stored in the node. 
     value = null;
@@ -15,7 +15,7 @@
      * Constructor for a tree node.
      *
      * @param {any} value - The value to store in the node.
-     */
+    */
     constructor(value) {
         this.value = value;
     }
@@ -29,7 +29,7 @@
  * An AVL tree implementation.
  *
  * An AVL tree is a self-balancing binary search tree where the heights of the two child subtrees of any node differ by at most one.
- */
+*/
 ::AVLTree <- class {
     // The root node of the tree. 
     root = null;
@@ -42,7 +42,7 @@
      * Constructor for an AVL tree.
      *
      * @param {...any} vargv - The initial values to add to the tree.
-     */
+    */
     constructor(...) {
         for (local i = 0; i < vargc; i++) {
             this.insert(vargv[i]);
@@ -54,7 +54,7 @@
      * 
      * @param {array} array - The array to create the tree from.
      * @returns {AVLTree} - The new tree containing the elements from the array.
-     */
+    */
     function fromArray(array) {
         local tree = AVLTree()
         foreach(val in array) 
@@ -68,7 +68,7 @@
      * Gets the number of nodes in the tree.
      *
      * @returns {number} - The number of nodes in the tree.
-     */
+    */
     function len() {
         return this.size;
     }
@@ -77,7 +77,7 @@
      * Converts the tree to an array using inorder traversal.
      *
      * @returns {arrayLib} - An array containing the tree nodes in ascending order.
-     */
+    */
     function toArray() { 
         if(this.inorderCache == null) 
             this.inorderCache = this.inorderTraversal()
@@ -89,7 +89,7 @@
      * Converts the tree to a list using inorder traversal.
      *
      * @returns {List} - A list containing the tree nodes in ascending order.
-     */
+    */
     function tolist() {
         local result = List();
         this._inorder(this.root, result);
@@ -126,7 +126,7 @@
      * Inserts a new node with the given key into the tree.
      *
      * @param {any} key - The key of the node to insert.
-     */
+    */
     function insert(key) {
         this.root = this._insert(this.root, key);
         this.size++
@@ -139,7 +139,7 @@
      * @param {treeNode|null} node - The current node being examined.
      * @param {any} key - The key of the node to insert.
      * @returns {treeNode} - The root node of the subtree after insertion.
-     */
+    */
     function _insert(node, key) {
         if (node == null) {
             return treeNode(key);
@@ -187,7 +187,7 @@
      *
      * @param {treeNode} x - The node to rotate.
      * @returns {treeNode} - The new root node of the subtree after rotation.
-     */
+    */
     function _lRotate(x) {
         local y = x.r;
         local T2 = y.l;
@@ -206,7 +206,7 @@
      *
      * @param {treeNode} x - The node to rotate.
      * @returns {treeNode} - The new root node of the subtree after rotation.
-     */
+    */
     function _rRotate(x) {
         local y = x.l;
         local T3 = y.r;
@@ -227,7 +227,7 @@
      *
      * @param {treeNode|null} node - The node to get the height of.
      * @returns {number} - The height of the node, or 0 if the node is null. 
-     */
+    */
     function _getHeight(node) {
         if (node == null) {
             return 0;
@@ -242,7 +242,7 @@
      *
      * @param {treeNode|null} node - The node to get the balance factor of.
      * @returns {number} - The balance factor of the node.
-     */
+    */
     function _balanceFactor(node) {
         if (node == null) {
             return 0;
@@ -257,7 +257,7 @@
      *
      * @param {any} value - The value to search for.
      * @returns {treeNode|null} - The node with the matching value, or null if not found.
-     */
+    */
     function search(value) {
         return this._search(this.root, value);
     }
@@ -268,7 +268,7 @@
      * @param {treeNode|null} node - The current node being examined.
      * @param {any} value - The value to search for.
      * @returns {treeNode|null} - The node with the matching value, or null if not found. 
-     */
+    */
     function _search(node, value) {
         if (!node || node.value == value) {
             return node;
@@ -287,7 +287,7 @@
      * Removes the node with the given value from the tree.
      *
      * @param {any} value - The value of the node to remove.
-     */
+    */
     function remove(value) {
         this.root = this._remove(this.root, value);
         this.size--
@@ -300,7 +300,7 @@
      * @param {treeNode|null} node - The current node being examined.
      * @param {any} value - The value of the node to remove. 
      * @returns {treeNode|null} - The root node of the subtree after removal.
-     */
+    */
     function _remove(node, value) {
         if (!node) {
             return null;
@@ -364,14 +364,14 @@
      * Gets the minimum value in the tree.
      *
      * @returns {any} - The minimum value in the tree.
-     */
+    */
     function GetMin() return this.min(this.root).value
     
     /*
      * Gets the maximum value in the tree.
      *
      * @returns {any} - The maximum value in the tree.
-     */
+    */
     function GetMax() return this.max(this.root).value
 
     function min(node) { // todo mb fix that?
@@ -396,7 +396,7 @@
      * Performs an inorder traversal of the tree and returns the nodes in ascending order.
      *
      * @returns {arrayLib} - An array containing the tree nodes in ascending order.
-     */
+    */
     function inorderTraversal() {
         local result = arrayLib.new();
         this._inorder(this.root, result);
@@ -408,7 +408,7 @@
      *
      * @param {treeNode|null} node - The current node being visited.
      * @param {arrayLib} result - The array to store the traversed nodes. 
-     */
+    */
     function _inorder(node, result) {
         if (node) {
             this._inorder(node.l, result);

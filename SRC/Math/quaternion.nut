@@ -11,7 +11,7 @@ math["Quaternion"] <- class {
      * @param {number} y - The y component.
      * @param {number} z - The z component.
      * @param {number} w - The w component.
-     */
+    */
     constructor(x,y,z,w) {
         this.x = x
         this.y = y
@@ -24,7 +24,7 @@ math["Quaternion"] <- class {
      *
      * @param {Vector} angles - The Euler angles in degrees (pitch, yaw, roll).
      * @returns {Quaternion} - The new quaternion.
-     */
+    */
     function fromEuler(angles) {
         // Convert angles to radians
         local pitch = angles.z * 0.5 / 180 * PI
@@ -53,7 +53,7 @@ math["Quaternion"] <- class {
      *
      * @param {Vector} vector - The vector.
      * @returns {Quaternion} - The new quaternion with the vector's components as x, y, z, and w set to 0.
-     */
+    */
     function fromVector(vector) {
         return math.Quaternion(vector.x, vector.y, vector.z, 0)
     }
@@ -64,7 +64,7 @@ math["Quaternion"] <- class {
      *
      * @param {Vector} vector - The vector to rotate.
      * @returns {Vector} - The rotated vector.
-     */
+    */
     function rotateVector(vector) {
         // Convert vector to quaternion
         local vecQuaternion = this.fromVector(vector)
@@ -89,7 +89,7 @@ math["Quaternion"] <- class {
      *
      * @param {Vector} vector - The vector to un-rotate.
      * @returns {Vector} - The un-rotated vector.
-     */
+    */
     function unrotateVector(vector) {
         local vecQuaternion = this.fromVector(vector)
 
@@ -114,7 +114,7 @@ math["Quaternion"] <- class {
      * @param {Quaternion} targetQuaternion - The target quaternion to interpolate towards.
      * @param {Number} t - The interpolation parameter between 0 and 1.
      * @returns {Quaternion} - The interpolated quaternion.
-     */
+    */
     function slerp(targetQuaternion, t) {
         // Normalize quaternions
         local quaternion1 = this.normalize()
@@ -153,7 +153,7 @@ math["Quaternion"] <- class {
      * Normalizes the quaternion.
      *
      * @returns {Quaternion} - The normalized quaternion.
-     */
+    */
     function normalize() {
         local magnitude = this.length()
 
@@ -228,7 +228,7 @@ math["Quaternion"] <- class {
      * Converts the quaternion to a vector representing Euler angles.
      *
      * @returns {Vector} - The vector representing Euler angles in degrees.
-     */
+    */
     function toVector() {
         local sinr_cosp = 2 * (this.w * this.x + this.y * this.z);
         local cosr_cosp = 1 - 2 * (this.x * this.x + this.y * this.y);
@@ -259,7 +259,7 @@ math["Quaternion"] <- class {
      *
      * @param {Quaternion} other - The other quaternion to compare.
      * @returns {boolean} - True if the quaternions are equal, false otherwise.
-     */
+    */
     function isEqually(other) {
         return this.cmp(other) == 0
     }
@@ -269,7 +269,7 @@ math["Quaternion"] <- class {
      *
      * @param {Quaternion} other - The other quaternion to compare.
      * @returns {number} - 1 if this quaternion's magnitude is greater, -1 if less, 0 if equal.
-     */
+    */
     function cmp(other) {
         if (typeof other != "Quaternion") {
             throw "Cannot compare quaternion with non-quaternion type";
@@ -314,7 +314,7 @@ math["Quaternion"] <- class {
      *
      * @param {Quaternion} other - The other quaternion.
      * @returns {Quaternion} - The multiplication result.
-     */
+    */
     function _mul(other) {
         if(typeof other == "Quaternion") {
             return math.Quaternion(

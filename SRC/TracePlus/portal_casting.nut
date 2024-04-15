@@ -6,7 +6,7 @@
  * @param {pcapEntity} portal - The portal entity. 
  * @param {pcapEntity} partnerPortal - The partner portal entity. 
  * @returns {table} - A table containing the new startPos and endPos for the trace after passing through the portal. 
- */ 
+*/ 
  local applyPortal = function(startPos, hitPos, portal, partnerPortal) {
     local portalAngles = portal.GetAngles();
     local partnerAngles = partnerPortal.GetAngles();
@@ -33,7 +33,7 @@
  * @param {Vector} startPos - The start position of the trace.
  * @param {Vector} endPos - The end position of the trace.  
  * @returns {CheapTraceResult} - The trace result object, including information about portal entries.
- */
+*/
 TracePlus["PortalCheap"] <- function(startPos, endPos) : (applyPortal) {
     local previousTraceData 
     // Portal castings
@@ -75,7 +75,7 @@ TracePlus["PortalCheap"] <- function(startPos, endPos) : (applyPortal) {
  * @param {number} distance - The distance of the trace. 
  * @param {CBaseEntity|pcapEntity} player - The player entity.
  * @returns {CheapTraceResult} - The trace result object.
- */
+*/
  TracePlus["FromEyes"]["PortalCheap"] <- function(distance, player) {
     // Calculate the start and end positions of the trace
     local startpos = player.EyePosition()
@@ -94,7 +94,7 @@ TracePlus["PortalCheap"] <- function(startPos, endPos) : (applyPortal) {
  * @param {TraceSettings} settings - The settings to use for the trace. (optional, defaults to TracePlus.defaultSettings) 
  * @param {string|null} note - An optional note associated with the trace. 
  * @returns {BboxTraceResult} - The trace result object, including information about portal entries.
- */
+*/
 TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, settings = TracePlus.defaultSettings, note = null) : (applyPortal) {
     local previousTraceData 
     // Portal castings
@@ -140,7 +140,7 @@ TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, set
  * @param {array|CBaseEntity|null} ignoreEntities - A list of entities or a single entity to ignore during the trace. (optional)
  * @param {TraceSettings} settings - The settings to use for the trace. (optional, defaults to TracePlus.defaultSettings) 
  * @returns {BboxTraceResult} - The trace result object. 
- */
+*/
  TracePlus["FromEyes"]["PortalBbox"] <- function(distance, player, ignoreEntities = null, settings = TracePlus.defaultSettings) {
     // Calculate the start and end positions of the trace
     local startPos = player.EyePosition()
@@ -164,7 +164,7 @@ TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, set
  * 
  * This function is called automatically at the initialization of the TracePlus module to ensure portal information is available for portal traces. 
  * 
- */
+*/
  ::FindPartnersForPortals <- function() {
     // Iterate through all linked_portal_door entities.  
     for(local portal; portal = entLib.FindByClassname("linked_portal_door", portal);) {

@@ -6,7 +6,7 @@
  * @param {Vector} endAngles - The ending angles. 
  * @param {number} time - The duration of the animation in seconds. 
  * @param {table} animSetting - A table containing additional animation settings. (optional) 
- */
+*/
  animate["AnglesTransitionByTime"] <- function(entities, startAngles, endAngles, time, animSetting = {}) {
     local animSetting = AnimEvent(animSetting, _GetValidEntitiy(entities), time)
 

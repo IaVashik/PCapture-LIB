@@ -204,7 +204,7 @@ math["Matrix"] <- class {
      *
      * @param {Matrix} other - The other matrix to compare.
      * @returns {boolean} - True if the matrices are equal, false otherwise.
-     */
+    */
     function isEqually(other) {
         return this.cmp(other) == 0
     }
@@ -214,7 +214,7 @@ math["Matrix"] <- class {
      *
      * @param {Matrix} other - The other matrix to compare.
      * @returns {number} - 1 if this matrix's sum is greater, -1 if less, 0 if equal.
-     */
+    */
     function cmp(other) {
         if (typeof other != "Matrix") {
             throw "Cannot compare matrix with non-matrix type";

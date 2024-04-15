@@ -7,7 +7,7 @@
  * @param {TraceSettings} settings - The settings to use for the trace. (optional, defaults to TracePlus.defaultSettings) 
  * @param {string|null} note - An optional note associated with the trace. 
  * @returns {BboxTraceResult} - The trace result object. 
- */
+*/
  TracePlus["Bbox"] <- function(startPos, endPos, ignoreEntities = null, settings = TracePlus.defaultSettings, note = null) {
     local SCOPE = {} // TODO potential place for improvement
     
@@ -31,7 +31,7 @@
  * @param {array|CBaseEntity|null} ignoreEntities - A list of entities or a single entity to ignore during the trace. (optional)
  * @param {TraceSettings} settings - The settings to use for the trace. (optional, defaults to TracePlus.defaultSettings) 
  * @returns {BboxTraceResult} - The trace result object. 
- */
+*/
 TracePlus["FromEyes"]["Bbox"] <- function(distance, player, ignoreEntities = null, settings = TracePlus.defaultSettings) {
     // Calculate the start and end positions of the trace
     local startPos = player.EyePosition()

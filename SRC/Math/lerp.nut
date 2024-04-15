@@ -9,7 +9,7 @@ local lerp = math["lerp"]
  * @param {number} end - The ending value.
  * @param {number} t - The interpolation parameter.
  * @returns {number} - The interpolated value.
- */
+*/
 lerp["number"] <- function(start, end, t) {
     return start * (1 - t) + end * t;
 }
@@ -22,7 +22,7 @@ lerp["number"] <- function(start, end, t) {
  * @param {Vector} end - The ending vector.
  * @param {number} t - The interpolation parameter.
  * @returns {Vector} - The interpolated vector.
- */
+*/
 lerp["vector"] <- function(start, end, t) {
     return Vector(this.number(start.x, end.x, t), this.number(start.y, end.y, t), this.number(start.z, end.z, t));
 }
@@ -35,7 +35,7 @@ lerp["vector"] <- function(start, end, t) {
  * @param {Vector|string} end - The ending color vector or string representation.
  * @param {number} t - The interpolation parameter.
  * @returns {string} - The interpolated color string representation (e.g., "128 64 0").
- */
+*/
 lerp["color"] <- function(start, end, t) {
     if (type(start) == "string") {
         start = macros.StrToVec(start)
@@ -75,7 +75,7 @@ lerp["spline"] <- function( f )
  * @param {number} edge1 - The upper edge of the interpolation range.
  * @param {number} value - The interpolation parameter.
  * @returns {number} - The interpolated value.
- */
+*/
 lerp["SmoothStep"] <- function(edge0, edge1, value) {
     local t = math.clamp((value - edge0) / (edge1 - edge0), 0.0, 1.0);
     return t * t * (3.0 - 2.0 * t)
@@ -91,7 +91,7 @@ lerp["SmoothStep"] <- function(edge0, edge1, value) {
  * @param {number} i2 - The end interpolation parameter.
  * @param {number} value - The interpolation parameter.
  * @returns {number} - The interpolated value.
- */
+*/
 lerp["FLerp"] <- function( f1, f2, i1, i2, value ) {
     return f1 + (f2 - f1) * (value - i1) / (i2 - i1);
 }
