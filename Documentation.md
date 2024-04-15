@@ -472,6 +472,7 @@ This file provides the `animate.PositionTransitionByTime` function for creating 
 | Function | Description |
 | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | `animate.PositionTransitionByTime(entities, startPos, endPos, time, animSetting)` | Creates an animation that moves entities from the starting position to the ending position over a specified time based on increments of time. |
+| `animate.PositionTransitionBySpeed(entities, startPos, endPos, speed, animSetting)` | Creates an animation that transitions the position of entities over time based on a specified speed.  |
 
 ### [`Animations/angles.nut`](SRC/Animations/angles.nut)
 

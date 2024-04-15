@@ -94,7 +94,7 @@ local myEntity = entLib.FindByClassname("prop_physics")
 animate.ColorTransition(myEntity, "255 0 0", "0 255 0", 3) // Change the entity's color from red to green over 3 seconds
 ```
 
-## [Animations/position.nut](position.nut) (TODO)
+## [Animations/position.nut](position.nut)
 
 This file provides the `animate.PositionTransitionByTime` function for creating animations that transition the position of entities over time.
 
@@ -117,6 +117,27 @@ local myEntity = entLib.FindByClassname("prop_physics")
 local startPos = myEntity.GetOrigin()
 local endPos = startPos + Vector(0, 100, 0) // Move 100 units along the Y axis
 animate.PositionTransitionByTime(myEntity, startPos, endPos, 5) // Move the entity over 5 seconds
+```
+
+### `animate.PositionTransitionBySpeed(entities, startPos, endPos, speed, animSetting)`
+
+This function creates an animation that transitions the position of entities over time based on a specified speed. The animation calculates the time it takes to travel from the start position to the end position based on the provided speed and creates a smooth transition of the entities' positions over that duration.
+
+**Parameters:**
+
+* `entities` (array, CBaseEntity, or pcapEntity): The entities to animate.
+* `startPos` (Vector): The starting position of the entities.
+* `endPos` (Vector): The ending position of the entities.
+* `speed` (number): The speed of the animation in units per tick.
+* `animSetting` (table, optional): A table containing additional animation settings (see the `AnimEvent` constructor for details).
+
+**Example:**
+
+```js
+local myEntity = entLib.FindByClassname("prop_physics")
+local startPos = myEntity.GetOrigin()
+local endPos = startPos + Vector(100, 0, 0) // Move 100 units to the right
+animate.PositionTransitionBySpeed(myEntity, startPos, endPos, 50) // Animate the movement over time with a speed of 50 units per tick
 ```
 
 ## [Animations/angles.nut](angles.nut)

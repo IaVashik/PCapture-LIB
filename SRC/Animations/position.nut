@@ -28,7 +28,7 @@
  * @param {array|CBaseEntity|pcapEntity} entities - The entities to animate.
  * @param {Vector} startPos - The starting position.
  * @param {Vector} endPos - The ending position.
- * @param {number} speed - The speed of the animation in units per second.
+ * @param {number} speed - The speed of the animation in units per tick.
  * @param {table} animSetting - A table containing additional animation settings. (optional)
  * 
  * The animation will calculate the time it takes to travel from the start position to the end position based on the specified speed. 
