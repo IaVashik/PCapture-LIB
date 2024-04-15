@@ -11,7 +11,9 @@
         foreach(key, value in keyvalues) {
             new_entity.SetKeyValue(key, value)
         }
-        pcapEntityCache[CBaseEntity] <- new_entity
+
+        pcapEntityCache[new_entity.CBaseEntity] <- new_entity
+
         return new_entity
     }
 
@@ -31,6 +33,9 @@
         foreach(key, value in keyvalues) {
             new_entity.SetKeyValue(key, value)
         }
+        
+        pcapEntityCache[new_entity.CBaseEntity] <- new_entity
+
         return new_entity
     }
     
@@ -175,7 +180,7 @@
      * @returns {pcapEntity} - A new entity object.
     */
     function __init(CBaseEntity) {
-        if(!CBaseEntity)
+        if(!CBaseEntity || !CBaseEntity.IsValid())
             return null
 
         if(CBaseEntity in pcapEntityCache) {
