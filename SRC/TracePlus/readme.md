@@ -16,7 +16,6 @@ This class stores various settings that control the behavior of traces, such as 
 * `priorityClasses` (arrayLib): An array of entity classnames to prioritize during traces.
 * `ignoredModels` (arrayLib): An array of entity model names to ignore during traces.
 * `errorTolerance` (number): The maximum allowed distance between a trace's start and hit positions. Traces exceeding this tolerance may be considered inaccurate.
-* `useCostlyNormalComputation` (boolean): Whether to use a more costly but precise method for calculating impact normals (unstable).
 * `shouldRayHitEntity` (function or null): A custom function to determine if a ray should hit an entity.
 * `shouldIgnoreEntity` (function or null): A custom function to determine if an entity should be ignored during a trace.
 
@@ -40,7 +39,6 @@ This class stores various settings that control the behavior of traces, such as 
 * `GetIgnoreFilter()`: Returns the custom ignore filter function.
 * `ApplyCollisionFilter(entity, note)`: Applies the custom collision filter function to an entity.
 * `ApplyIgnoreFilter(entity, note)`: Applies the custom ignore filter function to an entity.
-* `ToggleUseCostlyNormal(isEnabled)`: Toggles the use of a more costly but precise method for calculating impact normals.
 * `UpdateIgnoreEntities(ignoreEntities, newEnt)`: Updates the list of entities to ignore during a trace, including the player entity.
 
 **Example:**

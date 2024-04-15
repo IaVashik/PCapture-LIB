@@ -53,6 +53,6 @@
      * @param {string} str - The script string.
     */
     fromStr = function(str) {
-        compilestring(str)() // todo а если передать функцию в виде строки?
+        compilestring(str)()
     }
 }

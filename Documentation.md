@@ -364,7 +364,6 @@ This file defines the `TracePlus.Settings` class, which encapsulates settings fo
 | `GetIgnoreFilter()` | Returns the custom ignore filter function. |
 | `ApplyCollisionFilter(entity, note)` | Applies the custom collision filter function to an entity. |
 | `ApplyIgnoreFilter(entity, note)` | Applies the custom ignore filter function to an entity. |
-| `ToggleUseCostlyNormal(isEnabled)` | Toggles the use of a more costly but precise method for calculating impact normals. |
 | `UpdateIgnoreEntities(ignoreEntities, newEnt)`| Updates the list of entities to ignore during a trace, including the player entity. |
 
 ### [`TracePlus/cheap_trace.nut`](SRC/TracePlus/cheap_trace.nut)

@@ -329,7 +329,7 @@ idt_tests <- {
 
     function entity_spawnflags_test() {
         local ent = entLib.CreateByClassname("prop_dynamic")
-        ent.SetSpawnflags(8) // todo mb add const? (SF_PHYSPROP_START_ASLEEP)
+        ent.SetSpawnflags(8)
         return assert(ent.GetSpawnflags() == 8)
     },
 

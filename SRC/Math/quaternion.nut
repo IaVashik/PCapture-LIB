@@ -325,7 +325,7 @@ math["Quaternion"] <- class {
             )
         }
 
-        return math.Quaternion( // todo meh :d 
+        return math.Quaternion( 
             this.x * other,
             this.y * other,
             this.z * other,

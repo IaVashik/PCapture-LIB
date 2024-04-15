@@ -1,6 +1,3 @@
-//TODO TODO TODO ADD INFO ABOUT DELAY!!!
-
-
 /*
  * Represents a file for reading and writing.
 */

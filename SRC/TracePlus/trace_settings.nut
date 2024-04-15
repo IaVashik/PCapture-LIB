@@ -14,8 +14,6 @@
 
     // The maximum allowed distance between a trace's start and hit positions. 
     errorTolerance = 500; 
-    // Whether to use a more costly but precise method for calculating impact normals. (unstable)  
-    useCostlyNormalComputation = false; 
 
     // A custom function to determine if a ray should hit an entity. 
     shouldRayHitEntity = null;
@@ -233,16 +231,6 @@
         return this.shouldIgnoreEntity ? this.shouldIgnoreEntity(entity, note) : false
     }
 
-
-    /*
-     * Toggles the use of a more costly but precise method for calculating impact normals. 
-     *
-     * @param {boolean} isEnabled - True to enable the costly method, false to disable.
-    */
-    function ToggleUseCostlyNormal(isEnabled) {
-        this.useCostlyNormalComputation = isEnabled
-    }
-
     /*
      * Updates the list of entities to ignore during a trace, including the player entity.
      *
@@ -250,7 +238,7 @@
      * @param {CBaseEntity|pcapEntity} newEnt - The new entity to add to the ignore list.
      * @returns {array} - The updated list of entities to ignore. 
     */
-    function UpdateignoreEntities(ignoreEntities, newEnt) {
+    function UpdateIgnoreEntities(ignoreEntities, newEnt) {
         // Check if any entities should be ignored during the trace 
         if (ignoreEntities) {
             // If ignoreEntities is an array, append the player entity to it 

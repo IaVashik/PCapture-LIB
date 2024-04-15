@@ -374,7 +374,7 @@
     */
     function GetMax() return this.max(this.root).value
 
-    function min(node) { // todo mb fix that?
+    function min(node) {
         local current = node;
         while (current && current.l) {
             current = current.l;
@@ -382,7 +382,7 @@
         return current;
     }
 
-    function max(node) { // todo mb fix that?
+    function max(node) {
         local current = node;
         while (current && current.r) {
             current = current.r;
