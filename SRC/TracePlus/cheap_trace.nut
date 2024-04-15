@@ -32,5 +32,5 @@ TracePlus["FromEyes"]["Cheap"] <- function(distance, player) {
     local startpos = player.EyePosition()
     local endpos = macros.GetEyeEndpos(player, distance)
 
-    return this.Cheap(startpos, endpos)
+    return TracePlus.Cheap(startpos, endpos)
 }

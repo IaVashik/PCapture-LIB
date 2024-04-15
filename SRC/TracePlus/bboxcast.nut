@@ -18,7 +18,7 @@
     SCOPE.note <- note
     // SCOPE.type <- "BboxCast"
 
-    local result = TraceLineAnalyzer(startPos, endPos, ignoreEntities, settings, note) // TODO :<
+    local result = TraceLineAnalyzer(startPos, endPos, ignoreEntities, settings, note)
     
     return TracePlus.Result.Bbox(SCOPE, result.GetHitpos(), result.GetEntity())
 }
@@ -37,8 +37,8 @@ TracePlus["FromEyes"]["Bbox"] <- function(distance, player, ignoreEntities = nul
     local startPos = player.EyePosition()
     local endPos = macros.GetEyeEndpos(player, distance)
 
-    ignoreEntities = this.Settings.UpdateIgnoreEntities(ignoreEntities, player)
+    ignoreEntities = TracePlus.Settings.UpdateIgnoreEntities(ignoreEntities, player)
 
     // Perform the bboxcast trace and return the trace result
-    return BboxCast(startPos, endPos, ignoreEntities, settings)
+    return TracePlus.Bbox(startPos, endPos, ignoreEntities, settings)
 }

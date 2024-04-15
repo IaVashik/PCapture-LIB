@@ -37,8 +37,8 @@
 TracePlus["PortalCheap"] <- function(startPos, endPos) : (applyPortal) {
     local previousTraceData 
     // Portal castings
-    for (local i = 0; i < 10; i++) { // todo?
-        local traceData = this.Cheap(startPos, endPos)
+    for (local i = 0; i < MAX_PORTAL_CAST_DEPTH; i++) {
+        local traceData = TracePlus.Cheap(startPos, endPos)
         traceData.portalEntryInfo = previousTraceData
 
         local hitPos = traceData.GetHitpos()
@@ -54,7 +54,7 @@ TracePlus["PortalCheap"] <- function(startPos, endPos) : (applyPortal) {
         if(normal.Dot(portal.GetForwardVector()) < 0.8)
             return traceData
         
-        local partnerPortal = portal.GetUserData("partner")
+        local partnerPortal = portal.GetPartnerInstance()
         if (partnerPortal == null) {
             return traceData 
         }
@@ -81,7 +81,7 @@ TracePlus["PortalCheap"] <- function(startPos, endPos) : (applyPortal) {
     local startpos = player.EyePosition()
     local endpos = macros.GetEyeEndpos(player, distance)
 
-    return this.PortalCheap(startpos, endpos)
+    return TracePlus.PortalCheap(startpos, endpos)
 }
 
 
@@ -98,8 +98,8 @@ TracePlus["PortalCheap"] <- function(startPos, endPos) : (applyPortal) {
 TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, settings = TracePlus.defaultSettings, note = null) : (applyPortal) {
     local previousTraceData 
     // Portal castings
-    for (local i = 0; i < 10; i++) { // todo?
-        local traceData = BboxCast(startPos, endPos, ignoreEntities, settings, note)
+    for (local i = 0; i < MAX_PORTAL_CAST_DEPTH; i++) {
+        local traceData = TracePlus.Bbox(startPos, endPos, ignoreEntities, settings, note)
         traceData.portalEntryInfo = previousTraceData 
 
         local hitPos = traceData.GetHitpos()
@@ -110,7 +110,7 @@ TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, set
         if(!portal) 
             return traceData 
         
-        local partnerPortal = portal.GetUserData("partner")
+        local partnerPortal = portal.GetPartnerInstance()
         if (partnerPortal == null) 
             return traceData 
 
@@ -118,9 +118,9 @@ TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, set
             local normal = traceData.GetImpactNormal()
             if(normal.Dot(portal.GetForwardVector()) < 0.8)
                 return traceData
-        } else { // todo
-            ignoreEntities = addInIgnoreList(ignoreEntities, partnerPortal)
         }
+        
+        ignoreEntities = addInIgnoreList(ignoreEntities, partnerPortal)
 
         // Calculate new start and end positions for the trace after passing through the portal.  
         local ray = applyPortal(startPos, hitPos, portal, partnerPortal);
@@ -145,11 +145,12 @@ TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, set
     // Calculate the start and end positions of the trace
     local startPos = player.EyePosition()
     local endPos = macros.GetEyeEndpos(player, distance)
-    ignoreEntities = this.Settings.UpdateIgnoreEntities(ignoreEntities, player)
+    ignoreEntities = TracePlus.Settings.UpdateIgnoreEntities(ignoreEntities, player)
 
     // Perform the bboxcast trace and return the trace result
-    return PortalBboxCast(startPos, endPos, ignoreEntities, settings)
+    return TracePlus.PortalBbox(startPos, endPos, ignoreEntities, settings)
 }
+
 
 
 /* 
@@ -169,11 +170,11 @@ TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, set
     // Iterate through all linked_portal_door entities.  
     for(local portal; portal = entLib.FindByClassname("linked_portal_door", portal);) {
         // Skip if the portal already has a partner set. 
-        if(portal.GetUserData("partner"))
+        if(portal.GetPartnerInstance())
             continue
     
         // Get the partner portal entity using GetPartnerInstance().  
-        local partner = entLib.FromEntity(portal.GetPartnerInstance())
+        local partner = portal.GetPartnerInstance()
         // Store the partner portal as user data in both portals.  
         portal.SetUserData("partner", partner)
     
@@ -185,10 +186,7 @@ TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, set
         local wpInfo = split(portal.GetModelName(), " ")
         // Rotate the bounding box dimensions based on the portal's angles.  
         local wpBBox = math.vector.rotateVector(Vector(5, wpInfo[0].tointeger(), wpInfo[1].tointeger()), portal.GetAngles())
-        // Ensure bounding box dimensions are positive.  
-        wpBBox.x = abs(wpBBox.x); // TODO добавить abs для векторов
-        wpBBox.y = abs(wpBBox.y);
-        wpBBox.z = abs(wpBBox.z);
+        wpBBox = math.vector.abs(wpBBox)
         // Set the bounding box of the portal using the calculated dimensions.  
         portal.SetBBox(wpBBox * -1, wpBBox) 
     }
@@ -196,7 +194,7 @@ TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, set
     // Iterate through all prop_portal entities.  
     for(local portal; portal = entLib.FindByClassname("prop_portal", portal);) { 
         // Skip if the portal already has a partner set. 
-        if(portal.GetUserData("partner"))
+        if(portal.GetPartnerInstance())
             continue
     
         // Determine the model name of the partner portal based on the current portal's model. 

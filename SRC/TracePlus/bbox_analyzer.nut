@@ -19,7 +19,7 @@
      * @param {string|null} note - An optional note associated with the trace. 
     */ 
     constructor(startpos, endpos, ignoreEntities, settings, note) {
-        this.settings = settings // todo
+        this.settings = settings
         
         local result = this.Trace(startpos, endpos, ignoreEntities, note)
         this.hitpos = result[0]
@@ -111,7 +111,7 @@ function TraceLineAnalyzer::Trace(startPos, endPos, ignoreEntities, note) {
         local rayPart = startPos + dist * (i / step)
         // Find the entity at the ray point
         // TODO!!! separate code! "*"
-        for (local ent;ent = Entities.FindByClassnameWithin(ent, "*", rayPart, 5 * dist_coeff);) { // todo potential place for improvement
+        for (local ent;ent = entLib.FindByClassnameWithin("*", rayPart, 5 * dist_coeff, ent);) { // todo potential place for improvement
             if (ent && this.shouldHitEntity(ent, ignoreEntities, note)) {
                 return [rayPart, ent] // no tuple? :>
             }
