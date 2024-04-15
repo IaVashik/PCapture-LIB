@@ -364,3 +364,37 @@ This function calculates the impact normal of a surface hit by a trace. It uses 
 **Returns:**
 
 * (Vector): The calculated impact normal vector.
+
+**Explanation:**
+
+1. **Trace Direction:** The function starts by calculating the normalized direction vector of the original trace, which points from the start position to the hit position.
+2. **New Start Positions:** Two new start positions for additional traces are calculated by offsetting the original start position slightly along two perpendicular directions to the trace direction. This ensures that the additional traces will hit the surface at different points, allowing for the calculation of the normal vector.
+3. **Additional Traces:** Two cheap traces are performed from the new start positions in the same direction as the original trace. The hit positions of these traces are stored as intersection points.
+4. **Edge Vectors:** Two edge vectors are calculated by subtracting the hit position of the original trace from the hit positions of the two additional traces. These vectors represent two edges of the surface that was hit.
+5. **Cross Product:** The cross product of the two edge vectors is calculated to obtain a vector that is perpendicular to both edges and thus represents the normal vector of the surface.
+6. **Normalization:** The resulting normal vector is normalized to have a length of 1.
+7. **Result:** The function returns the normalized normal vector, which represents the orientation of the surface hit by the trace.
+
+
+### `CalculateImpactNormalFromBbox(startPos, hitPos, traceResult)`
+
+This function calculates the impact normal of a surface hit by a trace using the bounding box of the hit entity. It provides a more accurate and efficient way to calculate normals compared to the traditional method of using additional traces and trigonometry.
+
+**Parameters:**
+
+* `startPos` (Vector): The start position of the trace.
+* `hitPos` (Vector): The hit position of the trace.
+* `traceResult` (BboxTraceResult): The trace result object containing information about the hit entity.
+
+**Returns:**
+
+* (Vector): The calculated impact normal vector.
+
+**Explanation:**
+
+1. **Hit Entity and BBox Vertices:** The function first retrieves the hit entity from the trace result object and then obtains the eight vertices of the entity's bounding box using the `pcapEntity.getBBoxPoints()` method.
+2. **Trace Direction:** The direction vector of the trace is calculated by subtracting the start position from the hit position and normalizing the resulting vector.
+3. **Closest Vertices:** The function then finds the three vertices of the bounding box that are closest to the hit position. These three vertices define the face of the bounding box that the trace hit.
+4. **Face Normal Calculation:** The normal vector of the face is calculated using the cross product of two edge vectors of the face.
+5. **Normal Direction Check:** The dot product of the face normal and the trace direction vector is calculated to determine if the normal vector is pointing in the correct direction (away from the trace). If the dot product is positive, the normal vector is inverted.
+6. **Result:** The function returns the final calculated normal vector, which represents the orientation of the surface hit by the trace.

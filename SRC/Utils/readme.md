@@ -535,6 +535,36 @@ local player = GetPlayerEx()
 local endPos = macros.GetEyeEndpos(player, 100) // Calculate the end position of a ray cast 100 units in front of the player's eyes
 ```
 
+### `macros.GetVertex(x, y, z, ang)`
+
+This macro calculates the position of a vertex of a bounding box based on the provided x, y, z bounds and the rotation angles of the bounding box. It is used internally by the `pcapEntity.getBBoxPoints()` method to retrieve the eight vertices of an entity's axis-aligned bounding box (AABB) in world coordinates.
+
+**Parameters:**
+
+* `x` (Vector): A Vector representing the minimum and maximum extents of the bounding box along the x-axis.
+* `y` (Vector): A Vector representing the minimum and maximum extents of the bounding box along the y-axis.
+* `z` (Vector): A Vector representing the minimum and maximum extents of the bounding box along the z-axis.
+* `ang` (Vector): A Vector representing the Euler angles (pitch, yaw, roll) of the bounding box's rotation.
+
+**Returns:**
+
+* (Vector): The position of the vertex in world coordinates.
+
+**Explanation:**
+
+1. **Vertex Construction:** The macro first constructs a Vector using the x, y, and z components extracted from the input `x`, `y`, and `z` Vectors. This creates a Vector representing the vertex's position relative to the center of the bounding box, before any rotation is applied.
+2. **Rotation:** The macro then uses the `math.vector.rotate` function to rotate the constructed vertex Vector by the specified `ang` Euler angles. This transforms the vertex's position from the bounding box's local coordinate system to world coordinates, taking into account the bounding box's rotation.
+3. **Result:** The resulting Vector represents the final position of the vertex in the game world.
+
+**Example:**
+
+```js
+// ... (assuming you have BBmin, BBmax, and angles for a bounding box)
+local vertex = macros.GetVertex(BBmin, BBmin, BBmax, angles)
+// This calculates the position of the vertex at the left-bottom-back corner of the bounding box in world coordinates.
+```
+
+
 ## [Utils/scripts.nut](scripts.nut)
 
 This file provides functions for running scripts with delays, loops, and intervals, offering more flexibility and control over script execution compared to standard VScripts mechanisms.

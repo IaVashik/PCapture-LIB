@@ -34,6 +34,8 @@ This file contains utility functions for working with vectors, including checkin
 | `math.vector.clamp(vec, min, max)` | Clamps the components of a vector within the specified range. |
 | `math.vector.resize(vec, newLength)` | Resizes a vector to a new length while maintaining its direction. |
 | `math.vector.round(vec, precision)`| Rounds the components of a vector to the specified precision. |
+| `math.vector.sign(vec)`| Returns the sign vector of a number. |
+| `math.vector.abs(vec)`| Calculates the absolute value of each component in a vector. |
 
 ### m`Math/lerp.nut`
 
@@ -309,6 +311,7 @@ This file contains various macro functions that provide shortcuts for common ope
 | `macros.GetPrefix(name)` | Gets the prefix of an entity name, or the original name if no "-" is found. |
 | `macros.GetPostfix(name)` | Gets the postfix of an entity name, or the original name if no "-" is found. |
 | `macros.GetEyeEndpos(player, distance)` | Calculates the end position of a ray cast from the player's eyes based on the given distance. |
+| `macros.GetVertex(VecX, VecY, VecZ, angle)` | Gets one vertex of the bounding box based on x, y, z bounds. |
 
 ### [`Utils/scripts.nut`](SRC/Utils/scripts.nut)
 

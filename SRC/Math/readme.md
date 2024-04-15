@@ -310,6 +310,45 @@ This function rounds the components of a vector to the specified precision.
 local roundedVec = math.vector.round(Vector(1.234, 5.678, 9.101), 100) // Round the vector components to two decimal places
 ```
 
+### `math.vector.sign(vec)` 
+
+This function returns a new vector where each component represents the sign of the corresponding component in the input vector. The sign is determined using the `math.Sign` function, which returns -1 for negative values, 0 for zero, and 1 for positive values.
+
+**Parameters:**
+
+* `vec` (Vector): The input vector.
+
+**Returns:**
+
+* (Vector): A new vector with the signs of the input vector's components.
+
+**Example:**
+
+```js
+local vec = Vector(-14, 0, 2)
+local signVec = math.vector.sign(vec) // signVec will be Vector(-1, 0, 1)
+```
+
+#### `math.vector.abs(vector)`
+
+This function calculates the absolute value of each component in a vector and returns a new vector with the absolute values.
+
+**Parameters:**
+
+* `vector` (Vector): The input vector.
+
+**Returns:**
+
+* (Vector): A new vector with the absolute values of the original vector's components.
+
+**Example:**
+
+```js
+local vec = Vector(-3, 4, -5)
+local absVec = math.vector.abs(vec) // absVec will be Vector(3, 4, 5)
+```
+
+
 ## [Math/lerp.nut](lerp.nut)
 
 This file provides functions for linear interpolation (lerp) between different data types, including numbers, vectors, and colors. It also includes functions for spline interpolation, smoothstep interpolation, and other interpolation techniques.
