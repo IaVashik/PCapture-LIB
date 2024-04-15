@@ -142,3 +142,16 @@ macros["GetEyeEndpos"] <- function(player, distance) {
 
     return player.EyePosition() + player.EyeForwardVector() * distance
 }
+
+/*
+ * Gets one vertex of the bounding box based on x, y, z bounds.
+ * 
+ * @param {Vector} x - The x bounds.
+ * @param {Vector} y - The y bounds.  
+ * @param {Vector} z - The z bounds.
+ * @param {Vector} ang - The angle vector.
+ * @returns {Vector} - The vertex.
+*/
+macros["GetVertex"] <- function(x, y, z, ang) {
+    return math.vector.rotate(Vector(x.x, y.y, z.z), ang)
+}
