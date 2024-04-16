@@ -12,7 +12,7 @@
 ::LibDebugInfo <- false
 ::VSEventLogs <- false
 
-local version = "PCapture-Lib 2.0 beta"
+local version = "PCapture-Lib 2.0 Release-Candidate"
 
 // `Self` must be in any case, even if the script is run directly by the interpreter
 if (!("self" in this)) {
@@ -60,6 +60,14 @@ if(IsMultiplayer()) {
 
 ::_lib_version_ <- version
 
-printl("-----------------")
-printl(_lib_version_)
-printl("-----------------")
+
+/*
+ * Prints information about the PCapture library upon initialization.
+ *
+ * This includes the library name, version, author, and a link to the GitHub repository.
+*/
+printl("\n----------------------------------------")
+printl("Welcome to " + _lib_version_)
+printl("Author: laVashik Production") // The Grand Archmage :P
+printl("GitHub: https://github.com/IaVashik/PCapture-LIB")
+printl("----------------------------------------\n")
