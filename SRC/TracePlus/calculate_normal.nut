@@ -32,6 +32,26 @@ local _getIntPoint = function(newStart, dir) {
     return TracePlus.Cheap(newStart, (newStart + dir * 8000)).GetHitpos()
 }
 
+/*
+ * Calculates the normal vector of a triangle .
+ * 
+ * @param {Vector} v1 - The first . 
+ * @param {Vector} v2 - The second .
+ * @param {Vector} v3 - The third . 
+ * @returns {Vector} - The normal vector of the triangle. 
+*/
+local _calculateNormal = function(v1, v2, v3) {
+    // Calculate two edge vectors of the triangle. 
+    local edge1 = v2 - v1
+    local edge2 = v3 - v1
+
+    // Calculate the normal vector using the cross product of the edge vectors.
+    local normal = edge1.Cross(edge2)
+    normal.Norm()
+
+    return normal 
+}
+
 /* 
  * Calculates the impact normal of a surface hit by a trace. 
  *
@@ -41,7 +61,7 @@ local _getIntPoint = function(newStart, dir) {
  * @returns {Vector} - The calculated impact normal vector. 
 */
 ::CalculateImpactNormal <- function(startPos, hitPos, traceResult) 
-                        : (GetNewStartsPos, _getIntPoint) {
+                        : (GetNewStartsPos, _getIntPoint, _calculateNormal) {
     // Calculate the normalized direction vector from startpos to hitpos
     local dir = hitPos - startPos
     dir.Norm()
@@ -50,20 +70,10 @@ local _getIntPoint = function(newStart, dir) {
     local newStartsPos = GetNewStartsPos(startPos, dir)
     
     // Perform cheap traces from the new start positions to find intersection points.
-    local intersectionPoints = {
-        point1 = _getIntPoint(newStartsPos[0], dir),
-        point2 = _getIntPoint(newStartsPos[1], dir)
-    }
-
-    // Calculate two edge vectors from intersection point to hitpos
-    local edge1 = intersectionPoints.point1 - hitPos;
-    local edge2 = intersectionPoints.point2 - hitPos;
-
-    // Calculate the cross product of the two edges to find the normal vector
-    local normal = edge2.Cross(edge1)
-    normal.Norm()
-
-    return normal
+    local point1 = _getIntPoint(newStartsPos[0], dir)
+    local point2 = _getIntPoint(newStartsPos[1], dir)
+    
+    return _calculateNormal(hitPos, point2, point1)
 }
 
 
@@ -84,25 +94,6 @@ local _findClosestVertices = function(point, vertices) {
     return vertices.slice(0, 3)  
 }
 
-/*
- * Calculates the normal vector of a triangle face formed by three vertices.
- * 
- * @param {Vector} v1 - The first vertex of the triangle. 
- * @param {Vector} v2 - The second vertex of the triangle.
- * @param {Vector} v3 - The third vertex of the triangle. 
- * @returns {Vector} - The normal vector of the triangle face. 
-*/
-local _calculateFaceNormal = function(v1, v2, v3) {
-    // Calculate two edge vectors of the triangle. 
-    local edge1 = v2 - v1
-    local edge2 = v3 - v1
-
-    // Calculate the normal vector using the cross product of the edge vectors.
-    local normal = edge1.Cross(edge2)
-    normal.Norm()
-
-    return normal 
-}
 
 /*
  * Calculates the impact normal of a surface hit by a trace using the bounding box of the hit entity.
@@ -113,7 +104,7 @@ local _calculateFaceNormal = function(v1, v2, v3) {
  * @returns {Vector} - The calculated impact normal vector. 
 */
  ::CalculateImpactNormalFromBbox <- function(startPos, hitPos, hitEntity)
-                                    : (_findClosestVertices, _calculateFaceNormal) {
+                                    : (_findClosestVertices, _calculateNormal) {
     // Get the entity bounding box vertices.
     local bboxVertices = hitEntity.getBBoxPoints()
 
@@ -125,13 +116,13 @@ local _calculateFaceNormal = function(v1, v2, v3) {
     local closestVertices = _findClosestVertices(hitPos - hitEntity.GetOrigin(), bboxVertices)
 
     // foreach(k, i in closestVertices) { todo dev code
-    //     dev.drawbox(hitEntity.GetOrigin() + i, Vector(125,125,0), 0.03)
+        //     dev.drawbox(hitEntity.GetOrigin() + i, Vector(125,125,0), 0.03)
     // }
 
     // Calculate the normal vector of the face formed by the three closest vertices.
-    local faceNormal = _calculateFaceNormal(closestVertices[0], closestVertices[1], closestVertices[2])
+    local faceNormal = _calculateNormal(closestVertices[0], closestVertices[1], closestVertices[2])
 
-    // Ensure the normal vector points away from the trace direction.
+    // Ensure the normal vector points away from the trace direction. // TODO
     if (faceNormal.Dot(traceDir) > 0) {
         faceNormal = faceNormal * -1
     }
