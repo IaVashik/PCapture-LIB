@@ -8,7 +8,7 @@
  * @param {table} animSetting - A table containing additional animation settings. (optional) 
 */
  animate["PositionTransitionByTime"] <- function(entities, startPos, endPos, time, animSetting = {}) {
-    local animSetting = AnimEvent(animSetting, _GetValidEntitiy(entities), time)
+    local animSetting = AnimEvent(animSetting, entities, time)
     
     local dist = endPos - startPos
     local coordStep = dist.Length() / abs(time / FrameTime())
@@ -35,7 +35,7 @@
  * It will then use this time to create a smooth transition of the entities' positions over that duration.
 */
 animate["PositionTransitionBySpeed"] <- function(entities, startPos, endPos, speed, animSetting = {}) {
-    local animSetting = AnimEvent(animSetting, _GetValidEntitiy(entities))
+    local animSetting = AnimEvent(animSetting, entities)
     
     local distance = endPos - startPos
     local dir = (endPos - startPos)

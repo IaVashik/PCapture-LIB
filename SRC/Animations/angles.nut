@@ -8,7 +8,7 @@
  * @param {table} animSetting - A table containing additional animation settings. (optional) 
 */
  animate["AnglesTransitionByTime"] <- function(entities, startAngles, endAngles, time, animSetting = {}) {
-    local animSetting = AnimEvent(animSetting, _GetValidEntitiy(entities), time)
+    local animSetting = AnimEvent(animSetting, entities, time)
 
     animate.applyAnimation(
         animSetting, 

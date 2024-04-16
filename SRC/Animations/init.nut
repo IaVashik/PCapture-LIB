@@ -26,7 +26,7 @@
      * @param {number} time - The duration of the animation in seconds.
     */
     constructor(table, ents, time = 0) {
-        this.entities = ents
+        this.entities = _GetEntities(ents)
         this.delay = time
 
         this.eventName = macros.GetFromTable(table, "eventName", UniqueString("anim")) //! todo mega bruh! Mb use link id, hash or str?
@@ -42,6 +42,24 @@
         if (this.outputs)
             CreateScheduleEvent(this.eventName, this.outputs, this.time)
     }
+
+    function _GetEntities(entities) { // meh :>
+        if (typeof entities == "string") {
+            if(entities.find("*") == null)
+                return [entLib.FindByName(entities)]
+            else {
+                local ents = List()
+                for(local ent; ent = entLib.FindByName(entities, ent);)
+                    ents.append(ent)
+                return ents
+            }
+        }
+                
+        if (typeof entities != "pcapEntity")
+            return [entLib.FromEntity(entities)]
+        
+        return [entities]
+    } 
 }
 
 /*
@@ -53,7 +71,7 @@
 */
 animate["applyAnimation"] <- function(animSetting, valueCalculator, propertySetter, transitionFrames = 0) {
     if(transitionFrames == 0)
-        local transitionFrames = animSetting.time / FrameTime();
+        transitionFrames = animSetting.delay / FrameTime();
 
     for (local step = 0; step < transitionFrames; step++) {
         local elapsed = (FrameTime() * step) + animSetting.globalDelay
@@ -64,6 +82,7 @@ animate["applyAnimation"] <- function(animSetting, valueCalculator, propertySett
             CreateScheduleEvent(animSetting.eventName, propertySetter, elapsed, animSetting.note, [ent, newValue])
         }
     }
+    printl(getEventInfo(animSetting.eventName))
 }
 
 IncludeScript("SRC/Animations/alpha")
