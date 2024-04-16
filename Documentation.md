@@ -37,7 +37,7 @@ This file contains utility functions for working with vectors, including checkin
 | `math.vector.sign(vec)`| Returns the sign vector of a number. |
 | `math.vector.abs(vec)`| Calculates the absolute value of each component in a vector. |
 
-### m`Math/lerp.nut`
+### [`Math/lerp.nut`](SRC/Math/lerp.nut)
 
 This file provides functions for linear interpolation (lerp) between different data types, including numbers, vectors, and colors. It also includes functions for spline interpolation, smoothstep interpolation, and other interpolation techniques.
 
@@ -325,6 +325,46 @@ This file provides functions for running scripts with delays, loops, and interva
 | `RunScriptCode.loopy(script, runDelay, loopCount, outputs)` | Executes a function repeatedly with a specified delay for a given number of loops. |
 | `RunScriptCode.setInterval(script, interval, runDelay, eventName)` | Schedules the execution of a script recursively at a fixed interval. |
 | `RunScriptCode.fromStr(str)` | Executes a script from a string. |
+
+### [`Utils/consts.nut`](SRC/Utils/consts.nut)
+This file contains constants that define the different types of collisions and object physics in Source Engine.
+
+#### Collision Groups
+
+| Constant | Description |
+| ---------------------------- | ------------------------------------------------------------- |
+| `COLLISION_GROUP_NONE` | Collides with nothing (0). |
+| `COLLISION_GROUP_DEBRIS` | Small, non-gameplay-interfering objects (1). |
+| `COLLISION_GROUP_DEBRIS_TRIGGER` | Like `DEBRIS`, but ignores `PUSHAWAY` (2). |
+| `COLLISION_GROUP_INTERACTIVE_DEBRIS` | Like `DEBRIS`, but doesn't collide with the same group (3). |
+| `COLLISION_GROUP_INTERACTIVE` | Interactive entities, ignores debris (4). |
+| `COLLISION_GROUP_PLAYER` | Used by players, ignores `PASSABLE_DOOR` (5). |
+| `COLLISION_GROUP_BREAKABLE_GLASS` | Breakable glass, ignores the same group and NPC line-of-sight (6). |
+| `COLLISION_GROUP_VEHICLE` | Driveable vehicles, always collides with `VEHICLE_CLIP` (7). |
+| `COLLISION_GROUP_PLAYER_MOVEMENT` | Player movement collision (8). |
+| `COLLISION_GROUP_NPC` | Used by NPCs, always collides with `DOOR_BLOCKER` (9). |
+| `COLLISION_GROUP_IN_VEHICLE` | Entities inside vehicles, no collisions (10). |
+| `COLLISION_GROUP_WEAPON` | Weapons, including dropped ones (11). |
+| `COLLISION_GROUP_VEHICLE_CLIP` | Only collides with `VEHICLE` (12). |
+| `COLLISION_GROUP_PROJECTILE` | Projectiles, ignore other projectiles (13). |
+| `COLLISION_GROUP_DOOR_BLOCKER` | Blocks NPCs, may collide with some projectiles (14). |
+| `COLLISION_GROUP_PASSABLE_DOOR` | Passable doors, allows players through (15). |
+| `COLLISION_GROUP_DISSOLVING` | Dissolved entities, only collide with `NONE` (16). |
+| `COLLISION_GROUP_PUSHAWAY` | Pushes props away from the player (17). |
+| `COLLISION_GROUP_NPC_ACTOR` | NPCs potentially stuck in a player (18). |
+| `COLLISION_GROUP_NPC_SCRIPTED` | NPCs in scripted sequences with collisions disabled (19). |
+
+#### Solid Types
+
+| Constant | Description |
+| --------------- | ------------------------------------------------------------ |
+| `SOLID_NONE` | No collision at all (0). |
+| `SOLID_BSP` | Uses Quake Physics engine (1). |
+| `SOLID_VPHYSICS` | Uses an axis-aligned bounding box (AABB) for collision (2). |
+| `SOLID_OBB` | Uses an oriented bounding box (OBB) for collision (3). |
+| `SOLID_OBB_YAW` | Uses an OBB constrained to yaw rotation (4). |
+| `SOLID_CUSTOM` | Custom/test solid type (5). |
+| `SOLID_VPHYSICS`| Uses VPhysics engine for realistic physics (6). |
 
 #### [More info about *Utils module* here](SRC/Utils/readme.md)
 
