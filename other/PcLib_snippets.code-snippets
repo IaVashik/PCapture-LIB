@@ -434,7 +434,7 @@
     },
     "AVLTree.new": {
         "prefix": "AVLTree.new",
-        "body": "AVLTree.new(${1:values})",
+        "body": "AVLTree(${1:values})",
         "description": "Creates a new AVL tree." 
     },
     "AVLTree.len": {

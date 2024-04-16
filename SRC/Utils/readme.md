@@ -582,7 +582,7 @@ This macro function creates a representation of a triangle from three given vert
 
 **Example:**
 
-```javascript
+```js
 local triangle = macros.GetTriangle(v1, v2, v3)
 printl("Triangle centroid:", triangle.origin)
 printl("Triangle vertices:", triangle.vertices)
