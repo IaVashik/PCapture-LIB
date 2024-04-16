@@ -564,6 +564,30 @@ local vertex = macros.GetVertex(BBmin, BBmin, BBmax, angles)
 // This calculates the position of the vertex at the left-bottom-back corner of the bounding box in world coordinates.
 ```
 
+### `macros.GetTriangle()`
+
+This macro function creates a representation of a triangle from three given vertices. It calculates the centroid (center of mass) of the triangle and returns a table containing the centroid and the three vertices.
+
+**Parameters:**
+
+* `v1` (Vector): The first vertex of the triangle.
+* `v2` (Vector): The second vertex of the triangle.
+* `v3` (Vector): The third vertex of the triangle.
+
+**Returns:**
+
+* (table): A table containing two properties:
+* `origin` (Vector): The centroid (center of mass) of the triangle.
+* `vertices` (array): An array containing the three vertices of the triangle as Vector objects.
+
+**Example:**
+
+```javascript
+local triangle = macros.GetTriangle(v1, v2, v3)
+printl("Triangle centroid:", triangle.origin)
+printl("Triangle vertices:", triangle.vertices)
+```
+
 
 ## [Utils/scripts.nut](scripts.nut)
 

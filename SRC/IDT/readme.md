@@ -1740,3 +1740,25 @@ Returns an array of vectors representing the 8 vertices of the entity's axis-ali
 ```js
 local vertices = myPcapEntity.getBBoxPoints() // Get the vertices of the AABB
 ```
+
+### `getBBoxFaces()`
+This method retrieves the faces of an entity's bounding box as an array of triangle vertices. It is used to access and work with the individual triangular faces that make up the bounding box.
+
+**Returns:**
+
+* (array): An array of 12 Vector triplets, where each triplet represents the three vertices of a triangle face.
+
+**Example:**
+
+```js
+local myEntity = entLib.FindByClassname("prop_physics")
+local faces = myEntity.getBBoxFaces()
+
+// Iterate over the faces and print the vertices of each triangle
+foreach(i, face in faces ) {
+    printl("Face", i, ":")
+    foreach(j, vertex in face.vertices) {
+        printl(" Vertex", j, ":", vertex)
+    }
+}
+```

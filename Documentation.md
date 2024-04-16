@@ -187,6 +187,7 @@ This file defines the `pcapEntity` class, which extends the functionality of `CB
 | `GetNamePostfix()` | Returns the postfix of the entity's name. |
 | `CreateAABB(stat)` | Returns a specific face of the entity's oriented bounding box (AABB) as a vector. |
 | `getBBoxPoints()` | Returns an array of vectors representing the 8 vertices of the entity's axis-aligned bounding box (AABB). |
+| `getBBoxFaces()` | Gets the faces of the entity's bounding box as an array of triangle vertices. |
 
 ### [`IDT/entity_creator.nut`](SRC/IDT/entity_creator.nut)
 
@@ -312,6 +313,7 @@ This file contains various macro functions that provide shortcuts for common ope
 | `macros.GetPostfix(name)` | Gets the postfix of an entity name, or the original name if no "-" is found. |
 | `macros.GetEyeEndpos(player, distance)` | Calculates the end position of a ray cast from the player's eyes based on the given distance. |
 | `macros.GetVertex(VecX, VecY, VecZ, angle)` | Gets one vertex of the bounding box based on x, y, z bounds. |
+| `macros.GetTriangle(Vec1, Vec2, Vec3)` | Creates a triangle representation from three vertices. |
 
 ### [`Utils/scripts.nut`](SRC/Utils/scripts.nut)
 

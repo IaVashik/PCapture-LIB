@@ -630,7 +630,7 @@
      *
      * @returns {Array<Vector>} - The 8 vertices of the bounding box.  
     */
-     function getBBoxPoints() {
+    function getBBoxPoints() {
         local max = this.GetBoundingMaxs();
         local min = this.GetBoundingMins();
         local angles = this.GetAngles()
@@ -644,6 +644,41 @@
             macros.GetVertex(min, max, max, angles), // 5 - Left-Top-Back
             macros.GetVertex(max, max, max, angles), // 6 - Right-Top-Back
             macros.GetVertex(max, min, max, angles), // 7 - Right-Bottom-Back
+        ]
+    }
+
+    /*
+     * Gets the faces of the entity's bounding box as an array of triangle vertices.
+     *
+     * @returns {array} - An array of 12 Vector triplets, where each triplet represents the three vertices of a triangle face.
+     * 
+    */
+     function getBBoxFaces() {
+        local vertices = this.getBBoxPoints()
+        return [
+            /* Bottom face triangles */ 
+            macros.GetTriangle(vertices[0], vertices[3], vertices[4]), // Face 0: Right-Bottom-Front, Left-Bottom-Front, Left-Bottom-Back
+            macros.GetTriangle(vertices[0], vertices[4], vertices[7]), // Face 1: Right-Bottom-Front, Left-Bottom-Back, Right-Bottom-Back
+
+            /* Top face triangles */ 
+            macros.GetTriangle(vertices[1], vertices[2], vertices[5]), // Face 2: Right-Top-Front, Left-Top-Front, Left-Top-Back
+            macros.GetTriangle(vertices[1], vertices[5], vertices[6]), // Face 3: Right-Top-Front, Left-Top-Back, Right-Top-Back
+
+            /* Left face triangles */ 
+            macros.GetTriangle(vertices[3], vertices[2], vertices[5]), // Face 4: Left-Bottom-Front, Left-Top-Front, Left-Top-Back 
+            macros.GetTriangle(vertices[3], vertices[5], vertices[4]), // Face 5: Left-Bottom-Front, Left-Top-Back, Left-Bottom-Back
+
+            /* Right face triangles */ 
+            macros.GetTriangle(vertices[0], vertices[1], vertices[6]), // Face 6: Right-Bottom-Front, Right-Top-Front, Right-Top-Back
+            macros.GetTriangle(vertices[0], vertices[6], vertices[7]), // Face 7: Right-Bottom-Front, Right-Top-Back, Right-Bottom-Back
+
+            /* Front face triangles */ 
+            macros.GetTriangle(vertices[0], vertices[1], vertices[2]), // Face 8: Right-Bottom-Front, Right-Top-Front, Left-Top-Front 
+            macros.GetTriangle(vertices[0], vertices[2], vertices[3]), // Face 9: Right-Bottom-Front, Left-Top-Front, Left-Bottom-Front
+
+            /* Back face triangles */
+            macros.GetTriangle(vertices[7], vertices[6], vertices[5]), // Face 10: Right-Bottom-Back, Right-Top-Back, Left-Top-Back 
+            macros.GetTriangle(vertices[7], vertices[5], vertices[4])  // Face 11: Right-Bottom-Back, Left-Top-Back, Left-Bottom-Back 
         ]
     }
 

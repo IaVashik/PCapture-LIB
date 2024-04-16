@@ -155,3 +155,18 @@ macros["GetEyeEndpos"] <- function(player, distance) {
 macros["GetVertex"] <- function(x, y, z, ang) {
     return math.vector.rotate(Vector(x.x, y.y, z.z), ang)
 }
+
+/*
+ * Creates a triangle representation from three vertices. 
+ *
+ * @param {Vector} v1 - The first vertex of the triangle.
+ * @param {Vector} v2 - The second vertex of the triangle.
+ * @param {Vector} v3 - The third vertex of the triangle.
+ * @returns {table} - A table containing the origin and vertices of the triangle.
+*/
+macros["GetTriangle"] <- function(v1, v2, v3) {
+    return {
+        origin = (v1 + v2 + v3) * 0.3333,
+        vertices = [v1, v2, v3]
+    }
+}
