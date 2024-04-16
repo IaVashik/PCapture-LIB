@@ -96,7 +96,7 @@ This file defines the `math.Matrix` class, which represents a 3x3 matrix (a math
 | `isEqually(other)` | Checks if this matrix is equal to another matrix based on their components and sum. |
 | `cmp(other)` | Compares this matrix to another matrix based on the sum of their components. |
 
-#### [More info about *Math module* here](SRC/Math/readme.md)
+### [More info about *Math module* here](SRC/Math/readme.md)
 
 ## 2. [IDT](SRC/IDT/readme.md) (Improved Data Types)
 
@@ -250,7 +250,7 @@ This file defines the `AVLTree` class, which represents a self-balancing binary 
 | `inorderTraversal()` | Performs an inorder traversal of the tree and returns an array of nodes in ascending order. |
 | `printTree()` | Prints a visual representation of the tree structure to the console. |
 
-#### [More info about *IDT module* here](SRC/Math/readme.md)
+### [More info about *IDT module* here](SRC/IDT/readme.md)
 
 ## 3. [Utils](SRC/Utils/readme.md)
 
@@ -366,7 +366,7 @@ This file contains constants that define the different types of collisions and o
 | `SOLID_CUSTOM` | Custom/test solid type (5). |
 | `SOLID_VPHYSICS`| Uses VPhysics engine for realistic physics (6). |
 
-#### [More info about *Utils module* here](SRC/Utils/readme.md)
+### [More info about *Utils module* here](SRC/Utils/readme.md)
 
 ## 4. [TracePlus](SRC/TracePlus/readme.md)
 
@@ -441,7 +441,7 @@ This file contains functions for handling portal interactions during traces, inc
 | `TracePlus.PortalBbox(startPos, endPos, ignoreEntities, settings, note)` | Performs a bbox cast with portal support. |
 | `FindPartnersForPortals()` | Finds and sets partner portals for linked portal doors and prop portals. |
 
-#### [More info about *TracePlus module* here](SRC/TracePlus/readme.md)
+### [More info about *TracePlus module* here](SRC/TracePlus/readme.md)
 
 
 ## 5. [Events](SRC/Events/readme.md)
@@ -481,7 +481,7 @@ This file defines the `ExecuteScheduledEvents` function, which processes schedul
 | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `ExecuteScheduledEvents()` | Iterates over all scheduled events and checks if their execution time has arrived. If so, it executes the event's action and removes it from the list of scheduled events. The function then schedules itself to run again to continue processing events. |
 
-#### [More info about *ScheduledEvents module* here](SRC/Events/readme.md)
+### [More info about *ScheduledEvents module* here](SRC/Events/readme.md)
 
 ## 6. [Animations](SRC/Animations/readme.md)
 
@@ -524,7 +524,7 @@ This file provides the `animate.AnglesTransitionByTime` function for creating an
 | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
 | `animate.AnglesTransitionByTime(entities, startAngles, endAngles, time, animSetting)` | Creates an animation that changes the angles of entities from the starting angles to the ending angles over a specified time. |
 
-#### [More info about *Animations module* here](SRC/Animations/readme.md)
+### [More info about *Animations module* here](SRC/Animations/readme.md)
 
 ## 7. [GameEvents](SRC/GameEvents/readme.md)
 
@@ -555,7 +555,7 @@ This file defines the `EventListener` object, which listens for and handles cust
 | `Notify(eventName, args)` | Notifies the listener of a triggered event and calls the event's `Trigger` method with the provided arguments. Returns the result of the event's action or `null` if the event is not found or the filter fails. |
 | `GetEvent(EventName)` | Retrieves a `GameEvent` object by name. Returns `null` if the event is not found. |
 
-#### [More info about *GameEvents module* here](SRC/GameEvents/readme.md)
+### [More info about *GameEvents module* here](SRC/GameEvents/readme.md)
 
 ## 8. [HUD](SRC/HUD/readme.md)
 
@@ -605,4 +605,4 @@ This file defines the `HUD.HintInstructor` class, which allows you to create and
 | `SetDistance(distance)` | Sets the distance at which the hint is visible. |
 | `SetEffects(sizePulsing, alphaPulsing, shaking)` | Sets the visual effects for the hint, including size pulsing, alpha pulsing, and shaking. |
 
-#### [More info about *HUD module* here](SRC/HUD/readme.md)
+### [More info about *HUD module* here](SRC/HUD/readme.md)
