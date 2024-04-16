@@ -55,8 +55,10 @@
         return action.acall(actionArgs)
     }
 
+    // TODO
+    function GetInfo() return "[Caller] " + caller + "\n[Action] " + action + "\n[TimeDelay] " + timeDelay + "\n[Note] " + note 
     function _typeof() return "ScheduleEvent"
-    function _tostring() return "[Caller] " + caller + "\n[Action] " + action + "\n[TimeDelay] " + timeDelay + "\n[Note] " + note 
+    function _tostring() return "ScheduleEvent: (" + this.timeDelay + ")"
     function _cmp(other) {    
         if (this.timeDelay > other.timeDelay) {
             return 1;

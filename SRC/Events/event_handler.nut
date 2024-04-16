@@ -21,7 +21,7 @@
             }
             catch(exception) { // todo??
                 SendToConsole("playvol resource/warning.wav 1")
-                printl("\nSCHEDULED EVENT\n[Name] " + eventName + "\n" + event)
+                printl("\nSCHEDULED EVENT\n[Name] " + eventName + "\n" + event.GetInfo())
 
                 if(type(event.action) == "function") {
                     local info = ""
