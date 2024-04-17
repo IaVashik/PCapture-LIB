@@ -83,6 +83,23 @@ events_tests <- {
         cancelScheduledEvent("cancel_test_event", 0.1) 
         return assert(eventIsValid("cancel_test_event")) 
     },
+
+    function cancel_test_event() { 
+        local x = ThisTest()
+        x.test()
+    },
+}
+
+class ThisTest {
+    constructor() {}
+
+    function theta() {
+        printl("Hello, Theta!")
+    }
+
+    function test() {
+        CreateScheduleEvent("this_test_event", theta, 0.2) 
+    }
 }
 
 // Run all tests

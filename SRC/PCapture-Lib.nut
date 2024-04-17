@@ -38,7 +38,7 @@ IncludeScript("SRC/IDT/init.nut")
 
 IncludeScript("SRC/TracePlus/init.nut")
 IncludeScript("SRC/Animations/init.nut")
-IncludeScript("SRC/Events/init.nut")
+IncludeScript("SRC/ActionScheduler/init.nut")
 IncludeScript("SRC/GameEvents/init.nut")
 IncludeScript("SRC/HUD/init.nut")
 

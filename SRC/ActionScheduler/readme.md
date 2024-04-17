@@ -1,8 +1,8 @@
-# Events Module
+# ActionScheduler Module
 
-The `Events` module provides an enhanced system for creating and managing scheduled events in VScripts. It offers more flexibility and control compared to standard mechanisms like `EntFireByHandle`, allowing you to create complex events composed of multiple actions, schedule them with precise timing, and cancel them as needed.
+The `ActionScheduler` module provides an enhanced system for creating and managing scheduled events in VScripts. It offers more flexibility and control compared to standard mechanisms like `EntFireByHandle`, allowing you to create complex events composed of multiple actions, schedule them with precise timing, and cancel them as needed.
 
-## [Events/event.nut](event.nut)
+## [ActionScheduler/event.nut](event.nut)
 
 This file defines the `ScheduleEvent` class, which represents a scheduled event with information about its caller, action, execution time, optional note, and arguments.
 
@@ -23,7 +23,7 @@ This class encapsulates the details of a scheduled event, providing methods for 
 * `run()`: Executes the scheduled action. If the action is a string, it is compiled into a function before execution. If arguments are provided, they are passed to the action function. The return value of the action function is returned by the `run` method.
 
 
-## [Events/event_manager.nut](event_manager.nut)
+## [ActionScheduler/event_manager.nut](event_manager.nut)
 
 This file provides functions for creating and managing scheduled events, including scheduling events, canceling events, and retrieving information about events.
 
@@ -126,7 +126,7 @@ if (eventNote) {
 }
 ```
 
-## [Events/event_handler.nut](event_handler.nut)
+## [ActionScheduler/event_handler.nut](event_handler.nut)
 
 This file defines the `ExecuteScheduledEvents` function, which processes scheduled events when their execution time arrives.
 

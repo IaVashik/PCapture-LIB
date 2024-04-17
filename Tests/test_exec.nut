@@ -30,5 +30,5 @@ function RunAllTests() {
     IncludeScript("Tests/Math")
     IncludeScript("Tests/IDT")
     IncludeScript("Tests/Utils")
-    IncludeScript("Tests/Events")
+    IncludeScript("Tests/ActionScheduler")
 }

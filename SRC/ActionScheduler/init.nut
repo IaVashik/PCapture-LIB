@@ -8,6 +8,6 @@
 |   for creating complex, timed events with precision and control.                 |
 +----------------------------------------------------------------------------------+ */ 
 
-IncludeScript("SRC/Events/event")
-IncludeScript("SRC/Events/event_manager")
-IncludeScript("SRC/Events/event_handler")
+IncludeScript("SRC/ActionScheduler/event")
+IncludeScript("SRC/ActionScheduler/event_manager")
+IncludeScript("SRC/ActionScheduler/event_handler")

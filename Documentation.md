@@ -444,15 +444,15 @@ This file contains functions for handling portal interactions during traces, inc
 ### [More info about *TracePlus module* here](SRC/TracePlus/readme.md)
 
 
-## 5. [Events](SRC/Events/readme.md)
+## 5. [ActionScheduler](SRC/ActionScheduler/readme.md)
 
-The `Events` module provides an improved system for creating and managing scheduled events in VScripts, offering more flexibility than standard mechanisms like `EntFireByHandle`.
+The `ActionScheduler` module provides an improved system for creating and managing scheduled events in VScripts, offering more flexibility than standard mechanisms like `EntFireByHandle`.
 
-### [`Events/init.nut`](SRC/Events/init.nut)
+### [`ActionScheduler/init.nut`](SRC/ActionScheduler/init.nut)
 
-This file initializes the `Events` module and includes the necessary script files for the module's functionality.
+This file initializes the `ActionScheduler` module and includes the necessary script files for the module's functionality.
 
-### [`Events/event.nut`](SRC/Events/event.nut)
+### [`ActionScheduler/event.nut`](SRC/ActionScheduler/event.nut)
 
 This file defines the `ScheduleEvent` class, which represents a scheduled event with information about its caller, action, execution time, optional note, and arguments.
 
@@ -461,7 +461,7 @@ This file defines the `ScheduleEvent` class, which represents a scheduled event 
 | `ScheduleEvent(caller, action, timeDelay, note, args)` | Creates a new `ScheduleEvent` object with the specified caller, action, execution time, optional note, and arguments. |
 | `run()` | Executes the scheduled action, compiling it if necessary and passing any provided arguments. Returns the result of the action function. |
 
-### [`Events/event_manager.nut`](SRC/Events/event_manager.nut)
+### [`ActionScheduler/event_manager.nut`](SRC/ActionScheduler/event_manager.nut)
 
 This file provides functions for creating and managing scheduled events, including scheduling events, canceling events, and retrieving information about events.
 
@@ -473,7 +473,7 @@ This file provides functions for creating and managing scheduled events, includi
 | `eventIsValid(eventName)` | Checks if a scheduled event with the given name exists and has scheduled events. |
 | `getEventNote(eventName)` | Returns the note associated with the first scheduled event with the given name, or `null` if no note is found or the event doesn't exist. |
 
-### [`Events/event_handler.nut`](SRC/Events/event_handler.nut)
+### [`ActionScheduler/event_handler.nut`](SRC/ActionScheduler/event_handler.nut)
 
 This file defines the `ExecuteScheduledEvents` function, which processes scheduled events when their execution time arrives.
 
@@ -481,7 +481,7 @@ This file defines the `ExecuteScheduledEvents` function, which processes schedul
 | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `ExecuteScheduledEvents()` | Iterates over all scheduled events and checks if their execution time has arrived. If so, it executes the event's action and removes it from the list of scheduled events. The function then schedules itself to run again to continue processing events. |
 
-### [More info about *ScheduledEvents module* here](SRC/Events/readme.md)
+### [More info about *ActionScheduler module* here](SRC/ActionScheduler/readme.md)
 
 ## 6. [Animations](SRC/Animations/readme.md)
 
@@ -526,15 +526,15 @@ This file provides the `animate.AnglesTransitionByTime` function for creating an
 
 ### [More info about *Animations module* here](SRC/Animations/readme.md)
 
-## 7. [GameEvents](SRC/GameEvents/readme.md)
+## 7. [GameEvents](SRC/GameActionScheduler/readme.md)
 
 The `GameEvents` module provides classes for creating and handling custom game events with triggers, filters, and actions. It offers more flexibility than standard VScripts game events.
 
-### [`GameEvents/init.nut`](SRC/GameEvents/init.nut)
+### [`GameActionScheduler/init.nut`](SRC/GameActionScheduler/init.nut)
 
 This file initializes the `GameEvents` module and includes the necessary script files for the module's functionality.
 
-### [`GameEvents/game_event.nut`](SRC/GameEvents/game_event.nut)
+### [`GameActionScheduler/game_event.nut`](SRC/GameActionScheduler/game_event.nut)
 
 This file defines the `GameEvent` class, which represents a custom game event with a name, trigger count, action to perform when triggered, and optional filter function.
 
@@ -546,7 +546,7 @@ This file defines the `GameEvent` class, which represents a custom game event wi
 | `Trigger(args)` | Triggers the event if the trigger count allows and the filter function (if set) returns true. The action function is executed with the provided arguments, and a VScript event message is logged if event logging is enabled. |
 | `ForceTrigger(args)` | Forces the event to trigger, ignoring the filter function and trigger count. The action function is executed with the provided arguments. |
 
-### [`GameEvents/event_listener.nut`](SRC/GameEvents/event_listener.nut)
+### [`GameActionScheduler/event_listener.nut`](SRC/GameActionScheduler/event_listener.nut)
 
 This file defines the `EventListener` object, which listens for and handles custom game events created using the `GameEvent` class.
 
@@ -555,7 +555,7 @@ This file defines the `EventListener` object, which listens for and handles cust
 | `Notify(eventName, args)` | Notifies the listener of a triggered event and calls the event's `Trigger` method with the provided arguments. Returns the result of the event's action or `null` if the event is not found or the filter fails. |
 | `GetEvent(EventName)` | Retrieves a `GameEvent` object by name. Returns `null` if the event is not found. |
 
-### [More info about *GameEvents module* here](SRC/GameEvents/readme.md)
+### [More info about *GameEvents module* here](SRC/GameActionScheduler/readme.md)
 
 ## 8. [HUD](SRC/HUD/readme.md)
 
