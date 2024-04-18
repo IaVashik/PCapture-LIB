@@ -8,6 +8,29 @@
 |   for creating complex, timed events with precision and control.                 |
 +----------------------------------------------------------------------------------+ */ 
 
-IncludeScript("SRC/ActionScheduler/event")
+
+::ScheduleEvent <- {
+    // Object to store scheduled events 
+    eventsList = {global = AVLTree()},
+    // Var to track if event loop is running
+    executorRunning = false,
+
+    
+    Add = null,
+    AddActions = null,
+    AddInterval = null,
+
+    Cancel = null,
+    CancelByAction = null,
+    CancelAll = null,
+    
+    GetEvent = null,
+    GetNote = null,
+    
+    IsValid = null,
+}
+
+
+IncludeScript("SRC/ActionScheduler/action")
 IncludeScript("SRC/ActionScheduler/event_manager")
 IncludeScript("SRC/ActionScheduler/event_handler")

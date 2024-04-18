@@ -7,12 +7,12 @@
 */
  ::ExecuteScheduledEvents <- function() {
     // If there are no events scheduled, stop the event loop. 
-    if(scheduledEventsList.len() == 1 && scheduledEventsList.global.len() == 0) {
-        return isEventLoopRunning = false
+    if(ScheduleEvent.eventsList.len() == 1 && ScheduleEvent.eventsList.global.len() == 0) {
+        return ScheduleEvent.executorRunning = false
     }
 
     // Iterate over each event name and its corresponding event list. 
-    foreach(eventName, eventInfo in scheduledEventsList) {
+    foreach(eventName, eventInfo in ScheduleEvent.eventsList) {
         local event 
         // Process events until the list is empty or the next event's time hasn't arrived yet.  
         while(eventInfo.len() > 0 && Time() >= (event = eventInfo.GetMin()).timeDelay) {
@@ -34,6 +34,8 @@
             }
             eventInfo.remove(event) 
         }
+        if(eventName != "global" && eventInfo.len() == 0) 
+            ScheduleEvent.eventsList.rawdelete(eventName)
     }
-    RunScriptCode.delay("ExecuteScheduledEvents()", FrameTime())
+    RunScriptCode.delay("ExecuteScheduledEvents()", FrameTime()) // todo
 }

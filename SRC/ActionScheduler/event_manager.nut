@@ -1,9 +1,3 @@
-// Object to store scheduled events 
-::scheduledEventsList <- {global = AVLTree()}
-// Var to track if event loop is running
-::isEventLoopRunning <- false
-
-
 /*
  * Creates a new scheduled event.
  * 
@@ -13,23 +7,44 @@
  * @param {string|null} note - Optional note about the event, if needed.
  * @param {array|null} args - Optional arguments to pass to the action function. 
 */
-::CreateScheduleEvent <- function(eventName, action, timeDelay, note = null, args = null) {
-    if ( !(eventName in scheduledEventsList) ) {
-        scheduledEventsList[eventName] <- AVLTree()
+ScheduleEvent["Add"] <- function(eventName, action, timeDelay, args = null, note = null) {
+    if ( !(eventName in ScheduleEvent.eventsList) ) {
+        ScheduleEvent.eventsList[eventName] <- AVLTree() // todo, mb use list?
         dev.debug("Created new Event - " + eventName)
     }
 
-    local newScheduledEvent = ScheduleEvent(this, action, timeDelay + Time(), note, args)
-    local currentEventList = scheduledEventsList[eventName]
-    // dev.debug("eventName: "+eventName+",  - "+eventList.len()+", currentEventList: "+currentEventList.len())
+    local newScheduledEvent = ScheduleAction(this, action, timeDelay, args, note)
+    local currentEventList = ScheduleEvent.eventsList[eventName]
 
     currentEventList.insert(newScheduledEvent)
 
-    if(!isEventLoopRunning) {
-        isEventLoopRunning = true
+    if(!ScheduleEvent.executorRunning) {
+        ScheduleEvent.executorRunning = true
         ExecuteScheduledEvents()
     }
 }
+
+
+ScheduleEvent["AddActions"] <- function(eventName, actions) {
+    actions.sort()
+    ScheduleEvent.eventsList[eventName] <- AVLTree.fromArray(actions) // todo а если уже есть события?
+    dev.debug("Created new Event - " + eventName)
+
+    if(!ScheduleEvent.executorRunning) {
+        ScheduleEvent.executorRunning = true
+        ExecuteScheduledEvents()
+    }
+}
+
+
+// ScheduleEvent["AddInterval"] <- function(eventName, action, interval, initialDelay = 0 , args = null, note = null) {
+//     local actions = [ // TODO
+//         ScheduleAction(this, action, initialDelay, args, note),
+//         ScheduleAction(this, this.AddInterval, initialDelay + interval, [eventName, action, interval, 0, args, note])
+//     ]
+
+//     ScheduleEvent.AddActions(eventName, actions)
+// }
 
 
 /*
@@ -38,27 +53,46 @@
 * @param {string} eventName - Name of event to cancel.
 * @param {number} delay - Delay in seconds before event cancelation
 */
-::cancelScheduledEvent <- function(eventName, delay = 0) {
+ScheduleEvent["Cancel"] <- function(eventName, delay = 0) {
     if(eventName == "global")
         return dev.warning("The global event cannot be closed!")
-    if(!(eventName in scheduledEventsList))
+    if(!(eventName in ScheduleEvent.eventsList))
         return dev.error("There is no event named " + eventName)
-
-    if(delay == 0)
-        scheduledEventsList.rawdelete(eventName)
-    else {
-        return CreateScheduleEvent("global", format("cancelScheduledEvent(\"%s\")", eventName), delay)
-    }
+    if(delay > 0)
+        return ScheduleEvent.Add("global", format("ScheduleEvent.Cancel(\"%s\")", eventName), delay)
+    
+        ScheduleEvent.eventsList.rawdelete(eventName)
         
     // Debug info
     if(LibDebugInfo) {
         local test = ""
-        foreach(k, i in scheduledEventsList)
+        foreach(k, i in ScheduleEvent.eventsList)
             test += k + ", "
 
         test = test.slice(0, -2)
         dev.debug(format("Event \"%s\" closed. Actial events: [%s]", eventName, test))
     }
+}
+
+ScheduleEvent["CancelByAction"] <- function(action, delay = 0) {
+    if(delay > 0)
+        return ScheduleEvent.Add("global", format("ScheduleEvent.Cancel(\"%s\")", eventName), delay)
+    
+    foreach(name, events in ScheduleEvent.eventsList) {
+        foreach(eventAction in events) {
+            if(eventAction.action == action) {
+                events.remove(eventAction)
+                dev.debug(eventAction + " was deleted from " + name)
+                return true
+            }
+        }
+    }
+    return false
+}
+
+ScheduleEvent["CancelAll"] <- function() {
+    ScheduleEvent.eventsList = {global = AVLTree()}
+    dev.debug("All scheduled events have been canceled!")
 }
 
 
@@ -68,8 +102,8 @@
  * @param {string} eventName - Name of event to get info for.
  * @returns {AVLTree|null} - The event info object or null if not found.
 */
-::getEventInfo <- function(eventName) {
-    return eventName in scheduledEventsList ? scheduledEventsList[eventName] : null
+ScheduleEvent["GetEvent"] <- function(eventName) {
+    return eventName in ScheduleEvent.eventsList ? ScheduleEvent.eventsList[eventName] : null
 }
 
 
@@ -79,8 +113,8 @@
  * @param {string} eventName - Name of event to get info for.
  * @returns {bool} - Object exists or not.
 */
-::eventIsValid <- function(eventName) {
-    return eventName in scheduledEventsList && scheduledEventsList[eventName].len() != 0
+ScheduleEvent["IsValid"] <- function(eventName) {
+    return eventName in ScheduleEvent.eventsList && ScheduleEvent.eventsList[eventName].len() != 0
 }
 
 
@@ -90,8 +124,8 @@
  * @param {string} eventName - The name of the event. 
  * @returns {string|null} - The note of the first event, or null if no note is found or the event doesn't exist. 
 */
-::getEventNote <- function(eventName) {
-    local info = getEventInfo(eventName)
+ScheduleEvent["GetNote"] <- function(eventName) {
+    local info = ScheduleEvent.GetEvent(eventName)
     if(!info || info.len() == 0) 
         return null
     
