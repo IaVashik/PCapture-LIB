@@ -18,7 +18,7 @@
 }
 
 ::List <- class {
-    lenght = 0;
+    length = 0;
     first_node = null;
     last_node = null;
 
@@ -55,7 +55,7 @@
      * @returns {number} - The number of elements in the list.
     */
     function len() {
-        return this.lenght;
+        return this.length;
     }
 
     /*
@@ -71,7 +71,7 @@
         next_node.prev_ref = current_node;
 
         this.last_node = next_node;
-        this.lenght++;
+        this.length++;
     }
 
     /*
@@ -81,7 +81,7 @@
      * @param {any} value - The value to insert.
     */
     function insert(idx, value) {
-        if(this.lenght == 0 || idx >= this.lenght) 
+        if(this.length == 0 || idx >= this.length) 
             return this.append(value)
     
         local node = this.getNode(idx)
@@ -93,7 +93,7 @@
         node.prev_ref.next_ref = newNode 
         node.prev_ref = newNode
 
-        this.lenght++
+        this.length++
     }
 
     /*
@@ -104,7 +104,7 @@
      * @throws {Error} - If the index is out of bounds.
     */
     function getNode(idx) {
-        if (idx >= this.lenght) {
+        if (idx >= this.length) {
             throw("the index '" + idx + "' does not exist!");
         }
 
@@ -123,7 +123,7 @@
      * @returns {any} - The value at the specified index or the default value if the index is out of bounds.
     */
     function get(idx, defaultValue = null) {
-        if (idx >= this.lenght)
+        if (idx >= this.length)
             return defaultValue
 
         return this.getNode(idx).value
@@ -144,7 +144,7 @@
         if (next) 
             next.prev_ref = prev;
 
-        this.lenght--;
+        this.length--;
     }
 
     /*
@@ -156,7 +156,7 @@
         local current = this.last_node;
         this.last_node = current.prev_ref;
         this.last_node.next_ref = null;
-        this.lenght--
+        this.length--
         return current.value;
     }
 
@@ -166,7 +166,13 @@
      * @returns {any} - The value of the last element.
     */
     function top() {
+        if(this.length == 0) throw("top() on a empty list")
         return this.last_node.value
+    }
+
+    function first() {
+        if(this.length == 0) throw("first() on a empty list")
+        return this.first_node.next_ref.value
     }
 
     /*
@@ -191,13 +197,78 @@
         this.last_node = temp;
     }
 
+    function sort() {
+        this.first_node.next_ref = _mergeSort(this.first_node.next_ref)
+        
+        /* Обновление last_node */ 
+        local node = this.first_node 
+        while (node.next_ref) {
+            node = node.next_ref
+        }
+        this.last_node = node 
+        
+        return this
+    }
+
+    function _mergeSort(head) {
+        if (head == null || head.next_ref == null) {
+            return head  // Список с одним или нулём элементов уже отсортирован
+        }
+    
+        /* Разделение списка на две части. */
+        local middle = _findMiddleNode(head)
+        local nextToMiddle = middle.next_ref 
+        middle.next_ref = null 
+    
+        /* Рекурсивная сортировка двух половин. */ 
+        local left = _mergeSort(head)
+        local right = _mergeSort(nextToMiddle) 
+    
+        /* Слияние отсортированных половин. */
+        return _merge(left, right) 
+    }
+    
+    
+    function _findMiddleNode(head) {
+        local slow = head
+        local fast = head.next_ref
+        while (fast != null && fast.next_ref != null) {
+            slow = slow.next_ref
+            fast = fast.next_ref.next_ref 
+        }
+        return slow 
+    }
+    
+    
+    function _merge(left, right) {
+        local dummyHead = ListNode(null)
+        local current = dummyHead
+    
+        while (left != null && right != null) {
+            if (left.value <= right.value) {
+                current.next_ref = left
+                left = left.next_ref 
+            } else {
+                current.next_ref = right
+                right = right.next_ref 
+            } 
+            current = current.next_ref
+        } 
+    
+        /* Добавление оставшихся элементов. */
+        current.next_ref = left != null ? left : right
+    
+        return dummyHead.next_ref 
+    }
+
+
     /*
      * Removes all elements from the list.
     */
     function clear() {
         this.first_node.next_ref = null;
         this.last_node = this.first_node;
-        this.lenght = 0;
+        this.length = 0;
     }
 
     /*
@@ -207,7 +278,7 @@
      * @returns {string} - The joined string.
     */
     function join(joinstr = "") {
-        if(this.lenght == 0) return ""
+        if(this.length == 0) return ""
         
         local string = ""
         foreach(elem in this) {
@@ -264,6 +335,27 @@
         return null
     }
 
+    // function binarySearch(value) {
+    //     this.sort() // Сортировка списка перед поиском
+
+    //     local low = 0
+    //     local high = this.length - 1
+    //     local mid
+
+    //     while (low <= high) {
+    //         mid = floor((low + high) / 2)
+    //         if (this[mid] < value) {
+    //             low = mid + 1
+    //         } else if (this[mid] > value) {
+    //             high = mid - 1 
+    //         } else {
+    //             return mid  // Элемент найден 
+    //         }
+    //     }
+
+    //     return null  // Элемент не найден 
+    // }
+
     /*
      * Creates a new list by applying a function to each element of this list.
      * 
@@ -284,7 +376,7 @@
      * @returns {array} - An array containing the elements of the list.
     */
     function toarray() {
-        local array = arrayLib(array(this.lenght))
+        local array = arrayLib(array(this.length))
         foreach(idx, value in this) {
             array[idx] = value
         }
