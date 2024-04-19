@@ -11,6 +11,7 @@
 ::animate <- {}
 
 ::AnimEvent <- class {
+    animName = null;
     eventName = null
     delay = 0
     globalDelay = 0
@@ -21,15 +22,17 @@
     /*
      * Constructor for an AnimEvent object. 
      *
+     * @param {string} name - TODO
      * @param {table} settings - A table containing animation settings.
      * @param {array} entities - An array of entities to animate.
      * @param {number} time - The duration of the animation in seconds.
     */
-    constructor(table, ents, time = 0) {
+    constructor(name, table, ents, time = 0) {
+        this.animName = name
         this.entities = _GetEntities(ents)
         this.delay = time
 
-        this.eventName = macros.GetFromTable(table, "eventName", UniqueString("anim")) //! todo mega bruh! Mb use link id, hash or str?
+        this.eventName = macros.GetFromTable(table, "eventName", UniqueString(name + "_anim")) //! todo mega bruh! Mb use link id, hash or str?
         this.globalDelay = macros.GetFromTable(table, "globalDelay", 0)
         this.note = macros.GetFromTable(table, "note", null)
         this.outputs = macros.GetFromTable(table, "outputs", null)
@@ -40,7 +43,7 @@
     */
     function callOutputs() {
         if (this.outputs)
-            CreateScheduleEvent(this.eventName, this.outputs, this.time)
+            ScheduleEvent.Add(this.eventName, this.outputs, this.time)
     }
 
     function _GetEntities(entities) { // meh :>
@@ -72,6 +75,7 @@
 animate["applyAnimation"] <- function(animSetting, valueCalculator, propertySetter, transitionFrames = 0) {
     if(transitionFrames == 0)
         transitionFrames = animSetting.delay / FrameTime();
+    local actionsList = List()
 
     for (local step = 0; step < transitionFrames; step++) {
         local elapsed = (FrameTime() * step) + animSetting.globalDelay
@@ -79,10 +83,13 @@ animate["applyAnimation"] <- function(animSetting, valueCalculator, propertySett
         local newValue = valueCalculator(step, transitionFrames)
         
         foreach(ent in animSetting.entities) {
-            CreateScheduleEvent(animSetting.eventName, propertySetter, elapsed, animSetting.note, [ent, newValue])
+            local action = ScheduleAction(this, propertySetter, elapsed, [ent, newValue], animSetting.note)
+            actionsList.append(action)
         }
     }
-    printl(getEventInfo(animSetting.eventName))
+
+    ScheduleEvent.AddActions(animSetting.eventName, actionsList, true)
+    dev.debug("Created " + animSetting.animName + " animation ("+animSetting.eventName+") for " + actionsList.len() + " actions")
 }
 
 IncludeScript("SRC/Animations/alpha")

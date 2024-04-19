@@ -8,7 +8,7 @@
  * @param {table} animSetting - A table containing additional animation settings. (optional) 
 */
  animate["ColorTransition"] <- function(entities, startColor, endColor, time, animSetting = {}) {
-    local animSetting = AnimEvent(animSetting, entities, time)
+    local animSetting = AnimEvent("color", animSetting, entities, time)
 
     animate.applyAnimation(
         animSetting, 

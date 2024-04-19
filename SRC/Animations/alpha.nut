@@ -8,7 +8,7 @@
  * @param {table} animSetting - A table containing additional animation settings. (optional) 
 */
  animate["AlphaTransition"] <- function(entities, startOpacity, endOpacity, time, animSetting = {}) {
-    local animSetting = AnimEvent(animSetting, entities, time)
+    local animSetting = AnimEvent("alpha", animSetting, entities, time)
     local transitionFrames = time / FrameTime();    
     local alphaStep = (endOpacity - startOpacity) / transitionFrames;    
 
