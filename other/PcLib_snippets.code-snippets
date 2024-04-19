@@ -989,30 +989,51 @@
     },
 
     // * Events
-    "CreateScheduleEvent": {
-        "prefix": "CreateScheduleEvent",
-        "body": "CreateScheduleEvent(${1:eventName}, ${2:action}, ${3:timeDelay}, ${4:note}, ${5:args})", 
-        "description": "Creates a scheduled event."
-    }, 
-    "cancelScheduledEvent": { 
-        "prefix": "cancelScheduledEvent",
-        "body": "cancelScheduledEvent(${1:eventName}, ${2:delay})", 
-        "description": "Cancels a scheduled event."
-    }, 
-    "getEventInfo": {
-        "prefix": "getEventInfo",
-        "body": "getEventInfo(${1:eventName})",
-        "description": "Gets information about a scheduled event." 
+    // Events 
+    "ScheduleEvent.Add": {
+        "prefix": "ScheduleEvent.Add",
+        "body": "ScheduleEvent.Add(${1:eventName}, ${2:action}, ${3:delay}, ${4:args}, ${5:note})",
+        "description": "Adds a single action to a scheduled event."
     },
-    "eventIsValid": {
-        "prefix": "eventIsValid",
-        "body": "eventIsValid(${1:eventName})",
-        "description": "Checks if an event is valid." 
+    "ScheduleEvent.AddActions": {
+        "prefix": "ScheduleEvent.AddActions",
+        "body": "ScheduleEvent.AddActions(${1:eventName}, ${2:actions}, ${3:noSort})",
+        "description": "Adds multiple actions to a scheduled event."
     }, 
-    "getEventNote": {
-        "prefix": "getEventNote",
-        "body": "getEventNote(${1:eventName})", 
-        "description": "Gets the note of a scheduled event."
+    "ScheduleEvent.AddInterval": {
+        "prefix": "ScheduleEvent.AddInterval",
+        "body": "ScheduleEvent.AddInterval(${1:eventName}, ${2:action}, ${3:interval}, ${4:initialDelay}, ${5:args}, ${6:note})", 
+        "description": "Adds an action to a scheduled event that will be executed repeatedly at a fixed interval."
+    },
+    "ScheduleEvent.Cancel": { 
+        "prefix": "ScheduleEvent.Cancel",
+        "body": "ScheduleEvent.Cancel(${1:eventName}, ${2:delay})",
+        "description": "Cancels a scheduled event."
+    },
+    "ScheduleEvent.CancelByAction": {
+        "prefix": "ScheduleEvent.CancelByAction",
+        "body": "ScheduleEvent.CancelByAction(${1:action}, ${2:delay})",
+        "description": "Cancels all scheduled actions that match the given action."
+    }, 
+    "ScheduleEvent.CancelAll": {
+        "prefix": "ScheduleEvent.CancelAll", 
+        "body": "ScheduleEvent.CancelAll()", 
+        "description": "Cancels all scheduled events and actions." 
+    },
+    "ScheduleEvent.GetEvent": {
+        "prefix": "ScheduleEvent.GetEvent",
+        "body": "ScheduleEvent.GetEvent(${1:eventName})",
+        "description": "Gets a scheduled event by name."
+    }, 
+    "ScheduleEvent.IsValid": {
+        "prefix": "ScheduleEvent.IsValid",
+        "body": "ScheduleEvent.IsValid(${1:eventName})", 
+        "description": "Checks if a scheduled event is valid."
+    },
+    "ScheduleEvent.GetNote": {
+        "prefix": "ScheduleEvent.GetNote", 
+        "body": "ScheduleEvent.GetNote(${1:eventName})", 
+        "description": "Gets the note of the first scheduled action within an event." 
     }, 
 
     // * GameEvents 

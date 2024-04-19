@@ -446,42 +446,42 @@ This file contains functions for handling portal interactions during traces, inc
 
 ## 5. [ActionScheduler](SRC/ActionScheduler/readme.md)
 
-The `ActionScheduler` module provides an improved system for creating and managing scheduled events in VScripts, offering more flexibility than standard mechanisms like `EntFireByHandle`.
-
-### [`ActionScheduler/init.nut`](SRC/ActionScheduler/init.nut)
-
-This file initializes the `ActionScheduler` module and includes the necessary script files for the module's functionality.
+The `ActionScheduler` module provides an enhanced system for creating and managing scheduled events in VScripts, offering more flexibility and control compared to standard mechanisms like `EntFireByHandle`. It allows you to create complex sequences of actions, schedule them with precise timing, and cancel them as needed.
 
 ### [`ActionScheduler/event.nut`](SRC/ActionScheduler/event.nut)
 
-This file defines the `ScheduleEvent` class, which represents a scheduled event with information about its caller, action, execution time, optional note, and arguments.
+This file defines the `ScheduleAction` class, which represents a single action scheduled for execution at a specific time.
 
 | Method | Description |
 | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `ScheduleEvent(caller, action, timeDelay, note, args)` | Creates a new `ScheduleEvent` object with the specified caller, action, execution time, optional note, and arguments. |
 | `run()` | Executes the scheduled action, compiling it if necessary and passing any provided arguments. Returns the result of the action function. |
 
-### [`ActionScheduler/event_manager.nut`](SRC/ActionScheduler/event_manager.nut)
+### [`ActionScheduler/action_scheduler.nut`](SRC/ActionScheduler/action_scheduler.nut)
 
-This file provides functions for creating and managing scheduled events, including scheduling events, canceling events, and retrieving information about events.
+This file provides functions for creating and managing scheduled events, including adding actions, creating intervals, and canceling events.
 
 | Function | Description |
 | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `CreateScheduleEvent(eventName, action, timeDelay, note, args)` | Creates a new scheduled event with the specified name, action, execution time, optional note, and arguments. The event is added to a list of scheduled events and the event loop is started if it is not already running. |
-| `cancelScheduledEvent(eventName, delay)` | Cancels a scheduled event with the given name, optionally after a delay. The global event cannot be canceled. |
-| `getEventInfo(eventName)` | Retrieves information about a scheduled event with the given name as an `AVLTree` object containing the scheduled `ScheduleEvent` objects. Returns `null` if the event is not found. |
-| `eventIsValid(eventName)` | Checks if a scheduled event with the given name exists and has scheduled events. |
-| `getEventNote(eventName)` | Returns the note associated with the first scheduled event with the given name, or `null` if no note is found or the event doesn't exist. |
+| `ScheduleEvent.Add(eventName, action, timeDelay, args, note)`  | Adds a single action to a scheduled event with the specified name. If the event does not exist, it is created.                                                                                                                     |
+| `ScheduleEvent.AddActions(eventName, actions, noSort)`      | Adds multiple actions to a scheduled event, ensuring they are sorted by execution time.                                                                                                                                                 |
+| `ScheduleEvent.AddInterval(eventName, action, interval, initialDelay, args, note)` | Adds an action to a scheduled event that will be executed repeatedly at a fixed interval.                                                                                                                                               |
+| `ScheduleEvent.Cancel(eventName, delay)`       | Cancels all scheduled actions within an event with the given name.                                                                                                                                                                    |
+| `ScheduleEvent.CancelByAction(action, delay)` | Cancels all scheduled actions that match the given action.                                                                                                                                                                         | 
+| `ScheduleEvent.CancelAll()`                  | Cancels all scheduled events and actions, effectively clearing the event scheduler.                                                                                                                                                         |
+| `ScheduleEvent.GetEvent(eventName)`           | Retrieves a scheduled event by name as a `List` of `ScheduleAction` objects.                                                                                                                                                           |
+| `ScheduleEvent.IsValid(eventName)`            | Checks if a scheduled event with the given name exists and has scheduled actions.                                                                                                                                                |
+| `ScheduleEvent.GetNote(eventName)`            | Retrieves the note associated with the first scheduled action within the event with the given name.                                                                                                                                      | 
 
 ### [`ActionScheduler/event_handler.nut`](SRC/ActionScheduler/event_handler.nut)
 
-This file defines the `ExecuteScheduledEvents` function, which processes scheduled events when their execution time arrives.
+This file contains the `ExecuteScheduledEvents` function, which processes scheduled events and actions.
 
 | Function | Description |
 | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ExecuteScheduledEvents()` | Iterates over all scheduled events and checks if their execution time has arrived. If so, it executes the event's action and removes it from the list of scheduled events. The function then schedules itself to run again to continue processing events. |
+| `ExecuteScheduledEvents()` | Iterates over all scheduled events and checks if the execution time for the first action in each event has arrived. If so, it executes the action and removes it from the event's list of actions. If an event has no more actions remaining, it is removed from the list of scheduled events. The function then schedules itself to run again after a short delay to continue processing events. | 
 
-### [More info about *ActionScheduler module* here](SRC/ActionScheduler/readme.md)
+### [More info about *ActionScheduler module* here](SRC/ActionScheduler/readme.md) 
 
 ## 6. [Animations](SRC/Animations/readme.md)
 

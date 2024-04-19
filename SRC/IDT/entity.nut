@@ -197,7 +197,7 @@
     function EmitSoundEx(soundName, timeDelay = 0, eventName = this) {
         if(timeDelay == 0)
             return this.CBaseEntity.EmitSound(soundName)
-        CreateScheduleEvent(eventName, function():(CBaseEntity, soundName) {
+        ScheduleEvent.Add(eventName, function():(CBaseEntity, soundName) {
             CBaseEntity.EmitSound(soundName)
         }, timeDelay)
     }

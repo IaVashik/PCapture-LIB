@@ -15,7 +15,7 @@
     foreach(eventName, eventInfo in ScheduleEvent.eventsList) {
         local event 
         // Process events until the list is empty or the next event's time hasn't arrived yet.  
-        while(eventInfo.len() > 0 && Time() >= (event = eventInfo.first()).executeTime) {
+        while(eventInfo.len() > 0 && Time() >= (event = eventInfo.first()).executionTime) {
             try {
                 event.run() 
             }

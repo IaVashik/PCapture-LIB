@@ -32,5 +32,5 @@
 
 
 IncludeScript("SRC/ActionScheduler/action")
-IncludeScript("SRC/ActionScheduler/event_manager")
+IncludeScript("SRC/ActionScheduler/action_scheduler")
 IncludeScript("SRC/ActionScheduler/event_handler")

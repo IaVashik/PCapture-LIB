@@ -5,12 +5,12 @@
      * @param {string|function} script - The script to execute. Can be a function or a string.
      * @param {number} runDelay - The delay in seconds.
      * @param {CBaseEntity|pcapEntity} activator - The activator entity. (optional)
-     * @param {CBaseEntity|pcapEntity} caller - The caller entity. (optional)
      * @param {array|null} args - Optional arguments to pass to the script function. 
+     * @param {CBaseEntity|pcapEntity} caller - The caller entity. (optional)
     */
-    delay = function(script, runDelay, activator = null, caller = null, args = null) {
+    delay = function(script, runDelay, activator = null, args = null, caller = null) {
         if (typeof script == "function")
-            return CreateScheduleEvent("global", script, runDelay, null, args)
+            return ScheduleEvent.Add("global", script, runDelay, args, null)
 
         EntFireByHandle(self, "runscriptcode", script, runDelay, activator, caller)
     },  
@@ -25,10 +25,10 @@
     */
     loopy = function(script, runDelay, loopCount, outputs = null) {
         if (loopCount > 0) {
-            this.delay(script, runDelay)
-            this.delay(this.loopy, runDelay, null, null, [script, runDelay, --loopCount, outputs])
+            RunScriptCode.delay(script, runDelay)
+            RunScriptCode.delay(RunScriptCode.loopy, runDelay, null, [script, runDelay, --loopCount, outputs], null)
         } else if (outputs)
-            this.delay(outputs, 0)
+            RunScriptCode.delay(outputs, 0)
     },
 
     /* 
@@ -43,8 +43,7 @@
      * @param {string} eventName - The name of the event used for scheduling. (optional, default="global")
     */
     setInterval = function(script, interval  = FrameTime(), runDelay = 0, eventName = "global") {
-        CreateScheduleEvent(eventName, script, runDelay)
-        CreateScheduleEvent(eventName, this.setInterval, interval + runDelay, null, [script, interval, 0, eventName])
+        ScheduleEvent.AddInterval(eventName, script, interval, runDelay)
     },
 
     /* 

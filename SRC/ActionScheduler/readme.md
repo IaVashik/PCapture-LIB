@@ -1,56 +1,111 @@
 # ActionScheduler Module
 
-The `ActionScheduler` module provides an enhanced system for creating and managing scheduled events in VScripts. It offers more flexibility and control compared to standard mechanisms like `EntFireByHandle`, allowing you to create complex events composed of multiple actions, schedule them with precise timing, and cancel them as needed.
+The `ActionScheduler` module provides an enhanced system for creating and managing scheduled events in VScripts. It offers more flexibility and control compared to standard mechanisms like `EntFireByHandle`, allowing you to create complex sequences of actions, schedule them with precise timing, and cancel them as needed.
 
-## [ActionScheduler/event.nut](event.nut)
+## [ActionScheduler/action.nut](action.nut)
 
-This file defines the `ScheduleEvent` class, which represents a scheduled event with information about its caller, action, execution time, optional note, and arguments.
+This file defines the `ScheduleAction` class, which represents a single action scheduled for execution at a specific time.
 
-### `ScheduleEvent`
+### `ScheduleAction` Class
 
-This class encapsulates the details of a scheduled event, providing methods for executing the event and accessing its properties. **It's required for the CreateScheduleEvent**
+#### `ScheduleAction(caller, action, timeDelay, args, note)`:
 
-**Properties:**
+**Constructor** 
 
-* `caller` (pcapEntity): The entity that created the event.
-* `action` (string or function): The action to execute when the event is triggered. This can be a string containing VScripts code or a function object.
-* `timeDelay` (number): The time at which the event is scheduled to be executed, measured in seconds since the start of the game.
-* `note` (string, optional): An optional note describing the event, which can be useful for debugging or logging purposes.
-* `args` (array, optional): Optional arguments to pass to the action function when the event is triggered.
-
-**Methods:**
-
-* `run()`: Executes the scheduled action. If the action is a string, it is compiled into a function before execution. If arguments are provided, they are passed to the action function. The return value of the action function is returned by the `run` method.
-
-
-## [ActionScheduler/event_manager.nut](event_manager.nut)
-
-This file provides functions for creating and managing scheduled events, including scheduling events, canceling events, and retrieving information about events.
-
-### `CreateScheduleEvent(eventName, action, timeDelay, note, args)`
-
-This function creates a new scheduled event and adds it to the list of scheduled events. If the event loop is not already running, it is started to process the scheduled events.
+Creates a new `ScheduleAction` object representing a scheduled action.
 
 **Parameters:**
 
-* `eventName` (string): The name of the event. This is used to group related events and to cancel events later.
-* `action` (string or function): The action to execute when the event is triggered. This can be a string containing VScripts code or a function object.
-* `timeDelay` (number): The delay in seconds before executing the event.
-* `note` (string, optional): An optional note describing the event.
-* `args` (array, optional): Optional arguments to pass to the action function.
+* `caller` (pcapEntity): The entity that scheduled the action.
+* `action` (string or function): The action to execute when the scheduled time arrives. This can be a string containing VScripts code or a function object.
+* `timeDelay` (number): The delay in seconds before executing the action.
+* `args` (array, optional): An optional array of arguments to pass to the action function.
+* `note` (string, optional): An optional note describing the action.
 
 **Example:**
 
 ```js
-// Schedule an event to print a message after 1 second
-CreateScheduleEvent("my_event", function() {
+local myAction = ScheduleAction(myEntity, function() {
+    printl("Action executed!")
+}, 2)
+```
+
+#### `run()`:
+Executes the scheduled action. If the action is a string, it is compiled into a function before execution. If arguments are provided, they are passed to the action function.
+
+**Example:**
+
+```js
+myAction.run()
+```
+
+## [ActionScheduler/action_scheduler.nut](action_scheduler.nut)
+
+This file provides functions for creating and managing scheduled events, including adding actions, creating intervals, and canceling events.
+
+### Functions
+
+#### `ScheduleEvent.Add(eventName, action, timeDelay, args, note)`:
+Adds a single action to a scheduled event with the specified name. If the event does not exist, it is created.
+
+**Parameters:**
+
+* `eventName` (string): The name of the event to add the action to.
+* `action` (string or function): The action to execute when the scheduled time arrives. This can be a string containing VScripts code or a function object.
+* `timeDelay` (number): The delay in seconds before executing the action.
+* `args` (array, optional): An optional array of arguments to pass to the action function.
+* `note` (string, optional): An optional note describing the action.
+
+**Example:**
+
+```js
+ScheduleEvent.Add("my_event", function() {
     printl("This is my scheduled event.")
 }, 1)
 ```
 
-### `cancelScheduledEvent(eventName, delay)`
+#### `ScheduleEvent.AddActions(eventName, actions, noSort)`:
+Adds multiple actions to a scheduled event.
 
-This function cancels all scheduled events with the given name.
+**Parameters:**
+
+* `eventName` (string): The name of the event to add the actions to.
+* `actions` (array or List): An array or List of `ScheduleAction` objects to add to the event.
+* `noSort` (boolean, optional): If true, the actions will not be sorted by execution time (default is false).
+
+**Example:**
+
+```js
+local actions = [
+    ScheduleAction(myEntity, function() { ... }, 1),
+    ScheduleAction(myEntity, function() { ... }, 3),
+    ScheduleAction(myEntity, function() { ... }, 2)
+]
+ScheduleEvent.AddActions("my_event", actions) // Actions will be sorted by execution time
+```
+
+#### `ScheduleEvent.AddInterval(eventName, action, interval, initialDelay, args, note)`:
+Adds an action to a scheduled event that will be executed repeatedly at a fixed interval.
+
+**Parameters:**
+
+* `eventName` (string): The name of the event to add the interval to.
+* `action` (string or function): The action to execute at each interval.
+* `interval` (number): The time interval in seconds between executions of the action.
+* `initialDelay` (number, optional): The initial delay in seconds before the first execution of the action (default is 0).
+* `args` (array, optional): An optional array of arguments to pass to the action function.
+* `note` (string, optional): An optional note describing the action.
+
+**Example:**
+
+```js
+ScheduleEvent.AddInterval("my_event", function() {
+    // ... do something periodically
+}, 1)
+```
+
+#### `ScheduleEvent.Cancel(eventName, delay)`:
+Cancels all scheduled actions within an event with the given name.
 
 **Parameters:**
 
@@ -60,34 +115,60 @@ This function cancels all scheduled events with the given name.
 **Example:**
 
 ```js
-// Cancel the "my_event" event after 0.5 seconds
-cancelScheduledEvent("my_event", 0.5)
+ScheduleEvent.Cancel("my_event") // Cancel the "my_event" event
 ```
 
-### `getEventInfo(eventName)`
-
-This function retrieves information about a scheduled event with the given name.
+#### `ScheduleEvent.CancelByAction(action, delay)`:
+Cancels all scheduled actions that match the given action.
 
 **Parameters:**
 
-* `eventName` (string): The name of the event to get information about.
-
-**Returns:**
-
-* (AVLTree or null): An AVL tree containing the scheduled `ScheduleEvent` objects for the event, or `null` if the event is not found.
+* `action` (string or function): The action to cancel.
+* `delay` (number, optional): An optional delay in seconds before canceling the actions.
 
 **Example:**
 
 ```js
-local eventInfo = getEventInfo("my_event")
-if (eventInfo) {
-    // ... process the event information
+function test() {
+    // do something
+}
+
+ScheduleEvent.Add("my_test_event", test, 1)
+
+ScheduleEvent.CancelByAction(test)
+```
+
+#### `ScheduleEvent.CancelAll()`:
+Cancels all scheduled events and actions.
+
+**Example:**
+
+```js
+ScheduleEvent.CancelAll() // Cancel all scheduled events and actions
+```
+
+#### `ScheduleEvent.GetEvent(eventName)`:
+Retrieves a scheduled event by name as a `List` of `ScheduleAction` objects.
+
+**Parameters:**
+
+* `eventName` (string): The name of the event to retrieve.
+
+**Returns:**
+
+* (List or null): The `List` containing the scheduled actions for the event, or `null` if the event is not found.
+
+**Example:**
+
+```js
+local eventActions = ScheduleEvent.GetEvent("my_event")
+if (eventActions) {
+    // ... process the actions in the event
 }
 ```
 
-### `eventIsValid(eventName)`
-
-This function checks if a scheduled event with the given name exists and has scheduled events.
+#### `ScheduleEvent.IsValid(eventName)`:
+Checks if a scheduled event with the given name exists and has scheduled actions.
 
 **Parameters:**
 
@@ -95,19 +176,18 @@ This function checks if a scheduled event with the given name exists and has sch
 
 **Returns:**
 
-* (boolean): True if the event exists and has scheduled events, false otherwise.
+* (boolean): True if the event exists and has scheduled actions, false otherwise.
 
 **Example:**
 
 ```js
-if (eventIsValid("my_event")) {
-    // The event exists and has scheduled events
+if (ScheduleEvent.IsValid("my_event")) {
+    // The event exists and has scheduled actions
 }
 ```
 
-### `getEventNote(eventName)`
-
-This function returns the note associated with the first scheduled event with the given name. It can be useful for retrieving additional information about the event's purpose.
+#### `ScheduleEvent.GetNote(eventName)`:
+Retrieves the note associated with the first scheduled action within the event with the given name.
 
 **Parameters:**
 
@@ -115,28 +195,20 @@ This function returns the note associated with the first scheduled event with th
 
 **Returns:**
 
-* (string or null): The note of the first event, or `null` if no note is found or the event doesn't exist.
+* (string or null): The note of the first action in the event, or `null` if no note is found or the event doesn't exist.
 
 **Example:**
 
 ```js
-local eventNote = getEventNote("my_event")
-if (eventNote) {
-    printl("Event note:" + eventNote)
-}
+ScheduleEvent.Add("my_note_event", "printl(123)", 1, null, "MyNote")
+local actionNote = ScheduleEvent.GetNote("my_note_event")
+printl("Action note: ", actionNote) // Action note: MyNote
 ```
 
 ## [ActionScheduler/event_handler.nut](event_handler.nut)
 
-This file defines the `ExecuteScheduledEvents` function, which processes scheduled events when their execution time arrives.
+This file contains the `ExecuteScheduledEvents` function, which processes scheduled events and actions.
 
 ### `ExecuteScheduledEvents()`
 
-This function iterates over all scheduled events and checks if their scheduled execution time has arrived. If so, it executes the event's action and removes it from the list of scheduled events. The function then schedules itself to run again after a short delay to continue processing events.
-
-**Example:**
-
-```js
-// This function is called automatically by the Events module
-ExecuteScheduledEvents()
-```
+This function iterates over all scheduled events and checks if the execution time for the first action in each event has arrived. If so, it executes the action and removes it from the event's list of actions. If an event has no more actions remaining, it is removed from the list of scheduled events. The function then schedules itself to run again after a short delay to continue processing events. **This function is called automatically by the ActionScheduler module**
