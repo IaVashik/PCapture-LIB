@@ -11,7 +11,7 @@
 
 ::ScheduleEvent <- {
     // Object to store scheduled events 
-    eventsList = {global = AVLTree()},
+    eventsList = {global = List()},
     // Var to track if event loop is running
     executorRunning = false,
 

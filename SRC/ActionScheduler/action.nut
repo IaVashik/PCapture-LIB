@@ -9,7 +9,7 @@
     // The action to execute when the event is triggered.  
     action = null;
     // The time at which the event is scheduled to be executed. 
-    timeDelay = null;
+    executeTime = null;
     // An optional note describing the event.  
     note = null;
     // Optional arguments to pass to the action function.  
@@ -28,7 +28,7 @@
         this.caller = caller
 
         this.action = action
-        this.timeDelay = timeDelay + Time() // todo rename
+        this.executeTime = timeDelay + Time()
         this.note = note
 
         this.args = args
@@ -56,13 +56,13 @@
     }
 
     // TODO
-    function GetInfo() return "[Caller] " + caller + "\n[Action] " + action + "\n[TimeDelay] " + timeDelay + "\n[Note] " + note 
+    function GetInfo() return "[Caller] " + caller + "\n[Action] " + action + "\n[executeTime] " + executeTime + "\n[Note] " + note 
     function _typeof() return "ScheduleAction"
-    function _tostring() return "ScheduleAction: (" + this.timeDelay + ")"
+    function _tostring() return "ScheduleAction: (" + this.executeTime + ")"
     function _cmp(other) {    
-        if (this.timeDelay > other.timeDelay) {
+        if (this.executeTime > other.executeTime) {
             return 1;
-        } else if (this.timeDelay < other.timeDelay) {
+        } else if (this.executeTime < other.executeTime) {
             return -1;
         } else {
             return 0; 

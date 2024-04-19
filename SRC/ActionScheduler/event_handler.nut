@@ -15,7 +15,7 @@
     foreach(eventName, eventInfo in ScheduleEvent.eventsList) {
         local event 
         // Process events until the list is empty or the next event's time hasn't arrived yet.  
-        while(eventInfo.len() > 0 && Time() >= (event = eventInfo.GetMin()).timeDelay) {
+        while(eventInfo.len() > 0 && Time() >= (event = eventInfo.first()).executeTime) {
             try {
                 event.run() 
             }
@@ -32,10 +32,12 @@
                     printl("\nFUNCTION INFO\n" + info)
                 }
             }
-            eventInfo.remove(event) 
+            eventInfo.remove(0) 
         }
-        if(eventName != "global" && eventInfo.len() == 0) 
+        if(eventName != "global" && eventInfo.len() == 0) {
             ScheduleEvent.eventsList.rawdelete(eventName)
+            dev.debug("I delete " + eventName) // todo dev code
+        }
     }
-    RunScriptCode.delay("ExecuteScheduledEvents()", FrameTime()) // todo
+    EntFireByHandle(self, "runscriptcode", "ExecuteScheduledEvents()", FrameTime(), null, null)
 }
