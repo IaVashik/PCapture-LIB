@@ -71,7 +71,7 @@ utils_tests <- {
         }
 
         RunScriptCode.delay(testFunc, 1.0)
-        return assert(getEventInfo("global") != null) // Assuming the event is scheduled correctly
+        return assert(ScheduleEvent.GetEvent("global") != null) // Assuming the event is scheduled correctly
     },
 
     function scripts_run_script_code_from_str_test() {

@@ -10,8 +10,8 @@
  local applyPortal = function(startPos, hitPos, portal, partnerPortal) {
     local portalAngles = portal.GetAngles();
     local partnerAngles = partnerPortal.GetAngles();
-    local offset = math.unrotateVector(hitPos - portal.GetOrigin(), portalAngles);
-    local dir = math.unrotateVector(hitPos - startPos, portalAngles);
+    local offset = math.vector.unrotate(hitPos - portal.GetOrigin(), portalAngles);
+    local dir = math.vector.unrotate(hitPos - startPos, portalAngles);
 
     offset = Vector(offset.x * -1, offset.y * -1, offset.z)
     dir = Vector(dir.x * -1, dir.y * -1, dir.z)
@@ -120,7 +120,7 @@ TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, set
                 return traceData
         }
         
-        ignoreEntities = addInIgnoreList(ignoreEntities, partnerPortal)
+        ignoreEntities = TracePlus.Settings.UpdateIgnoreEntities(ignoreEntities, partnerPortal)
 
         // Calculate new start and end positions for the trace after passing through the portal.  
         local ray = applyPortal(startPos, hitPos, portal, partnerPortal);

@@ -74,7 +74,7 @@ vector["reflect"] <- function(dir, normal) {
  * @returns {Vector} - The clamped vector.
 */
 vector["clamp"] <- function(vector, min = 0, max = 255) {
-    return Vector(this.clamp(vector.x, min, max), this.clamp(vector.y, min, max), this.clamp(vector.z, max, max)) 
+    return Vector(math.clamp(vector.x, min, max), math.clamp(vector.y, min, max), math.clamp(vector.z, min, max)) 
 }
 
 /*
@@ -120,5 +120,5 @@ vector["sign"] <- function(vec) {
  * @returns {Vector} - A new vector with the absolute values of the original vector's components.
 */
 vector["abs"] <- function(vector) {
-    return Vector(abs(vector.x), abs(vector.y), abs(vector.z)) 
+    return Vector(::abs(vector.x), ::abs(vector.y), ::abs(vector.z)) 
 }
