@@ -6,7 +6,7 @@
 </h2>
 </div>
 
-![version](https://img.shields.io/badge/Pcapture--Lib-v2.0.0.release--candidate-informational)
+![version](https://img.shields.io/badge/Pcapture--Lib-v2.0.0.stable-informational)
 
 **PCapture-Lib is a comprehensive VScripts library for Portal 2 that empowers mappers to create sophisticated and engaging gameplay experiences.** It provides a wealth of features and enhancements, streamlining development and allowing you to focus on the creative aspects of your maps.
 
