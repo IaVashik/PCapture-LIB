@@ -19,6 +19,7 @@
      * @param {string|null} note - An optional note associated with the trace. 
     */ 
     constructor(startpos, endpos, ignoreEntities, settings, note) {
+        if(typeof settings != "TraceSettings") throw("Invalid trace settings provided. Expected an instance of TracePlus.Settings")
         this.settings = settings
         
         local result = this.Trace(startpos, endpos, ignoreEntities, note)

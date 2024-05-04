@@ -178,7 +178,7 @@
      *
      * @param {function} filterFunction - The filter function to set. 
     */
-    function SetCollisionFilter(filterFunction) {
+    function SetCollisionFilter(filterFunction) { // aka. SetHitFilter
         this.shouldRayHitEntity = filterFunction
     }
 
