@@ -8,7 +8,7 @@ This file initializes the `Animations` module, defines the `AnimEvent` class for
 
 ### `AnimEvent`
 
-The `AnimEvent` class is used to encapsulate information about an animation event. It stores details such as the event name, delay, global delay, note, outputs (functions to call when the animation finishes), and the entities involved in the animation.
+The `AnimEvent` class is used to encapsulate information about an animation event. It stores details such as the event name, delay, global delay, scope, outputs (functions to call when the animation finishes), and the entities involved in the animation.
 
 #### `AnimEvent(settings, entities, time)`
 
@@ -21,7 +21,7 @@ Creates a new `AnimEvent` object with the specified settings, entities, and anim
 * `settings` (table): A table containing optional settings for the animation event:
 * `eventName` (string, optional): The name of the event (default is a unique string starting with "anim").
 * `globalDelay` (number, optional): A global delay in seconds before the animation starts (default is 0).
-* `note` (string, optional): A note describing the animation event.
+* `scope` (object, optional): The scope in which to execute the action (default is `this`).
 * `outputs` (string or function, optional): A script or function to execute when the animation finishes.
 * `entities` (array): An array of entities to animate.
 * `time` (number): The duration of the animation in seconds.
@@ -64,6 +64,10 @@ This function creates an animation that smoothly transitions the alpha (opacity)
 * `time` (number): The duration of the animation in seconds.
 * `animSetting` (table, optional): A table containing additional animation settings (see `AnimEvent` constructor for details).
 
+**Returns:**
+
+*   (number): The duration of the animation in seconds. 
+
 **Example:**
 
 ```js
@@ -86,6 +90,10 @@ This function creates an animation that smoothly transitions the color of entiti
 * `endColor` (string or Vector): The ending color as a string or a Vector.
 * `time` (number): The duration of the animation in seconds.
 * `animSetting` (table, optional): A table containing additional animation settings (see `AnimEvent` constructor for details).
+
+**Returns:**
+
+*   (number): The duration of the animation in seconds. 
 
 **Example:**
 
@@ -110,6 +118,10 @@ This function creates an animation that moves entities from the starting positio
 * `time` (number): The duration of the animation in seconds.
 * `animSetting` (table, optional): A table containing additional animation settings (see `AnimEvent` constructor for details).
 
+**Returns:**
+
+*   (number): The duration of the animation in seconds. 
+
 **Example:**
 
 ```js
@@ -130,6 +142,10 @@ This function creates an animation that transitions the position of entities ove
 * `endPos` (Vector): The ending position of the entities.
 * `speed` (number): The speed of the animation in units per tick.
 * `animSetting` (table, optional): A table containing additional animation settings (see the `AnimEvent` constructor for details).
+
+**Returns:**
+
+*   (number): The duration of the animation in seconds. 
 
 **Example:**
 
@@ -155,6 +171,10 @@ This function creates an animation that smoothly changes the angles of entities 
 * `endAngles` (Vector): The ending angles of the entities (pitch, yaw, roll).
 * `time` (number): The duration of the animation in seconds.
 * `animSetting` (table, optional): A table containing additional animation settings (see `AnimEvent` constructor for details).
+
+**Returns:**
+
+*   (number): The duration of the animation in seconds. 
 
 **Example:**
 

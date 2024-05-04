@@ -6,6 +6,7 @@
  * @param {number} endOpacity - The ending opacity value (0-255). 
  * @param {number} time - The duration of the animation in seconds. 
  * @param {table} animSetting - A table containing additional animation settings. (optional) 
+ * @returns {number} The duration of the animation in seconds. 
 */
  animate["AlphaTransition"] <- function(entities, startOpacity, endOpacity, time, animSetting = {}) {
     local animSetting = AnimEvent("alpha", animSetting, entities, time)
@@ -18,4 +19,5 @@
         function(ent, newAlpha) {ent.SetAlpha(newAlpha)})
     
     animSetting.callOutputs()
+    return animSetting.delay
 }

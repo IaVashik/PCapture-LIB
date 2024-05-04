@@ -6,6 +6,7 @@
  * @param {string|Vector} endColor - The ending color as a string or a Vector. 
  * @param {number} time - The duration of the animation in seconds. 
  * @param {table} animSetting - A table containing additional animation settings. (optional) 
+ * @returns {number} The duration of the animation in seconds. 
 */
  animate["ColorTransition"] <- function(entities, startColor, endColor, time, animSetting = {}) {
     local animSetting = AnimEvent("color", animSetting, entities, time)
@@ -16,4 +17,5 @@
         function(ent, newColor) {ent.SetColor(newColor)})
     
     animSetting.callOutputs()
+    return animSetting.delay
 }
