@@ -15,9 +15,9 @@
     eventName = null
     delay = 0
     globalDelay = 0
-    note = null
     outputs = null
     entities = []
+    scope = null;
 
     /*
      * Constructor for an AnimEvent object. 
@@ -31,11 +31,11 @@
         this.animName = name
         this.entities = _GetEntities(ents)
         this.delay = time
-
+        
         this.eventName = macros.GetFromTable(table, "eventName", UniqueString(name + "_anim")) //! todo mega bruh! Mb use link id, hash or str?
         this.globalDelay = macros.GetFromTable(table, "globalDelay", 0)
-        this.note = macros.GetFromTable(table, "note", null)
         this.outputs = macros.GetFromTable(table, "outputs", null)
+        this.scope = macros.GetFromTable(table, "scope", this)
     }
 
     /* 
@@ -43,7 +43,7 @@
     */
     function callOutputs() {
         if (this.outputs)
-            ScheduleEvent.Add(this.eventName, this.outputs, this.time)
+            ScheduleEvent.Add(this.eventName, this.outputs, this.delay + this.globalDelay, null, this.scope)
     }
 
     function _GetEntities(entities) { // meh :>
@@ -75,20 +75,23 @@
 animate["applyAnimation"] <- function(animSetting, valueCalculator, propertySetter, transitionFrames = 0) {
     if(transitionFrames == 0)
         transitionFrames = animSetting.delay / FrameTime();
+    transitionFrames = ceil(transitionFrames) 
     local actionsList = List()
 
-    for (local step = 0; step < transitionFrames; step++) {
+    for (local step = 0; step <= transitionFrames; step++) {
         local elapsed = (FrameTime() * step) + animSetting.globalDelay
 
         local newValue = valueCalculator(step, transitionFrames)
         
         foreach(ent in animSetting.entities) {
-            local action = ScheduleAction(this, propertySetter, elapsed, [ent, newValue], animSetting.note)
+            local action = ScheduleAction(this, propertySetter, elapsed, [ent, newValue])
             actionsList.append(action)
         }
     }
 
     ScheduleEvent.AddActions(animSetting.eventName, actionsList, true)
+    animSetting.delay = FrameTime() * transitionFrames
+
     dev.debug("Created " + animSetting.animName + " animation ("+animSetting.eventName+") for " + actionsList.len() + " actions")
 }
 
