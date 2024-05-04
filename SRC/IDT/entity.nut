@@ -178,12 +178,12 @@
     */
     function ConnectOutputEx(outputName, script, delay = 0, fires = -1) {
         if(typeof script == "function") {
-            local funcName = "OutputFunc" + UniqueString()
+            local funcName = UniqueString("OutputFunc")
             getroottable()[funcName] <- script
             script = funcName + "()"
-        } 
+        }
 
-        this.addOutput(outputName, self, "RunScriptCode", script, delay, fires)
+        this.addOutput(outputName, this, "RunScriptCode", script, delay, fires)
     }
 
 
@@ -473,7 +473,7 @@
     function GetAABB() {
         local max = CreateAABB(7)
         local min = CreateAABB(0)
-        local center = CreateAABB( 4)
+        local center = CreateAABB(4)
         return {min = min, center = center, max = max}
     }
 
@@ -569,7 +569,7 @@
      * @returns {string} - The prefix of the entity name.
     */
     function GetNamePrefix() {
-        return macros.StrToVec(this.GetName())
+        return macros.GetPrefix(this.GetName())
     }
 
 
@@ -609,15 +609,17 @@
             angles = Vector(45, 45, 45)
 
         local all_vertex = this.getBBoxPoints()
-        local x = AVLTree()
-        local y = AVLTree()
-        local z = AVLTree()
+        local x = array(8) // AVLTree() // todo FUCKING AVL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        local y = array(8)
+        local z = array(8)
 
-        foreach(vec in all_vertex) {
-            x.insert(vec.x)
-            y.insert(vec.y)
-            z.insert(vec.z)
+        foreach(idx, vec in all_vertex) {
+            x[idx] = vec.x
+            y[idx] = vec.y
+            z[idx] = vec.z
         }
+
+        x.sort(); y.sort(); z.sort()
  
         if(stat == 4) // centered
             return ( Vector(x[7], y[7], z[7]) - Vector(x[0], y[0], z[0]) ) * 0.5
@@ -635,15 +637,16 @@
         local min = this.GetBoundingMins();
         local angles = this.GetAngles()
     
+        local getVertex = macros.GetVertex
         return [
-            macros.GetVertex(max, min, min, angles), // 0 - Right-Bottom-Front
-            macros.GetVertex(max, max, min, angles), // 1 - Right-Top-Front
-            macros.GetVertex(min, max, min, angles), // 2 - Left-Top-Front
-            macros.GetVertex(min, min, min, angles)  // 3 - Left-Bottom-Front 
-            macros.GetVertex(min, min, max, angles), // 4 - Left-Bottom-Back
-            macros.GetVertex(min, max, max, angles), // 5 - Left-Top-Back
-            macros.GetVertex(max, max, max, angles), // 6 - Right-Top-Back
-            macros.GetVertex(max, min, max, angles), // 7 - Right-Bottom-Back
+            getVertex(max, min, min, angles), // 0 - Right-Bottom-Front
+            getVertex(max, max, min, angles), // 1 - Right-Top-Front
+            getVertex(min, max, min, angles), // 2 - Left-Top-Front
+            getVertex(min, min, min, angles)  // 3 - Left-Bottom-Front 
+            getVertex(min, min, max, angles), // 4 - Left-Bottom-Back
+            getVertex(min, max, max, angles), // 5 - Left-Top-Back
+            getVertex(max, max, max, angles), // 6 - Right-Top-Back
+            getVertex(max, min, max, angles), // 7 - Right-Bottom-Back
         ]
     }
 

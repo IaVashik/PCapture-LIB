@@ -69,7 +69,7 @@
 
         current_node.next_ref = next_node;
         next_node.prev_ref = current_node;
-
+        
         this.last_node = next_node;
         this.length++;
     }
@@ -139,10 +139,17 @@
         local next = node.next_ref;
         local prev = node.prev_ref;
 
-        if (prev)
-            prev.next_ref = next;
-        if (next) 
+        if (prev) {
+            prev.next_ref = next; 
+        } else {
+            this.first_node.next_ref = next;
+        }
+    
+        if (next) {
             next.prev_ref = prev;
+        } else { 
+            this.last_node = prev; 
+        } 
 
         this.length--;
     }
