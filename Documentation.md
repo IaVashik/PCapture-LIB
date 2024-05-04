@@ -27,6 +27,7 @@ This file contains utility functions for working with vectors, including checkin
 | Function | Description |
 | ----------------------- | ----------------------------------------------------------------------------------------------------- |
 | `math.vector.isEqually(vec1, vec2)` | Checks if two vectors are equal based on their rounded components. |
+| `math.vector.mul(vec1, vec2)` | A new vector with the result of the element-wise multiplication. |
 | `math.vector.rotate(vec, angle)` | Rotates a vector by a given angle represented as Euler angles. |
 | `math.vector.unrotate(vec, angle)` | Un-rotates a vector by a given angle represented as Euler angles. |
 | `math.vector.random(min, max)` | Generates a random vector within the specified range (either between two vectors or two numbers). |
@@ -454,7 +455,7 @@ This file defines the `ScheduleAction` class, which represents a single action s
 
 | Method | Description |
 | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ScheduleEvent(caller, action, timeDelay, note, args)` | Creates a new `ScheduleEvent` object with the specified caller, action, execution time, optional note, and arguments. |
+| `ScheduleEvent(caller, action, timeDelay, args)` | Creates a new `ScheduleEvent` object with the specified caller, action, execution time, optional note, and arguments. |
 | `run()` | Executes the scheduled action, compiling it if necessary and passing any provided arguments. Returns the result of the action function. |
 
 ### [`ActionScheduler/action_scheduler.nut`](SRC/ActionScheduler/action_scheduler.nut)
@@ -463,15 +464,14 @@ This file provides functions for creating and managing scheduled events, includi
 
 | Function | Description |
 | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `ScheduleEvent.Add(eventName, action, timeDelay, args, note)`  | Adds a single action to a scheduled event with the specified name. If the event does not exist, it is created.                                                                                                                     |
+| `ScheduleEvent.Add(eventName, action, timeDelay, args, scope)`  | Adds a single action to a scheduled event with the specified name. If the event does not exist, it is created.                                                                                                                     |
+| `ScheduleEvent.AddInterval(eventName, action, interval, initialDelay, args, scope)` | Adds an action to a scheduled event that will be executed repeatedly at a fixed interval.                                                                                                                                               |
 | `ScheduleEvent.AddActions(eventName, actions, noSort)`      | Adds multiple actions to a scheduled event, ensuring they are sorted by execution time.                                                                                                                                                 |
-| `ScheduleEvent.AddInterval(eventName, action, interval, initialDelay, args, note)` | Adds an action to a scheduled event that will be executed repeatedly at a fixed interval.                                                                                                                                               |
 | `ScheduleEvent.Cancel(eventName, delay)`       | Cancels all scheduled actions within an event with the given name.                                                                                                                                                                    |
 | `ScheduleEvent.CancelByAction(action, delay)` | Cancels all scheduled actions that match the given action.                                                                                                                                                                         | 
 | `ScheduleEvent.CancelAll()`                  | Cancels all scheduled events and actions, effectively clearing the event scheduler.                                                                                                                                                         |
 | `ScheduleEvent.GetEvent(eventName)`           | Retrieves a scheduled event by name as a `List` of `ScheduleAction` objects.                                                                                                                                                           |
 | `ScheduleEvent.IsValid(eventName)`            | Checks if a scheduled event with the given name exists and has scheduled actions.                                                                                                                                                |
-| `ScheduleEvent.GetNote(eventName)`            | Retrieves the note associated with the first scheduled action within the event with the given name.                                                                                                                                      | 
 
 ### [`ActionScheduler/event_handler.nut`](SRC/ActionScheduler/event_handler.nut)
 
