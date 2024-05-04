@@ -173,6 +173,27 @@ if (math.vector.isEqually(vec1, vec2)) {
 }
 ```
 
+### `math.vector.mul(vec1, vec2)`
+
+Performs element-wise multiplication of two vectors.
+
+**Parameters:**
+
+* `vec1` (Vector): The first vector.
+* `vec2` (Vector): The second vector. 
+
+**Returns:**
+
+* (Vector): A new vector with the result of the element-wise multiplication.
+
+**Example:**
+
+```js
+local vec1 = Vector(1, 2, 3)
+local vec2 = Vector(4, 5, 6)
+local result = math.vector.mul(vec1, vec2)  // result will be Vector(4, 10, 18) 
+```
+
 ### `math.vector.rotate(vec, angle)`
 
 This function rotates a vector by a given angle represented as Euler angles (pitch, yaw, roll). It uses quaternion operations to perform the rotation.

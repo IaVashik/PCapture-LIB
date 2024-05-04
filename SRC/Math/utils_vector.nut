@@ -16,6 +16,18 @@ vector["isEqually"] <- function(vector, other) {
             vector.z == other.z
 }
 
+
+/*
+ * Performs element-wise multiplication of two vectors.
+ *
+ * @param {Vector} vector - The first vector.
+ * @param {Vector} other - The second vector.
+ * @returns {Vector} - A new vector with the result of the element-wise multiplication.
+*/
+vector["mul"] <- function(vector, other) {
+    return Vector(vector.x * other.x, vector.y * other.y, vector.z * other.z)
+}
+
 /*
  * Rotates a vector by a given angle.
  *
