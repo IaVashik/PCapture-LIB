@@ -5,7 +5,7 @@ function RunTests(testName, tests_table) {
     printl("-------------------------------------------------")
     
     local passed_tests = tests_table.len()
-    local unsuccessful = arrayLib.new()
+    local unsuccessful = List()
     foreach(name, test_func in tests_table) {
         try {
             test_func()
@@ -17,7 +17,7 @@ function RunTests(testName, tests_table) {
     }
 
     local resTest = "Tests passed successfully!"
-    if(passed_tests != tests_table.len()) {
+    if(unsuccessful.len() > 0) {
         resTest = dev.format("{} tests with error:\n* {}", testName, unsuccessful.join("\n* "))
         printl("")
     } 

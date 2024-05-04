@@ -26,9 +26,9 @@ events_tests <- {
             return assert(true)
         }
 
-        ScheduleEvent.Add("event_info_test", testFunc, 0.1, null, "Test Note")
+        ScheduleEvent.Add("event_info_test", testFunc, 0.1, null)
         local eventInfo = ScheduleEvent.GetEvent("event_info_test")
-        return assert(eventInfo.len() == 1 && eventInfo[0].note == "Test Note")
+        return assert(eventInfo.len() == 1)
     },
 
     function event_validity_test() {
@@ -38,15 +38,6 @@ events_tests <- {
 
         ScheduleEvent.Add("event_validity_test", testFunc, 0.1)
         return assert(ScheduleEvent.IsValid("event_validity_test"))
-    },
-
-    function get_event_note_test() {
-        local testFunc = function() {
-            return assert(true)
-        }
-
-        ScheduleEvent.Add("get_event_note_test", testFunc, 0.1, null, "Test Note")
-        return assert(ScheduleEvent.GetNote("get_event_note_test") == "Test Note")
     },
 
     function schedule_event_with_args_test() {
@@ -91,14 +82,19 @@ events_tests <- {
 }
 
 class ThisTest {
+    something = false
     constructor() {}
 
     function theta() {
         printl("Hello, Theta!")
+        this.something = true
     }
 
     function test() {
         ScheduleEvent.Add("this_test_event", theta, 0.2) 
+        ScheduleEvent.Add("this_test_event", function() {
+            if(!this.something) throw("WTF BRO?")
+        }, 0.3) 
     }
 }
 
