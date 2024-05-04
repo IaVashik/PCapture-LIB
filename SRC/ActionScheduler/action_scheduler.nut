@@ -7,7 +7,6 @@
  * @param {array|null} args - An optional array of arguments to pass to the action function.
  * @param {object} scope - The scope in which to execute the action (default is `this`). 
 */
-*/
 ScheduleEvent["Add"] <- function(eventName, action, timeDelay, args = null, scope = this) {
     if ( !(eventName in ScheduleEvent.eventsList) ) {
         ScheduleEvent.eventsList[eventName] <- List()
