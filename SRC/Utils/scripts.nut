@@ -4,13 +4,13 @@
      * 
      * @param {string|function} script - The script to execute. Can be a function or a string.
      * @param {number} runDelay - The delay in seconds.
-     * @param {CBaseEntity|pcapEntity} activator - The activator entity. (optional)
      * @param {array|null} args - Optional arguments to pass to the script function. 
+     * @param {entity|object} activator - The activator entity. (optional)
      * @param {CBaseEntity|pcapEntity} caller - The caller entity. (optional)
     */
-    delay = function(script, runDelay, activator = null, args = null, caller = null) {
+    delay = function(script, runDelay, args = null, activator = null, caller = null) { 
         if (typeof script == "function")
-            return ScheduleEvent.Add("global", script, runDelay, args, null)
+            return ScheduleEvent.Add("global", script, runDelay, args, caller)
 
         EntFireByHandle(self, "runscriptcode", script, runDelay, activator, caller)
     },  

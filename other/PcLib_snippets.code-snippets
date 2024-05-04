@@ -942,7 +942,7 @@
     // * Utils/scripts.nut
     "RunScriptCode.delay": { 
         "prefix": "RunScriptCode.delay",
-        "body": "RunScriptCode.delay(${1:script}, ${2:runDelay}, ${3:activator}, ${4:caller}, ${5:args})",
+        "body": "RunScriptCode.delay(${1:script}, ${2:runDelay}, ${3:args}, ${4:activator}, ${5:caller})",
         "description": "Creates a delay before executing the specified script."
     }, 
     "RunScriptCode.loopy": { 
