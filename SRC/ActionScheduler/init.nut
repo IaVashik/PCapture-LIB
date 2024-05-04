@@ -25,7 +25,6 @@
     CancelAll = null,
     
     GetEvent = null,
-    GetNote = null,
     
     IsValid = null,
 }

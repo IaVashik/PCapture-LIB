@@ -354,7 +354,7 @@
     }, 
     "List.new": {
         "prefix": "List.new",
-        "body": "List.new(${1:values})",
+        "body": "List(${1:values})",
         "description": "Creates a new List object."
     }, 
     "List.append": { 
@@ -992,7 +992,7 @@
     // Events 
     "ScheduleEvent.Add": {
         "prefix": "ScheduleEvent.Add",
-        "body": "ScheduleEvent.Add(${1:eventName}, ${2:action}, ${3:delay}, ${4:args}, ${5:note})",
+        "body": "ScheduleEvent.Add(${1:eventName}, ${2:action}, ${3:delay}, ${4:args}, ${5:scope})",
         "description": "Adds a single action to a scheduled event."
     },
     "ScheduleEvent.AddActions": {
@@ -1002,7 +1002,7 @@
     }, 
     "ScheduleEvent.AddInterval": {
         "prefix": "ScheduleEvent.AddInterval",
-        "body": "ScheduleEvent.AddInterval(${1:eventName}, ${2:action}, ${3:interval}, ${4:initialDelay}, ${5:args}, ${6:note})", 
+        "body": "ScheduleEvent.AddInterval(${1:eventName}, ${2:action}, ${3:interval}, ${4:initialDelay}, ${5:args}, ${6:scope})", 
         "description": "Adds an action to a scheduled event that will be executed repeatedly at a fixed interval."
     },
     "ScheduleEvent.Cancel": { 
@@ -1030,11 +1030,6 @@
         "body": "ScheduleEvent.IsValid(${1:eventName})", 
         "description": "Checks if a scheduled event is valid."
     },
-    "ScheduleEvent.GetNote": {
-        "prefix": "ScheduleEvent.GetNote", 
-        "body": "ScheduleEvent.GetNote(${1:eventName})", 
-        "description": "Gets the note of the first scheduled action within an event." 
-    }, 
 
     // * GameEvents 
     "GameEvent.new": {

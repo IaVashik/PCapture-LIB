@@ -8,7 +8,7 @@ This file defines the `ScheduleAction` class, which represents a single action s
 
 ### `ScheduleAction` Class
 
-#### `ScheduleAction(caller, action, timeDelay, args, note)`:
+#### `ScheduleAction(caller, action, timeDelay, args)`:
 
 **Constructor** 
 
@@ -20,7 +20,6 @@ Creates a new `ScheduleAction` object representing a scheduled action.
 * `action` (string or function): The action to execute when the scheduled time arrives. This can be a string containing VScripts code or a function object.
 * `timeDelay` (number): The delay in seconds before executing the action.
 * `args` (array, optional): An optional array of arguments to pass to the action function.
-* `note` (string, optional): An optional note describing the action.
 
 **Example:**
 
@@ -45,7 +44,7 @@ This file provides functions for creating and managing scheduled events, includi
 
 ### Functions
 
-#### `ScheduleEvent.Add(eventName, action, timeDelay, args, note)`:
+#### `ScheduleEvent.Add(eventName, action, timeDelay, args, scope)`:
 Adds a single action to a scheduled event with the specified name. If the event does not exist, it is created.
 
 **Parameters:**
@@ -54,7 +53,7 @@ Adds a single action to a scheduled event with the specified name. If the event 
 * `action` (string or function): The action to execute when the scheduled time arrives. This can be a string containing VScripts code or a function object.
 * `timeDelay` (number): The delay in seconds before executing the action.
 * `args` (array, optional): An optional array of arguments to pass to the action function.
-* `note` (string, optional): An optional note describing the action.
+* `scope` (object, optional): The scope in which to execute the action (default is `this`).  
 
 **Example:**
 
@@ -62,6 +61,70 @@ Adds a single action to a scheduled event with the specified name. If the event 
 ScheduleEvent.Add("my_event", function() {
     printl("This is my scheduled event.")
 }, 1)
+```
+
+#### `ScheduleEvent.AddInterval(eventName, action, interval, initialDelay, args, scope)`:
+Adds an action to a scheduled event that will be executed repeatedly at a fixed interval.
+
+**Parameters:**
+
+* `eventName` (string): The name of the event to add the interval to.
+* `action` (string or function): The action to execute at each interval.
+* `interval` (number): The time interval in seconds between executions of the action.
+* `initialDelay` (number, optional): The initial delay in seconds before the first execution of the action (default is 0).
+* `args` (array, optional): An optional array of arguments to pass to the action function.
+* `scope` (object, optional): The scope in which to execute the action (default is `this`).  
+
+**Example:**
+
+```js
+ScheduleEvent.AddInterval("my_event", function() {
+    // ... do something periodically
+}, 1)
+```
+
+##### Using the `args` parameter 
+
+The `args` parameter allows you to pass additional arguments to the scheduled action when it is executed. This can be useful for providing context or data that the action needs to perform its task. 
+
+**Example:**
+
+```js
+// Schedule an event to print a message with a custom name after 2 seconds.
+ScheduleEvent.Add("my_event", function(name) {
+    printl("Hello, " + name + "!")
+}, 2, ["Theta"])  // Pass an array containing the name "Theta" as the args parameter.
+```
+
+##### Using the `scope` parameter
+
+The `scope` parameter is essential for correctly handling delayed events within classes.  It allows you to specify the context in which the scheduled action will be executed.  When you schedule an action within a class method, passing `this` as the `scope` ensures that the action has access to the class instance's properties and methods.
+
+**Example:**
+
+```js
+class MyClass {
+    something = 11
+
+    function myMethod() { 
+        // Schedule an event to call another method of this class after 1 second.
+        ScheduleEvent.Add("my_event", function() {
+            this.anotherMethod()  // Access another method of the class instance.
+            printl(this.something)
+        }, 1, null, this)  // Pass "this" as the scope. 
+
+        // Alternative:
+        // ScheduleEvent.Add("my_event", function(scope) {
+        //     scope.anotherMethod() 
+        //     printl(scope.something)
+        // }, 1, [this]) 
+    } 
+
+    function anotherMethod() { 
+        this.something = 15
+        // ...
+    }
+}
 ```
 
 #### `ScheduleEvent.AddActions(eventName, actions, noSort)`:
@@ -82,26 +145,6 @@ local actions = [
     ScheduleAction(myEntity, function() { ... }, 2)
 ]
 ScheduleEvent.AddActions("my_event", actions) // Actions will be sorted by execution time
-```
-
-#### `ScheduleEvent.AddInterval(eventName, action, interval, initialDelay, args, note)`:
-Adds an action to a scheduled event that will be executed repeatedly at a fixed interval.
-
-**Parameters:**
-
-* `eventName` (string): The name of the event to add the interval to.
-* `action` (string or function): The action to execute at each interval.
-* `interval` (number): The time interval in seconds between executions of the action.
-* `initialDelay` (number, optional): The initial delay in seconds before the first execution of the action (default is 0).
-* `args` (array, optional): An optional array of arguments to pass to the action function.
-* `note` (string, optional): An optional note describing the action.
-
-**Example:**
-
-```js
-ScheduleEvent.AddInterval("my_event", function() {
-    // ... do something periodically
-}, 1)
 ```
 
 #### `ScheduleEvent.Cancel(eventName, delay)`:
@@ -184,25 +227,6 @@ Checks if a scheduled event with the given name exists and has scheduled actions
 if (ScheduleEvent.IsValid("my_event")) {
     // The event exists and has scheduled actions
 }
-```
-
-#### `ScheduleEvent.GetNote(eventName)`:
-Retrieves the note associated with the first scheduled action within the event with the given name.
-
-**Parameters:**
-
-* `eventName` (string): The name of the event.
-
-**Returns:**
-
-* (string or null): The note of the first action in the event, or `null` if no note is found or the event doesn't exist.
-
-**Example:**
-
-```js
-ScheduleEvent.Add("my_note_event", "printl(123)", 1, null, "MyNote")
-local actionNote = ScheduleEvent.GetNote("my_note_event")
-printl("Action note: ", actionNote) // Action note: MyNote
 ```
 
 ## [ActionScheduler/event_handler.nut](event_handler.nut)

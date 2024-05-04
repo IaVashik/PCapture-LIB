@@ -5,19 +5,20 @@
  * @param {string|function} action - The action to execute when the scheduled time arrives. This can be a string containing VScripts code or a function object.
  * @param {number} timeDelay - The delay in seconds before executing the action.
  * @param {array|null} args - An optional array of arguments to pass to the action function.
- * @param {string|null} note - An optional note describing the action.
+ * @param {object} scope - The scope in which to execute the action (default is `this`). 
 */
-ScheduleEvent["Add"] <- function(eventName, action, timeDelay, args = null, note = null) {
+*/
+ScheduleEvent["Add"] <- function(eventName, action, timeDelay, args = null, scope = this) {
     if ( !(eventName in ScheduleEvent.eventsList) ) {
         ScheduleEvent.eventsList[eventName] <- List()
         dev.debug("Created new Event - " + eventName)
     }
 
-    local newScheduledEvent = ScheduleAction(this, action, timeDelay, args, note)
+    local newScheduledEvent = ScheduleAction(scope, action, timeDelay, args)
     local currentActionList = ScheduleEvent.eventsList[eventName]
 
 
-    if(currentActionList.len() > 0 && currentActionList.top() <= newScheduledEvent) {
+    if(currentActionList.len() == 0 || currentActionList.top() <= newScheduledEvent) {
         currentActionList.append(newScheduledEvent)
     } 
     else {
@@ -51,6 +52,26 @@ ScheduleEvent["Add"] <- function(eventName, action, timeDelay, args = null, note
 }
 
 /*
+ * Adds an action to a scheduled event that will be executed repeatedly at a fixed interval. 
+ *
+ * @param {string} eventName - The name of the event to add the interval to. If the event does not exist, it is created.
+ * @param {string|function} action - The action to execute at each interval.
+ * @param {number} interval - The time interval in seconds between executions of the action.
+ * @param {number} initialDelay - The initial delay in seconds before the first execution of the action (default is 0). 
+ * @param {array|null} args - An optional array of arguments to pass to the action function. 
+ * @param {object} scope - The scope in which to execute the action (default is `this`). 
+*/ 
+ScheduleEvent["AddInterval"] <- function(eventName, action, interval, initialDelay = 0, args = null, scope = this) {
+    local actions = [ // TODO
+        ScheduleAction(scope, action, initialDelay, args),
+        ScheduleAction(scope, ScheduleEvent.AddInterval, initialDelay + interval, [eventName, action, interval, 0, args, scope])
+    ]   
+
+    ScheduleEvent.AddActions(eventName, actions, true)
+    // ScheduleEvent.eventsList[eventName] <- actions // tood :d
+}
+
+/*
  * Adds multiple actions to a scheduled event, ensuring they are sorted by execution time.
  *
  * @param {string} eventName - The name of the event to add the actions to. If the event does not exist, it is created.
@@ -80,27 +101,6 @@ ScheduleEvent["AddActions"] <- function(eventName, actions, noSort = false) {
         ScheduleEvent.executorRunning = true
         ExecuteScheduledEvents()
     }
-}
-
-
-/*
- * Adds an action to a scheduled event that will be executed repeatedly at a fixed interval. 
- *
- * @param {string} eventName - The name of the event to add the interval to. If the event does not exist, it is created.
- * @param {string|function} action - The action to execute at each interval.
- * @param {number} interval - The time interval in seconds between executions of the action.
- * @param {number} initialDelay - The initial delay in seconds before the first execution of the action (default is 0). 
- * @param {array|null} args - An optional array of arguments to pass to the action function. 
- * @param {string|null} note - An optional note describing the action.
-*/ 
-ScheduleEvent["AddInterval"] <- function(eventName, action, interval, initialDelay = 0 , args = null, note = null) {
-    local actions = [ // TODO
-        ScheduleAction(this, action, initialDelay, args, note),
-        ScheduleAction(this, this.AddInterval, initialDelay + interval, [eventName, action, interval, 0, args, note])
-    ]
-
-    ScheduleEvent.AddActions(eventName, actions)
-    // ScheduleEvent.eventsList[eventName] <- actions // tood :d
 }
 
 
@@ -180,24 +180,4 @@ ScheduleEvent["GetEvent"] <- function(eventName) {
 */
 ScheduleEvent["IsValid"] <- function(eventName) {
     return eventName in ScheduleEvent.eventsList && ScheduleEvent.eventsList[eventName].len() != 0
-}
-
-
-/* 
- * Gets the note associated with the first scheduled event with the given name.
- *
- * @param {string} eventName - The name of the event. 
- * @returns {string|null} - The note of the first event, or null if no note is found or the event doesn't exist. 
-*/
-ScheduleEvent["GetNote"] <- function(eventName) {
-    local info = ScheduleEvent.GetEvent(eventName)
-    if(!info || info.len() == 0) 
-        return null
-    
-    foreach(event in info) {
-        if(event.note)
-            return event.note
-    }
-    
-    return null
 }

@@ -10,8 +10,6 @@
     action = null;
     // The time at which the action is scheduled to be executed. 
     executionTime = null;
-    // An optional note describing the event.  
-    note = null;
     // Optional arguments to pass to the action function.  
     args = null;
 
@@ -22,14 +20,12 @@
      * @param {string|function} action - The action to execute when the event is triggered.
      * @param {number} delay - The time at which the event is scheduled to be executed.
      * @param {array|null} args - Optional arguments to pass to the action function. 
-     * @param {string|null} note - An optional note describing the event. 
     */
-    constructor(caller, action, delay, args = null, note = null) {
+    constructor(caller, action, delay, args = null) {
         this.caller = caller
 
         this.action = action
         this.executionTime = delay + Time()
-        this.note = note
 
         this.args = args
     }
@@ -51,11 +47,11 @@
         }
 
         local actionArgs = [caller]
-        actionArgs.extend(args)
+        actionArgs.extend(this.args)
         return action.acall(actionArgs)
     }
 
-    function GetInfo() return "[Caller] " + caller + "\n[Action] " + action + "\n[executionTime] " + executionTime + "\n[Note] " + note 
+    function GetInfo() return "[Caller] " + caller + "\n[Action] " + action + "\n[executionTime] " + executionTime
     function _typeof() return "ScheduleAction"
     function _tostring() return "ScheduleAction: (" + this.executionTime + ")"
     function _cmp(other) {    
