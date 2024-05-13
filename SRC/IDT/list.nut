@@ -207,12 +207,20 @@
     function sort() {
         this.first_node.next_ref = _mergeSort(this.first_node.next_ref)
         
-        /* Обновление last_node */ 
-        local node = this.first_node 
-        while (node.next_ref) {
-            node = node.next_ref
-        }
-        this.last_node = node 
+        // Update prev_ref and next_ref links after sorting
+        local current = this.first_node.next_ref;
+        local previous = null;
+        while (current) {
+            current.prev_ref = previous;
+            if (previous) {
+                previous.next_ref = current; 
+            }
+            previous = current; 
+            current = current.next_ref; 
+        } 
+
+        // Update last_node to point to the last node after sorting 
+        this.last_node = previous; 
         
         return this
     }

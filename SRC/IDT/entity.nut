@@ -374,6 +374,7 @@
     function SetModelScale(scaleValue, fireDelay = 0) {
         EntFireByHandle(this.CBaseEntity, "addoutput", "ModelScale " + scaleValue, fireDelay, null, null)
         this.SetUserData("ModelScale", scaleValue)
+        EntFireByHandle(this, "SetBodyGroup", "1"); EntFireByHandle(this, "SetBodyGroup", "0", 0.02)
     }
 
     /*

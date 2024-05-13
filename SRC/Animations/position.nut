@@ -16,7 +16,7 @@
     animate.applyAnimation(
         animSetting, 
         function(step, steps):(startPos, dist) {return startPos + dist * (step / steps)},
-        function(ent, newPosition) {ent.SetAbsOrigin(newPosition)}
+        function(ent, newPosition) {ent.SetOrigin(newPosition)}
     )
     
     animSetting.callOutputs()
@@ -40,16 +40,13 @@
 animate["PositionTransitionBySpeed"] <- function(entities, startPos, endPos, speed, animSetting = {}) {
     local animSetting = AnimEvent("position", animSetting, entities)
     
-    local distance = endPos - startPos
-    local dir = (endPos - startPos)
-    dir.Norm()
-
-    local steps = abs(distance.Length() / speed)
-
+    local dist = endPos - startPos
+    local steps = dist.Length() / speed.tofloat()
+    
     animate.applyAnimation(
         animSetting, 
-        function(step, _):(startPos, dir, speed) {return startPos + (dir * speed * step)},
-        function(ent, newPosition) {ent.SetAbsOrigin(newPosition)},
+        function(step, steps):(startPos, dist) {return startPos + dist * (step / steps)},
+        function(ent, newPosition) {ent.SetOrigin(newPosition)}
         steps
     )
     
