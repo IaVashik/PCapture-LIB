@@ -2,11 +2,11 @@
 <img src="other\logo.png" alt="Logo"> <!-- width="660" height="350" -->
 
 <h2 align="center">
-    PCapture-Lib - The library that you need!
+    The most powerful library for Portal 2 that you need!
 </h2>
 </div>
 
-![version](https://img.shields.io/badge/Pcapture--Lib-v2.1.stable-informational)
+![version](https://img.shields.io/badge/Pcapture--Lib-v2.2--testing-informational)
 
 **PCapture-Lib is a comprehensive VScripts library for Portal 2 that empowers mappers to create sophisticated and engaging gameplay experiences.** It provides a wealth of features and enhancements, streamlining development and allowing you to focus on the creative aspects of your maps.
 
