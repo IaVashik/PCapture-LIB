@@ -6,13 +6,20 @@
      * Notifies the listener of a triggered event.
      *
      * @param {string} eventName - The name of the triggered event.
-     * @param {any} args - Optional arguments associated with the event. 
+     * @param {any} ... - Optional arguments associated with the event. 
      * @returns {any|null} - The result of the event's action, or null if the event is not found or the filter fails. 
     */
-    function Notify(eventName, args = null) {
-        if(eventName in AllGameEvents)
-            return AllGameEvents[eventName].Trigger(args)
-        return dev.warning("Unknown GameEvent {" + eventName + "}")
+    function Notify(eventName, ...) {
+        if(eventName in AllGameEvents == false)
+            return dev.warning("Unknown GameEvent {" + eventName + "}")
+
+        local varg = array(vargc)
+        for(local i = 0; i< vargc; i++) {
+            varg[i] = vargv[i]
+        }
+
+        return AllGameEvents[eventName].Trigger(varg)
+        
     }
     
     /* 

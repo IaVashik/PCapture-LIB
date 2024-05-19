@@ -553,27 +553,28 @@ This file provides the `animate.AnglesTransitionByTime` function for creating an
 
 ### [More info about *Animations module* and `animSetting` here](SRC/Animations/readme.md)
 
-## 7. [GameEvents](SRC/GameActionScheduler/readme.md)
+## 7. [GameEvents](SRC/GameEvent/readme.md)
 
 The `GameEvents` module provides classes for creating and handling custom game events with triggers, filters, and actions. It offers more flexibility than standard VScripts game events.
 
-### [`GameActionScheduler/init.nut`](SRC/GameActionScheduler/init.nut)
+### [`GameEvent/init.nut`](SRC/GameEvent/init.nut)
 
 This file initializes the `GameEvents` module and includes the necessary script files for the module's functionality.
 
-### [`GameActionScheduler/game_event.nut`](SRC/GameActionScheduler/game_event.nut)
+### [`GameEvent/game_event.nut`](SRC/GameEvent/game_event.nut)
 
 This file defines the `GameEvent` class, which represents a custom game event with a name, trigger count, action to perform when triggered, and optional filter function.
 
 | Method | Description |
 | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `GameEvent(eventName, triggerCount, action)` | Creates a new `GameEvent` object with the specified name, trigger count (number of times it can be triggered before becoming inactive, -1 for unlimited triggers), and action to perform when triggered. |
-| `SetAction(actionFunction)` | Sets the action function for the event, which will be executed when the event is triggered. |
+| `GameEvent(eventName, triggerCount, actions = [])` | Creates a new `GameEvent` object with the specified name, trigger count (number of times it can be triggered before becoming inactive, -1 for unlimited triggers), and action to perform when triggered. |
+| `SetAction(actionFunction)` | Add the action function for the event, which will be executed when the event is triggered. |
 | `SetFilter(filterFunction)` | Sets the filter function for the event, which should return true if the event should be triggered and false otherwise. This allows for conditional triggering of the event based on custom criteria. |
-| `Trigger(args)` | Triggers the event if the trigger count allows and the filter function (if set) returns true. The action function is executed with the provided arguments, and a VScript event message is logged if event logging is enabled. |
-| `ForceTrigger(args)` | Forces the event to trigger, ignoring the filter function and trigger count. The action function is executed with the provided arguments. |
+| `Trigger(args = [])` | Triggers the event if the trigger count allows and the filter function (if set) returns true. The action function is executed with the provided arguments, and a VScript event message is logged if event logging is enabled. |
+| `ForceTrigger(args = [])` | Forces the event to trigger, ignoring the filter function and trigger count. The action function is executed with the provided arguments. |
 
-### [`GameActionScheduler/event_listener.nut`](SRC/GameActionScheduler/event_listener.nut)
+
+### [`GameEvent/event_listener.nut`](SRC/GameEvent/event_listener.nut)
 
 This file defines the `EventListener` object, which listens for and handles custom game events created using the `GameEvent` class.
 
@@ -582,7 +583,7 @@ This file defines the `EventListener` object, which listens for and handles cust
 | `Notify(eventName, args)` | Notifies the listener of a triggered event and calls the event's `Trigger` method with the provided arguments. Returns the result of the event's action or `null` if the event is not found or the filter fails. |
 | `GetEvent(EventName)` | Retrieves a `GameEvent` object by name. Returns `null` if the event is not found. |
 
-### [More info about *GameEvents module* here](SRC/GameActionScheduler/readme.md)
+### [More info about *GameEvents module* here](SRC/GameEvent/readme.md)
 
 ## 8. [HUD](SRC/HUD/readme.md)
 
