@@ -8,14 +8,15 @@
  * @param {table} animSetting - A table containing additional animation settings. (optional) 
  * @returns {number} The duration of the animation in seconds. 
 */
- animate["AlphaTransition"] <- function(entities, startOpacity, endOpacity, time, animSetting = {}) {
+animate["AlphaTransition"] <- function(entities, startOpacity, endOpacity, time, animSetting = {}) {
     local animSetting = AnimEvent("alpha", animSetting, entities, time)
-    local transitionFrames = time / FrameTime();    
-    local alphaStep = (endOpacity - startOpacity) / transitionFrames;    
+    local opacityDelta = endOpacity - startOpacity
+
+    local lerpFunc = animSetting.lerpFunc
 
     animate.applyAnimation(
         animSetting, 
-        function(step, _):(startOpacity, alphaStep) {return startOpacity + alphaStep * (step + 1)}, //? +1
+        function(step, steps):(startOpacity, opacityDelta, lerpFunc) {return startOpacity + opacityDelta * lerpFunc(step / steps)},
         function(ent, newAlpha) {ent.SetAlpha(newAlpha)})
     
     animSetting.callOutputs()

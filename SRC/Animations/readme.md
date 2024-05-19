@@ -8,13 +8,13 @@ This file initializes the `Animations` module, defines the `AnimEvent` class for
 
 ### `AnimEvent`
 
-The `AnimEvent` class is used to encapsulate information about an animation event. It stores details such as the event name, delay, global delay, scope, outputs (functions to call when the animation finishes), and the entities involved in the animation.
+The `AnimEvent` class is used to encapsulate information about an animation event. It stores details such as the event name, delay, global delay, scope, outputs (functions to call when the animation finishes), the entities involved in the animation, and an optional lerp function for customizing the animation curve. 
 
 #### `AnimEvent(settings, entities, time)`
 
 **Constructor**
 
-Creates a new `AnimEvent` object with the specified settings, entities, and animation duration.
+Creates a new `AnimEvent` object with the specified settings, entities, and animation duration. 
 
 **Parameters:**
 
@@ -22,24 +22,22 @@ Creates a new `AnimEvent` object with the specified settings, entities, and anim
 * `eventName` (string, optional): The name of the event (default is a unique string starting with "anim").
 * `globalDelay` (number, optional): A global delay in seconds before the animation starts (default is 0).
 * `scope` (object, optional): The scope in which to execute the action (default is `this`).
+* `lerp` (function, optional): A easing lerp function to apply to the animation progress. This function should accept a single argument and return a value between 0 and 1.
 * `outputs` (string or function, optional): A script or function to execute when the animation finishes.
 * `entities` (array): An array of entities to animate.
-* `time` (number): The duration of the animation in seconds.
+*   `time` (number): The duration of the animation in seconds. 
 
-### `applyAnimation(animSetting, valueCalculator, propertySetter)`
 
+### `applyAnimation(animSetting, valueCalculator, propertySetter, transitionFrames)`
 This function applies an animation over a specified duration, calculating and setting new values for a property at each frame. It is used internally by the various animation functions to handle the animation process.
 
 **Parameters:**
 
 * `animSetting` (AnimEvent): The `AnimEvent` object containing the animation settings and entities.
-* `valueCalculator` (function): A function that calculates the new value for the property at each frame. The function should take two arguments:
-* `step` (number): The current animation step (frame).
+* `valueCalculator` (function): A function that calculates the new value for the property at each frame. The function should take two arguments: current step, all steps
+* `propertySetter` (function): A function that sets the new value for the property on each entity. The function should take two arguments: entity, calculatedValue
 * `transitionFrames` (number): The total number of frames in the animation.
-The function should return the new value for the property.
-* `propertySetter` (function): A function that sets the new value for the property on each entity. The function should take two arguments:
-* `ent` (pcapEntity): The entity to set the property on.
-* `newValue` (any): The new value for the property.
+
 
 **Example:**
 

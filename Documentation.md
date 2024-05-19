@@ -551,7 +551,7 @@ This file provides the `animate.AnglesTransitionByTime` function for creating an
 | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
 | `animate.AnglesTransitionByTime(entities, startAngles, endAngles, time, animSetting)` | Creates an animation that changes the angles of entities from the starting angles to the ending angles over a specified time. |
 
-### [More info about *Animations module* here](SRC/Animations/readme.md)
+### [More info about *Animations module* and `animSetting` here](SRC/Animations/readme.md)
 
 ## 7. [GameEvents](SRC/GameActionScheduler/readme.md)
 

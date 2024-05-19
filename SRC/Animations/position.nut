@@ -8,14 +8,15 @@
  * @param {table} animSetting - A table containing additional animation settings. (optional) 
  * @returns {number} The duration of the animation in seconds. 
 */
- animate["PositionTransitionByTime"] <- function(entities, startPos, endPos, time, animSetting = {}) {
+animate["PositionTransitionByTime"] <- function(entities, startPos, endPos, time, animSetting = {}) {
     local animSetting = AnimEvent("position", animSetting, entities, time)
     
     local dist = endPos - startPos
+    local lerpFunc = animSetting.lerpFunc
 
     animate.applyAnimation(
         animSetting, 
-        function(step, steps):(startPos, dist) {return startPos + dist * (step / steps)},
+        function(step, steps):(startPos, dist, lerpFunc) {return startPos + dist * lerpFunc(step / steps)},
         function(ent, newPosition) {ent.SetOrigin(newPosition)}
     )
     
@@ -42,10 +43,11 @@ animate["PositionTransitionBySpeed"] <- function(entities, startPos, endPos, spe
     
     local dist = endPos - startPos
     local steps = dist.Length() / speed.tofloat()
+    local lerpFunc = animSetting.lerpFunc
     
     animate.applyAnimation(
         animSetting, 
-        function(step, steps):(startPos, dist) {return startPos + dist * (step / steps)},
+        function(step, steps):(startPos, dist, lerpFunc) {return startPos + dist * lerpFunc(step / steps)},
         function(ent, newPosition) {ent.SetOrigin(newPosition)}
         steps
     )

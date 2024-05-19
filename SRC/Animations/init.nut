@@ -17,6 +17,7 @@
     globalDelay = 0
     outputs = null
     entities = []
+    lerpFunc = null;
     scope = null;
 
     /*
@@ -36,7 +37,8 @@
         this.globalDelay = macros.GetFromTable(table, "globalDelay", 0)
         this.outputs = macros.GetFromTable(table, "outputs", null)
         this.scope = macros.GetFromTable(table, "scope", this)
-    }
+        this.lerpFunc = macros.GetFromTable(table, "lerp", function(t) return t)
+    } 
 
     /* 
      * Calls the outputs associated with the animation event. 
