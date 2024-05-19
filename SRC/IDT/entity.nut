@@ -183,7 +183,7 @@
             script = funcName + "()"
         }
 
-        this.addOutput(outputName, this, "RunScriptCode", script, delay, fires)
+        this.addOutput(outputName, "!self", "RunScriptCode", script, delay, fires)
     }
 
 

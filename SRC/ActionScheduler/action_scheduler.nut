@@ -83,18 +83,20 @@ ScheduleEvent["AddActions"] <- function(eventName, actions, noSort = false) {
     if (eventName in ScheduleEvent.eventsList ) {
         ScheduleEvent.eventsList[eventName].extend(actions)
         ScheduleEvent.eventsList[eventName].sort()
-        dev.debug("Added " + actions.len() + " actions to Event " + eventName)
+        // dev.debug("Added " + actions.len() + " actions to Event " + eventName)
+        return
+    } 
+
+    if(!noSort) actions.sort()
+
+    if(typeof actions == "List") {
+        ScheduleEvent.eventsList[eventName] <- actions
     } else {
-        if(!noSort) actions.sort()
-
-        if(typeof actions == "List") {
-            ScheduleEvent.eventsList[eventName] <- actions
-        } else {
-            ScheduleEvent.eventsList[eventName] <- List.fromArray(actions)
-        }
-
-        dev.debug("Created new Event - " + eventName)
+        ScheduleEvent.eventsList[eventName] <- List.fromArray(actions)
     }
+
+    dev.debug("Created new Event - " + eventName)
+    
 
     if(!ScheduleEvent.executorRunning) {
         ScheduleEvent.executorRunning = true
@@ -126,7 +128,7 @@ ScheduleEvent["Cancel"] <- function(eventName, delay = 0) {
             test += k + ", "
 
         test = test.slice(0, -2)
-        dev.debug(format("Event \"%s\" closed. Actial events: [%s]", eventName, test))
+        dev.debug(format("Event \"%s\" closed. Actial events: [%s]", eventName.tostring(), test))
     }
 }
 

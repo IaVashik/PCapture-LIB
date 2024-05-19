@@ -22,7 +22,7 @@ macros["Precache"] <- function(soundPath) {
  * @returns {any} - The value associated with the key, or the default value if the key is not found. 
 */ 
 macros["GetFromTable"] <- function(table, key, defaultValue = null) {
-    if(key in table) 
+    if(key in table && table[key]) 
         return table[key]
     return defaultValue
 }

@@ -32,11 +32,11 @@
                     printl("\nFUNCTION INFO\n" + info)
                 }
             }
-            eventInfo.remove(0) 
+            eventInfo.remove(0)
         }
         if(eventName != "global" && eventInfo.len() == 0) {
             ScheduleEvent.eventsList.rawdelete(eventName)
-            dev.debug("I delete " + eventName) // todo dev code
+            // dev.debug("I delete " + eventName) // todo dev code
         }
     }
     EntFireByHandle(self, "runscriptcode", "ExecuteScheduledEvents()", FrameTime(), null, null)

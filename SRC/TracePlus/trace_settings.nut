@@ -34,7 +34,6 @@
     constructor(ignoreClasses, priorityClasses, ignoredModels, errorTolerance, shouldRayHitEntity, shouldIgnoreEntity) {
         this.ignoreClasses = ignoreClasses
         this.priorityClasses = priorityClasses
-        this.priorityClasses = priorityClasses
         this.ignoredModels = ignoredModels
         this.errorTolerance = errorTolerance
         this.shouldRayHitEntity = shouldRayHitEntity
