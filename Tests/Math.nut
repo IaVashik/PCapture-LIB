@@ -40,12 +40,6 @@ math_tests <- {
     //     return assert(math.vector.isEqually(result, vec))
     // },
 
-    // Test the spline function
-    function spline() {
-        local result = math.lerp.spline(0.5)
-        return assert(result == 0.5)
-    },
-
     // Test the SmoothStep function
     function SmoothStep() {
         local result = math.lerp.SmoothStep(0, 1, 0.5)
@@ -58,16 +52,388 @@ math_tests <- {
         return assert(result == 5)
     },
 
-    // Test the SmoothCurve function
-    function SmoothCurve() {
-        local result = math.lerp.SmoothCurve(0.5)
-        return assert(result == 0.5)
+    /* InSine tests */ 
+    function lerp_InSine_0() {
+        local result = math.lerp.InSine(0)
+        return assert(result == 0) 
+    }, 
+    function lerp_InSine_0_5() {
+        local result = math.lerp.InSine(0.5) 
+        return assert(math.round(result, 100) == 0.29)
+    },
+    function lerp_InSine_1() {
+        local result = math.lerp.InSine(1) 
+        return assert(result == 1)
     },
 
-    // Test the SmoothProgress function
-    function SmoothProgress() {
-        local result = math.lerp.SmoothProgress(0.5)
+    /* OutSine tests */
+    function lerp_OutSine_0() {
+        local result = math.lerp.OutSine(0)
+        return assert(result == 0)
+    },
+    function lerp_OutSine_0_5() {
+        local result = math.lerp.OutSine(0.5)
+        return assert(math.round(result, 100) == 0.71)
+    },
+    function lerp_OutSine_1() {
+        local result = math.lerp.OutSine(1)
+        return assert(result == 1)
+    },
+
+    /* InOutSine tests */
+    function lerp_InOutSine_0() {
+        local result = math.lerp.InOutSine(0) 
+        return assert(result == 0)
+    },
+    function lerp_InOutSine_0_5() {
+        local result = math.lerp.InOutSine(0.5)
         return assert(result == 0.5)
+    },
+    function lerp_InOutSine_1() {
+        local result = math.lerp.InOutSine(1)
+        return assert(result == 1)
+    },
+
+    /* InQuad tests */
+    function lerp_InQuad_0() {
+        local result = math.lerp.InQuad(0)
+        return assert(result == 0)
+    },
+    function lerp_InQuad_0_5() {
+        local result = math.lerp.InQuad(0.5)
+        return assert(result == 0.25)
+    },
+    function lerp_InQuad_1() {
+        local result = math.lerp.InQuad(1)
+        return assert(result == 1)
+    }, 
+
+    /* OutQuad tests */
+    function lerp_OutQuad_0() {
+        local result = math.lerp.OutQuad(0)
+        return assert(result == 0)
+    },
+    function lerp_OutQuad_0_5() {
+        local result = math.lerp.OutQuad(0.5)
+        return assert(result == 0.75)
+    },
+    function lerp_OutQuad_1() {
+        local result = math.lerp.OutQuad(1)
+        return assert(result == 1)
+    },
+
+    /* InOutQuad tests */
+    function lerp_InOutQuad_0() {
+        local result = math.lerp.InOutQuad(0)
+        return assert(result == 0) 
+    },
+    function lerp_InOutQuad_0_5() {
+        local result = math.lerp.InOutQuad(0.5)
+        return assert(result == 0.5) 
+    },
+    function lerp_InOutQuad_1() {
+        local result = math.lerp.InOutQuad(1)
+        return assert(result == 1)
+    },
+
+    /* InCubic tests */
+    function lerp_InCubic_0() {
+        local result = math.lerp.InCubic(0)
+        return assert(result == 0)
+    },
+    function lerp_InCubic_0_5() {
+        local result = math.lerp.InCubic(0.5)
+        return assert(result == 0.125)
+    },
+    function lerp_InCubic_1() {
+        local result = math.lerp.InCubic(1)
+        return assert(result == 1)
+    }, 
+
+    /* OutCubic tests */ 
+    function lerp_OutCubic_0() { 
+        local result = math.lerp.OutCubic(0)
+        return assert(result == 0)
+    },
+    function lerp_OutCubic_0_5() {
+        local result = math.lerp.OutCubic(0.5) 
+        return assert(result == 0.875)
+    }, 
+    function lerp_OutCubic_1() {
+        local result = math.lerp.OutCubic(1)
+        return assert(result == 1)
+    },
+
+    /* InOutCubic tests */ 
+    function lerp_InOutCubic_0() {
+        local result = math.lerp.InOutCubic(0)
+        return assert(result == 0)
+    }, 
+    function lerp_InOutCubic_0_5() {
+        local result = math.lerp.InOutCubic(0.5) 
+        return assert(result == 0.5)
+    }, 
+    function lerp_InOutCubic_1() {
+        local result = math.lerp.InOutCubic(1)
+        return assert(result == 1)
+    }, 
+
+    /* InQuart tests */
+    function lerp_InQuart_0() {
+        local result = math.lerp.InQuart(0) 
+        return assert(result == 0) 
+    }, 
+    function lerp_InQuart_0_5() {
+        local result = math.lerp.InQuart(0.5) 
+        return assert(result == 0.0625)
+    },
+    function lerp_InQuart_1() { 
+        local result = math.lerp.InQuart(1) 
+        return assert(result == 1)
+    }, 
+
+    /* OutQuart tests */ 
+    function lerp_OutQuart_0() {
+        local result = math.lerp.OutQuart(0) 
+        return assert(result == 0)
+    }, 
+    function lerp_OutQuart_0_5() { 
+        local result = math.lerp.OutQuart(0.5) 
+        return assert(result == 0.9375)
+    },
+    function lerp_OutQuart_1() { 
+        local result = math.lerp.OutQuart(1) 
+        return assert(result == 1)
+    }, 
+
+    /* InOutQuart tests */
+    function lerp_InOutQuart_0() { 
+        local result = math.lerp.InOutQuart(0) 
+        return assert(result == 0) 
+    },
+    function lerp_InOutQuart_0_5() {
+        local result = math.lerp.InOutQuart(0.5) 
+        return assert(result == 0.5) 
+    },
+    function lerp_InOutQuart_1() {
+        local result = math.lerp.InOutQuart(1) 
+        return assert(result == 1)
+    },
+
+    /* InQuint tests */
+    function lerp_InQuint_0() { 
+        local result = math.lerp.InQuint(0) 
+        return assert(result == 0)
+    }, 
+    function lerp_InQuint_0_5() { 
+        local result = math.lerp.InQuint(0.5) 
+        return assert(result == 0.03125) 
+    },
+    function lerp_InQuint_1() {
+        local result = math.lerp.InQuint(1) 
+        return assert(result == 1) 
+    }, 
+
+    /* OutQuint tests */
+    function lerp_OutQuint_0() { 
+        local result = math.lerp.OutQuint(0) 
+        return assert(result == 0) 
+    }, 
+    function lerp_OutQuint_0_5() { 
+        local result = math.lerp.OutQuint(0.5) 
+        return assert(result == 0.96875)
+    },
+    function lerp_OutQuint_1() { 
+        local result = math.lerp.OutQuint(1) 
+        return assert(result == 1)
+    },
+
+    /* InOutQuint tests */
+    function lerp_InOutQuint_0() { 
+        local result = math.lerp.InOutQuint(0) 
+        return assert(result == 0)
+    }, 
+    function lerp_InOutQuint_0_5() {
+        local result = math.lerp.InOutQuint(0.5)
+        return assert(result == 0.5)
+    }, 
+    function lerp_InOutQuint_1() {
+        local result = math.lerp.InOutQuint(1)
+        return assert(result == 1)
+    }, 
+
+    /* InExpo tests */
+    function lerp_InExpo_0() {
+        local result = math.lerp.InExpo(0) 
+        return assert(result == 0)
+    }, 
+    function lerp_InExpo_0_5() { 
+        local result = math.lerp.InExpo(0.5)
+        return assert(math.round(result, 100) == 0.03)
+    }, 
+    function lerp_InExpo_1() {
+        local result = math.lerp.InExpo(1) 
+        return assert(result == 1) 
+    },
+
+    /* OutExpo tests */ 
+    function lerp_OutExpo_0() {
+        local result = math.lerp.OutExpo(0) 
+        return assert(result == 0)
+    }, 
+    function lerp_OutExpo_0_5() {
+        local result = math.lerp.OutExpo(0.5) 
+        return assert(math.round(result, 100) == 0.97)
+    }, 
+    function lerp_OutExpo_1() {
+        local result = math.lerp.OutExpo(1) 
+        return assert(result == 1)
+    }, 
+
+    /* InOutExpo tests */
+    function lerp_InOutExpo_0() {
+        local result = math.lerp.InOutExpo(0)
+        return assert(result == 0) 
+    }, 
+    function lerp_InOutExpo_0_5() {
+        local result = math.lerp.InOutExpo(0.5)
+        return assert(result == 0.5)
+    }, 
+    function lerp_InOutExpo_1() {
+        local result = math.lerp.InOutExpo(1) 
+        return assert(result == 1)
+    }, 
+
+    /* InCirc tests */
+    function lerp_InCirc_0() {
+        local result = math.lerp.InCirc(0) 
+        return assert(result == 0) 
+    },
+    function lerp_InCirc_0_5() {
+        local result = math.lerp.InCirc(0.5)
+        return assert(math.round(result, 100) == 0.13) 
+    }, 
+    function lerp_InCirc_1() {
+        local result = math.lerp.InCirc(1) 
+        return assert(result == 1)
+    }, 
+
+    /* OutCirc tests */
+    function lerp_OutCirc_0() { 
+        local result = math.lerp.OutCirc(0) 
+        return assert(result == 0)
+    }, 
+    function lerp_OutCirc_0_5() { 
+        local result = math.lerp.OutCirc(0.5)
+        return assert(math.round(result, 100) == 0.87)
+    }, 
+    function lerp_OutCirc_1() { 
+        local result = math.lerp.OutCirc(1)
+        return assert(result == 1)
+    }, 
+
+    /* InOutCirc tests */
+    function lerp_InOutCirc_0() {
+        local result = math.lerp.InOutCirc(0)
+        return assert(result == 0)
+    },
+    function lerp_InOutCirc_0_5() {
+        local result = math.lerp.InOutCirc(0.5)
+        return assert(result == 0.5)
+    }, 
+    function lerp_InOutCirc_1() { 
+        local result = math.lerp.InOutCirc(1)
+        return assert(result == 1)
+    },
+
+    /* InBack tests */
+    function lerp_InBack_0() { 
+        local result = math.lerp.InBack(0)
+        return assert(result == 0) 
+    }, 
+    function lerp_InBack_1() { 
+        local result = math.lerp.InBack(1) 
+        return assert(result == 1)
+    },
+
+    /* OutBack tests */
+    function lerp_OutBack_0() {
+        local result = math.lerp.OutBack(0) 
+        return assert(result == 0)
+    },
+    function lerp_OutBack_1() {
+        local result = math.lerp.OutBack(1)
+        return assert(result == 1) 
+    },
+
+    /* InOutBack tests */
+    function lerp_InOutBack_0() { 
+        local result = math.lerp.InOutBack(0)
+        return assert(result == 0) 
+    }, 
+    function lerp_InOutBack_1() {
+        local result = math.lerp.InOutBack(1) 
+        return assert(result == 1)
+    }, 
+
+    /* InElastic tests */
+    function lerp_InElastic_0() {
+        local result = math.lerp.InElastic(0) 
+        return assert(result == 0) 
+    }, 
+    function lerp_InElastic_1() { 
+        local result = math.lerp.InElastic(1)
+        return assert(result == 1) 
+    }, 
+
+    /* OutElastic tests */
+    function lerp_OutElastic_0() {
+        local result = math.lerp.OutElastic(0)
+        return assert(result == 0) 
+    }, 
+    function lerp_OutElastic_1() {
+        local result = math.lerp.OutElastic(1) 
+        return assert(result == 1)
+    },
+
+    /* InOutElastic tests */
+    function lerp_InOutElastic_0() {
+        local result = math.lerp.InOutElastic(0) 
+        return assert(result == 0) 
+    }, 
+    function lerp_InOutElastic_1() { 
+        local result = math.lerp.InOutElastic(1)
+        return assert(result == 1) 
+    }, 
+
+    /* InBounce tests */
+    function lerp_InBounce_0() {
+        local result = math.lerp.InBounce(0)
+        return assert(result == 0)
+    }, 
+    function lerp_InBounce_1() { 
+        local result = math.lerp.InBounce(1)
+        return assert(result == 1)
+    },
+
+    /* OutBounce tests */
+    function lerp_OutBounce_0() {
+        local result = math.lerp.OutBounce(0) 
+        return assert(result == 0) 
+    },
+    function lerp_OutBounce_1() {
+        local result = math.lerp.OutBounce(1)
+        return assert(result == 1)
+    }, 
+
+    /* InOutBounce tests */
+    function lerp_InOutBounce_0() {
+        local result = math.lerp.InOutBounce(0)
+        return assert(result == 0)
+    },
+    function lerp_InOutBounce_1() { 
+        local result = math.lerp.InOutBounce(1)
+        return assert(result == 1) 
     },
 
     // Test the min function
