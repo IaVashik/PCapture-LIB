@@ -105,11 +105,6 @@
         "body": "math.lerp.sVector(${1:start}, ${2:end}, ${3:t})", 
         "description": "Spherically interpolates between two vectors."
     },
-    "math.lerp.spline": {
-        "prefix": "math.lerp.spline", 
-        "body": "math.lerp.spline(${1:f})",
-        "description": "Performs cubic spline interpolation."
-    }, 
     "math.lerp.SmoothStep": {
         "prefix": "math.lerp.SmoothStep", 
         "body": "math.lerp.SmoothStep(${1:edge0}, ${2:edge1}, ${3:value})",
@@ -120,16 +115,156 @@
         "body": "math.lerp.FLerp(${1:f1}, ${2:f2}, ${3:i1}, ${4:i2}, ${5:value})", 
         "description": "Performs linear interpolation between two values with custom interpolation parameters." 
     },
-    "math.lerp.SmoothCurve": {
-        "prefix": "math.lerp.SmoothCurve", 
-        "body": "math.lerp.SmoothCurve(${1:x})", 
-        "description": "Applies a smooth curve function to a value." 
+    "math.lerp.InSine": {
+        "prefix": "math.lerp.InSine",
+        "body": "math.lerp.InSine(${1:t})",
+        "description": "Applies an ease-in sine interpolation to a value."
     },
-    "math.lerp.SmoothProgress": { 
-        "prefix": "math.lerp.SmoothProgress", 
-        "body": "math.lerp.SmoothProgress(${1:progress})", 
-        "description": "Calculates smooth progress based on a progress value."
-    }, 
+    "math.lerp.OutSine": {
+        "prefix": "math.lerp.OutSine",
+        "body": "math.lerp.OutSine(${1:t})",
+        "description": "Applies an ease-out sine interpolation to a value."
+    },
+    "math.lerp.InOutSine": {
+        "prefix": "math.lerp.InOutSine",
+        "body": "math.lerp.InOutSine(${1:t})",
+        "description": "Applies an ease-in-out sine interpolation to a value."
+    },
+    "math.lerp.InQuad": {
+        "prefix": "math.lerp.InQuad",
+        "body": "math.lerp.InQuad(${1:t})",
+        "description": "Applies an ease-in quadratic interpolation to a value."
+    },
+    "math.lerp.OutQuad": {
+        "prefix": "math.lerp.OutQuad",
+        "body": "math.lerp.OutQuad(${1:t})",
+        "description": "Applies an ease-out quadratic interpolation to a value."
+    },
+    "math.lerp.InOutQuad": {
+        "prefix": "math.lerp.InOutQuad",
+        "body": "math.lerp.InOutQuad(${1:t})",
+        "description": "Applies an ease-in-out quadratic interpolation to a value."
+    },
+    "math.lerp.InCubic": {
+        "prefix": "math.lerp.InCubic",
+        "body": "math.lerp.InCubic(${1:t})",
+        "description": "Applies an ease-in cubic interpolation to a value."
+    },
+    "math.lerp.OutCubic": {
+        "prefix": "math.lerp.OutCubic",
+        "body": "math.lerp.OutCubic(${1:t})",
+        "description": "Applies an ease-out cubic interpolation to a value."
+    },
+    "math.lerp.InOutCubic": {
+        "prefix": "math.lerp.InOutCubic",
+        "body": "math.lerp.InOutCubic(${1:t})",
+        "description": "Applies an ease-in-out cubic interpolation to a value."
+    },
+    "math.lerp.InQuart": {
+        "prefix": "math.lerp.InQuart",
+        "body": "math.lerp.InQuart(${1:t})",
+        "description": "Applies an ease-in quartic interpolation to a value."
+    },
+    "math.lerp.OutQuart": {
+        "prefix": "math.lerp.OutQuart",
+        "body": "math.lerp.OutQuart(${1:t})",
+        "description": "Applies an ease-out quartic interpolation to a value."
+    },
+    "math.lerp.InOutQuart": {
+        "prefix": "math.lerp.InOutQuart",
+        "body": "math.lerp.InOutQuart(${1:t})",
+        "description": "Applies an ease-in-out quartic interpolation to a value."
+    },
+    "math.lerp.InQuint": {
+        "prefix": "math.lerp.InQuint",
+        "body": "math.lerp.InQuint(${1:t})",
+        "description": "Applies an ease-in quintic interpolation to a value."
+    },
+    "math.lerp.OutQuint": {
+        "prefix": "math.lerp.OutQuint",
+        "body": "math.lerp.OutQuint(${1:t})",
+        "description": "Applies an ease-out quintic interpolation to a value."
+    },
+    "math.lerp.InOutQuint": {
+        "prefix": "math.lerp.InOutQuint",
+        "body": "math.lerp.InOutQuint(${1:t})",
+        "description": "Applies an ease-in-out quintic interpolation to a value."
+    },
+    "math.lerp.InExpo": {
+        "prefix": "math.lerp.InExpo",
+        "body": "math.lerp.InExpo(${1:t})",
+        "description": "Applies an ease-in exponential interpolation to a value."
+    },
+    "math.lerp.OutExpo": {
+        "prefix": "math.lerp.OutExpo",
+        "body": "math.lerp.OutExpo(${1:t})",
+        "description": "Applies an ease-out exponential interpolation to a value."
+    },
+    "math.lerp.InOutExpo": {
+        "prefix": "math.lerp.InOutExpo",
+        "body": "math.lerp.InOutExpo(${1:t})",
+        "description": "Applies an ease-in-out exponential interpolation to a value."
+    },
+    "math.lerp.InCirc": {
+        "prefix": "math.lerp.InCirc",
+        "body": "math.lerp.InCirc(${1:t})",
+        "description": "Applies an ease-in circular interpolation to a value."
+    },
+    "math.lerp.OutCirc": {
+        "prefix": "math.lerp.OutCirc",
+        "body": "math.lerp.OutCirc(${1:t})",
+        "description": "Applies an ease-out circular interpolation to a value."
+    },
+    "math.lerp.InOutCirc": {
+        "prefix": "math.lerp.InOutCirc",
+        "body": "math.lerp.InOutCirc(${1:t})",
+        "description": "Applies an ease-in-out circular interpolation to a value."
+    },
+    "math.lerp.InBack": {
+        "prefix": "math.lerp.InBack",
+        "body": "math.lerp.InBack(${1:t})",
+        "description": "Applies an ease-in back interpolation to a value."
+    },
+    "math.lerp.OutBack": {
+        "prefix": "math.lerp.OutBack",
+        "body": "math.lerp.OutBack(${1:t})",
+        "description": "Applies an ease-out back interpolation to a value."
+    },
+    "math.lerp.InOutBack": {
+        "prefix": "math.lerp.InOutBack",
+        "body": "math.lerp.InOutBack(${1:t})",
+        "description": "Applies an ease-in-out back interpolation to a value."
+    },
+    "math.lerp.InElastic": {
+        "prefix": "math.lerp.InElastic",
+        "body": "math.lerp.InElastic(${1:t})",
+        "description": "Applies an ease-in elastic interpolation to a value."
+    },
+    "math.lerp.OutElastic": {
+        "prefix": "math.lerp.OutElastic",
+        "body": "math.lerp.OutElastic(${1:t})",
+        "description": "Applies an ease-out elastic interpolation to a value."
+    },
+    "math.lerp.InOutElastic": {
+        "prefix": "math.lerp.InOutElastic",
+        "body": "math.lerp.InOutElastic(${1:t})",
+        "description": "Applies an ease-in-out elastic interpolation to a value."
+    },
+    "math.lerp.InBounce": {
+        "prefix": "math.lerp.InBounce",
+        "body": "math.lerp.InBounce(${1:t})",
+        "description": "Applies an ease-in bounce interpolation to a value."
+    },
+    "math.lerp.OutBounce": {
+        "prefix": "math.lerp.OutBounce",
+        "body": "math.lerp.OutBounce(${1:t})",
+        "description": "Applies an ease-out bounce interpolation to a value."
+    },
+    "math.lerp.InOutBounce": {
+        "prefix": "math.lerp.InOutBounce",
+        "body": "math.lerp.InOutBounce(${1:t})",
+        "description": "Applies an ease-in-out bounce interpolation to a value."
+    },
     "math.Quaternion": { 
         "prefix": "math.Quaternion", 
         "body": "math.Quaternion.${1|fromEuler,fromVector,fromAxisAngle|}(${2})",

@@ -48,11 +48,38 @@ This file provides functions for linear interpolation (lerp) between different d
 | `math.lerp.vector(start, end, t)` | Performs linear interpolation between two vectors. |
 | `math.lerp.color(start, end, t)` | Performs linear interpolation between two colors (represented as strings or vectors). |
 | `math.lerp.sVector(start, end, t)` | Performs spherical linear interpolation between two vectors. |
-| `math.lerp.spline(f)` | Performs cubic spline interpolation. |
 | `math.lerp.SmoothStep(edge0, edge1, value)` | Performs smooth interpolation using a smoothstep function. |
 | `math.lerp.FLerp(f1, f2, i1, i2, value)` | Performs linear interpolation between two values with custom interpolation parameters. |
-| `math.lerp.SmoothCurve(x)` | Applies a smooth curve function to a value. |
-| `math.lerp.SmoothProgress(progress)` | Calculates smooth progress based on a progress value. |
+| `math.lerp.InSine(t)`                 | Applies an ease-in sine interpolation to a value.                             |
+| `math.lerp.OutSine(t)`                | Applies an ease-out sine interpolation to a value.                            |
+| `math.lerp.InOutSine(t)`               | Applies an ease-in-out sine interpolation to a value.                           |
+| `math.lerp.InQuad(t)`                 | Applies an ease-in quadratic interpolation to a value.                         |
+| `math.lerp.OutQuad(t)`                | Applies an ease-out quadratic interpolation to a value.                        |
+| `math.lerp.InOutQuad(t)`               | Applies an ease-in-out quadratic interpolation to a value.                       |
+| `math.lerp.InCubic(t)`                | Applies an ease-in cubic interpolation to a value.                            |
+| `math.lerp.OutCubic(t)`               | Applies an ease-out cubic interpolation to a value.                           |
+| `math.lerp.InOutCubic(t)`              | Applies an ease-in-out cubic interpolation to a value.                          |
+| `math.lerp.InQuart(t)`                | Applies an ease-in quartic interpolation to a value.                           |
+| `math.lerp.OutQuart(t)`               | Applies an ease-out quartic interpolation to a value.                          |
+| `math.lerp.InOutQuart(t)`              | Applies an ease-in-out quartic interpolation to a value.                         |
+| `math.lerp.InQuint(t)`                | Applies an ease-in quintic interpolation to a value.                           |
+| `math.lerp.OutQuint(t)`               | Applies an ease-out quintic interpolation to a value.                          |
+| `math.lerp.InOutQuint(t)`              | Applies an ease-in-out quintic interpolation to a value.                         |
+| `math.lerp.InExpo(t)`                 | Applies an ease-in exponential interpolation to a value.                        |
+| `math.lerp.OutExpo(t)`                | Applies an ease-out exponential interpolation to a value.                       |
+| `math.lerp.InOutExpo(t)`               | Applies an ease-in-out exponential interpolation to a value.                      |
+| `math.lerp.InCirc(t)`                 | Applies an ease-in circular interpolation to a value.                          |
+| `math.lerp.OutCirc(t)`                | Applies an ease-out circular interpolation to a value.                         |
+| `math.lerp.InOutCirc(t)`               | Applies an ease-in-out circular interpolation to a value.                        |
+| `math.lerp.InBack(t)`                 | Applies an ease-in back interpolation to a value, creating an `overshoot` effect. |
+| `math.lerp.OutBack(t)`                | Applies an ease-out back interpolation to a value, creating an `overshoot` effect. |
+| `math.lerp.InOutBack(t)`               | Applies an ease-in-out back interpolation to a value, creating an `overshoot` effect. |
+| `math.lerp.InElastic(t)`              | Applies an ease-in elastic interpolation to a value, creating a `springy` effect. |
+| `math.lerp.OutElastic(t)`             | Applies an ease-out elastic interpolation to a value, creating a `springy` effect. |
+| `math.lerp.InOutElastic(t)`            | Applies an ease-in-out elastic interpolation to a value, creating a `springy` effect. |
+| `math.lerp.InBounce(t)`               | Applies an ease-in bounce interpolation to a value, creating a `bouncing` effect. |
+| `math.lerp.OutBounce(t)`              | Applies an ease-out bounce interpolation to a value, creating a `bouncing` effect. |
+| `math.lerp.InOutBounce(t)`             | Applies an ease-in-out bounce interpolation to a value, creating a `bouncing` effect. |
 
 ### [`Math/quaternion.nut`](SRC/Math/quaternion.nut)
 

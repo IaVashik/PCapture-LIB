@@ -460,25 +460,6 @@ local endDir = Vector(0, 1, 0) // Facing forward
 local interpolatedDir = math.lerp.sVector(startDir, endDir, 0.5) // Interpolate between the two directions using slerp
 ```
 
-### `math.lerp.spline(f)`
-
-This function performs cubic spline interpolation. Spline interpolation is a technique for creating smooth curves that pass through a set of control points.
-
-**Parameters:**
-
-* `f` (number): The interpolation parameter (between 0 and 1).
-
-**Returns:**
-
-* (number): The interpolated value using cubic spline interpolation.
-
-**Example:**
-
-```js
-// ... (assuming you have a set of control points for the spline)
-local interpolatedValue = math.lerp.spline(0.5) // Interpolate at the midpoint of the spline
-```
-
 ### `math.lerp.SmoothStep(edge0, edge1, x)`
 
 This function performs smooth interpolation between two values using a smoothstep function. The smoothstep function provides a smooth transition between the two edges, avoiding sudden jumps or discontinuities.
@@ -521,41 +502,484 @@ This function performs linear interpolation between two values with custom inter
 local result = math.lerp.FLerp(10, 20, 0, 10, 5) // result will be 15 (linear interpolation with custom parameters)
 ```
 
-### `math.lerp.SmoothCurve(x)`
 
-This function applies a smooth curve function to a value. It transforms the input value using a cosine function to create a smooth, curved transition.
+### `math.lerp.InSine(t)`
 
-**Parameters:**
-
-* `x` (number): The input value to transform.
-
-**Returns:**
-
-* (number): The transformed value using the smooth curve function.
-
-**Example:**
-
-```js
-local curvedValue = math.lerp.SmoothCurve(0.5) // Apply the smooth curve function to the value 0.5
-```
-
-### `math.lerp.SmoothProgress(progress)`
-
-This function calculates smooth progress based on a progress value. It maps the input progress value (between 0 and 1) to a smooth, curved progression using sine and linear interpolation.
+This function applies an ease-in sine interpolation to a value.  The animation starts slowly and accelerates towards the end. 
 
 **Parameters:**
-
-* `progress` (number): The input progress value (between 0 and 1).
+*   `t` (number): The interpolation parameter (between 0 and 1). 
 
 **Returns:**
-
-* (number): The calculated smooth progress value.
+*   (number): The interpolated value using the ease-in sine function. 
 
 **Example:**
+```js
+local value = math.lerp.InSine(0.5)  // Returns a value around 0.29 
+```
+
+### `math.lerp.OutSine(t)`
+
+This function applies an ease-out sine interpolation to a value.  The animation starts quickly and decelerates towards the end.
+
+**Parameters:**
+*   `t` (number): The interpolation parameter (between 0 and 1).
+
+**Returns:**
+*   (number): The interpolated value using the ease-out sine function.
+
+**Example:**
+```js
+local value = math.lerp.OutSine(0.5)  // Returns a value around 0.71
+```
+
+### `math.lerp.InOutSine(t)`
+
+This function applies an ease-in-out sine interpolation to a value. The animation starts slowly, accelerates in the middle, and decelerates again towards the end.
+
+**Parameters:**
+*   `t` (number): The interpolation parameter (between 0 and 1). 
+
+**Returns:**
+*   (number): The interpolated value using the ease-in-out sine function. 
+
+**Example:** 
 
 ```js
-local smoothProgress = math.lerp.SmoothProgress(0.5) // Calculate the smooth progress at 50%
+local value = math.lerp.InOutSine(0.5) // Returns 0.5
 ```
+
+### `math.lerp.InQuad(t)`
+
+This function applies an ease-in quadratic interpolation to a value. The animation starts slowly and accelerates gradually towards the end.
+
+**Parameters:**
+*   `t` (number): The interpolation parameter (between 0 and 1).
+
+**Returns:**
+*   (number): The interpolated value using the ease-in quadratic function. 
+
+**Example:** 
+
+```js
+local value = math.lerp.InQuad(0.5) // Returns 0.25
+```
+
+### `math.lerp.OutQuad(t)`
+
+This function applies an ease-out quadratic interpolation to a value. The animation starts quickly and decelerates gradually towards the end.
+
+**Parameters:**
+*   `t` (number): The interpolation parameter (between 0 and 1). 
+
+**Returns:**
+*   (number): The interpolated value using the ease-out quadratic function.
+
+**Example:** 
+
+```js
+local value = math.lerp.OutQuad(0.5) // Returns 0.75 
+```
+
+### `math.lerp.InOutQuad(t)`
+
+This function applies an ease-in-out quadratic interpolation to a value.  The animation starts slowly, accelerates in the middle, and then decelerates towards the end. 
+
+**Parameters:**
+*   `t` (number): The interpolation parameter (between 0 and 1).
+
+**Returns:**
+*   (number): The interpolated value using the ease-in-out quadratic function. 
+
+**Example:**
+```js 
+local value = math.lerp.InOutQuad(0.5) // Returns 0.5
+```
+
+### `math.lerp.InCubic(t)`
+
+This function applies an ease-in cubic interpolation to a value.  The animation starts even slower than the quadratic ease-in and accelerates more dramatically towards the end. 
+
+**Parameters:**
+*   `t` (number): The interpolation parameter (between 0 and 1).
+
+**Returns:**
+*   (number): The interpolated value using the ease-in cubic function. 
+
+**Example:** 
+
+```js
+local value = math.lerp.InCubic(0.5) // Returns 0.125
+```
+
+### `math.lerp.OutCubic(t)`
+
+This function applies an ease-out cubic interpolation to a value.  The animation starts quickly and decelerates more gradually than the quadratic ease-out towards the end. 
+
+**Parameters:**
+*   `t` (number): The interpolation parameter (between 0 and 1). 
+
+**Returns:**
+*   (number): The interpolated value using the ease-out cubic function.
+
+**Example:**
+```js
+local value = math.lerp.OutCubic(0.5) // Returns 0.875
+```
+
+### `math.lerp.InOutCubic(t)`
+
+This function applies an ease-in-out cubic interpolation to a value. The animation starts slowly, accelerates in the middle, and then decelerates smoothly towards the end. 
+
+**Parameters:**
+*   `t` (number): The interpolation parameter (between 0 and 1).
+
+**Returns:** 
+
+*   (number): The interpolated value using the ease-in-out cubic function.
+
+**Example:**
+```js
+local value = math.lerp.InOutCubic(0.5) // Returns 0.5
+```
+
+### `math.lerp.InQuart(t)`
+
+This function applies an ease-in quartic (fourth power) interpolation to a value. This creates an even more pronounced acceleration than the cubic ease-in, starting very slowly and then quickly ramping up in speed. 
+
+**Parameters:**
+*   `t` (number): The interpolation parameter (between 0 and 1).
+
+**Returns:** 
+
+*   (number): The interpolated value using the ease-in quartic function.
+
+**Example:**
+```js
+local value = math.lerp.InQuart(0.5) // Returns 0.0625
+```
+
+### `math.lerp.OutQuart(t)` 
+
+This function applies an ease-out quartic (fourth power) interpolation to a value. This creates a very smooth deceleration, starting quickly and then slowly easing to a stop. 
+
+**Parameters:** 
+
+*   `t` (number): The interpolation parameter (between 0 and 1).
+
+**Returns:** 
+
+*   (number): The interpolated value using the ease-out quartic function.
+
+**Example:**
+```js 
+local value = math.lerp.OutQuart(0.5) // Returns 0.9375
+```
+
+### `math.lerp.InOutQuart(t)`
+
+This function applies an ease-in-out quartic (fourth power) interpolation to a value.  The animation begins slowly, speeds up in the middle, and then gracefully slows down as it approaches the end value.
+
+**Parameters:**
+*   `t` (number): The interpolation parameter (between 0 and 1). 
+
+**Returns:**
+*   (number): The interpolated value using the ease-in-out quartic function.
+
+**Example:** 
+
+```js
+local value = math.lerp.InOutQuart(0.5) // Returns 0.5
+```
+
+### `math.lerp.InQuint(t)`
+
+This function applies an ease-in quintic (fifth power) interpolation to a value. This is the most extreme of the power-based ease-in functions, with a very slow start and a very rapid acceleration towards the end.
+
+**Parameters:**
+*   `t` (number): The interpolation parameter (between 0 and 1).
+
+**Returns:**
+*   (number): The interpolated value using the ease-in quintic function. 
+
+**Example:**
+```js
+local value = math.lerp.InQuint(0.5) // Returns 0.03125
+```
+
+### `math.lerp.OutQuint(t)`
+
+This function applies an ease-out quintic (fifth power) interpolation to a value. This provides the smoothest deceleration of the power-based ease-out functions, starting quickly and very gradually coming to a halt.
+
+**Parameters:**
+*   `t` (number): The interpolation parameter (between 0 and 1).
+
+**Returns:**
+*   (number): The interpolated value using the ease-out quintic function. 
+
+**Example:**
+```js
+local value = math.lerp.OutQuint(0.5) // Returns 0.96875
+```
+
+### `math.lerp.InOutQuint(t)`
+
+This function applies an ease-in-out quintic (fifth power) interpolation to a value.  The animation starts gently, accelerates significantly in the middle, and then smoothly decelerates as it reaches the final value.
+
+**Parameters:** 
+
+*   `t` (number): The interpolation parameter (between 0 and 1).
+
+**Returns:** 
+
+*   (number): The interpolated value using the ease-in-out quintic function.
+
+**Example:**
+```js
+local value = math.lerp.InOutQuint(0.5) // Returns 0.5 
+``` 
+
+### `math.lerp.InExpo(t)`
+
+This function applies an ease-in exponential interpolation to a value. The animation starts slowly and then accelerates rapidly towards the end.
+
+**Parameters:**
+*   `t` (number): The interpolation parameter (between 0 and 1). 
+
+**Returns:**
+*   (number): The interpolated value using the ease-in exponential function.
+
+**Example:**
+```js
+local value = math.lerp.InExpo(0.5) // Returns a value close to 0.03
+```
+
+### `math.lerp.OutExpo(t)`
+
+This function applies an ease-out exponential interpolation to a value. The animation starts quickly and then decelerates rapidly towards the end. 
+
+**Parameters:** 
+
+*   `t` (number): The interpolation parameter (between 0 and 1). 
+
+**Returns:**
+*   (number): The interpolated value using the ease-out exponential function.
+
+**Example:**
+```js
+local value = math.lerp.OutExpo(0.5) // Returns a value close to 0.97
+```
+
+### `math.lerp.InOutExpo(t)`
+
+This function applies an ease-in-out exponential interpolation to a value.  The animation starts and ends slowly, with a sharp acceleration and deceleration in the middle.
+
+**Parameters:** 
+
+*   `t` (number): The interpolation parameter (between 0 and 1). 
+
+**Returns:**
+*   (number): The interpolated value using the ease-in-out exponential function.
+
+**Example:** 
+
+```js
+local value = math.lerp.InOutExpo(0.5) // Returns 0.5
+```
+
+### `math.lerp.InCirc(t)` 
+
+This function applies an ease-in circular interpolation to a value.  The animation starts slowly with a subtle curve and gradually accelerates towards the end. 
+
+**Parameters:**
+*   `t` (number): The interpolation parameter (between 0 and 1).
+
+**Returns:** 
+
+*   (number): The interpolated value using the ease-in circular function.
+
+**Example:**
+```js
+local value = math.lerp.InCirc(0.5) // Returns a value close to 0.13
+``` 
+
+### `math.lerp.OutCirc(t)` 
+
+This function applies an ease-out circular interpolation to a value.  The animation starts quickly and decelerates with a subtle curve, ending smoothly.
+
+**Parameters:**
+*   `t` (number): The interpolation parameter (between 0 and 1).
+
+**Returns:**
+*   (number): The interpolated value using the ease-out circular function. 
+
+**Example:**
+```js
+local value = math.lerp.OutCirc(0.5) // Returns a value close to 0.87 
+```
+
+### `math.lerp.InOutCirc(t)`
+
+This function applies an ease-in-out circular interpolation to a value.  The animation starts and ends slowly, with a smooth, rounded acceleration and deceleration in the middle. 
+
+**Parameters:**
+*   `t` (number): The interpolation parameter (between 0 and 1). 
+
+**Returns:**
+*   (number): The interpolated value using the ease-in-out circular function.
+
+**Example:**
+```js
+local value = math.lerp.InOutCirc(0.5) // Returns 0.5 
+```
+
+### `math.lerp.InBack(t)` 
+
+This function applies an ease-in back interpolation to a value.  The animation starts by briefly going back slightly before moving forward, creating an \"anticipation\" or \"overshoot\" effect at the beginning.
+
+**Parameters:**
+*   `t` (number): The interpolation parameter (between 0 and 1). 
+
+**Returns:**
+*   (number): The interpolated value using the ease-in back function.
+
+**Example:** 
+
+```js
+local value = math.lerp.InBack(0.5) // Returns a value close to -0.13
+``` 
+
+### `math.lerp.OutBack(t)`
+
+This function applies an ease-out back interpolation to a value. The animation ends by briefly overshooting the final value before settling, creating an \"overshoot\" effect at the end.
+
+**Parameters:**
+*   `t` (number): The interpolation parameter (between 0 and 1).
+
+**Returns:** 
+
+*   (number): The interpolated value using the ease-out back function. 
+
+**Example:**
+```js 
+local value = math.lerp.OutBack(0.5) // Returns a value close to 1.13
+```
+
+### `math.lerp.InOutBack(t)` 
+
+This function applies an ease-in-out back interpolation to a value.  The animation starts and ends with a slight \"overshoot\" effect, creating a more dramatic and bouncy movement.
+
+**Parameters:**
+*   `t` (number): The interpolation parameter (between 0 and 1).
+
+**Returns:**
+*   (number): The interpolated value using the ease-in-out back function. 
+
+**Example:** 
+
+```js 
+local value = math.lerp.InOutBack(0.5) // Returns 0.5 
+```
+
+### `math.lerp.InElastic(t)`
+
+This function applies an ease-in elastic interpolation to a value. The animation starts with a \"winding up\" or \"stretching\" effect before moving forward, creating a bouncy, springy feel. 
+
+**Parameters:** 
+
+*   `t` (number): The interpolation parameter (between 0 and 1). 
+
+**Returns:** 
+
+*   (number): The interpolated value using the ease-in elastic function.
+
+**Example:**
+```js
+local value = math.lerp.InElastic(0.5) // Returns a value close to -0.05 
+```
+
+### `math.lerp.OutElastic(t)`
+
+This function applies an ease-out elastic interpolation to a value.  The animation ends with a \"springy\" overshoot effect, as if the value bounces back slightly before settling at its final position.
+
+**Parameters:** 
+
+*   `t` (number): The interpolation parameter (between 0 and 1).
+
+**Returns:**
+*   (number): The interpolated value using the ease-out elastic function. 
+
+**Example:** 
+
+```js
+local value = math.lerp.OutElastic(0.5) // Returns a value close to 1.05
+```
+
+### `math.lerp.InOutElastic(t)` 
+
+This function applies an ease-in-out elastic interpolation to a value.  The animation combines the \"winding up\" effect of ease-in elastic with the \"springy\" overshoot of ease-out elastic, creating a more pronounced bouncy movement. 
+
+**Parameters:**
+*   `t` (number): The interpolation parameter (between 0 and 1).
+
+**Returns:** 
+
+*   (number): The interpolated value using the ease-in-out elastic function. 
+
+**Example:**
+```js
+local value = math.lerp.InOutElastic(0.5) // Returns 0.5 
+``` 
+
+### `math.lerp.InBounce(t)` 
+
+This function applies an ease-in bounce interpolation to a value. The animation starts with a series of bounces, gradually increasing in size until it reaches the final value.
+
+**Parameters:**
+*   `t` (number): The interpolation parameter (between 0 and 1).
+
+**Returns:**
+*   (number): The interpolated value using the ease-in bounce function. 
+
+**Example:**
+```js 
+local value = math.lerp.InBounce(0.5) // Returns a value close to 0.72 
+``` 
+
+### `math.lerp.OutBounce(t)`
+
+This function applies an ease-out bounce interpolation to a value. The animation ends with a series of bounces, gradually decreasing in size until it settles at the final value.
+
+**Parameters:**
+*   `t` (number): The interpolation parameter (between 0 and 1). 
+
+**Returns:**
+*   (number): The interpolated value using the ease-out bounce function. 
+
+**Example:**
+```js
+local value = math.lerp.OutBounce(0.5) // Returns a value close to 0.28 
+```
+
+### `math.lerp.InOutBounce(t)`
+
+This function applies an ease-in-out bounce interpolation to a value.  The animation combines the bouncing effect of both ease-in and ease-out bounce, creating a symmetrical bouncing movement.
+
+**Parameters:** 
+
+*   `t` (number): The interpolation parameter (between 0 and 1).
+
+**Returns:**
+*   (number): The interpolated value using the ease-in-out bounce function. 
+
+**Example:** 
+
+```js
+local value = math.lerp.InOutBounce(0.5) // Returns 0.5 
+```
+
+#### More info about `easing` lerp function you can found here: https://gizma.com/easing/
+
 
 ## [Math/quaternion.nut](quaternion.nut)
 
