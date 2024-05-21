@@ -72,20 +72,18 @@ local _EntFireByHandle = EntFireByHandle
     _EntFireByHandle(target, action, value, delay, activator, caller)
 }
 
-::AllPlayers <- array(3)
+::AllPlayers <- []
 
 /*
 * Retrieves a player entity with extended functionality.
 *
-* @param {int} index - The index of the player (1-based).
+* @param {int} index - The index of the player (0-based).
 * @returns {pcapEntity} - An extended player entity with additional methods.
 */
-::GetPlayerEx <- function(index = 1) {
+::GetPlayerEx <- function(index = 0) {
     if(IsMultiplayer()) {
-        foreach(idx, player in AllPlayers){
-            if(idx == index) return player
-        }
-        return null
+        if(index >= AllPlayers.len()) return
+        return AllPlayers[index]
     }
 
     return entLib.FromEntity(GetPlayer())
@@ -107,9 +105,9 @@ local _EntFireByHandle = EntFireByHandle
  * This function creates logic_measure_movement and info_target entities for each player to track their eye position and angles. 
  * It is called automatically at the initialization of the library and periodically in multiplayer games. 
 */
-function AttachEyeControlToPlayers() {
+::AttachEyeControlToPlayers <- function() {
     for(local player; player = entLib.FindByClassname("player", player);) {
-        if(player.GetUserData("Eye")) return
+        if(player.GetUserData("Eye")) continue
 
         local controlName = UniqueString("eyeControl")
         local eyeControlEntity = entLib.CreateByClassname("logic_measure_movement", {
