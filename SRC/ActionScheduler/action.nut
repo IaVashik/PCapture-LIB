@@ -42,8 +42,12 @@
         if(type(action) == "string")
             action = compilestring(action)
 
-        if(!args) {
+        if(args == null) {
             return action.call(caller)
+        }
+        
+        if(typeof args != "array" && typeof args != "arrayLib" && typeof args != "List") {
+            throw("Invalid arguments for ScheduleEvent! The argument must be itterable, not (" + args + ")")
         }
 
         local actionArgs = [caller]

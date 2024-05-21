@@ -14,7 +14,6 @@
     eventsList = {global = List()},
     // Var to track if event loop is running
     executorRunning = false,
-
     
     Add = null,
     AddActions = null,
@@ -29,6 +28,12 @@
     IsValid = null,
 }
 
+ScheduleEvent["_startThink"] <- function() {
+    if(!ScheduleEvent.executorRunning) {
+        ScheduleEvent.executorRunning = true
+        ExecuteScheduledEvents()
+    }
+}
 
 IncludeScript("SRC/ActionScheduler/action")
 IncludeScript("SRC/ActionScheduler/action_scheduler")

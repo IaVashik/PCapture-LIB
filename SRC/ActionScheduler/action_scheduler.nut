@@ -19,35 +19,30 @@ ScheduleEvent["Add"] <- function(eventName, action, timeDelay, args = null, scop
 
     if(currentActionList.len() == 0 || currentActionList.top() <= newScheduledEvent) {
         currentActionList.append(newScheduledEvent)
+        return ScheduleEvent._startThink()
     } 
-    else {
-        //! --- A binary tree. This is an experimental code!!
-        local low = 0
-        local high = currentActionList.len() - 1
-        local mid
     
-        while (low <= high) {
-            mid = (low + high) / 2
-            if (currentActionList[mid] < newScheduledEvent) {
-                low = mid + 1
-            }
-            else if (currentActionList[mid] > newScheduledEvent) {
-                high = mid - 1
-            }
-            else {
-                low = mid
-                break
-            }
-        }
-        
-        currentActionList.insert(low, newScheduledEvent)
-        //! ---
-    }
+    //* --- A binary tree.
+    local low = 0
+    local high = currentActionList.len() - 1
+    local mid
 
-    if(!ScheduleEvent.executorRunning) {
-        ScheduleEvent.executorRunning = true
-        ExecuteScheduledEvents()
+    while (low <= high) {
+        mid = (low + high) / 2
+        if (currentActionList[mid] < newScheduledEvent) {
+            low = mid + 1
+        }
+        else if (currentActionList[mid] > newScheduledEvent) {
+            high = mid - 1
+        }
+        else {
+            low = mid
+            break
+        }
     }
+    
+    currentActionList.insert(low, newScheduledEvent)
+    ScheduleEvent._startThink()
 }
 
 /*
@@ -84,7 +79,7 @@ ScheduleEvent["AddActions"] <- function(eventName, actions, noSort = false) {
         ScheduleEvent.eventsList[eventName].extend(actions)
         ScheduleEvent.eventsList[eventName].sort()
         // dev.debug("Added " + actions.len() + " actions to Event " + eventName)
-        return
+        return ScheduleEvent._startThink()
     } 
 
     if(!noSort) actions.sort()
@@ -96,12 +91,7 @@ ScheduleEvent["AddActions"] <- function(eventName, actions, noSort = false) {
     }
 
     dev.debug("Created new Event - " + eventName)
-    
-
-    if(!ScheduleEvent.executorRunning) {
-        ScheduleEvent.executorRunning = true
-        ExecuteScheduledEvents()
-    }
+    ScheduleEvent._startThink()
 }
 
 
