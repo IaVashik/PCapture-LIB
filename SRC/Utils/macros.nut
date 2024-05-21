@@ -57,10 +57,9 @@ macros["GetDist"] <- function(vec1, vec2) {
 */
 macros["StrToVec"] <- function(str) {
     local str_arr = split(str, " ")
-    local vec = Vector(str_arr[0].tointeger(), str_arr[1].tointeger(), str_arr[2].tointeger())
+    local vec = Vector(str_arr[0].tofloat(), str_arr[1].tofloat(), str_arr[2].tofloat())
     return vec
 }
-
 
 /*
  * Converts a Vector object to a string representation.
