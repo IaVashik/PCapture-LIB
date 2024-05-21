@@ -12,7 +12,7 @@
 ::LibDebugInfo <- false
 ::VSEventLogs <- false
 
-local version = "PCapture-Lib 2.2 Testing"
+local version = "PCapture-Lib 2.3 Testing"
 
 // `Self` must be in any case, even if the script is run directly by the interpreter
 if (!("self" in this)) {
@@ -220,9 +220,15 @@ if("_lib_version_" in getroottable()) {
      * @param {string} path - The path to the file.
     */
     constructor(path) {
-        this.name = split(path, "/")[0] //! mega todo
-        if(path.find(".log") == null) 
+        path = split(path, "/").top() 
+        this.name = path
+
+        if(path.find(".log") == null) {
             path += ".log"
+        } else {
+            this.name = this.name.slice(0, -4)
+        }
+        
         this.path = path
         this._recreateCache()
     }
@@ -372,20 +378,18 @@ local _EntFireByHandle = EntFireByHandle
     _EntFireByHandle(target, action, value, delay, activator, caller)
 }
 
-::AllPlayers <- array(3)
+::AllPlayers <- []
 
 /*
 * Retrieves a player entity with extended functionality.
 *
-* @param {int} index - The index of the player (1-based).
+* @param {int} index - The index of the player (0-based).
 * @returns {pcapEntity} - An extended player entity with additional methods.
 */
-::GetPlayerEx <- function(index = 1) {
+::GetPlayerEx <- function(index = 0) {
     if(IsMultiplayer()) {
-        foreach(idx, player in AllPlayers){
-            if(idx == index) return player
-        }
-        return null
+        if(index >= AllPlayers.len()) return
+        return AllPlayers[index]
     }
 
     return entLib.FromEntity(GetPlayer())
@@ -407,9 +411,9 @@ local _EntFireByHandle = EntFireByHandle
  * This function creates logic_measure_movement and info_target entities for each player to track their eye position and angles. 
  * It is called automatically at the initialization of the library and periodically in multiplayer games. 
 */
-function AttachEyeControlToPlayers() {
+::AttachEyeControlToPlayers <- function() {
     for(local player; player = entLib.FindByClassname("player", player);) {
-        if(player.GetUserData("Eye")) return
+        if(player.GetUserData("Eye")) continue
 
         local controlName = UniqueString("eyeControl")
         local eyeControlEntity = entLib.CreateByClassname("logic_measure_movement", {
@@ -489,10 +493,9 @@ macros["GetDist"] <- function(vec1, vec2) {
 */
 macros["StrToVec"] <- function(str) {
     local str_arr = split(str, " ")
-    local vec = Vector(str_arr[0].tointeger(), str_arr[1].tointeger(), str_arr[2].tointeger())
+    local vec = Vector(str_arr[0].tofloat(), str_arr[1].tofloat(), str_arr[2].tofloat())
     return vec
 }
-
 
 /*
  * Converts a Vector object to a string representation.
@@ -4890,7 +4893,7 @@ TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, set
         // Extract bounding box dimensions from the model name (assuming a specific format). 
         local wpInfo = split(portal.GetModelName(), " ")
         // Rotate the bounding box dimensions based on the portal's angles.  
-        local wpBBox = math.vector.rotateVector(Vector(5, wpInfo[0].tointeger(), wpInfo[1].tointeger()), portal.GetAngles())
+        local wpBBox = math.vector.rotate(Vector(5, wpInfo[0].tointeger(), wpInfo[1].tointeger()), portal.GetAngles())
         wpBBox = math.vector.abs(wpBBox)
         // Set the bounding box of the portal using the calculated dimensions.  
         portal.SetBBox(wpBBox * -1, wpBBox) 
@@ -5489,7 +5492,6 @@ animate["PositionTransitionBySpeed"] <- function(entities, startPos, endPos, spe
     eventsList = {global = List()},
     // Var to track if event loop is running
     executorRunning = false,
-
     
     Add = null,
     AddActions = null,
@@ -5504,6 +5506,12 @@ animate["PositionTransitionBySpeed"] <- function(entities, startPos, endPos, spe
     IsValid = null,
 }
 
+ScheduleEvent["_startThink"] <- function() {
+    if(!ScheduleEvent.executorRunning) {
+        ScheduleEvent.executorRunning = true
+        ExecuteScheduledEvents()
+    }
+}
 
 /*
  * Represents a scheduled action.
@@ -5549,8 +5557,12 @@ animate["PositionTransitionBySpeed"] <- function(entities, startPos, endPos, spe
         if(type(action) == "string")
             action = compilestring(action)
 
-        if(!args) {
+        if(args == null) {
             return action.call(caller)
+        }
+        
+        if(typeof args != "array" && typeof args != "arrayLib" && typeof args != "List") {
+            throw("Invalid arguments for ScheduleEvent! The argument must be itterable, not (" + args + ")")
         }
 
         local actionArgs = [caller]
@@ -5591,35 +5603,30 @@ ScheduleEvent["Add"] <- function(eventName, action, timeDelay, args = null, scop
 
     if(currentActionList.len() == 0 || currentActionList.top() <= newScheduledEvent) {
         currentActionList.append(newScheduledEvent)
+        return ScheduleEvent._startThink()
     } 
-    else {
-        //! --- A binary tree. This is an experimental code!!
-        local low = 0
-        local high = currentActionList.len() - 1
-        local mid
     
-        while (low <= high) {
-            mid = (low + high) / 2
-            if (currentActionList[mid] < newScheduledEvent) {
-                low = mid + 1
-            }
-            else if (currentActionList[mid] > newScheduledEvent) {
-                high = mid - 1
-            }
-            else {
-                low = mid
-                break
-            }
-        }
-        
-        currentActionList.insert(low, newScheduledEvent)
-        //! ---
-    }
+    //* --- A binary tree.
+    local low = 0
+    local high = currentActionList.len() - 1
+    local mid
 
-    if(!ScheduleEvent.executorRunning) {
-        ScheduleEvent.executorRunning = true
-        ExecuteScheduledEvents()
+    while (low <= high) {
+        mid = (low + high) / 2
+        if (currentActionList[mid] < newScheduledEvent) {
+            low = mid + 1
+        }
+        else if (currentActionList[mid] > newScheduledEvent) {
+            high = mid - 1
+        }
+        else {
+            low = mid
+            break
+        }
     }
+    
+    currentActionList.insert(low, newScheduledEvent)
+    ScheduleEvent._startThink()
 }
 
 /*
@@ -5656,7 +5663,7 @@ ScheduleEvent["AddActions"] <- function(eventName, actions, noSort = false) {
         ScheduleEvent.eventsList[eventName].extend(actions)
         ScheduleEvent.eventsList[eventName].sort()
         // dev.debug("Added " + actions.len() + " actions to Event " + eventName)
-        return
+        return ScheduleEvent._startThink()
     } 
 
     if(!noSort) actions.sort()
@@ -5668,12 +5675,7 @@ ScheduleEvent["AddActions"] <- function(eventName, actions, noSort = false) {
     }
 
     dev.debug("Created new Event - " + eventName)
-    
-
-    if(!ScheduleEvent.executorRunning) {
-        ScheduleEvent.executorRunning = true
-        ExecuteScheduledEvents()
-    }
+    ScheduleEvent._startThink()
 }
 
 
