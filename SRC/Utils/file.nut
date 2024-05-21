@@ -13,9 +13,15 @@
      * @param {string} path - The path to the file.
     */
     constructor(path) {
-        this.name = split(path, "/")[0] //! mega todo
-        if(path.find(".log") == null) 
+        path = split(path, "/").top() 
+        this.name = path
+
+        if(path.find(".log") == null) {
             path += ".log"
+        } else {
+            this.name = this.name.slice(0, -4)
+        }
+        
         this.path = path
         this._recreateCache()
     }
