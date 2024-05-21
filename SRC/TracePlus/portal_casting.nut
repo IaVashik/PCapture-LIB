@@ -185,7 +185,7 @@ TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, set
         // Extract bounding box dimensions from the model name (assuming a specific format). 
         local wpInfo = split(portal.GetModelName(), " ")
         // Rotate the bounding box dimensions based on the portal's angles.  
-        local wpBBox = math.vector.rotateVector(Vector(5, wpInfo[0].tointeger(), wpInfo[1].tointeger()), portal.GetAngles())
+        local wpBBox = math.vector.rotate(Vector(5, wpInfo[0].tointeger(), wpInfo[1].tointeger()), portal.GetAngles())
         wpBBox = math.vector.abs(wpBBox)
         // Set the bounding box of the portal using the calculated dimensions.  
         portal.SetBBox(wpBBox * -1, wpBBox) 
