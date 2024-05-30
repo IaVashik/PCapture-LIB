@@ -279,7 +279,7 @@
      * @param {string} animationName - The name of the animation to play.
      * @param {number} fireDelay - Delay in seconds before starting the animation.
     */
-    function SetAnimation(animationName, fireDelay) {
+    function SetAnimation(animationName, fireDelay = 0) {
         EntFireByHandle(this.CBaseEntity, "SetAnimation", animationName, fireDelay)
         this.SetUserData("animation", animationName)
     }
@@ -717,6 +717,7 @@ function pcapEntity::IsSequenceFinished() return this.CBaseEntity.IsSequenceFini
 function pcapEntity::SpawnEntity() this.CBaseEntity.SpawnEntity()
 
 function pcapEntity::GetAngles() return this.CBaseEntity.GetAngles()
+function pcapEntity::GetScriptScope() return this.CBaseEntity.GetScriptScope()
 function pcapEntity::GetAngularVelocity() return this.CBaseEntity.GetAngularVelocity()
 function pcapEntity::GetBoundingMaxs() return this.CBaseEntity.GetBoundingMaxs()
 function pcapEntity::GetBoundingMins() return this.CBaseEntity.GetBoundingMins()

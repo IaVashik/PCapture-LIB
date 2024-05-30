@@ -297,7 +297,7 @@ This function retrieves a player entity with extended functionality as a `pcapEn
 
 **Parameters:**
 
-* `index` (number, optional): The index of the player (0-based, default is 1).
+* `index` (number, optional): The index of the player (0-based, default is 0).
 
 **Returns:**
 
