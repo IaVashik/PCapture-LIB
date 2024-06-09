@@ -12,7 +12,7 @@
 ::LibDebugInfo <- false
 ::VSEventLogs <- false
 
-local version = "PCapture-Lib 2.3 Testing"
+local version = "PCapture-Lib 2.3 Stable"
 
 // `Self` must be in any case, even if the script is run directly by the interpreter
 if (!("self" in this)) {
@@ -46,16 +46,15 @@ IncludeScript("SRC/HUD/init.nut")
 ::cwar <- List() // todo
 ::cerr <- List()
 
-//* Default settings for bboxcast traces.
-
+// dissolve entity for pcapEnts
 if(("dissolver" in getroottable()) == false) {
     ::dissolver <- entLib.CreateByClassname("env_entity_dissolver", {targetname = "@dissolver"})
 } 
 
-if(IsMultiplayer()) {
-    RunScriptCode.setInterval(AttachEyeControlToPlayers, 5)
-} else {
-    AttachEyeControlToPlayers()
+// 
+AttachEyeControlToPlayers()
+if(IsMultiplayer() && "TEAM_SINGLEPLAYER" in getroottable()) { // "TEAM_SINGLEPLAYER" - p2mm const
+    RunScriptCode.setInterval(AttachEyeControlToPlayers, 0.5)
 }
 
 ::_lib_version_ <- version

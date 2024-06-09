@@ -12,7 +12,7 @@
 ::LibDebugInfo <- false
 ::VSEventLogs <- false
 
-local version = "PCapture-Lib 2.3 Testing"
+local version = "PCapture-Lib 2.3 Stable"
 
 // `Self` must be in any case, even if the script is run directly by the interpreter
 if (!("self" in this)) {
@@ -2123,7 +2123,7 @@ lerp["InOutBounce"] <- function(t) {
      * @param {string} animationName - The name of the animation to play.
      * @param {number} fireDelay - Delay in seconds before starting the animation.
     */
-    function SetAnimation(animationName, fireDelay) {
+    function SetAnimation(animationName, fireDelay = 0) {
         EntFireByHandle(this.CBaseEntity, "SetAnimation", animationName, fireDelay)
         this.SetUserData("animation", animationName)
     }
@@ -2561,6 +2561,7 @@ function pcapEntity::IsSequenceFinished() return this.CBaseEntity.IsSequenceFini
 function pcapEntity::SpawnEntity() this.CBaseEntity.SpawnEntity()
 
 function pcapEntity::GetAngles() return this.CBaseEntity.GetAngles()
+function pcapEntity::GetScriptScope() return this.CBaseEntity.GetScriptScope()
 function pcapEntity::GetAngularVelocity() return this.CBaseEntity.GetAngularVelocity()
 function pcapEntity::GetBoundingMaxs() return this.CBaseEntity.GetBoundingMaxs()
 function pcapEntity::GetBoundingMins() return this.CBaseEntity.GetBoundingMins()
@@ -6324,16 +6325,15 @@ function HUD::HintInstructor::SetEffects(sizePulsing, alphaPulsing, shaking) {
 ::cwar <- List() // todo
 ::cerr <- List()
 
-//* Default settings for bboxcast traces.
-
+// dissolve entity for pcapEnts
 if(("dissolver" in getroottable()) == false) {
     ::dissolver <- entLib.CreateByClassname("env_entity_dissolver", {targetname = "@dissolver"})
 } 
 
-if(IsMultiplayer()) {
-    RunScriptCode.setInterval(AttachEyeControlToPlayers, 5)
-} else {
-    AttachEyeControlToPlayers()
+// 
+AttachEyeControlToPlayers()
+if(IsMultiplayer() && "TEAM_SINGLEPLAYER" in getroottable()) { // "TEAM_SINGLEPLAYER" - p2mm const
+    RunScriptCode.setInterval(AttachEyeControlToPlayers, 0.5)
 }
 
 ::_lib_version_ <- version
