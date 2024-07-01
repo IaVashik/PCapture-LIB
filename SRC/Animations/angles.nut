@@ -10,12 +10,18 @@
 */
  animate["AnglesTransitionByTime"] <- function(entities, startAngles, endAngles, time, animSetting = {}) {
     local animSetting = AnimEvent("angles", animSetting, entities, time)
-    local lerpFunc = animSetting.lerpFunc
+    local vars = {
+        startAngles = startAngles,
+        endAngles = endAngles,
+        lerpFunc = animSetting.lerpFunc
+    }
 
     animate.applyAnimation(
         animSetting, 
-        function(step, transitionFrames):(startAngles, endAngles, lerpFunc) {return math.lerp.sVector(startAngles, endAngles, lerpFunc(step / transitionFrames))},
-        function(ent, newAngle) {ent.SetAbsAngles(newAngle)})
+        function(step, transitionFrames, v){return math.lerp.sVector(v.startAngles, v.endAngles, v.lerpFunc(step / transitionFrames))},
+        function(ent, newAngle) {ent.SetAbsAngles(newAngle)},
+        vars
+    )
     
     animSetting.callOutputs()
     return animSetting.delay

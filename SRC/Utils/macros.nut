@@ -169,3 +169,23 @@ macros["GetTriangle"] <- function(v1, v2, v3) {
         vertices = [v1, v2, v3]
     }
 }
+
+macros["BuildAnimateFunction"] <- function(name, propertySetterFunc) {
+    return function(entities, startValue, endValue, time, animSetting = {}) : (name, propertySetterFunc) {
+        local animSetting = AnimEvent(name, animSetting, entities, time) 
+        local varg = {
+            start = startPitch,
+            delta = endValue - startValue,
+            lerpFunc = animSetting.lerpFunc
+        }
+
+        animate.applyAnimation(
+            animSetting,
+            function(step, steps, v) {return v.start + v.delta * v.lerpFunc(step / steps)},
+            propertySetterFunc
+            varg
+        ) 
+
+        animSetting.callOutputs() 
+    }
+}

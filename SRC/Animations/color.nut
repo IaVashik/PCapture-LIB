@@ -10,12 +10,18 @@
 */
  animate["ColorTransition"] <- function(entities, startColor, endColor, time, animSetting = {}) {
     local animSetting = AnimEvent("color", animSetting, entities, time)
-    local lerpFunc = animSetting.lerpFunc
+    local vars = {
+        startColor = startColor,
+        endColor = endColor,
+        lerpFunc = animSetting.lerpFunc
+    }
 
     animate.applyAnimation(
         animSetting, 
-        function(step, transitionFrames):(startColor, endColor, lerpFunc) {return math.lerp.color(startColor, endColor, lerpFunc(step / transitionFrames))},
-        function(ent, newColor) {ent.SetColor(newColor)})
+        function(step, transitionFrames, v) {return math.lerp.color(v.startColor, v.endColor, v.lerpFunc(step / transitionFrames))},
+        function(ent, newColor) {ent.SetColor(newColor)},
+        vars
+    )
     
     animSetting.callOutputs()
     return animSetting.delay

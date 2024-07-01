@@ -10,14 +10,18 @@
 */
 animate["AlphaTransition"] <- function(entities, startOpacity, endOpacity, time, animSetting = {}) {
     local animSetting = AnimEvent("alpha", animSetting, entities, time)
-    local opacityDelta = endOpacity - startOpacity
-
-    local lerpFunc = animSetting.lerpFunc
+    local vars = {
+        startOpacity = startOpacity,
+        opacityDelta = endOpacity - startOpacity,
+        lerpFunc = animSetting.lerpFunc
+    }
 
     animate.applyAnimation(
         animSetting, 
-        function(step, steps):(startOpacity, opacityDelta, lerpFunc) {return startOpacity + opacityDelta * lerpFunc(step / steps)},
-        function(ent, newAlpha) {ent.SetAlpha(newAlpha)})
+        function(step, steps, v) {return v.startOpacity + v.opacityDelta * v.lerpFunc(step / steps)},
+        function(ent, newAlpha) {ent.SetAlpha(newAlpha)},
+        vars
+    )
     
     animSetting.callOutputs()
     return animSetting.delay

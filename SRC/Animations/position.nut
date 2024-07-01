@@ -10,14 +10,17 @@
 */
 animate["PositionTransitionByTime"] <- function(entities, startPos, endPos, time, animSetting = {}) {
     local animSetting = AnimEvent("position", animSetting, entities, time)
-    
-    local dist = endPos - startPos
-    local lerpFunc = animSetting.lerpFunc
+    local vars = {
+        startPos = startPos,
+        dist = endPos - startPos,
+        lerpFunc = animSetting.lerpFunc
+    }
 
     animate.applyAnimation(
         animSetting, 
-        function(step, steps):(startPos, dist, lerpFunc) {return startPos + dist * lerpFunc(step / steps)},
-        function(ent, newPosition) {ent.SetOrigin(newPosition)}
+        function(step, steps, v) {return v.startPos + v.dist * v.lerpFunc(step / steps)},
+        function(ent, newPosition) {ent.SetOrigin(newPosition)},
+        vars
     )
     
     animSetting.callOutputs()
@@ -40,16 +43,18 @@ animate["PositionTransitionByTime"] <- function(entities, startPos, endPos, time
 */
 animate["PositionTransitionBySpeed"] <- function(entities, startPos, endPos, speed, animSetting = {}) {
     local animSetting = AnimEvent("position", animSetting, entities)
-    
-    local dist = endPos - startPos
-    local steps = dist.Length() / speed.tofloat()
-    local lerpFunc = animSetting.lerpFunc
+    local vars = {
+        startPos = startPos,
+        dist = endPos - startPos,
+        lerpFunc = animSetting.lerpFunc
+    }
     
     animate.applyAnimation(
         animSetting, 
-        function(step, steps):(startPos, dist, lerpFunc) {return startPos + dist * lerpFunc(step / steps)},
-        function(ent, newPosition) {ent.SetOrigin(newPosition)}
-        steps
+        function(step, steps, v) {return v.startPos + v.dist * v.lerpFunc(step / steps)},
+        function(ent, newPosition) {ent.SetOrigin(newPosition)},
+        vars,
+        vars.dist.Length() / speed.tofloat() // steps
     )
     
     animSetting.callOutputs()

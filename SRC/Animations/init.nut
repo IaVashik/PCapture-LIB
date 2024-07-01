@@ -74,16 +74,16 @@
  * @param {function} valueCalculator - A function that calculates the new value for the property at each frame.
  * @param {function} propertySetter - A function that sets the new value for the property on each entity. 
 */
-animate["applyAnimation"] <- function(animSetting, valueCalculator, propertySetter, transitionFrames = 0) {
+animate["applyAnimation"] <- function(animSetting, valueCalculator, propertySetter, vars = null, transitionFrames = 0) {
     if(transitionFrames == 0)
         transitionFrames = animSetting.delay / FrameTime();
     transitionFrames = ceil(transitionFrames) 
-    local actionsList = List()
+    local actionsList = List() //* hm....
 
     for (local step = 0; step <= transitionFrames; step++) {
         local elapsed = (FrameTime() * step) + animSetting.globalDelay
 
-        local newValue = valueCalculator(step, transitionFrames)
+        local newValue = valueCalculator(step, transitionFrames, vars)
         
         foreach(ent in animSetting.entities) {
             local action = ScheduleAction(this, propertySetter, elapsed, [ent, newValue])
