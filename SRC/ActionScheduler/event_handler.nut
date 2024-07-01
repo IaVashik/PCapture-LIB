@@ -21,9 +21,9 @@
             }
             catch(exception) { // todo??
                 SendToConsole("playvol resource/warning.wav 1")
-                printl("\nSCHEDULED EVENT\n[Name] " + eventName + "\n" + event.GetInfo())
+                // printl("\nSCHEDULED EVENT\n[Name] " + eventName + "\n" + event.GetInfo() + "\n" + "[Exception] " + exception)
 
-                if(type(event.action) == "function") {
+                if(type(event.action) == "function" || type(event.action) == "native function") {
                     local info = ""
                     foreach(key, val in event.action.getinfos()) {
                         if(type(val) == "array") val = arrayLib(val)

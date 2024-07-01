@@ -109,10 +109,10 @@ ScheduleEvent["Cancel"] <- function(eventName, delay = 0) {
     if(delay > 0)
         return ScheduleEvent.Add("global", format("ScheduleEvent.Cancel(\"%s\")", eventName), delay)
     
-        ScheduleEvent.eventsList.rawdelete(eventName)
+    ScheduleEvent.eventsList.rawdelete(eventName)
         
     // Debug info
-    if(LibDebugInfo) {
+    if(LibDebugInfo || 1) {
         local test = ""
         foreach(k, i in ScheduleEvent.eventsList)
             test += k + ", "
@@ -120,6 +120,12 @@ ScheduleEvent["Cancel"] <- function(eventName, delay = 0) {
         test = test.slice(0, -2)
         dev.debug(format("Event \"%s\" closed. Actial events: [%s]", eventName.tostring(), test))
     }
+}
+
+ScheduleEvent["TryCancel"] <- function(eventName, delay = 0) {
+    if(delay > 0) 
+        return ScheduleEvent.Add("global", format("ScheduleEvent.TryCancel(\"%s\")", eventName), delay)
+    if(ScheduleEvent.IsValid(eventName)) ScheduleEvent.Cancel(eventName)
 }
 
 
