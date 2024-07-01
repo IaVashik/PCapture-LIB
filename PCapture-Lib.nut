@@ -12,7 +12,7 @@
 ::LibDebugInfo <- false
 ::VSEventLogs <- false
 
-local version = "PCapture-Lib 2.3 Stable"
+local version = "PCapture-Lib 2.4 Stable"
 
 // `Self` must be in any case, even if the script is run directly by the interpreter
 if (!("self" in this)) {
@@ -21,7 +21,7 @@ if (!("self" in this)) {
     getroottable()["self"] <- self
 }
 
-if("_lib_version_" in getroottable()) {
+if("_lib_version_" in getroottable() && version.find("Debug") == null) {
     printl("\n")
     dev.warning("PCapture-Lib already initialized.")
     if(_lib_version_ != version) {
@@ -205,7 +205,8 @@ if("_lib_version_" in getroottable()) {
 
         printl(this.format.acall(args))
     }
-}/*
+}
+/*
  * Represents a file for reading and writing.
 */
  ::File <- class {
@@ -304,7 +305,8 @@ if("_lib_version_" in getroottable()) {
     function updateInfo() {
         SendToConsole("exec " + path)
     }
-}if("GetPlayerEx" in getroottable()) {
+}
+if("GetPlayerEx" in getroottable()) {
     return
 }
 
@@ -313,7 +315,7 @@ if("_lib_version_" in getroottable()) {
 *
 * @returns {number} Clamped frametime
 */
-local _frametime = FrameTime
+::_frametime <- FrameTime
 /*
  * Returns the current frame time, ensuring it is never zero. 
  * 
@@ -322,14 +324,14 @@ local _frametime = FrameTime
  *
  * @returns {number} - The current frame time. 
 */
-::FrameTime <- function() : (_frametime) {
+::FrameTime <- function() {
     local tick = _frametime()
     if(tick == 0)
         return 0.016
     return tick
 }
 
-local _UniqueString = UniqueString
+::_uniquestring <- UniqueString
 /*
  * Generates a unique string with the specified prefix. 
  * 
@@ -338,23 +340,13 @@ local _UniqueString = UniqueString
  * @param {string} prefix - The prefix to use for the unique string. (optional, default="u") 
  * @returns {string} - The generated unique string. 
 */ 
-::UniqueString <- function(prefix = "u") : (_UniqueString) {
-    return prefix + "_" + _UniqueString().slice(0, -1)
+::UniqueString <- function(prefix = "u") {
+    return prefix + "_" + _uniquestring().slice(0, -1)
 }
 
+::_EntFireByHandle <- EntFireByHandle
 /*
-* Wrapper for EntFireByHandle to handle PCapLib objects.
-*
-* @param {CBaseEntity|pcapEntity} target - Target entity.
-* @param {string} action - Action.
-* @param {string} value - Action value. (optional)
-* @param {number} delay - Delay in seconds. (optional)
-* @param {CBaseEntity|pcapEntity} activator - Activator entity. (optional)
-* @param {CBaseEntity|pcapEntity} caller - Caller entity. (optional)
-*/
-local _EntFireByHandle = EntFireByHandle
-/*
- * Triggers an entity's input with optional delay and activator/caller. 
+ * Wrapper for EntFireByHandle to handle PCapLib objects.
  *
  * This function overrides the standard EntFireByHandle function to handle pcapEntity objects and extract the underlying CBaseEntity objects. 
  * It also allows specifying an activator and caller entity. 
@@ -366,16 +358,24 @@ local _EntFireByHandle = EntFireByHandle
  * @param {CBaseEntity|pcapEntity} activator - The activator entity (the entity that triggered the input). (optional)
  * @param {CBaseEntity|pcapEntity} caller - The caller entity (the entity that called the function). (optional) 
 */
-::EntFireByHandle <- function(target, action, value = "", delay = 0, activator = null, caller = null) : (_EntFireByHandle) {
+::EntFireByHandle <- function(target, action, value = "", delay = 0, activator = null, caller = null, eventName = null) {
     // Extract the underlying entity from the pcapEntity wrapper 
-    if (typeof target == "pcapEntity")
+    if (typeof target == "pcapEntity") // todo create macros for this!
         target = target.CBaseEntity
     if (typeof activator == "pcapEntity")
         activator = activator.CBaseEntity
     if (typeof caller == "pcapEntity")
         caller = target.CBaseEntity
 
-    _EntFireByHandle(target, action, value, delay, activator, caller)
+    if(!eventName) 
+        return _EntFireByHandle(target, action, value, delay, activator, caller)
+    ScheduleEvent.Add(eventName, _EntFireByHandle, delay, [target, action, value, 0, activator, caller])
+}
+
+::EntFireEx <- function(target, action, value = "", delay = 0, activator = null, eventName = null) {
+    if(!eventName)
+        return EntFire(target, action, value, delay, activator)
+    ScheduleEvent.Add(eventName, EntFire, delay, [target, action, value, 0, activator])
 }
 
 ::AllPlayers <- []
@@ -434,7 +434,8 @@ local _EntFireByHandle = EntFireByHandle
         player.SetUserData("Eye", eyePointEntity)
         AllPlayers.append(player)
     }
-}::macros <- {}
+}
+::macros <- {}
 
 /* 
  * Precaches a sound script or a list of sound scripts for later use.
@@ -604,7 +605,28 @@ macros["GetTriangle"] <- function(v1, v2, v3) {
         origin = (v1 + v2 + v3) * 0.3333,
         vertices = [v1, v2, v3]
     }
-}::RunScriptCode <- {
+}
+
+macros["BuildAnimateFunction"] <- function(name, propertySetterFunc) {
+    return function(entities, startValue, endValue, time, animSetting = {}) : (name, propertySetterFunc) {
+        local animSetting = AnimEvent(name, animSetting, entities, time) 
+        local varg = {
+            start = startPitch,
+            delta = endValue - startValue,
+            lerpFunc = animSetting.lerpFunc
+        }
+
+        animate.applyAnimation(
+            animSetting,
+            function(step, steps, v) {return v.start + v.delta * v.lerpFunc(step / steps)},
+            propertySetterFunc
+            varg
+        ) 
+
+        animSetting.callOutputs() 
+    }
+}
+::RunScriptCode <- {
     /* 
      * Creates a delay before executing the specified script.
      * 
@@ -660,7 +682,8 @@ macros["GetTriangle"] <- function(v1, v2, v3) {
     fromStr = function(str) {
         compilestring(str)()
     }
-}// Collides with everything.
+}
+// Collides with everything.
 const COLLISION_GROUP_NONE = 0
 
 // Small objects, doesn't interfere with gameplay.
@@ -741,7 +764,9 @@ const SOLID_OBB_YAW = 4
 const SOLID_CUSTOM = 5 
 
 // Uses VPhysics engine for realistic physics. 
-const SOLID_VPHYSICS = 6 /*+--------------------------------------------------------------------------------+
+const SOLID_VPHYSICS = 6 
+
+/*+--------------------------------------------------------------------------------+
 |                           PCapture Vscripts Library                              |
 +----------------------------------------------------------------------------------+
 | Author:                                                                          |
@@ -867,7 +892,8 @@ math["RemapVal"] <- function( value, A, B, C, D )
         return C;
     };
     return C + (D - C) * (value - A) / (B - A);
-}   math["vector"] <- {}
+}   
+math["vector"] <- {}
 local vector = math["vector"]
 
 /*
@@ -1003,6 +1029,7 @@ vector["sign"] <- function(vec) {
 vector["abs"] <- function(vector) {
     return Vector(::abs(vector.x), ::abs(vector.y), ::abs(vector.z)) 
 }
+
 math["lerp"] <- {}
 local lerp = math["lerp"]
 
@@ -1245,7 +1272,8 @@ lerp["InOutBounce"] <- function(t) {
     return t < 0.5
     ? (1 - math.lerp.OutBounce(1 - 2 * t)) / 2
     : (1 + math.lerp.OutBounce(2 * t - 1)) / 2;
-}math["Quaternion"] <- class {
+}
+math["Quaternion"] <- class {
     x = null;
     y = null;
     z = null;
@@ -1587,7 +1615,8 @@ lerp["InOutBounce"] <- function(t) {
     function _typeof() {
         return "Quaternion"
     }
-}math["Matrix"] <- class {
+}
+math["Matrix"] <- class {
     a = 1; b = 0; c = 0;
     d = 0; e = 1; f = 0;
     g = 0; h = 0; k = 1;
@@ -1830,7 +1859,9 @@ lerp["InOutBounce"] <- function(t) {
     function _typeof() {
         return "Matrix"
     }
-}/*+--------------------------------------------------------------------------------+
+}
+
+/*+--------------------------------------------------------------------------------+
 |                           PCapture Vscripts Library                              |
 +----------------------------------------------------------------------------------+
 | Author:                                                                          |
@@ -2041,9 +2072,8 @@ lerp["InOutBounce"] <- function(t) {
     function EmitSoundEx(soundName, timeDelay = 0, eventName = this) {
         if(timeDelay == 0)
             return this.CBaseEntity.EmitSound(soundName)
-        ScheduleEvent.Add(eventName, function():(CBaseEntity, soundName) {
-            CBaseEntity.EmitSound(soundName)
-        }, timeDelay)
+            
+        ScheduleEvent.Add(eventName, this.EmitSound, timeDelay, [soundName], this)
     }
 
 
@@ -2587,7 +2617,8 @@ function pcapEntity::SetForwardVector(vector) this.CBaseEntity.SetForwardVector(
 function pcapEntity::SetHealth(health) this.CBaseEntity.SetHealth(health)
 function pcapEntity::SetMaxHealth(health) this.CBaseEntity.SetMaxHealth(health)
 function pcapEntity::SetModel(model_name) this.CBaseEntity.SetModel(model_name)
-function pcapEntity::SetOrigin(vector) this.CBaseEntity.SetOrigin(vector)::entLib <- class {
+function pcapEntity::SetOrigin(vector) this.CBaseEntity.SetOrigin(vector)
+::entLib <- class {
     /*
      * Creates an entity of the specified classname with the provided keyvalues.
      *
@@ -2781,6 +2812,7 @@ function pcapEntity::SetOrigin(vector) this.CBaseEntity.SetOrigin(vector)::entLi
         }
     }
 }
+
 /*
 * Enhanced arrays module.
 */
@@ -3174,7 +3206,8 @@ function pcapEntity::SetOrigin(vector) this.CBaseEntity.SetOrigin(vector)::entLi
             return 0; 
         }
     }
-}::ListNode <- class {
+}
+::ListNode <- class {
     value = null;
     prev_ref = null;
     next_ref = null;
@@ -3191,6 +3224,9 @@ function pcapEntity::SetOrigin(vector) this.CBaseEntity.SetOrigin(vector)::entLi
     function _tostring() {
         return this.value.tostring();
     }
+    function _info() {
+        return "ListNode: " + value + ", " + prev_ref + ", " + next_ref
+    }
 }
 
 ::List <- class {
@@ -3206,7 +3242,7 @@ function pcapEntity::SetOrigin(vector) this.CBaseEntity.SetOrigin(vector)::entLi
     constructor(...) {
         this.first_node = ListNode(0);
         this.last_node = this.first_node;
-        
+
         for(local i = 0; i< vargc; i++) {
             this.append(vargv[i])
         }
@@ -3265,12 +3301,49 @@ function pcapEntity::SetOrigin(vector) this.CBaseEntity.SetOrigin(vector)::entLi
 
         newNode.next_ref = node
         newNode.prev_ref = node.prev_ref
+        if(!node.prev_ref) dev.error(node.prev_ref + " | " + node._info())
         
         node.prev_ref.next_ref = newNode 
         node.prev_ref = newNode
 
         this.length++
     }
+
+    function insertList(idx, otherList) {
+        /* If the index is out of bounds, append the other list to the end. */ 
+        if (idx >= this.length) {
+            return this.extend(otherList); 
+        }
+    
+        /* If the other list is empty, do nothing. */
+        if (otherList.len() == 0) {
+            return; 
+        }
+    
+        /* Get the node at the specified index. */
+        local node = this.getNode(idx); 
+    
+        /* Get the first and last nodes of the other list. */ 
+        local otherFirstNode = otherList.first_node.next_ref;
+        local otherLastNode = otherList.last_node; 
+    
+        /* Connect the other list's first node to the previous node. */
+        if (node.prev_ref) {
+            node.prev_ref.next_ref = otherFirstNode; 
+            otherFirstNode.prev_ref = node.prev_ref; 
+        } else {
+            /* If inserting at the beginning, update the first node. */ 
+            this.first_node.next_ref = otherFirstNode; 
+            otherFirstNode.prev_ref = this.first_node;
+        }
+    
+        /* Connect the other list's last node to the current node. */ 
+        otherLastNode.next_ref = node; 
+        node.prev_ref = otherLastNode; 
+    
+        /* Update the length of the list. */
+        this.length += otherList.length;
+    } 
 
     /*
      * Gets the node at a specific index in the list.
@@ -3385,52 +3458,22 @@ function pcapEntity::SetOrigin(vector) this.CBaseEntity.SetOrigin(vector)::entLi
         
         // Update prev_ref and next_ref links after sorting
         local current = this.first_node.next_ref;
-        local previous = null;
+        local previous = this.first_node;
+
         while (current) {
             current.prev_ref = previous;
-            if (previous) {
-                previous.next_ref = current; 
-            }
+            // if (previous) {
+            //     previous.next_ref = current; 
+            // }
             previous = current; 
             current = current.next_ref; 
         } 
 
         // Update last_node to point to the last node after sorting 
         this.last_node = previous; 
-        
         return this
     }
 
-    function _mergeSort(head) {
-        if (head == null || head.next_ref == null) {
-            return head  // Список с одним или нулём элементов уже отсортирован
-        }
-    
-        /* Разделение списка на две части. */
-        local middle = _findMiddleNode(head)
-        local nextToMiddle = middle.next_ref 
-        middle.next_ref = null 
-    
-        /* Рекурсивная сортировка двух половин. */ 
-        local left = _mergeSort(head)
-        local right = _mergeSort(nextToMiddle) 
-    
-        /* Слияние отсортированных половин. */
-        return _merge(left, right) 
-    }
-    
-    
-    function _findMiddleNode(head) {
-        local slow = head
-        local fast = head.next_ref
-        while (fast != null && fast.next_ref != null) {
-            slow = slow.next_ref
-            fast = fast.next_ref.next_ref 
-        }
-        return slow 
-    }
-    
-    
     function _merge(left, right) {
         local dummyHead = ListNode(null)
         local current = dummyHead
@@ -3452,6 +3495,38 @@ function pcapEntity::SetOrigin(vector) this.CBaseEntity.SetOrigin(vector)::entLi
         return dummyHead.next_ref 
     }
 
+
+    function _mergeSort(head) {
+        if (head == null || head.next_ref == null) {
+            return head  // Список с одним или нулём элементов уже отсортирован
+        }
+    
+        local middle = _findMiddleNode(head)
+
+        // local nextToMiddle = middle.next_ref 
+        // middle.next_ref = null 
+    
+        // Recur for left and right halves
+        local left = _mergeSort(head);
+        local right = _mergeSort(middle);
+    
+        // Merge the two sorted halves
+        return _merge(left, right) 
+    }
+    
+    
+    function _findMiddleNode(head) { // a.k.a `_split`
+        local slow = head
+        local fast = head
+        while (fast.next_ref != null && fast.next_ref.next_ref != null) {
+            fast = fast.next_ref.next_ref
+            slow = slow.next_ref
+        }
+
+        local temp = slow.next_ref
+        slow.next_ref = null
+        return temp
+    }
 
     /*
      * Removes all elements from the list.
@@ -3498,7 +3573,7 @@ function pcapEntity::SetOrigin(vector) this.CBaseEntity.SetOrigin(vector)::entLi
      * @returns {List} - The List instance for chaining.
     */
     function extend(other) {
-        foreach(val in other) 
+        foreach(val in other) // WTF, WHY? just connect this one!!!
             this.append(val)
         return this
     }
@@ -3600,7 +3675,8 @@ function pcapEntity::SetOrigin(vector) this.CBaseEntity.SetOrigin(vector)::entLi
             return 0; 
         }
     }
-}/*
+}
+/*
  * A node in an AVL tree.
 */
  ::treeNode <- class {
@@ -4039,6 +4115,8 @@ function pcapEntity::SetOrigin(vector) this.CBaseEntity.SetOrigin(vector)::entLi
         }
     }
 }
+
+
 /*+--------------------------------------------------------------------------------+
 |                           PCapture Vscripts Library                              |
 +----------------------------------------------------------------------------------+
@@ -4361,7 +4439,8 @@ results["Bbox"] <- class {
     function _tostring() {
         return "TraceResult | startpos: " + GetStartPos() + ", endpos: " + GetEndPos() + ", hitpos: " + GetHitpos() + ", entity: " + GetEntity()
     }
-}/*
+}
+/*
  * Settings for ray traces.
 */
  TracePlus["Settings"] <- class {
@@ -4627,7 +4706,8 @@ results["Bbox"] <- class {
             this.errorTolerance, this.shouldRayHitEntity, this.shouldIgnoreEntity
         )
     }
-}TracePlus.defaultSettings = TracePlus.Settings.new()
+}
+TracePlus.defaultSettings = TracePlus.Settings.new()
 
 // Haha, pseudo-constuctor-class
 /*
@@ -4664,7 +4744,8 @@ TracePlus["FromEyes"]["Cheap"] <- function(distance, player) {
     local endpos = macros.GetEyeEndpos(player, distance)
 
     return TracePlus.Cheap(startpos, endpos)
-}/*
+}
+/*
  * Performs a bbox cast (trace with bounding box) from the specified start and end positions. 
  *
  * @param {Vector} startPos - The start position of the trace.
@@ -4707,7 +4788,8 @@ TracePlus["FromEyes"]["Bbox"] <- function(distance, player, ignoreEntities = nul
 
     // Perform the bboxcast trace and return the trace result
     return TracePlus.Bbox(startPos, endPos, ignoreEntities, settings)
-}/*
+}
+/*
  * Applies portal transformations to a trace, calculating a new start and end position for the trace after passing through the portal. 
  *
  * @param {Vector} startPos - The original start position of the trace. 
@@ -4716,7 +4798,7 @@ TracePlus["FromEyes"]["Bbox"] <- function(distance, player, ignoreEntities = nul
  * @param {pcapEntity} partnerPortal - The partner portal entity. 
  * @returns {table} - A table containing the new startPos and endPos for the trace after passing through the portal. 
 */ 
- local applyPortal = function(startPos, hitPos, portal, partnerPortal) {
+::_applyPortal <- function(startPos, hitPos, portal, partnerPortal) {
     local portalAngles = portal.GetAngles();
     local partnerAngles = partnerPortal.GetAngles();
     local offset = math.vector.unrotate(hitPos - portal.GetOrigin(), portalAngles);
@@ -4743,7 +4825,7 @@ TracePlus["FromEyes"]["Bbox"] <- function(distance, player, ignoreEntities = nul
  * @param {Vector} endPos - The end position of the trace.  
  * @returns {CheapTraceResult} - The trace result object, including information about portal entries.
 */
-TracePlus["PortalCheap"] <- function(startPos, endPos) : (applyPortal) {
+TracePlus["PortalCheap"] <- function(startPos, endPos) {
     local previousTraceData 
     // Portal castings
     for (local i = 0; i < MAX_PORTAL_CAST_DEPTH; i++) {
@@ -4769,7 +4851,7 @@ TracePlus["PortalCheap"] <- function(startPos, endPos) : (applyPortal) {
         }
 
         // Calculate new start and end positions for the trace after passing through the portal. 
-        local ray = applyPortal(startPos, hitPos, portal, partnerPortal);
+        local ray = _applyPortal(startPos, hitPos, portal, partnerPortal);
         // Adjust the start position slightly to prevent the trace from getting stuck.  
         startPos = ray.startPos + partnerPortal.GetForwardVector() 
         endPos = ray.endPos
@@ -4804,7 +4886,7 @@ TracePlus["PortalCheap"] <- function(startPos, endPos) : (applyPortal) {
  * @param {string|null} note - An optional note associated with the trace. 
  * @returns {BboxTraceResult} - The trace result object, including information about portal entries.
 */
-TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, settings = TracePlus.defaultSettings, note = null) : (applyPortal) {
+TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, settings = TracePlus.defaultSettings, note = null) {
     local previousTraceData 
     // Portal castings
     for (local i = 0; i < MAX_PORTAL_CAST_DEPTH; i++) {
@@ -4832,7 +4914,7 @@ TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, set
         ignoreEntities = TracePlus.Settings.UpdateIgnoreEntities(ignoreEntities, partnerPortal)
 
         // Calculate new start and end positions for the trace after passing through the portal.  
-        local ray = applyPortal(startPos, hitPos, portal, partnerPortal);
+        local ray = _applyPortal(startPos, hitPos, portal, partnerPortal);
         // Adjust the start position slightly to prevent the trace from getting stuck. 
         startPos = ray.startPos + partnerPortal.GetForwardVector() 
         endPos = ray.endPos
@@ -4919,6 +5001,7 @@ TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, set
 }
 
 FindPartnersForPortals()
+
 // Expensive/Precise TraceLine logic
 /*
  * A class for performing precise trace line analysis. 
@@ -5043,6 +5126,13 @@ function TraceLineAnalyzer::Trace(startPos, endPos, ignoreEntities, note) {
     return [hitPos, null]
 }
 
+::_searchFunc <- function(str) {
+    //! TODO: workaround for S3, find something more practical!
+    return isSquirrel2 ? 
+    function(val):(str) {return str.find(val) >= 0} :
+    function(val) {return str.find(val) >= 0}
+}
+
 // Check if an entity should be ignored based on the provided settings
 /*
 * Check if entity is a priority class.
@@ -5053,9 +5143,8 @@ function TraceLineAnalyzer::Trace(startPos, endPos, ignoreEntities, note) {
 function TraceLineAnalyzer::_isPriorityEntity(entityClass) {
     if(settings.GetPriorityClasses().len() == 0) 
         return false
-    return settings.GetPriorityClasses().search(function(val):(entityClass) {
-        return entityClass.find(val) >= 0
-    }) != null
+    
+    return settings.GetPriorityClasses().search(_searchFunc(entityClass)) != null
 }
 
 /* 
@@ -5067,9 +5156,7 @@ function TraceLineAnalyzer::_isPriorityEntity(entityClass) {
 function TraceLineAnalyzer::_isIgnoredEntity(entityClass) {
     if(settings.GetIgnoreClasses().len() == 0) 
         return false
-    return settings.GetIgnoreClasses().search(function(val):(entityClass) {
-        return entityClass.find(val) >= 0
-    }) != null
+    return settings.GetIgnoreClasses().search(_searchFunc(entityClass)) != null
 }
 
 /* 
@@ -5081,9 +5168,7 @@ function TraceLineAnalyzer::_isIgnoredEntity(entityClass) {
 function TraceLineAnalyzer::_isIgnoredModels(entityModel) {
     if(settings.GetIgnoredModels().len() == 0 || entityModel == "") 
         return false
-    return settings.GetIgnoredModels().search(function(val):(entityModel) {
-        return entityModel.find(val) >= 0
-    }) != null
+    return settings.GetIgnoredModels().search(_searchFunc(entityModel)) != null
 }
 
 /*
@@ -5127,14 +5212,15 @@ function TraceLineAnalyzer::shouldHitEntity(ent, ignoreEntities, note) { // todo
     }
 
     return true
-}/*
+}
+/*
  * Calculates two new start positions for additional traces used in impact normal calculation. 
  * 
  * @param {Vector} startPos - The original start position of the trace. 
  * @param {Vector} dir - The direction vector of the trace. 
  * @returns {array} - An array containing two new start positions as Vectors. 
 */
- local GetNewStartsPos = function(startPos, dir) {
+::GetNewStartsPos <- function(startPos, dir) {
     // Calculate offset vectors perpendicular to the trace direction
     local perpDir = Vector(-dir.y, dir.x, 0)
     local offset1 = perpDir
@@ -5157,7 +5243,7 @@ function TraceLineAnalyzer::shouldHitEntity(ent, ignoreEntities, note) { // todo
  * @param {Vector} dir - The direction vector of the trace. 
  * @returns {Vector} - The hit position of the trace.
 */
-local _getIntPoint = function(newStart, dir) {    
+::_getIntPoint <- function(newStart, dir) {    
     return TracePlus.Cheap(newStart, (newStart + dir * 8000)).GetHitpos()
 }
 
@@ -5169,7 +5255,7 @@ local _getIntPoint = function(newStart, dir) {
  * @param {Vector} v3 - The third . 
  * @returns {Vector} - The normal vector of the triangle. 
 */
-local _calculateNormal = function(v1, v2, v3) {
+::_calculateNormal <- function(v1, v2, v3) {
     // Calculate two edge vectors of the triangle. 
     local edge1 = v2 - v1
     local edge2 = v3 - v1
@@ -5189,8 +5275,7 @@ local _calculateNormal = function(v1, v2, v3) {
  * @param {TraceResult} traceResult - The trace result object.
  * @returns {Vector} - The calculated impact normal vector. 
 */
-::CalculateImpactNormal <- function(startPos, hitPos, traceResult) 
-                        : (GetNewStartsPos, _getIntPoint, _calculateNormal) {
+::CalculateImpactNormal <- function(startPos, hitPos, traceResult) {
     // Calculate the normalized direction vector from startpos to hitpos
     local dir = hitPos - startPos
     dir.Norm()
@@ -5213,11 +5298,18 @@ local _calculateNormal = function(v1, v2, v3) {
  * @param {array} vertices - An array of Vector objects representing the vertices. 
  * @returns {array} - An array containing the three closest vertices as Vector objects.
 */ 
-local _findClosestVertices = function(point, vertices) {
+::_findClosestVertices <- function(point, vertices) {
     // Sort the vertices based on their distance to the point.
-    vertices.sort(function(a, b):(point) {
-        return (a - point).LengthSqr() - (b - point).LengthSqr() 
-    })
+    if(isSquirrel2) { //! TODO: workaround for S3, find something more practical!
+        vertices.sort(function(a, b):(point) {
+            return (a - point).LengthSqr() - (b - point).LengthSqr() 
+        })
+    }
+    else {
+        vertices.sort(function(a, b) {
+            return (a - point).LengthSqr() - (b - point).LengthSqr() 
+        })
+    }
 
     // Return the three closest vertices.
     return vertices.slice(0, 3)  
@@ -5232,8 +5324,7 @@ local _findClosestVertices = function(point, vertices) {
  * @param {BboxTraceResult} traceResult - The trace result object.
  * @returns {Vector} - The calculated impact normal vector. 
 */
- ::CalculateImpactNormalFromBbox <- function(startPos, hitPos, hitEntity)
-                                    : (_findClosestVertices, _calculateNormal) {
+::CalculateImpactNormalFromBbox <- function(startPos, hitPos, hitEntity) {
     // Get the entity bounding box vertices.
     local bboxVertices = hitEntity.getBBoxPoints()
 
@@ -5257,7 +5348,9 @@ local _findClosestVertices = function(point, vertices) {
     }
 
     return faceNormal 
-}/*+--------------------------------------------------------------------------------+
+}
+
+/*+--------------------------------------------------------------------------------+
 |                           PCapture Vscripts Library                              |
 +----------------------------------------------------------------------------------+
 | Author:                                                                          |
@@ -5333,16 +5426,16 @@ local _findClosestVertices = function(point, vertices) {
  * @param {function} valueCalculator - A function that calculates the new value for the property at each frame.
  * @param {function} propertySetter - A function that sets the new value for the property on each entity. 
 */
-animate["applyAnimation"] <- function(animSetting, valueCalculator, propertySetter, transitionFrames = 0) {
+animate["applyAnimation"] <- function(animSetting, valueCalculator, propertySetter, vars = null, transitionFrames = 0) {
     if(transitionFrames == 0)
         transitionFrames = animSetting.delay / FrameTime();
     transitionFrames = ceil(transitionFrames) 
-    local actionsList = List()
+    local actionsList = List() //* hm....
 
     for (local step = 0; step <= transitionFrames; step++) {
         local elapsed = (FrameTime() * step) + animSetting.globalDelay
 
-        local newValue = valueCalculator(step, transitionFrames)
+        local newValue = valueCalculator(step, transitionFrames, vars)
         
         foreach(ent in animSetting.entities) {
             local action = ScheduleAction(this, propertySetter, elapsed, [ent, newValue])
@@ -5368,18 +5461,23 @@ animate["applyAnimation"] <- function(animSetting, valueCalculator, propertySett
 */
 animate["AlphaTransition"] <- function(entities, startOpacity, endOpacity, time, animSetting = {}) {
     local animSetting = AnimEvent("alpha", animSetting, entities, time)
-    local opacityDelta = endOpacity - startOpacity
-
-    local lerpFunc = animSetting.lerpFunc
+    local vars = {
+        startOpacity = startOpacity,
+        opacityDelta = endOpacity - startOpacity,
+        lerpFunc = animSetting.lerpFunc
+    }
 
     animate.applyAnimation(
         animSetting, 
-        function(step, steps):(startOpacity, opacityDelta, lerpFunc) {return startOpacity + opacityDelta * lerpFunc(step / steps)},
-        function(ent, newAlpha) {ent.SetAlpha(newAlpha)})
+        function(step, steps, v) {return v.startOpacity + v.opacityDelta * v.lerpFunc(step / steps)},
+        function(ent, newAlpha) {ent.SetAlpha(newAlpha)},
+        vars
+    )
     
     animSetting.callOutputs()
     return animSetting.delay
-}/*
+}
+/*
  * Creates an animation that transitions the color of entities over time.
  *
  * @param {array|CBaseEntity|pcapEntity} entities - The entities to animate.
@@ -5391,16 +5489,23 @@ animate["AlphaTransition"] <- function(entities, startOpacity, endOpacity, time,
 */
  animate["ColorTransition"] <- function(entities, startColor, endColor, time, animSetting = {}) {
     local animSetting = AnimEvent("color", animSetting, entities, time)
-    local lerpFunc = animSetting.lerpFunc
+    local vars = {
+        startColor = startColor,
+        endColor = endColor,
+        lerpFunc = animSetting.lerpFunc
+    }
 
     animate.applyAnimation(
         animSetting, 
-        function(step, transitionFrames):(startColor, endColor, lerpFunc) {return math.lerp.color(startColor, endColor, lerpFunc(step / transitionFrames))},
-        function(ent, newColor) {ent.SetColor(newColor)})
+        function(step, transitionFrames, v) {return math.lerp.color(v.startColor, v.endColor, v.lerpFunc(step / transitionFrames))},
+        function(ent, newColor) {ent.SetColor(newColor)},
+        vars
+    )
     
     animSetting.callOutputs()
     return animSetting.delay
-}/*
+}
+/*
  * Creates an animation that transitions the position of entities over time.
  *
  * @param {array|CBaseEntity|pcapEntity} entities - The entities to animate.
@@ -5412,14 +5517,17 @@ animate["AlphaTransition"] <- function(entities, startOpacity, endOpacity, time,
 */
 animate["PositionTransitionByTime"] <- function(entities, startPos, endPos, time, animSetting = {}) {
     local animSetting = AnimEvent("position", animSetting, entities, time)
-    
-    local dist = endPos - startPos
-    local lerpFunc = animSetting.lerpFunc
+    local vars = {
+        startPos = startPos,
+        dist = endPos - startPos,
+        lerpFunc = animSetting.lerpFunc
+    }
 
     animate.applyAnimation(
         animSetting, 
-        function(step, steps):(startPos, dist, lerpFunc) {return startPos + dist * lerpFunc(step / steps)},
-        function(ent, newPosition) {ent.SetOrigin(newPosition)}
+        function(step, steps, v) {return v.startPos + v.dist * v.lerpFunc(step / steps)},
+        function(ent, newPosition) {ent.SetOrigin(newPosition)},
+        vars
     )
     
     animSetting.callOutputs()
@@ -5442,21 +5550,24 @@ animate["PositionTransitionByTime"] <- function(entities, startPos, endPos, time
 */
 animate["PositionTransitionBySpeed"] <- function(entities, startPos, endPos, speed, animSetting = {}) {
     local animSetting = AnimEvent("position", animSetting, entities)
-    
-    local dist = endPos - startPos
-    local steps = dist.Length() / speed.tofloat()
-    local lerpFunc = animSetting.lerpFunc
+    local vars = {
+        startPos = startPos,
+        dist = endPos - startPos,
+        lerpFunc = animSetting.lerpFunc
+    }
     
     animate.applyAnimation(
         animSetting, 
-        function(step, steps):(startPos, dist, lerpFunc) {return startPos + dist * lerpFunc(step / steps)},
-        function(ent, newPosition) {ent.SetOrigin(newPosition)}
-        steps
+        function(step, steps, v) {return v.startPos + v.dist * v.lerpFunc(step / steps)},
+        function(ent, newPosition) {ent.SetOrigin(newPosition)},
+        vars,
+        vars.dist.Length() / speed.tofloat() // steps
     )
     
     animSetting.callOutputs()
     return animSetting.delay
-} /*
+} 
+/*
  * Creates an animation that transitions the angles of entities over time.
  *
  * @param {array|CBaseEntity|pcapEntity} entities - The entities to animate.
@@ -5468,16 +5579,24 @@ animate["PositionTransitionBySpeed"] <- function(entities, startPos, endPos, spe
 */
  animate["AnglesTransitionByTime"] <- function(entities, startAngles, endAngles, time, animSetting = {}) {
     local animSetting = AnimEvent("angles", animSetting, entities, time)
-    local lerpFunc = animSetting.lerpFunc
+    local vars = {
+        startAngles = startAngles,
+        endAngles = endAngles,
+        lerpFunc = animSetting.lerpFunc
+    }
 
     animate.applyAnimation(
         animSetting, 
-        function(step, transitionFrames):(startAngles, endAngles, lerpFunc) {return math.lerp.sVector(startAngles, endAngles, lerpFunc(step / transitionFrames))},
-        function(ent, newAngle) {ent.SetAbsAngles(newAngle)})
+        function(step, transitionFrames, v){return math.lerp.sVector(v.startAngles, v.endAngles, v.lerpFunc(step / transitionFrames))},
+        function(ent, newAngle) {ent.SetAbsAngles(newAngle)},
+        vars
+    )
     
     animSetting.callOutputs()
     return animSetting.delay
-}/*+--------------------------------------------------------------------------------+
+}
+
+/*+--------------------------------------------------------------------------------+
 |                           PCapture Vscripts Library                              |
 +----------------------------------------------------------------------------------+
 | Author:                                                                          |
@@ -5583,7 +5702,8 @@ ScheduleEvent["_startThink"] <- function() {
             return 0; 
         }
     }
-}/*
+}
+/*
  * Adds a single action to a scheduled event with the specified name.
  *
  * @param {string} eventName - The name of the event to add the action to. If the event does not exist, it is created.
@@ -5694,10 +5814,10 @@ ScheduleEvent["Cancel"] <- function(eventName, delay = 0) {
     if(delay > 0)
         return ScheduleEvent.Add("global", format("ScheduleEvent.Cancel(\"%s\")", eventName), delay)
     
-        ScheduleEvent.eventsList.rawdelete(eventName)
+    ScheduleEvent.eventsList.rawdelete(eventName)
         
     // Debug info
-    if(LibDebugInfo) {
+    if(LibDebugInfo || 1) {
         local test = ""
         foreach(k, i in ScheduleEvent.eventsList)
             test += k + ", "
@@ -5705,6 +5825,12 @@ ScheduleEvent["Cancel"] <- function(eventName, delay = 0) {
         test = test.slice(0, -2)
         dev.debug(format("Event \"%s\" closed. Actial events: [%s]", eventName.tostring(), test))
     }
+}
+
+ScheduleEvent["TryCancel"] <- function(eventName, delay = 0) {
+    if(delay > 0) 
+        return ScheduleEvent.Add("global", format("ScheduleEvent.TryCancel(\"%s\")", eventName), delay)
+    if(ScheduleEvent.IsValid(eventName)) ScheduleEvent.Cancel(eventName)
 }
 
 
@@ -5756,7 +5882,8 @@ ScheduleEvent["GetEvent"] <- function(eventName) {
 */
 ScheduleEvent["IsValid"] <- function(eventName) {
     return eventName in ScheduleEvent.eventsList && ScheduleEvent.eventsList[eventName].len() != 0
-}/*
+}
+/*
  * Executes scheduled events when their time is up. 
  * 
  * This function iterates over all scheduled events and checks if their scheduled execution time has arrived. 
@@ -5779,9 +5906,9 @@ ScheduleEvent["IsValid"] <- function(eventName) {
             }
             catch(exception) { // todo??
                 SendToConsole("playvol resource/warning.wav 1")
-                printl("\nSCHEDULED EVENT\n[Name] " + eventName + "\n" + event.GetInfo())
+                // printl("\nSCHEDULED EVENT\n[Name] " + eventName + "\n" + event.GetInfo() + "\n" + "[Exception] " + exception)
 
-                if(type(event.action) == "function") {
+                if(type(event.action) == "function" || type(event.action) == "native function") {
                     local info = ""
                     foreach(key, val in event.action.getinfos()) {
                         if(type(val) == "array") val = arrayLib(val)
@@ -5798,7 +5925,9 @@ ScheduleEvent["IsValid"] <- function(eventName) {
         }
     }
     EntFireByHandle(self, "runscriptcode", "ExecuteScheduledEvents()", FrameTime(), null, null)
-}/*+--------------------------------------------------------------------------------+
+}
+
+/*+--------------------------------------------------------------------------------+
 |                           PCapture Vscripts Library                              |
 +----------------------------------------------------------------------------------+
 | Author:                                                                          |
@@ -5853,7 +5982,8 @@ dev["VSEvent"] <- function(msg) if(VSEventLogs) printl("VScript Event Fired: " +
     function GetEvent(EventName) {
         return eventName in AllGameEvents ? AllGameEvents[eventName] : null
     }
-}/*
+}
+/*
  * Represents a custom game event. 
  * 
  * This class allows you to create and manage custom game events with triggers, filters, and actions. 
@@ -5972,7 +6102,9 @@ function GameEvent::ForceTrigger(args = []) {
     foreach(action in this.actions) {
         action.acall(args)
     }
-}/*+--------------------------------------------------------------------------------+
+}
+
+/*+--------------------------------------------------------------------------------+
 |                           PCapture Vscripts Library                              |
 +----------------------------------------------------------------------------------+
 | Author:                                                                          |
@@ -6147,7 +6279,8 @@ function HUD::ScreenText::SetHoldTime(time) {
 function HUD::ScreenText::SetPos(position) {
     this.CPcapEntity.SetKeyValue("x", position.x)
     this.CPcapEntity.SetKeyValue("y", position.y)
-}/*
+}
+/*
  * A class for displaying hints using the "env_instructor_hint" entity. 
 */
  HUD["HintInstructor"] <- class {
@@ -6321,6 +6454,8 @@ function HUD::HintInstructor::SetEffects(sizePulsing, alphaPulsing, shaking) {
     this.CPcapEntity.SetKeyValue("hint_alphaoption", alphaPulsing)
     this.CPcapEntity.SetKeyValue("hint_shakeoption", shaking)
 }
+
+
 
 ::cwar <- List() // todo
 ::cerr <- List()

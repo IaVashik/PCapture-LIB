@@ -12,7 +12,7 @@
 ::LibDebugInfo <- false
 ::VSEventLogs <- false
 
-local version = "PCapture-Lib 2.3 Stable"
+local version = "PCapture-Lib 2.4 Stable"
 
 // `Self` must be in any case, even if the script is run directly by the interpreter
 if (!("self" in this)) {
@@ -21,7 +21,7 @@ if (!("self" in this)) {
     getroottable()["self"] <- self
 }
 
-if("_lib_version_" in getroottable()) {
+if("_lib_version_" in getroottable() && version.find("Debug") == null) {
     printl("\n")
     dev.warning("PCapture-Lib already initialized.")
     if(_lib_version_ != version) {
