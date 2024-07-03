@@ -3224,9 +3224,6 @@ function pcapEntity::SetOrigin(vector) this.CBaseEntity.SetOrigin(vector)
     function _tostring() {
         return this.value.tostring();
     }
-    function _info() {
-        return "ListNode: " + value + ", " + prev_ref + ", " + next_ref
-    }
 }
 
 ::List <- class {
@@ -3242,7 +3239,7 @@ function pcapEntity::SetOrigin(vector) this.CBaseEntity.SetOrigin(vector)
     constructor(...) {
         this.first_node = ListNode(0);
         this.last_node = this.first_node;
-
+        
         for(local i = 0; i< vargc; i++) {
             this.append(vargv[i])
         }
@@ -3301,49 +3298,12 @@ function pcapEntity::SetOrigin(vector) this.CBaseEntity.SetOrigin(vector)
 
         newNode.next_ref = node
         newNode.prev_ref = node.prev_ref
-        if(!node.prev_ref) dev.error(node.prev_ref + " | " + node._info())
         
         node.prev_ref.next_ref = newNode 
         node.prev_ref = newNode
 
         this.length++
     }
-
-    function insertList(idx, otherList) {
-        /* If the index is out of bounds, append the other list to the end. */ 
-        if (idx >= this.length) {
-            return this.extend(otherList); 
-        }
-    
-        /* If the other list is empty, do nothing. */
-        if (otherList.len() == 0) {
-            return; 
-        }
-    
-        /* Get the node at the specified index. */
-        local node = this.getNode(idx); 
-    
-        /* Get the first and last nodes of the other list. */ 
-        local otherFirstNode = otherList.first_node.next_ref;
-        local otherLastNode = otherList.last_node; 
-    
-        /* Connect the other list's first node to the previous node. */
-        if (node.prev_ref) {
-            node.prev_ref.next_ref = otherFirstNode; 
-            otherFirstNode.prev_ref = node.prev_ref; 
-        } else {
-            /* If inserting at the beginning, update the first node. */ 
-            this.first_node.next_ref = otherFirstNode; 
-            otherFirstNode.prev_ref = this.first_node;
-        }
-    
-        /* Connect the other list's last node to the current node. */ 
-        otherLastNode.next_ref = node; 
-        node.prev_ref = otherLastNode; 
-    
-        /* Update the length of the list. */
-        this.length += otherList.length;
-    } 
 
     /*
      * Gets the node at a specific index in the list.
@@ -3458,22 +3418,52 @@ function pcapEntity::SetOrigin(vector) this.CBaseEntity.SetOrigin(vector)
         
         // Update prev_ref and next_ref links after sorting
         local current = this.first_node.next_ref;
-        local previous = this.first_node;
-
+        local previous = null;
         while (current) {
             current.prev_ref = previous;
-            // if (previous) {
-            //     previous.next_ref = current; 
-            // }
+            if (previous) {
+                previous.next_ref = current; 
+            }
             previous = current; 
             current = current.next_ref; 
         } 
 
         // Update last_node to point to the last node after sorting 
         this.last_node = previous; 
+        
         return this
     }
 
+    function _mergeSort(head) {
+        if (head == null || head.next_ref == null) {
+            return head  // Список с одним или нулём элементов уже отсортирован
+        }
+    
+        /* Разделение списка на две части. */
+        local middle = _findMiddleNode(head)
+        local nextToMiddle = middle.next_ref 
+        middle.next_ref = null 
+    
+        /* Рекурсивная сортировка двух половин. */ 
+        local left = _mergeSort(head)
+        local right = _mergeSort(nextToMiddle) 
+    
+        /* Слияние отсортированных половин. */
+        return _merge(left, right) 
+    }
+    
+    
+    function _findMiddleNode(head) {
+        local slow = head
+        local fast = head.next_ref
+        while (fast != null && fast.next_ref != null) {
+            slow = slow.next_ref
+            fast = fast.next_ref.next_ref 
+        }
+        return slow 
+    }
+    
+    
     function _merge(left, right) {
         local dummyHead = ListNode(null)
         local current = dummyHead
@@ -3495,38 +3485,6 @@ function pcapEntity::SetOrigin(vector) this.CBaseEntity.SetOrigin(vector)
         return dummyHead.next_ref 
     }
 
-
-    function _mergeSort(head) {
-        if (head == null || head.next_ref == null) {
-            return head  // Список с одним или нулём элементов уже отсортирован
-        }
-    
-        local middle = _findMiddleNode(head)
-
-        // local nextToMiddle = middle.next_ref 
-        // middle.next_ref = null 
-    
-        // Recur for left and right halves
-        local left = _mergeSort(head);
-        local right = _mergeSort(middle);
-    
-        // Merge the two sorted halves
-        return _merge(left, right) 
-    }
-    
-    
-    function _findMiddleNode(head) { // a.k.a `_split`
-        local slow = head
-        local fast = head
-        while (fast.next_ref != null && fast.next_ref.next_ref != null) {
-            fast = fast.next_ref.next_ref
-            slow = slow.next_ref
-        }
-
-        local temp = slow.next_ref
-        slow.next_ref = null
-        return temp
-    }
 
     /*
      * Removes all elements from the list.
@@ -3573,7 +3531,7 @@ function pcapEntity::SetOrigin(vector) this.CBaseEntity.SetOrigin(vector)
      * @returns {List} - The List instance for chaining.
     */
     function extend(other) {
-        foreach(val in other) // WTF, WHY? just connect this one!!!
+        foreach(val in other) 
             this.append(val)
         return this
     }
@@ -4798,7 +4756,7 @@ TracePlus["FromEyes"]["Bbox"] <- function(distance, player, ignoreEntities = nul
  * @param {pcapEntity} partnerPortal - The partner portal entity. 
  * @returns {table} - A table containing the new startPos and endPos for the trace after passing through the portal. 
 */ 
-::_applyPortal <- function(startPos, hitPos, portal, partnerPortal) {
+ local applyPortal = function(startPos, hitPos, portal, partnerPortal) {
     local portalAngles = portal.GetAngles();
     local partnerAngles = partnerPortal.GetAngles();
     local offset = math.vector.unrotate(hitPos - portal.GetOrigin(), portalAngles);
@@ -4825,7 +4783,7 @@ TracePlus["FromEyes"]["Bbox"] <- function(distance, player, ignoreEntities = nul
  * @param {Vector} endPos - The end position of the trace.  
  * @returns {CheapTraceResult} - The trace result object, including information about portal entries.
 */
-TracePlus["PortalCheap"] <- function(startPos, endPos) {
+TracePlus["PortalCheap"] <- function(startPos, endPos) : (applyPortal) {
     local previousTraceData 
     // Portal castings
     for (local i = 0; i < MAX_PORTAL_CAST_DEPTH; i++) {
@@ -4851,7 +4809,7 @@ TracePlus["PortalCheap"] <- function(startPos, endPos) {
         }
 
         // Calculate new start and end positions for the trace after passing through the portal. 
-        local ray = _applyPortal(startPos, hitPos, portal, partnerPortal);
+        local ray = applyPortal(startPos, hitPos, portal, partnerPortal);
         // Adjust the start position slightly to prevent the trace from getting stuck.  
         startPos = ray.startPos + partnerPortal.GetForwardVector() 
         endPos = ray.endPos
@@ -4886,7 +4844,7 @@ TracePlus["PortalCheap"] <- function(startPos, endPos) {
  * @param {string|null} note - An optional note associated with the trace. 
  * @returns {BboxTraceResult} - The trace result object, including information about portal entries.
 */
-TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, settings = TracePlus.defaultSettings, note = null) {
+TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, settings = TracePlus.defaultSettings, note = null) : (applyPortal) {
     local previousTraceData 
     // Portal castings
     for (local i = 0; i < MAX_PORTAL_CAST_DEPTH; i++) {
@@ -4914,7 +4872,7 @@ TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, set
         ignoreEntities = TracePlus.Settings.UpdateIgnoreEntities(ignoreEntities, partnerPortal)
 
         // Calculate new start and end positions for the trace after passing through the portal.  
-        local ray = _applyPortal(startPos, hitPos, portal, partnerPortal);
+        local ray = applyPortal(startPos, hitPos, portal, partnerPortal);
         // Adjust the start position slightly to prevent the trace from getting stuck. 
         startPos = ray.startPos + partnerPortal.GetForwardVector() 
         endPos = ray.endPos
@@ -5126,13 +5084,6 @@ function TraceLineAnalyzer::Trace(startPos, endPos, ignoreEntities, note) {
     return [hitPos, null]
 }
 
-::_searchFunc <- function(str) {
-    //! TODO: workaround for S3, find something more practical!
-    return isSquirrel2 ? 
-    function(val):(str) {return str.find(val) >= 0} :
-    function(val) {return str.find(val) >= 0}
-}
-
 // Check if an entity should be ignored based on the provided settings
 /*
 * Check if entity is a priority class.
@@ -5143,8 +5094,9 @@ function TraceLineAnalyzer::Trace(startPos, endPos, ignoreEntities, note) {
 function TraceLineAnalyzer::_isPriorityEntity(entityClass) {
     if(settings.GetPriorityClasses().len() == 0) 
         return false
-    
-    return settings.GetPriorityClasses().search(_searchFunc(entityClass)) != null
+    return settings.GetPriorityClasses().search(function(val):(entityClass) {
+        return entityClass.find(val) >= 0
+    }) != null
 }
 
 /* 
@@ -5156,7 +5108,9 @@ function TraceLineAnalyzer::_isPriorityEntity(entityClass) {
 function TraceLineAnalyzer::_isIgnoredEntity(entityClass) {
     if(settings.GetIgnoreClasses().len() == 0) 
         return false
-    return settings.GetIgnoreClasses().search(_searchFunc(entityClass)) != null
+    return settings.GetIgnoreClasses().search(function(val):(entityClass) {
+        return entityClass.find(val) >= 0
+    }) != null
 }
 
 /* 
@@ -5168,7 +5122,9 @@ function TraceLineAnalyzer::_isIgnoredEntity(entityClass) {
 function TraceLineAnalyzer::_isIgnoredModels(entityModel) {
     if(settings.GetIgnoredModels().len() == 0 || entityModel == "") 
         return false
-    return settings.GetIgnoredModels().search(_searchFunc(entityModel)) != null
+    return settings.GetIgnoredModels().search(function(val):(entityModel) {
+        return entityModel.find(val) >= 0
+    }) != null
 }
 
 /*
@@ -5220,7 +5176,7 @@ function TraceLineAnalyzer::shouldHitEntity(ent, ignoreEntities, note) { // todo
  * @param {Vector} dir - The direction vector of the trace. 
  * @returns {array} - An array containing two new start positions as Vectors. 
 */
-::GetNewStartsPos <- function(startPos, dir) {
+ local GetNewStartsPos = function(startPos, dir) {
     // Calculate offset vectors perpendicular to the trace direction
     local perpDir = Vector(-dir.y, dir.x, 0)
     local offset1 = perpDir
@@ -5243,7 +5199,7 @@ function TraceLineAnalyzer::shouldHitEntity(ent, ignoreEntities, note) { // todo
  * @param {Vector} dir - The direction vector of the trace. 
  * @returns {Vector} - The hit position of the trace.
 */
-::_getIntPoint <- function(newStart, dir) {    
+local _getIntPoint = function(newStart, dir) {    
     return TracePlus.Cheap(newStart, (newStart + dir * 8000)).GetHitpos()
 }
 
@@ -5255,7 +5211,7 @@ function TraceLineAnalyzer::shouldHitEntity(ent, ignoreEntities, note) { // todo
  * @param {Vector} v3 - The third . 
  * @returns {Vector} - The normal vector of the triangle. 
 */
-::_calculateNormal <- function(v1, v2, v3) {
+local _calculateNormal = function(v1, v2, v3) {
     // Calculate two edge vectors of the triangle. 
     local edge1 = v2 - v1
     local edge2 = v3 - v1
@@ -5275,7 +5231,8 @@ function TraceLineAnalyzer::shouldHitEntity(ent, ignoreEntities, note) { // todo
  * @param {TraceResult} traceResult - The trace result object.
  * @returns {Vector} - The calculated impact normal vector. 
 */
-::CalculateImpactNormal <- function(startPos, hitPos, traceResult) {
+::CalculateImpactNormal <- function(startPos, hitPos, traceResult) 
+                        : (GetNewStartsPos, _getIntPoint, _calculateNormal) {
     // Calculate the normalized direction vector from startpos to hitpos
     local dir = hitPos - startPos
     dir.Norm()
@@ -5298,18 +5255,11 @@ function TraceLineAnalyzer::shouldHitEntity(ent, ignoreEntities, note) { // todo
  * @param {array} vertices - An array of Vector objects representing the vertices. 
  * @returns {array} - An array containing the three closest vertices as Vector objects.
 */ 
-::_findClosestVertices <- function(point, vertices) {
+local _findClosestVertices = function(point, vertices) {
     // Sort the vertices based on their distance to the point.
-    if(isSquirrel2) { //! TODO: workaround for S3, find something more practical!
-        vertices.sort(function(a, b):(point) {
-            return (a - point).LengthSqr() - (b - point).LengthSqr() 
-        })
-    }
-    else {
-        vertices.sort(function(a, b) {
-            return (a - point).LengthSqr() - (b - point).LengthSqr() 
-        })
-    }
+    vertices.sort(function(a, b):(point) {
+        return (a - point).LengthSqr() - (b - point).LengthSqr() 
+    })
 
     // Return the three closest vertices.
     return vertices.slice(0, 3)  
@@ -5324,7 +5274,8 @@ function TraceLineAnalyzer::shouldHitEntity(ent, ignoreEntities, note) { // todo
  * @param {BboxTraceResult} traceResult - The trace result object.
  * @returns {Vector} - The calculated impact normal vector. 
 */
-::CalculateImpactNormalFromBbox <- function(startPos, hitPos, hitEntity) {
+ ::CalculateImpactNormalFromBbox <- function(startPos, hitPos, hitEntity)
+                                    : (_findClosestVertices, _calculateNormal) {
     // Get the entity bounding box vertices.
     local bboxVertices = hitEntity.getBBoxPoints()
 
