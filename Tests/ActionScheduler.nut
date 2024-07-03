@@ -31,6 +31,87 @@ events_tests <- {
         return assert(eventInfo.len() == 1)
     },
 
+    function add_new_actions_test() {
+        local actions = List()
+        for(local i = 50; i >= 0; i--) {
+            actions.append(ScheduleAction(this, "1 + 1", RandomFloat(1, 10), null))
+        }
+
+        ScheduleEvent.AddActions("add_new_actions_test", actions, false)
+        
+        local list = ScheduleEvent.GetEvent("add_new_actions_test")
+        for(local i = 1; i < list.len(); i++) {
+            if(list[i - 1] > list[i]) {
+                return assert(false)
+            }
+        }
+    },
+
+    function add_actions_test() {
+        local create = function() {
+            local actions = List()
+            for(local i = 30; i >= 0; i--) {
+                actions.append(ScheduleAction(this, "1 + 1", RandomFloat(1, 10), null))
+            }
+            return actions
+        }
+
+        ScheduleEvent.AddActions("add_actions_test", create(), false)
+        ScheduleEvent.AddActions("add_actions_test", create(), false)
+        ScheduleEvent.AddActions("add_actions_test", create(), false)
+        
+        local list = ScheduleEvent.GetEvent("add_actions_test")
+        
+        for(local i = 1; i < list.len(); i++) {
+            if(list[i - 1] >= list[i]) {
+                return assert(false)
+            }
+        }
+    },
+
+    function add_new_actions_nosort_test() {
+        local actions = List()
+        for(local i = 50; i >= 0; i--) {
+            actions.append(ScheduleAction(this, "1 + 1", (50 - i.tofloat()) / 10, null))
+        }
+
+        ScheduleEvent.AddActions("add_new_actions_nosort_test", actions, true)
+
+        local list = ScheduleEvent.GetEvent("add_new_actions_nosort_test")
+        for(local i = 1; i < list.len(); i++) {
+            if(list[i - 1] >= list[i]) {
+                return assert(false)
+            }
+        }
+    },
+
+    function add_actions_nosort_test() {
+        local create = function(delay) {
+            local actions = List()
+            for(local i = 5; i >= 0; i--) {
+                actions.append(ScheduleAction(this, "1 + 1", (5 - i.tofloat()) / 10 + delay, null))
+            }
+            return actions
+        }
+
+        ScheduleEvent.AddActions("add_actions_nosort_test", create(0), true)
+        // ScheduleEvent.AddActions("add_actions_nosort_test", create(1), true)
+        // ScheduleEvent.AddActions("add_actions_nosort_test", create(3), true)
+        // ScheduleEvent.AddActions("add_actions_nosort_test", create(0.5), true)
+        // ScheduleEvent.AddActions("add_actions_nosort_test", create(4), true)
+        // ScheduleEvent.AddActions("add_actions_nosort_test", create(2), true)
+        ScheduleEvent.AddActions("add_actions_nosort_test", create(0.3), true)
+        
+        local list = ScheduleEvent.GetEvent("add_actions_nosort_test")
+        printl(list)
+        for(local i = 1; i < list.len(); i++) {
+            if(list[i - 1] >= list[i]) {
+                printl(list[i - 1] + " > " + list[i] + " {"+i+"}")
+                return assert(false)
+            }
+        }
+    },
+
     function event_validity_test() {
         local testFunc = function() {
             return assert(true)
@@ -57,11 +138,11 @@ events_tests <- {
 
     function schedule_event_with_delay_test() { 
         local startTime = Time()
-        local testFunc = function() : (startTime) {
+        local testFunc = function(startTime) {
             return assert(Time() >= startTime + 0.1) 
         }
 
-        ScheduleEvent.Add("test_with_delay", testFunc, 0.1) 
+        ScheduleEvent.Add("test_with_delay", testFunc, 0.1, [startTime]) 
         return assert(ScheduleEvent.GetEvent("test_with_delay").len() == 1) 
     },
 
@@ -91,10 +172,10 @@ class ThisTest {
     }
 
     function test() {
-        ScheduleEvent.Add("this_test_event", theta, 0.2) 
+        ScheduleEvent.Add("this_test_event", theta, 0.2, null, this) 
         ScheduleEvent.Add("this_test_event", function() {
             if(!this.something) throw("WTF BRO?")
-        }, 0.3) 
+        }, 0.3, null, this) 
     }
 }
 

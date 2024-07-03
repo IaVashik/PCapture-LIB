@@ -163,6 +163,35 @@ idt_tests <- {
         return assert(list.top() == 3)
     },
 
+    function list_sort_test() {
+        local list = List(3, 1, 2)
+        list.sort()
+        return assert(list[0] == 1 && list[1] == 2 && list[2] == 3)
+    },
+
+    function list_hard_sort_test() {
+        local list = List(3, 1, 2)
+        list.sort()
+
+        local test = function() : (list) {
+            for(local i = 100; i >= 0; i--) {
+                list.append(RandomInt(1, 10000))
+                list.insert(RandomInt(0, 100), RandomInt(1, 10000))
+            }
+            list.sort()
+        }
+
+        for(local i = 10; i >= 0; i--) {
+            test()
+        }
+        
+        for(local i = 1; i < list.len(); i++) {
+            if(list[i - 1] >= list[i]) {
+                return assert(false)
+            }
+        }
+    },
+
     function list_get_test() {
         local list = List(1, 2, 3)
         return assert(list.get(1) == 2 && list.get(4, -1) == -1)
@@ -189,7 +218,28 @@ idt_tests <- {
         local list1 = List(1, 2)
         local list2 = List(3, 4)
         list1.extend(list2)
+        printl(list1)
         return assert(list1.len() == 4 && list1[2] == 3 && list1[3] == 4)
+    },
+
+    function list_extend_test2() {
+        local list1 = List(1, 2)
+
+        local list2 = List(3, 4)
+        local list3 = List(5, 6, 7)
+        local list4 = List(7, 8, 9)
+        
+        list1.extend(list2)
+        list1.extend(list3)
+        list1.extend(list4)
+
+        printl(list1)
+        
+        for(local i = 1; i < list1.len(); i++) {
+            if(list1[i - 1] >= list1[i]) {
+                return assert(false)
+            }
+        }
     },
 
     function list_search_test() {

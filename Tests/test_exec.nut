@@ -7,8 +7,8 @@ function RunTests(testName, tests_table) {
     local passed_tests = tests_table.len()
     local unsuccessful = List()
     foreach(name, test_func in tests_table) {
+        test_func()
         try {
-            test_func()
         } catch(exception) {
             dev.fprint("{} test error: function {} ({})", testName, name, exception)
             unsuccessful.append(name)
