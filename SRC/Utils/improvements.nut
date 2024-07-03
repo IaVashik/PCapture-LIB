@@ -7,7 +7,7 @@ if("GetPlayerEx" in getroottable()) {
 *
 * @returns {number} Clamped frametime
 */
-local _frametime = FrameTime
+::_frametime <- FrameTime
 /*
  * Returns the current frame time, ensuring it is never zero. 
  * 
@@ -16,14 +16,14 @@ local _frametime = FrameTime
  *
  * @returns {number} - The current frame time. 
 */
-::FrameTime <- function() : (_frametime) {
+::FrameTime <- function() {
     local tick = _frametime()
     if(tick == 0)
         return 0.016
     return tick
 }
 
-local _UniqueString = UniqueString
+::_uniquestring <- UniqueString
 /*
  * Generates a unique string with the specified prefix. 
  * 
@@ -32,23 +32,13 @@ local _UniqueString = UniqueString
  * @param {string} prefix - The prefix to use for the unique string. (optional, default="u") 
  * @returns {string} - The generated unique string. 
 */ 
-::UniqueString <- function(prefix = "u") : (_UniqueString) {
-    return prefix + "_" + _UniqueString().slice(0, -1)
+::UniqueString <- function(prefix = "u") {
+    return prefix + "_" + _uniquestring().slice(0, -1)
 }
 
+::_EntFireByHandle <- EntFireByHandle
 /*
-* Wrapper for EntFireByHandle to handle PCapLib objects.
-*
-* @param {CBaseEntity|pcapEntity} target - Target entity.
-* @param {string} action - Action.
-* @param {string} value - Action value. (optional)
-* @param {number} delay - Delay in seconds. (optional)
-* @param {CBaseEntity|pcapEntity} activator - Activator entity. (optional)
-* @param {CBaseEntity|pcapEntity} caller - Caller entity. (optional)
-*/
-local _EntFireByHandle = EntFireByHandle
-/*
- * Triggers an entity's input with optional delay and activator/caller. 
+ * Wrapper for EntFireByHandle to handle PCapLib objects.
  *
  * This function overrides the standard EntFireByHandle function to handle pcapEntity objects and extract the underlying CBaseEntity objects. 
  * It also allows specifying an activator and caller entity. 
@@ -60,16 +50,24 @@ local _EntFireByHandle = EntFireByHandle
  * @param {CBaseEntity|pcapEntity} activator - The activator entity (the entity that triggered the input). (optional)
  * @param {CBaseEntity|pcapEntity} caller - The caller entity (the entity that called the function). (optional) 
 */
-::EntFireByHandle <- function(target, action, value = "", delay = 0, activator = null, caller = null) : (_EntFireByHandle) {
+::EntFireByHandle <- function(target, action, value = "", delay = 0, activator = null, caller = null, eventName = null) {
     // Extract the underlying entity from the pcapEntity wrapper 
-    if (typeof target == "pcapEntity")
+    if (typeof target == "pcapEntity") // todo create macros for this!
         target = target.CBaseEntity
     if (typeof activator == "pcapEntity")
         activator = activator.CBaseEntity
     if (typeof caller == "pcapEntity")
         caller = target.CBaseEntity
 
-    _EntFireByHandle(target, action, value, delay, activator, caller)
+    if(!eventName) 
+        return _EntFireByHandle(target, action, value, delay, activator, caller)
+    ScheduleEvent.Add(eventName, _EntFireByHandle, delay, [target, action, value, 0, activator, caller])
+}
+
+::EntFireEx <- function(target, action, value = "", delay = 0, activator = null, eventName = null) {
+    if(!eventName)
+        return EntFire(target, action, value, delay, activator)
+    ScheduleEvent.Add(eventName, EntFire, delay, [target, action, value, 0, activator])
 }
 
 ::AllPlayers <- []
