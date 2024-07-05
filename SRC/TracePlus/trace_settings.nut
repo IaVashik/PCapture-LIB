@@ -5,7 +5,7 @@
     // An array of entity classnames to ignore during traces. 
     ignoreClasses = arrayLib.new("viewmodel", "weapon_", "beam",
         "trigger_", "phys_", "env_", "point_", "info_", "vgui_", "logic_",
-        "clone", "prop_portal", "portal_base2D"
+        "clone", "prop_portal", "portal_base2D", "func_clip", "func_instance"
     );
     // An array of entity classnames to prioritize during traces.  
     priorityClasses = arrayLib.new();

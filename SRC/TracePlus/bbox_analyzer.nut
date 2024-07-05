@@ -146,6 +146,8 @@ function TraceLineAnalyzer::_isPriorityEntity(entityClass) {
 function TraceLineAnalyzer::_isIgnoredEntity(entityClass) {
     if(settings.GetIgnoreClasses().len() == 0) 
         return false
+    if(settings.GetIgnoreClasses().contains("*"))
+        return true
     return settings.GetIgnoreClasses().search(function(val):(entityClass) {
         return entityClass.find(val) >= 0
     }) != null
@@ -173,16 +175,14 @@ function TraceLineAnalyzer::_isIgnoredModels(entityModel) {
 * @returns {boolean} True if should ignore.
 */
 function TraceLineAnalyzer::shouldHitEntity(ent, ignoreEntities, note) { // todo rename
-    // todo
+    if(ent.GetUserData("TracePlusIgnore"))
+        return false
+    
     if(settings.ApplyIgnoreFilter(ent, note))
         return false
 
     if(settings.ApplyCollisionFilter(ent, note))
         return true
-
-    if(ent.GetUserData("TracePlusIgnore"))
-        return false
-
 
     if(ignoreEntities) {
         // Processing for arrays
