@@ -19,13 +19,40 @@ Creates a new `AnimEvent` object with the specified settings, entities, and anim
 **Parameters:**
 
 * `settings` (table): A table containing optional settings for the animation event:
-* `eventName` (string, optional): The name of the event (default is a unique string starting with "anim").
-* `globalDelay` (number, optional): A global delay in seconds before the animation starts (default is 0).
-* `scope` (object, optional): The scope in which to execute the action (default is `this`).
-* `lerp` (function, optional): A easing lerp function to apply to the animation progress. This function should accept a single argument and return a value between 0 and 1.
-* `outputs` (string or function, optional): A script or function to execute when the animation finishes.
+    * `eventName` (string, optional): The name of the event (default is a unique string starting with "anim").
+    * `globalDelay` (number, optional): A global delay in seconds before the animation starts (default is 0).
+    * `outputs` (string or function, optional): A script or function to execute when the animation finishes.
+    * `scope` (object, optional): The scope in which to execute the action.
+    * `lerpFunc` (function, optional): A custom lerp function to use for interpolation. If not provided, the default lerp function for the relevant animation type is used.
 * `entities` (array): An array of entities to animate.
-*   `time` (number): The duration of the animation in seconds. 
+* `time` (number): The duration of the animation in seconds.
+
+**Example:**
+
+```js
+
+// Create an AnimEvent object with custom settings
+local animSettings = {
+    eventName = "my_animation",
+    globalDelay = 0.5,
+    outputs = function() {
+        printl("Animation completed!")
+    },
+    note = "Custom animation for fading entities",
+    lerpFunc = math.lerp.InOutElastic
+}
+
+local entitiesToAnimate = [
+    entLib.FindByClassname("prop_physics"),
+    entLib.FindByClassname("prop_dynamic") 
+]
+
+// Create the AnimEvent object 
+local animEvent = AnimEvent(animSettings, entitiesToAnimate, 2)
+
+// ... (Use animEvent with animate functions)
+```
+
 
 
 ### `applyAnimation(animSetting, valueCalculator, propertySetter, transitionFrames)`

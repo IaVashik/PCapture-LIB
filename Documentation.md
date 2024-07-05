@@ -469,7 +469,7 @@ This file contains functions for handling portal interactions during traces, inc
 | `TracePlus.PortalBbox(startPos, endPos, ignoreEntities, settings, note)` | Performs a bbox cast with portal support. |
 | `FindPartnersForPortals()` | Finds and sets partner portals for linked portal doors and prop portals. |
 
-### [More info about *TracePlus module* here](SRC/TracePlus/readme.md)
+### [More info about *TracePlus module* and *How to Use Portal Castings* here](SRC/TracePlus/readme.md)
 
 
 ## 5. [ActionScheduler](SRC/ActionScheduler/readme.md)

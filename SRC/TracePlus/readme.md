@@ -222,6 +222,35 @@ if (traceResult.DidHit()) {
 }
 ```
 
+
+## Portal Castings - How to Use
+
+To ensure the correct functionality of portal casting, it's crucial to follow these guidelines:
+
+### `prop_portal`
+
+If `prop_portal` is created manually and has a non-zero `paidId`, you need to add the keyvalue `health` with a value matching the `paidId`. This is necessary for more accurate partner portal detection.
+
+todo: add photo
+
+### `linked_portal_door`
+
+For correct operation, you need to create the keyvalue `model` with the portal's `width height` values. For example: `128 64`. The `model` keyvalue is used by the `TracePlus` module to calculate the bounding box of the portal.
+
+todo: add photo
+
+### Disabling Portals
+
+* To correctly disable portals for a `pcapEntity` portal, you need to call the `SetTraceIgnore` method. You can achieve this by adding the `OnUser1` output to the portal entity and connecting it to a script that calls `SetTraceIgnore`.
+
+todo: add photo
+
+**Alternatively, you can automate this process using the `func_portal_detector` entity on your map.** This entity can detect when a portal is opened or closed and automatically trigger the appropriate script to enable or disable the portal for tracing.
+
+**Note:**
+* For advanced scenarios, you can create custom filter functions for `TracePlus.Settings` to define specific rules for ray tracing collisions and entity ignoring.
+
+
 ## [TracePlus/portal_casting.nut](portal_casting.nut)
 
 This file contains functions for handling portal interactions during traces.
