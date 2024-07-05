@@ -113,6 +113,9 @@ TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, set
         local partnerPortal = portal.GetPartnerInstance()
         if (partnerPortal == null) 
             return traceData 
+        
+        if(portal.GetUserData("TracePlusIgnore") || partnerPortal.GetUserData("TracePlusIgnore"))
+            return traceData
 
         if(portal.GetClassname() == "prop_portal") {
             local normal = traceData.GetImpactNormal()
@@ -166,7 +169,7 @@ TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, set
  * This function is called automatically at the initialization of the TracePlus module to ensure portal information is available for portal traces. 
  * 
 */
- ::FindPartnersForPortals <- function() {
+::FindPartnersForPortals <- function() {
     // Iterate through all linked_portal_door entities.  
     for(local portal; portal = entLib.FindByClassname("linked_portal_door", portal);) {
         // Skip if the portal already has a partner set. 
@@ -190,23 +193,25 @@ TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, set
         // Set the bounding box of the portal using the calculated dimensions.  
         portal.SetBBox(wpBBox * -1, wpBBox) 
     }
+}
+
+::FindPartnerForPropPortal <- function(portal) {
+    // Determine the model name of the partner portal based on the current portal's model. 
+    local mdl = "models/portals/portal1.mdl"
+    if(portal.GetModelName().find("portal2") == null) 
+        mdl = "models/portals/portal2.mdl"
     
-    // Iterate through all prop_portal entities.  
-    for(local portal; portal = entLib.FindByClassname("prop_portal", portal);) { 
-        // Skip if the portal already has a partner set. 
-        if(portal.GetPartnerInstance())
+    // Find the partner portal entity based on the determined model name.  
+    local portalPairId = portal.GetHealth()
+    for(local partner; partner = entLib.FindByModel(mdl, partner);) {
+        local partnerPairId = partner.GetHealth()
+        if(portalPairId != partnerPairId || partner.GetUserData("TracePlusIgnore")) 
             continue
-    
-        // Determine the model name of the partner portal based on the current portal's model. 
-        local mdl = "models/portals/portal1.mdl"
-        if(portal.GetModelName().find("portal2") == null) 
-            mdl = "models/portals/portal2.mdl"
         
-        // Find the partner portal entity based on the determined model name.  
-        local partner = entLib.FindByModel(mdl)
-        // Store the partner portal as user data in the current portal.  
-        portal.SetUserData("partner", partner) 
+        return partner
     }
+
+    return null
 }
 
 FindPartnersForPortals()

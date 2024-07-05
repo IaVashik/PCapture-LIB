@@ -593,7 +593,7 @@
     function GetPartnerInstance() {
         if(this.CBaseEntity instanceof CLinkedPortalDoor)
             return entLib.FromEntity(this.CBaseEntity.GetPartnerInstance())
-        return this.GetUserData("partner")
+        return FindPartnerForPropPortal(this)
     }
 
 
