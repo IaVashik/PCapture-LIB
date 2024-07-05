@@ -12,7 +12,7 @@
 ::LibDebugInfo <- false
 ::VSEventLogs <- false
 
-local version = "PCapture-Lib 2.4 Stable"
+local version = "PCapture-Lib 2.5 Stable"
 
 // `Self` must be in any case, even if the script is run directly by the interpreter
 if (!("self" in this)) {
@@ -2468,7 +2468,7 @@ math["Matrix"] <- class {
     function GetPartnerInstance() {
         if(this.CBaseEntity instanceof CLinkedPortalDoor)
             return entLib.FromEntity(this.CBaseEntity.GetPartnerInstance())
-        return this.GetUserData("partner")
+        return FindPartnerForPropPortal(this)
     }
 
 
@@ -4405,7 +4405,7 @@ results["Bbox"] <- class {
     // An array of entity classnames to ignore during traces. 
     ignoreClasses = arrayLib.new("viewmodel", "weapon_", "beam",
         "trigger_", "phys_", "env_", "point_", "info_", "vgui_", "logic_",
-        "clone", "prop_portal", "portal_base2D"
+        "clone", "prop_portal", "portal_base2D", "func_clip", "func_instance"
     );
     // An array of entity classnames to prioritize during traces.  
     priorityClasses = arrayLib.new();
@@ -4862,6 +4862,9 @@ TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, set
         local partnerPortal = portal.GetPartnerInstance()
         if (partnerPortal == null) 
             return traceData 
+        
+        if(portal.GetUserData("TracePlusIgnore") || partnerPortal.GetUserData("TracePlusIgnore"))
+            return traceData
 
         if(portal.GetClassname() == "prop_portal") {
             local normal = traceData.GetImpactNormal()
@@ -4915,7 +4918,7 @@ TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, set
  * This function is called automatically at the initialization of the TracePlus module to ensure portal information is available for portal traces. 
  * 
 */
- ::FindPartnersForPortals <- function() {
+::FindPartnersForPortals <- function() {
     // Iterate through all linked_portal_door entities.  
     for(local portal; portal = entLib.FindByClassname("linked_portal_door", portal);) {
         // Skip if the portal already has a partner set. 
@@ -4941,21 +4944,33 @@ TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, set
     }
     
     // Iterate through all prop_portal entities.  
-    for(local portal; portal = entLib.FindByClassname("prop_portal", portal);) { 
-        // Skip if the portal already has a partner set. 
-        if(portal.GetPartnerInstance())
-            continue
+    // for(local portal; portal = entLib.FindByClassname("prop_portal", portal);) { 
+    //     // Skip if the portal already has a partner set. 
+    //     if(portal.GetPartnerInstance())
+    //         continue
     
-        // Determine the model name of the partner portal based on the current portal's model. 
-        local mdl = "models/portals/portal1.mdl"
-        if(portal.GetModelName().find("portal2") == null) 
-            mdl = "models/portals/portal2.mdl"
+    //     // Store the partner portal as user data in the current portal.  
+    //     portal.SetUserData("partner", FindPartnerForPropPortal(portal)) 
+    // }
+}
+
+::FindPartnerForPropPortal <- function(portal) {
+    // Determine the model name of the partner portal based on the current portal's model. 
+    local mdl = "models/portals/portal1.mdl"
+    if(portal.GetModelName().find("portal2") == null) 
+        mdl = "models/portals/portal2.mdl"
+    
+    // Find the partner portal entity based on the determined model name.  
+    local portalPairId = portal.GetHealth()
+    for(local partner; partner = entLib.FindByModel(mdl, partner);) {
+        local partnerPairId = partner.GetHealth()
+        if(portalPairId != partnerPairId || partner.GetUserData("TracePlusIgnore")) 
+            continue
         
-        // Find the partner portal entity based on the determined model name.  
-        local partner = entLib.FindByModel(mdl)
-        // Store the partner portal as user data in the current portal.  
-        portal.SetUserData("partner", partner) 
+        return partner
     }
+
+    return null
 }
 
 FindPartnersForPortals()
@@ -5108,6 +5123,8 @@ function TraceLineAnalyzer::_isPriorityEntity(entityClass) {
 function TraceLineAnalyzer::_isIgnoredEntity(entityClass) {
     if(settings.GetIgnoreClasses().len() == 0) 
         return false
+    if(settings.GetIgnoreClasses().contains("*"))
+        return true
     return settings.GetIgnoreClasses().search(function(val):(entityClass) {
         return entityClass.find(val) >= 0
     }) != null
@@ -5135,16 +5152,14 @@ function TraceLineAnalyzer::_isIgnoredModels(entityModel) {
 * @returns {boolean} True if should ignore.
 */
 function TraceLineAnalyzer::shouldHitEntity(ent, ignoreEntities, note) { // todo rename
-    // todo
+    if(ent.GetUserData("TracePlusIgnore"))
+        return false
+    
     if(settings.ApplyIgnoreFilter(ent, note))
         return false
 
     if(settings.ApplyCollisionFilter(ent, note))
         return true
-
-    if(ent.GetUserData("TracePlusIgnore"))
-        return false
-
 
     if(ignoreEntities) {
         // Processing for arrays
