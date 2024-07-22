@@ -6,7 +6,23 @@ The `Utils` module provides a collection of utility functions for script executi
 
 This file contains functions for debugging and logging messages to the console, as well as visualizing entity bounding boxes.
 
-### `dev`
+### LoggerLevels
+The `LoggerLevels` class defines different levels of logging. The available levels are:
+- `Trace` (1)
+- `Debug` (5)
+- `Info` (10)
+- `Warning` (30)
+- `Error` (60)
+
+To use these levels, you need to set the `LibLogger` variable after initializing the library. For example:
+```js
+LibLogger = LoggerLevels.Trace
+```
+
+#### Developer Mode
+All logging functions only work if the console command `developer` is set to a value higher than 0.
+
+### dev
 
 The `dev` table contains various debugging utility functions.
 
@@ -42,63 +58,82 @@ This function draws a box at the specified position with the given color and dur
 dev.drawbox(Vector(0, 0, 100), Vector(255, 0, 0), 2) // Draw a red box for 2 seconds
 ```
 
-#### `debug(msg)`
+#### `trace(msg, ...)`
 
-This function logs a debug message to the console if debug logging is enabled (controlled by the `LibDebugInfo` variable). It is useful for printing information during development and testing.
+This function logs a trace message to the console if trace logging is enabled. It is intended for internal use within the PCapture-Lib and is not recommended for use outside the library.
 
 **Parameters:**
 
-* `msg` (string): The debug message to print.
+* `msg` (string): The trace message string containing `{}` placeholders.
+* `...` (any): Additional arguments to substitute into the placeholders.
 
 **Example:**
 
 ```js
-dev.debug("This is a debug message")
+dev.trace("Trace message with value: {}", someValue)
 ```
 
-#### `log(msg)`
+#### `debug(msg, ...)`
 
-This function logs a message to the console only if developer mode is enabled (when the `developer` console command is set to 1). It is useful for printing information that should only be visible to developers.
+This function logs a debug message to the console if debug logging is enabled.
 
 **Parameters:**
 
-* `msg` (string): The message to log.
+* `msg` (string): The debug message string containing `{}` placeholders.
+* `...` (any): Additional arguments to substitute into the placeholders.
 
 **Example:**
 
 ```js
-dev.log("This message is only visible in developer mode.")
+dev.debug("This is a {} message with value: {}", "debug", someValue)
 ```
 
-#### `warning(msg)`
+#### `info(msg, ...)`
 
-This function displays a warning message in a specific format, including the function name, source file, and line number where the warning originated. It is used to indicate potential problems or issues that may not necessarily cause errors.
+This function logs an info message to the console if info logging is enabled.
 
 **Parameters:**
 
-* `msg` (string): The warning message to display.
+* `msg` (string): The info message string containing `{}` placeholders.
+* `...` (any): Additional arguments to substitute into the placeholders.
+
+**Example:**
+
+```js
+dev.info("Information message with value: {}", someValue)
+```
+
+#### `warning(msg, ...)`
+
+This function displays a warning message in a specific format, including the function name and line number where the warning originated.
+
+**Parameters:**
+
+* `msg` (string): The warning message string containing `{}` placeholders.
+* `...` (any): Additional arguments to substitute into the placeholders.
 
 **Example:**
 
 ```js
 if (someCondition) {
-    dev.warning("Unexpected condition encountered!")
+    dev.warning("Unexpected condition encountered! Value: {}", someValue)
 }
 ```
 
-#### `error(msg)`
+#### `error(msg, ...)`
 
-This function displays an error message in a specific format, including the function name, source file, and line number where the error occurred. It is used to indicate critical errors that prevent the script from functioning correctly.
+This function displays an error message in a specific format, including the function name and line number where the error occurred. It is used to indicate critical errors that prevent the script from functioning correctly.
 
 **Parameters:**
 
-* `msg` (string): The error message to display.
+* `msg` (string): The error message string containing `{}` placeholders.
+* `...` (any): Additional arguments to substitute into the placeholders.
 
 **Example:**
 
 ```js
 if (!someEntity.IsValid()) {
-    dev.error("Entity is invalid!")
+    dev.error("Entity is invalid! Entity ID: {}", someEntity.GetID())
 }
 ```
 
