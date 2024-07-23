@@ -23,7 +23,7 @@ utils_tests <- {
     },
 
     function debug_format_test() {
-        local formattedString = dev.format("Name: {}, Age: {}", "John", 30)
+        local formattedString = macros.format("Name: {}, Age: {}", "John", 30)
         return assert(formattedString == "Name: John, Age: 30")
     },
 

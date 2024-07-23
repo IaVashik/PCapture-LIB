@@ -18,7 +18,7 @@ function RunTests(testName, tests_table) {
 
     local resTest = "Tests passed successfully!"
     if(unsuccessful.len() > 0) {
-        resTest = dev.format("{} tests with error:\n* {}", testName, unsuccessful.join("\n* "))
+        resTest = macros.format("{} tests with error:\n* {}", testName, unsuccessful.join("\n* "))
         printl("")
     } 
     dev.fprint("~~ {} tests result: {}/{} passed. ~~", testName, passed_tests, tests_table.len())
@@ -32,3 +32,7 @@ function RunAllTests() {
     IncludeScript("Tests/Utils")
     IncludeScript("Tests/ActionScheduler")
 }
+
+local stack
+    for(local i = 1; stack = getstackinfos(i); i++)
+        macros.fprint("*FUNCTION [{}()] {} line [{}]", stack.func, stack.src, stack.line)

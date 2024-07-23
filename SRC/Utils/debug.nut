@@ -47,7 +47,7 @@
         }
         // endregion
 
-        local msg = this.format.acall(args)
+        local msg = macros.format.acall(args)
         printl("-- PCapture-Lib: " + msg)
     },
 
@@ -68,7 +68,7 @@
         }
         // endregion
 
-        local msg = this.format.acall(args)
+        local msg = macros.format.acall(args)
         printl("~ " + msg)
     },
 
@@ -90,7 +90,7 @@
         }
         // endregion
 
-        local msg = this.format.acall(args)
+        local msg = macros.format.acall(args)
         printl("• " + msg)
     },
 
@@ -114,7 +114,7 @@
             args[i + 4] = vargv[i]
         }
         // endregion
-        printl(this.format.acall(args))
+        printl(macros.format.acall(args))
     },
 
     /* 
@@ -137,77 +137,8 @@
             args[i + 4] = vargv[i]
         }
         // endregion
-        printl(this.format.acall(args))
+        printl(macros.format.acall(args))
         SendToConsole("playvol resource/warning.wav 1")
-    },
-
-    /*
-     * Prints a formatted message to the console.
-     * 
-     * @param {string} msg - The message string containing `{}` placeholders.
-     * @param {any} vargs... - Additional arguments to substitute into the placeholders.
-    */
-    format = function(msg, ...) {
-        // If you are sure of what you are doing, you don't have to use it
-        local subst_count = 0;
-        for (local i = 0; i < msg.len() - 1; i++) {
-            if (msg.slice(i, i+2) == "{}") {
-                subst_count++; 
-            }
-        }
-
-        if (subst_count != vargc) {
-            throw("Discrepancy between the number of arguments and substitutions")
-        }
-
-
-        local args = array(vargc)
-        for(local i = 0; i< vargc; i++) {
-            args[i] = vargv[i]
-        }
-
-        if (msg.slice(0, 2) == "{}") {
-            msg = args[0] + msg.slice(2); 
-            args.remove(0); 
-        }
-
-        local parts = split(msg, "{}");
-        local result = "";
-
-        for (local i = 0; i < parts.len(); i++) {
-            result += parts[i];
-            if (i < args.len()) {
-                local txt = args[i]
-                try{
-                    txt = txt.tostring()
-                } catch(_) {}
-
-                result += txt;
-            }
-        }
-
-        return result
-    },
-
-    /*
-     * Prints a formatted message to the console.
-     *
-     * This function is similar to dev.format, but it automatically calls printl 
-     * with the formatted message. 
-     *
-     * @param {string} msg - The message string containing `{}` placeholders. 
-     * @param {any} vargs... - Additional arguments to substitute into the placeholders. 
-    */
-    fprint = function(msg, ...) {
-        local args = array(vargc + 2)
-        args[0] = this
-        args[1] = msg
-
-        for(local i = 0; i< vargc; i++) {
-            args[i + 2] = vargv[i]
-        }
-
-        printl(this.format.acall(args))
     },
 
     _getInfo = function() {

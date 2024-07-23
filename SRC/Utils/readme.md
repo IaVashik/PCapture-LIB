@@ -136,41 +136,7 @@ if (!someEntity.IsValid()) {
     dev.error("Entity is invalid! Entity ID: {}", someEntity.GetID())
 }
 ```
-
-#### `format(msg, ...)`
-
-This function formats a message string by replacing placeholders (`{}`) with values from the provided arguments. It is similar to the `string.format` function in other programming languages and is used for creating formatted output.
-
-**Parameters:**
-
-* `msg` (string): The message string containing placeholders (`{}`).
-* `...` (any): Additional arguments to substitute into the placeholders.
-
-**Example:**
-
-```js
-local name = "Vashik"
-local age = 20
-local message = dev.format("My name is {} and I am {} years old.", name, age)
-printl(message) // Output: "My name is Vashik and I am 20 years old."
-```
-
-#### `fprint(msg, ...)`
-
-This function combines the functionality of `dev.format` and `printl`. It formats a message string with placeholders and then prints the formatted message to the console.
-
-**Parameters:**
-
-* `msg` (string): The message string containing placeholders (`{}`).
-* `...` (any): Additional arguments to substitute into the placeholders.
-
-**Example:**
-
-```js
-local health = 100
-dev.fprint("Player health: {}", health) // Output: "Player health: 100"
-```
-
+m
 ## [Utils/file.nut](file.nut)
 
 This file defines the `File` class for reading from and writing to files. Due to the way file operations are handled in VScripts, there is a specific requirement when reading data from a file: **a one-tick delay is needed after calling `updateInfo()` before accessing the file contents.** This ensures that the file has been properly read and the data is available in the cache array.
@@ -409,6 +375,42 @@ This function retrieves the duration of a sound by its name. It is useful for de
 local duration = macros.GetSoundDuration("my_sound.wav")
 printl("The duration of the sound is " + duration + " seconds.")
 ```
+
+
+#### `format(msg, ...)`
+
+This function formats a message string by replacing placeholders (`{}`) with values from the provided arguments. It is similar to the `string.format` function in other programming languages and is used for creating formatted output.
+
+**Parameters:**
+
+* `msg` (string): The message string containing placeholders (`{}`).
+* `...` (any): Additional arguments to substitute into the placeholders.
+
+**Example:**
+
+```js
+local name = "Vashik"
+local age = 20
+local message = macros.format("My name is {} and I am {} years old.", name, age)
+printl(message) // Output: "My name is Vashik and I am 20 years old."
+```
+
+#### `fprint(msg, ...)`
+
+This function combines the functionality of `macros.format` and `printl`. It formats a message string with placeholders and then prints the formatted message to the console.
+
+**Parameters:**
+
+* `msg` (string): The message string containing placeholders (`{}`).
+* `...` (any): Additional arguments to substitute into the placeholders.
+
+**Example:**
+
+```js
+local health = 100
+macros.fprint("Player health: {}", health) // Output: "Player health: 100"
+```
+
 
 ### `macros.GetFromTable(table, key, defaultValue)`
 
