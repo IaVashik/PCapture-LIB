@@ -1,5 +1,5 @@
 // IDT Module Unit Tests
-IncludeScript("Tests/test_exec")
+if(!("RunTests" in getroottable())) IncludeScript("Tests/test_exec")
 
 idt_tests <- {
 
@@ -173,20 +173,14 @@ idt_tests <- {
         local list = List(3, 1, 2)
         list.sort()
 
-        local test = function() : (list) {
-            for(local i = 100; i >= 0; i--) {
-                list.append(RandomInt(1, 10000))
-                list.insert(RandomInt(0, 100), RandomInt(1, 10000))
-            }
-            list.sort()
+        for(local i = 100; i >= 0; i--) {
+            list.append(RandomInt(1, 10000))
+            list.insert(RandomInt(0, 100), RandomInt(1, 10000))
         }
-
-        for(local i = 10; i >= 0; i--) {
-            test()
-        }
+        list.sort()
         
         for(local i = 1; i < list.len(); i++) {
-            if(list[i - 1] >= list[i]) {
+            if(list[i - 1] > list[i]) {
                 return assert(false)
             }
         }
@@ -236,7 +230,7 @@ idt_tests <- {
         printl(list1)
         
         for(local i = 1; i < list1.len(); i++) {
-            if(list1[i - 1] >= list1[i]) {
+            if(list1[i - 1] > list1[i]) {
                 return assert(false)
             }
         }

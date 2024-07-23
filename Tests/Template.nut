@@ -1,4 +1,4 @@
-IncludeScript("Tests/test_exec")
+if(!("RunTests" in getroottable())) IncludeScript("Tests/test_exec")
 
 template_tests <- {
     function some_test() {

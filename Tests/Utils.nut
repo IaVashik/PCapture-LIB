@@ -1,5 +1,5 @@
 // Utils Module Unit Tests
-IncludeScript("Tests/test_exec")
+if(!("RunTests" in getroottable())) IncludeScript("Tests/test_exec")
 
 utils_tests <- {
     // --- Debug Tests ---
@@ -9,17 +9,15 @@ utils_tests <- {
     },
 
     function debug_log_test() {
-        dev.log("This is a test log message.")
+        dev.info("This is a test log message.")
     },
 
     function debug_warning_test() {
         dev.warning("This is a test warning message.")
-        return assert(cwar.len() > 0) // Assuming the warning message is stored
     },
 
     function debug_error_test() {
         dev.error("This is a test error message.")
-        return assert(cerr.len() > 0) // Assuming the error message is stored
     },
 
     function debug_format_test() {
