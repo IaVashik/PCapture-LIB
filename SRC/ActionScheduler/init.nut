@@ -31,7 +31,7 @@
 ScheduleEvent["_startThink"] <- function() {
     if(!ScheduleEvent.executorRunning) {
         ScheduleEvent.executorRunning = true
-        ExecuteScheduledEvents()
+        ScheduledEventsLoop()
     }
 }
 

@@ -8,7 +8,7 @@ This file defines the `ScheduleAction` class, which represents a single action s
 
 ### `ScheduleAction` Class
 
-#### `ScheduleAction(caller, action, timeDelay, args)`:
+#### `ScheduleAction(scope, action, timeDelay, args)`:
 
 **Constructor** 
 
@@ -16,7 +16,7 @@ Creates a new `ScheduleAction` object representing a scheduled action.
 
 **Parameters:**
 
-* `caller` (pcapEntity): The entity that scheduled the action.
+* `scope` (pcapEntity): The entity that scheduled the action.
 * `action` (string or function): The action to execute when the scheduled time arrives. This can be a string containing VScripts code or a function object.
 * `timeDelay` (number): The delay in seconds before executing the action.
 * `args` (array, optional): An optional array of arguments to pass to the action function.
@@ -229,10 +229,73 @@ if (ScheduleEvent.IsValid("my_event")) {
 }
 ```
 
+#### `ScheduleEvent.tryCancel(eventName, delay)`: **New in 3.0**
+The same as `ScheduleEvent.Cancel`, but does not cause an error if the event is not found.
+
+**Parameters:**
+
+* `eventName` (string): The name of the event to cancel.
+* `delay` (number, optional): An optional delay in seconds before canceling the event.
+
+**Example:**
+
+```js
+ScheduleEvent.tryCancel("my_event") 
+```
+
 ## [ActionScheduler/event_handler.nut](event_handler.nut)
 
-This file contains the `ExecuteScheduledEvents` function, which processes scheduled events and actions.
+This file contains the `ScheduledEventsLoop` function, which processes scheduled events and actions.
 
-### `ExecuteScheduledEvents()`
+### `ScheduledEventsLoop()`
 
 This function iterates over all scheduled events and checks if the execution time for the first action in each event has arrived. If so, it executes the action and removes it from the event's list of actions. If an event has no more actions remaining, it is removed from the list of scheduled events. The function then schedules itself to run again after a short delay to continue processing events. **This function is called automatically by the ActionScheduler module**
+
+## Enhanced Scheduling Features
+
+### Asynchronous Actions
+
+You can now introduce delays within your scheduled actions using the `yield` keyword. This allows you to create more dynamic and responsive sequences of actions without relying on nested callbacks or complex timing logic.
+
+The `yield` keyword, when used within a scheduled action function, will pause the execution of that specific action for a specified number of seconds. Importantly, the state of the function is preserved, meaning that all variables and their values will remain intact when the function resumes execution after the delay.
+
+**Example:**
+
+```
+ScheduleEvent.Add("global", function() {
+    local player = GetPlayerEx(1)
+    local first = player.GetOrigin()
+    printl("Hello, world!")
+    yield 2 // Wait for 2 seconds
+    
+    local second = player.GetOrigin()
+    printl("How are you?")
+    yield 1.1 // Wait for 1.1 seconds
+
+    local result = second - first // some result
+    printl("result: " + result)
+}, 1)
+
+ScheduleEvent.Add("async_loop", function() {
+    local player = GetPlayerEx(1)
+    while(true) { // asynchronous loop that can run forever!
+        printl(player.GetOrigin())
+        yield 0.2 // Wait for 0.2 seconds
+    }
+}, 0.2)
+```
+
+In this example, the `"global"` event demonstrates how `yield` can be used to create delays within a sequence of actions. The player's origin is recorded, a greeting is printed, and then the script pauses for 2 seconds. After the pause, the player's origin is recorded again, a question is printed, and the script pauses for 1.1 seconds. Finally, the difference between the two recorded origins is calculated and printed. 
+
+The `"async_loop"` event showcases how you can leverage `yield` to create asynchronous loops. In this case, the loop continuously prints the player's origin every 0.2 seconds. The `yield 0.2` statement ensures that the loop doesn't block other scheduled events and allows for responsive execution.
+
+### Error Handling
+
+The `ScheduledEventsLoop` now includes robust error handling for scheduled events. If an error occurs during the execution of a scheduled action, the following information will be printed to the console:
+
+* **Error Message:**  The specific error message that occurred.
+* **Callstack:**  A trace of the function calls that led to the error, allowing you to pinpoint the source of the problem.
+* **Scheduled Event Info:** Details about the scheduled event that triggered the error, including the event name and any associated data.
+* **Function Info:**  Information about the specific action function that caused the error.
+
+This comprehensive error handling ensures that errors within scheduled events are caught and reported without crashing the entire system.  Other scheduled events will continue to execute as expected. To see this information, set the logger level to `Trace`.

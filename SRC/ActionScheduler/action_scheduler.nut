@@ -10,7 +10,7 @@
 ScheduleEvent["Add"] <- function(eventName, action, timeDelay, args = null, scope = this) {
     if ( !(eventName in ScheduleEvent.eventsList) ) {
         ScheduleEvent.eventsList[eventName] <- List()
-        dev.debug("Created new Event - " + eventName)
+        dev.trace("Created new Event - " + eventName)
     }
 
     local newScheduledEvent = ScheduleAction(scope, action, timeDelay, args)
@@ -56,13 +56,15 @@ ScheduleEvent["Add"] <- function(eventName, action, timeDelay, args = null, scop
  * @param {object} scope - The scope in which to execute the action (default is `this`). 
 */ 
 ScheduleEvent["AddInterval"] <- function(eventName, action, interval, initialDelay = 0, args = null, scope = this) {
-    local actions = [ // TODO
-        ScheduleAction(scope, action, initialDelay, args),
-        ScheduleAction(scope, ScheduleEvent.AddInterval, initialDelay + interval, [eventName, action, interval, 0, args, scope])
-    ]   
+    local intervalAction = function(action, args, scope, interval) {
+        local event = ScheduleAction(scope, action, 0, args)
+        while(true) {
+            event.run()
+            yield interval
+        }
+    }
 
-    ScheduleEvent.AddActions(eventName, actions, true)
-    // ScheduleEvent.eventsList[eventName] <- actions // tood :d
+    ScheduleEvent.Add(eventName, intervalAction, initialDelay, [action, args, scope, interval])
 }
 
 /*
@@ -78,7 +80,7 @@ ScheduleEvent["AddActions"] <- function(eventName, actions, noSort = false) {
     if (eventName in ScheduleEvent.eventsList ) {
         ScheduleEvent.eventsList[eventName].extend(actions)
         ScheduleEvent.eventsList[eventName].sort()
-        // dev.debug("Added " + actions.len() + " actions to Event " + eventName)
+        if(developer() > 0) dev.trace("Added {} actions to Event {}.", actions.len(), eventName)
         return ScheduleEvent._startThink()
     } 
 
@@ -90,7 +92,7 @@ ScheduleEvent["AddActions"] <- function(eventName, actions, noSort = false) {
         ScheduleEvent.eventsList[eventName] <- List.fromArray(actions)
     }
 
-    dev.debug("Created new Event - " + eventName)
+    if(developer() > 0) dev.trace("Created new Event {} with {} actions.", eventName, actions.len())
     ScheduleEvent._startThink()
 }
 
@@ -103,29 +105,22 @@ ScheduleEvent["AddActions"] <- function(eventName, actions, noSort = false) {
 */  
 ScheduleEvent["Cancel"] <- function(eventName, delay = 0) {
     if(eventName == "global")
-        return dev.warning("The global event cannot be closed!")
+        throw("The global event cannot be closed!")
     if(!(eventName in ScheduleEvent.eventsList))
-        return dev.error("There is no event named " + eventName)
+        throw("There is no event named " + eventName)
     if(delay > 0)
         return ScheduleEvent.Add("global", format("ScheduleEvent.Cancel(\"%s\")", eventName), delay)
     
     ScheduleEvent.eventsList.rawdelete(eventName)
         
-    // Debug info
-    if(LibDebugInfo || 1) {
-        local test = ""
-        foreach(k, i in ScheduleEvent.eventsList)
-            test += k + ", "
-
-        test = test.slice(0, -2)
-        dev.debug(format("Event \"%s\" closed. Actial events: [%s]", eventName.tostring(), test))
-    }
+    if(developer() > 0) dev.trace("Event {} closed! Actial events: {}", eventName, ScheduleEvent.eventsList.join(", "))
 }
 
 ScheduleEvent["TryCancel"] <- function(eventName, delay = 0) {
     if(delay > 0) 
-        return ScheduleEvent.Add("global", format("ScheduleEvent.TryCancel(\"%s\")", eventName), delay)
-    if(ScheduleEvent.IsValid(eventName)) ScheduleEvent.Cancel(eventName)
+        return ScheduleEvent.Add("global", ScheduleEvent.TryCancel, delay, [eventName])
+    if(ScheduleEvent.IsValid(eventName)) 
+        ScheduleEvent.Cancel(eventName)
 }
 
 
@@ -143,7 +138,7 @@ ScheduleEvent["CancelByAction"] <- function(action, delay = 0) {
         foreach(eventAction in events) {
             if(eventAction.action == action) {
                 events.remove(eventAction)
-                dev.debug(eventAction + " was deleted from " + name)
+                dev.trace("{} was deleted from {}", eventAction, name)
             }
         }
     }
@@ -154,7 +149,7 @@ ScheduleEvent["CancelByAction"] <- function(action, delay = 0) {
 */
 ScheduleEvent["CancelAll"] <- function() {
     ScheduleEvent.eventsList = {global = List()}
-    dev.debug("All scheduled events have been canceled!")
+    dev.trace("All scheduled events have been canceled!")
 }
 
 

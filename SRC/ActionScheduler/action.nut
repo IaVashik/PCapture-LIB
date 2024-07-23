@@ -3,9 +3,9 @@
  *
  * This class encapsulates information about an action that is scheduled to be executed at a specific time.
 */
- ::ScheduleAction <- class {
+::ScheduleAction <- class {
     //  The entity that created the event. * 
-    caller = null;
+    scope = null;
     // The action to execute when the scheduled time arrives.  
     action = null;
     // The time at which the action is scheduled to be executed. 
@@ -16,14 +16,13 @@
     /*
      * Constructor for a ScheduleAction object.
      *
-     * @param {pcapEntity} caller - The entity that created the event.
+     * @param {pcapEntity} scope - The entity that created the event.
      * @param {string|function} action - The action to execute when the event is triggered.
      * @param {number} delay - The time at which the event is scheduled to be executed.
      * @param {array|null} args - Optional arguments to pass to the action function. 
     */
-    constructor(caller, action, delay, args = null) {
-        this.caller = caller
-
+    constructor(scope, action, delay, args = null) {
+        this.scope = scope
         this.action = action
         this.executionTime = delay + Time()
 
@@ -43,19 +42,36 @@
             action = compilestring(action)
 
         if(args == null) {
-            return action.call(caller)
+            return action.call(scope)
         }
         
         if(typeof args != "array" && typeof args != "arrayLib" && typeof args != "List") {
             throw("Invalid arguments for ScheduleEvent! The argument must be itterable, not (" + args + ")")
         }
 
-        local actionArgs = [caller]
+        local actionArgs = [scope]
         actionArgs.extend(this.args)
         return action.acall(actionArgs)
     }
 
-    function GetInfo() return "[Caller] " + caller + "\n[Action] " + action + "\n[executionTime] " + executionTime
+    /**
+    * Processes a generator action.
+    *
+    * @param {Generator} generator - The generator to be processed.
+    * @returns {any} - The result of processing the generator.
+    */
+    function processGenerator(generator, eventName) {
+        local delay = resume generator
+        if(delay == null) return
+        
+        try {delay = delay.tofloat()} 
+        catch(err) {throw "Invalid value for sleep. " + err}
+        
+        // todo Optimization: can edit this, change its time, and move in queue
+        ScheduleEvent.Add(eventName, generator, delay, null, this.scope)
+    }
+
+    function GetInfo() return "[Scope] " + scope + "\n[Action] " + action + "\n[executionTime] " + executionTime
     function _typeof() return "ScheduleAction"
     function _tostring() return "ScheduleAction: (" + this.executionTime + ")"
     function _cmp(other) {    
