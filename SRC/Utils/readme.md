@@ -13,6 +13,7 @@ The `LoggerLevels` class defines different levels of logging. The available leve
 - `Info` (10)
 - `Warning` (30)
 - `Error` (60)
+- `Off` (1000)
 
 To use these levels, you need to set the `LibLogger` variable after initializing the library. For example:
 ```js

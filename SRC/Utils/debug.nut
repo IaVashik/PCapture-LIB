@@ -4,6 +4,7 @@
     Info = 10
     Warning = 30
     Error = 60
+    Off = 1000
 }
 
 
