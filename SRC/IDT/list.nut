@@ -15,8 +15,19 @@
     function _tostring() {
         return this.value.tostring();
     }
+
+    function drop() {
+        if(this.prev_ref)
+            this.prev_ref.next_ref = null
+        this.prev_ref = null
+        
+        if(this.next_ref)
+            this.next_ref.prev_ref = null
+        this.next_ref = null
+    }
 }
 
+//! Deleting nodes should cause a leak!
 ::List <- class {
     length = 0;
     first_node = null;
@@ -138,6 +149,7 @@
         local node = this.getNode(idx);
         local next = node.next_ref;
         local prev = node.prev_ref;
+        node.drop();
 
         if (prev) {
             prev.next_ref = next; 
@@ -164,6 +176,7 @@
         this.last_node = current.prev_ref;
         this.last_node.next_ref = null;
         this.length--
+        current.drop()
         return current.value;
     }
 
@@ -227,19 +240,19 @@
 
     function _mergeSort(head) {
         if (head == null || head.next_ref == null) {
-            return head  // Список с одним или нулём элементов уже отсортирован
+            return head  // List with one or zero elements already sorted
         }
     
-        /* Разделение списка на две части. */
+        // Splitting the list into two parts
         local middle = _findMiddleNode(head)
         local nextToMiddle = middle.next_ref 
         middle.next_ref = null 
     
-        /* Рекурсивная сортировка двух половин. */ 
+        // Recursive sorting of two halves
         local left = _mergeSort(head)
         local right = _mergeSort(nextToMiddle) 
     
-        /* Слияние отсортированных половин. */
+        // Merging sorted halves
         return _merge(left, right) 
     }
     
@@ -270,10 +283,49 @@
             current = current.next_ref
         } 
     
-        /* Добавление оставшихся элементов. */
+        // Add the remaining elements
         current.next_ref = left != null ? left : right
     
         return dummyHead.next_ref 
+    }
+
+    function SwapNode(node1, node2) {
+        if (node1 == node2) return
+    
+        //  Update references of previous nodes
+        if (node1.prev_ref) {
+            node1.prev_ref.next_ref = node2
+        } else {
+            this.first_node = node2
+        }
+    
+        if (node2.prev_ref) {
+            node2.prev_ref.next_ref = node1
+        } else {
+            this.first_node = node1
+        }
+    
+        //  Update links for the following nodes
+        if (node1.next_ref) {
+            node1.next_ref.prev_ref = node2
+        } else {
+            this.last_node = node2
+        }
+    
+        if (node2.next_ref) {
+            node2.next_ref.prev_ref = node1
+        } else {
+            this.last_node = node1
+        }
+    
+        //  Exchange the `prev_ref` and `next_ref` references of the nodes themselves
+        local temp = node1.prev_ref
+        node1.prev_ref = node2.prev_ref
+        node2.prev_ref = temp
+    
+        temp = node1.next_ref
+        node1.next_ref = node2.next_ref
+        node2.next_ref = temp
     }
 
 
@@ -281,9 +333,27 @@
      * Removes all elements from the list.
     */
     function clear() {
+        if(this.length == 0) return
+        
+        local current = this.first_node.next_ref;
+        while (current) {
+            local next_node = current.next_ref;
+            current.drop()
+            current = next_node;
+        }
+
         this.first_node.next_ref = null;
         this.last_node = this.first_node;
         this.length = 0;
+    }
+
+    // More productive than the built-in iterator
+    function iter() {
+        local current = this.first_node.next_ref;
+        while (current) {
+            yield current
+            current = current.next_ref;
+        }
     }
 
     /*
@@ -299,6 +369,7 @@
         foreach(elem in this) {
             string += elem + joinstr
         }
+
         return joinstr.len() != 0 ? string.slice(0, joinstr.len() * -1) : string
     }
 
@@ -350,27 +421,6 @@
         return null
     }
 
-    // function binarySearch(value) {
-    //     this.sort() // Сортировка списка перед поиском
-
-    //     local low = 0
-    //     local high = this.length - 1
-    //     local mid
-
-    //     while (low <= high) {
-    //         mid = floor((low + high) / 2)
-    //         if (this[mid] < value) {
-    //             low = mid + 1
-    //         } else if (this[mid] > value) {
-    //             high = mid - 1 
-    //         } else {
-    //             return mid  // Элемент найден 
-    //         }
-    //     }
-
-    //     return null  // Элемент не найден 
-    // }
-
     /*
      * Creates a new list by applying a function to each element of this list.
      * 
@@ -404,6 +454,7 @@
     function _get(idx) return this.getNode(idx).value;
     function _set(idx, val) return this.getNode(idx).value = val
 
+    //* OUTDATED! The standard iterator, it's terrible! Use `.iter()` method
     function _nexti(previdx) {
         if(this.len() == 0) return null
         if (previdx == null) return 0;

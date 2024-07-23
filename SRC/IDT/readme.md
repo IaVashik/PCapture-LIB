@@ -427,6 +427,10 @@ local listRepr = myArrayLib.tolist() // Convert the array to a list
 
 This file defines the `List` class, which represents a doubly linked list and provides methods for adding and removing elements, accessing elements by index, reversing the list, and converting the list to an array. **A doubly linked list is a linear data structure where each element (node) contains a value and references to the previous and next nodes in the list.**
 
+#### **Warning:**
+Improper use of the List class can lead to memory leaks, as the garbage collector (GC) may not clean up the list if it is used incorrectly.
+
+
 ### `List(...)`
 **Constructor** - Creates a new `List` object with optional initial elements.
 
@@ -469,6 +473,21 @@ Gets the length of the list, which is the number of elements it contains.
 
 ```js
 local listLength = myList.len()
+```
+
+### `iter()`
+Returns an iterator object for the list. This method is more efficient than using a built-in iterator.
+
+**Returns:**
+
+* (iterator): An iterator for the list.
+
+**Example:**
+
+```js
+foreach(value in myList.iter()) {
+    printl(value)
+}
 ```
 
 ### `append(value)`
@@ -691,6 +710,22 @@ Converts the list to an array.
 
 ```js
 local myArray = myList.toarray()
+```
+
+### `SwapNode(node1, node2)`
+Swaps two nodes in the list. This method updates the references of the previous and next nodes accordingly.
+
+**Parameters:**
+
+* `node1` (ListNode): The first node to swap.
+* `node2` (ListNode): The second node to swap.
+
+**Example:**
+
+```js
+local nodeA = myList.getNode(0)
+local nodeB = myList.getNode(1)
+myList.SwapNode(nodeA, nodeB)
 ```
 
 ## [IDT/tree_sort.nut](tree_sort.nut)
