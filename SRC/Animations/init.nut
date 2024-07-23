@@ -80,7 +80,7 @@ animate["applyAnimation"] <- function(animSetting, valueCalculator, propertySett
     transitionFrames = ceil(transitionFrames) 
     local actionsList = List() //* hm....
 
-    for (local step = 0; step <= transitionFrames; step++) {
+    for(local step = 0; step <= transitionFrames; step++) {
         local elapsed = (FrameTime() * step) + animSetting.globalDelay
 
         local newValue = valueCalculator(step, transitionFrames, vars)
@@ -94,7 +94,7 @@ animate["applyAnimation"] <- function(animSetting, valueCalculator, propertySett
     ScheduleEvent.AddActions(animSetting.eventName, actionsList, true)
     animSetting.delay = FrameTime() * transitionFrames
 
-    dev.debug("Created " + animSetting.animName + " animation ("+animSetting.eventName+") for " + actionsList.len() + " actions")
+    if(developer() > 0) dev.trace("Created {} animation ({}) for {} actions", animSetting.animName, animSetting.eventName, actionsList.len())
 }
 
 IncludeScript("SRC/Animations/alpha")
