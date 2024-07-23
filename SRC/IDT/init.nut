@@ -16,3 +16,8 @@ IncludeScript("SRC/IDT/entity_creator")
 IncludeScript("SRC/IDT/array")
 IncludeScript("SRC/IDT/list")
 IncludeScript("SRC/IDT/tree_sort")
+
+// dissolve entity for pcapEnts
+if(("dissolver" in getroottable()) == false) {
+    ::dissolver <- entLib.CreateByClassname("env_entity_dissolver", {targetname = "@dissolver"})
+} 

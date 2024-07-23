@@ -9,10 +9,7 @@
 |    GitHud repo: https://github.com/IaVashik/PCapture-LIB                          |
 +----------------------------------------------------------------------------------+ */
 
-::LibDebugInfo <- false
-::VSEventLogs <- false
-
-local version = "PCapture-Lib 2.5 Stable"
+local version = "PCapture-Lib 3.0 Debug"
 
 // `Self` must be in any case, even if the script is run directly by the interpreter
 if (!("self" in this)) {
@@ -31,7 +28,6 @@ if("_lib_version_" in getroottable() && version.find("Debug") == null) {
     return
 }
 
-
 IncludeScript("SRC/Utils/init.nut")
 IncludeScript("SRC/Math/init.nut")
 IncludeScript("SRC/IDT/init.nut")
@@ -42,23 +38,26 @@ IncludeScript("SRC/ActionScheduler/init.nut")
 IncludeScript("SRC/GameEvents/init.nut")
 IncludeScript("SRC/HUD/init.nut")
 
+::LibLogger <- LoggerLevels.Info
 
-::cwar <- List() // todo
-::cerr <- List()
-
-// dissolve entity for pcapEnts
-if(("dissolver" in getroottable()) == false) {
-    ::dissolver <- entLib.CreateByClassname("env_entity_dissolver", {targetname = "@dissolver"})
-} 
-
-// 
+/*
+ * This code initializes "eyes" for all players to enable retrieving their coordinates and viewing directions,
+ * serving as a workaround due to the lack of the EyeForward function in Portal 2.
+ *
+ * If the session is multiplayer, it reinitializes the eyes after 1 second to ensure players are properly set up,
+ * as players initialize with a slight delay of 1-2 seconds in multiplayer mode.
+ *
+ * Additionally, if running in the Portal 2 Multiplayer Mod (P2MM), it sets up a repeated initialization every second,
+ * to accommodate new players joining the session dynamically.
+*/
 AttachEyeControlToPlayers()
-if(IsMultiplayer() && "TEAM_SINGLEPLAYER" in getroottable()) { // "TEAM_SINGLEPLAYER" - p2mm const
-    RunScriptCode.setInterval(AttachEyeControlToPlayers, 0.5)
-}
+if(IsMultiplayer()) 
+    ScheduleEvent.Add("global", AttachEyeControlToPlayers, 2)
+if(IsMultiplayer() && "TEAM_SINGLEPLAYER" in getroottable()) 
+    ScheduleEvent.AddInterval("global", AttachEyeControlToPlayers, 1, 2)
+
 
 ::_lib_version_ <- version
-
 
 /*
  * Prints information about the PCapture library upon initialization.
