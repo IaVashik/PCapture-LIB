@@ -1110,8 +1110,13 @@ Sets the absolute rotation angles of the entity using a Vector.
 myPcapEntity.SetAbsAngles(Vector(0, 180, 0)) // Set the entity to face the opposite direction
 ```
 
-### `Destroy()`
+### `Destroy(fireDelay, eventName)`
 Destroys the entity, removing it from the game world.
+
+**Parameters:**
+
+* `fireDelay` (number, optional): The delay in seconds before destroying the entity (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1119,12 +1124,13 @@ Destroys the entity, removing it from the game world.
 myPcapEntity.Destroy() // Destroy the entity
 ```
 
-### `Kill(fireDelay)`
+### `Kill(fireDelay, eventName)`
 Kills the entity, triggering its "kill" input with an optional delay.
 
 **Parameters:**
 
 * `fireDelay` (number, optional): The delay in seconds before killing the entity (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1132,8 +1138,13 @@ Kills the entity, triggering its "kill" input with an optional delay.
 myPcapEntity.Kill(2) // Kill the entity after 2 seconds
 ```
 
-### `Dissolve()`
+### `Dissolve(fireDelay, eventName)`
 Dissolves the entity using an `env_entity_dissolver` entity. This creates a visual effect of the entity dissolving away.
+
+**Parameters:**
+
+* `fireDelay` (number, optional): The delay in seconds before dissolving the entity (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1210,13 +1221,15 @@ Gets the forward vector from the player entity's eye position. This represents t
 local eyeForward = GetPlayerEx().EyeForwardVector()
 ```
 
-### `SetKeyValue(key, value)`
-Sets a key-value pair for the entity. This modifies the entity's properties and also stores the value as user data for later retrieval.
+### `SetKeyValue(key, value, fireDelay, eventName)`
+Sets a key-value pair for the entity. This modifies the entity's properties and also stores the value as user data for later retrieval using `GetKeyValue`.
 
 **Parameters:**
 
 * `key` (string): The key of the key-value pair.
 * `value` (any): The value to set for the key.
+* `fireDelay` (number, optional): The delay in seconds before setting the key-value pair (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1261,14 +1274,14 @@ myPcapEntity.ConnectOutputEx("OnTrigger", function() {
 })
 ```
 
-### `EmitSoundEx(soundName, timeDelay, eventName)`
-Plays a sound with an optional delay and event name for scheduling.
+### `EmitSound(soundName, fireDelay, eventName)`
+Plays a sound from the entity with an optional delay.
 
 **Parameters:**
 
 * `soundName` (string): The name of the sound to play.
-* `timeDelay` (number, optional): The delay in seconds before playing the sound (default is 0).
-* `eventName` (any, optional): The name of the event used for scheduling (default is the entity itself).
+* `fireDelay` (number, optional): The delay in seconds before playing the sound (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1276,12 +1289,44 @@ Plays a sound with an optional delay and event name for scheduling.
 myPcapEntity.EmitSoundEx("my_sound.wav", 1) // Play the sound after a 1-second delay
 ```
 
-### `SetName(name)`
+### `EmitSoundEx(soundName, fireDelay, eventName)`
+Plays a sound with an optional delay. This method uses a workaround to play sounds from non-studio models, ensuring that the sound plays for its full duration and can be stopped correctly.
+
+**Parameters:**
+
+* `soundName` (string): The name of the sound to play.
+* `fireDelay` (number, optional): The delay in seconds before playing the sound (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
+
+**Example:**
+
+```js
+myPcapEntity.EmitSoundEx("my_sound.wav", 1) // Play the sound after a 1-second delay
+```
+
+### `StopSoundEx(soundName, fireDelay, eventName)`
+Stops a sound played using `EmitSoundEx`.
+
+**Parameters:**
+
+* `soundName` (string): The name of the sound to stop.
+* `fireDelay` (number, optional): The delay in seconds before stopping the sound (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
+
+**Example:**
+
+```js
+myPcapEntity.StopSoundEx("my_sound.wav", 0.5) // Stop the sound after 0.5 seconds
+```
+
+### `SetName(name, fireDelay, eventName)`
 Sets the targetname of the entity.
 
 **Parameters:**
 
 * `name` (string): The targetname to set.
+* `fireDelay` (number, optional): The delay in seconds before setting the name (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1289,12 +1334,14 @@ Sets the targetname of the entity.
 myPcapEntity.SetName("my_entity") // Set the entity's targetname
 ```
 
-### `SetUniqueName(prefix)`
+### `SetUniqueName(prefix, fireDelay, eventName)`
 Sets a unique targetname for the entity using the provided prefix and a generated unique identifier.
 
 **Parameters:**
 
-* `prefix` (string, optional): The prefix to use for the unique targetname (default is "u").
+* `prefix` (string, optional): The prefix to use for the unique targetname (default is "pcapEnt").
+* `fireDelay` (number, optional): The delay in seconds before setting the unique name (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1302,13 +1349,14 @@ Sets a unique targetname for the entity using the provided prefix and a generate
 myPcapEntity.SetUniqueName("my_entity") // Set a unique targetname starting with "my_entity_"
 ```
 
-### `SetParent(parentEnt, fireDelay)`
+### `SetParent(parentEnt, fireDelay, eventName)`
 Sets the parent entity for the entity, establishing a parent-child relationship.
 
 **Parameters:**
 
 * `parentEnt` (string, CBaseEntity, or pcapEntity): The parent entity to set (can be a targetname or an entity object).
 * `fireDelay` (number, optional): The delay in seconds before setting the parent (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1333,13 +1381,14 @@ if (parent) {
 }
 ```
 
-### `SetCollision(solidType, fireDelay)`
+### `SetCollision(solidType, fireDelay, eventName)`
 Sets the collision type of the entity, controlling how it interacts with other entities in the game world.
 
 **Parameters:**
 
 * `solidType` (number): The collision type to set (see the Source SDK documentation for valid values).
 * `fireDelay` (number, optional): The delay in seconds before setting the collision type (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1347,12 +1396,14 @@ Sets the collision type of the entity, controlling how it interacts with other e
 myPcapEntity.SetCollision(SOLID_NONE) // Make the entity non-solid (pass through other entities)
 ```
 
-### `SetCollisionGroup(collisionGroup)`
+### `SetCollisionGroup(collisionGroup, fireDelay, eventName)`
 Sets the collision group of the entity, determining which other entities it can collide with.
 
 **Parameters:**
 
 * `collisionGroup` (number): The collision group to set (see the Source SDK documentation for valid values).
+* `fireDelay` (number, optional): The delay in seconds before setting the collision group (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1360,13 +1411,14 @@ Sets the collision group of the entity, determining which other entities it can 
 myPcapEntity.SetCollisionGroup(COLLISION_GROUP_PLAYER) // Set the collision group to the player group
 ```
 
-### `SetAnimation(animationName, fireDelay)`
+### `SetAnimation(animationName, fireDelay, eventName)`
 Starts playing the specified animation on the entity.
 
 **Parameters:**
 
 * `animationName` (string): The name of the animation to play.
 * `fireDelay` (number, optional): The delay in seconds before starting the animation (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1374,13 +1426,14 @@ Starts playing the specified animation on the entity.
 myPcapEntity.SetAnimation("run") // Start playing the "run" animation
 ```
 
-### `SetAlpha(opacity, fireDelay)`
+### `SetAlpha(opacity, fireDelay, eventName)`
 Sets the alpha (opacity) of the entity, controlling how transparent it appears.
 
 **Parameters:**
 
 * `opacity` (number): The alpha value between 0 (fully transparent) and 255 (fully opaque).
 * `fireDelay` (number, optional): The delay in seconds before setting the alpha (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1388,13 +1441,14 @@ Sets the alpha (opacity) of the entity, controlling how transparent it appears.
 myPcapEntity.SetAlpha(128) // Set the entity to be semi-transparent
 ```
 
-### `SetColor(colorValue, fireDelay)`
+### `SetColor(colorValue, fireDelay, eventName)`
 Sets the color of the entity.
 
 **Parameters:**
 
 * `colorValue` (string or Vector): The color value as a string (e.g., "255 0 0" for red) or a Vector with components (r, g, b).
 * `fireDelay` (number, optional): The delay in seconds before setting the color (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1402,13 +1456,14 @@ Sets the color of the entity.
 myPcapEntity.SetColor("0 255 0") // Set the entity to green
 ```
 
-### `SetSkin(skin, fireDelay)`
+### `SetSkin(skin, fireDelay, eventName)`
 Sets the skin of the entity, if the entity has multiple skins available.
 
 **Parameters:**
 
 * `skin` (number): The index of the skin to set.
 * `fireDelay` (number, optional): The delay in seconds before setting the skin (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1416,18 +1471,47 @@ Sets the skin of the entity, if the entity has multiple skins available.
 myPcapEntity.SetSkin(2) // Set the entity's skin to the third available skin
 ```
 
-### `SetDrawEnabled(isEnabled, fireDelay)`
+### `SetDrawEnabled(isEnabled, fireDelay, eventName)`
 Enables or disables rendering of the entity, controlling whether it is visible in the game world.
 
 **Parameters:**
 
 * `isEnabled` (boolean): True to enable rendering (make the entity visible), false to disable rendering (make the entity invisible).
 * `fireDelay` (number, optional): The delay in seconds before setting the draw state (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
 ```js
 myPcapEntity.SetDrawEnabled(false) // Make the entity invisible
+```
+
+### `Disable(fireDelay, eventName)`
+Disables the entity, making it invisible and preventing interactions. Equivalent to calling `SetDrawEnabled(false)` and `SetTraceIgnore(true)`.
+
+**Parameters:**
+
+* `fireDelay` (number, optional): The delay in seconds before disabling the entity (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
+
+**Example:**
+
+```js
+myPcapEntity.Disable() // Disable the entity
+```
+
+### `Enable(fireDelay, eventName)`
+Enables the entity, making it visible and allowing interactions. Equivalent to calling `SetDrawEnabled(true)` and `SetTraceIgnore(false)`.
+
+**Parameters:**
+
+* `fireDelay` (number, optional): The delay in seconds before enabling the entity (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
+
+**Example:**
+
+```js
+myPcapEntity.Enable() // Enable the entity
 ```
 
 ### `IsDrawEnabled()`
@@ -1445,12 +1529,14 @@ if (myPcapEntity.IsDrawEnabled()) {
 }
 ```
 
-### `SetTraceIgnore(isEnabled)`
+### `SetTraceIgnore(isEnabled, fireDelay, eventName)`
 Sets whether the entity should be ignored during traces. This can be used to prevent the entity from blocking traces or being detected by them.
 
 **Parameters:**
 
 * `isEnabled` (boolean): True to ignore the entity during traces, false otherwise.
+* `fireDelay` (number, optional): The delay in seconds before setting the trace ignore state (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1458,12 +1544,14 @@ Sets whether the entity should be ignored during traces. This can be used to pre
 myPcapEntity.SetTraceIgnore(true) // Ignore the entity during traces
 ```
 
-### `SetSpawnflags(flag)`
+### `SetSpawnflags(flag, fireDelay, eventName)`
 Sets the spawnflags of the entity, which can affect its behavior and properties.
 
 **Parameters:**
 
 * `flag` (number): The spawnflags value to set.
+* `fireDelay` (number, optional): The delay in seconds before setting the spawnflags (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1471,13 +1559,14 @@ Sets the spawnflags of the entity, which can affect its behavior and properties.
 myPcapEntity.SetSpawnflags(128) // Set the NPC_GAG spawnflag for an NPC entity
 ```
 
-### `SetModelScale(scaleValue, fireDelay)`
+### `SetModelScale(scaleValue, fireDelay, eventName)`
 Sets the scale of the entity's model, making it larger or smaller.
 
 **Parameters:**
 
 * `scaleValue` (number): The scale value to set.
 * `fireDelay` (number, optional): The delay in seconds before setting the model scale (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1525,7 +1614,7 @@ Sets the bounding box of the entity using vectors or string representations of v
 myPcapEntity.SetBBox(Vector(-10, -10, -10), Vector(10, 10, 10)) // Set a bounding box of 20x20x20 units
 ```
 
-### `SetContext(name, value, fireDelay)`
+### `SetContext(name, value, fireDelay, eventName)`
 Sets a context value for the entity, which can be used for storing additional information or state associated with the entity.
 
 **Parameters:**
@@ -1533,6 +1622,7 @@ Sets a context value for the entity, which can be used for storing additional in
 * `name` (string): The name of the context value.
 * `value` (any): The value to set for the context.
 * `fireDelay` (number, optional): The delay in seconds before setting the context value (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1617,7 +1707,7 @@ local entityIndex = myPcapEntity.GetIndex()
 ```
 
 ### `GetKeyValue(key)`
-Returns the value of a key-value pair for the entity, if it was set using the `SetKeyValue` method.
+Returns the value of a key-value pair for the entity, if it was set using the `SetKeyValue` method or other `pcapEntity` methods. It cannot retrieve values set directly through Hammer or the console.
 
 **Parameters:**
 
@@ -1651,7 +1741,7 @@ Returns the alpha (opacity) value of the entity, if it was set using the `SetAlp
 
 **Returns:**
 
-* (number or null): The alpha value, or `null` if the alpha was not set using `SetAlpha`.
+* (number or null): The alpha value, or 255 if the alpha was not set using `SetAlpha`.
 
 **Example:**
 
@@ -1664,7 +1754,7 @@ Returns the color of the entity as a string, if it was set using the `SetColor` 
 
 **Returns:**
 
-* (string or null): The color string, or `null` if the color was not set using `SetColor`.
+* (string or null): The color string in format "R G B", or "255 255 255" if the color was not set using `SetColor`.
 
 **Example:**
 
@@ -1677,7 +1767,7 @@ Returns the skin index of the entity, if it was set using the `SetSkin` method.
 
 **Returns:**
 
-* (number or null): The skin index, or `null` if the skin was not set using `SetSkin`.
+* (number or null): The skin index, or 0 if the skin was not set using `SetSkin`.
 
 **Example:**
 
@@ -1709,6 +1799,22 @@ Returns the postfix of the entity's name, if the name contains a "-" separator.
 
 ```js
 local postfix = myPcapEntity.GetNamePostfix()
+```
+
+### `GetPartnerInstance()`
+Retrieves the portal partner instance of the entity, prioritizing the actual partner entity if available, and falling back to user-stored partner data if necessary.
+
+**Returns:**
+
+* (Entity|null): The partner entity, or null if no partner is found.
+
+**Example:**
+
+```js
+local partner = myPortalEntity.GetPartnerInstance()
+if (partner) {
+    // ... do something with the partner entity
+}
 ```
 
 ### `CreateAABB(stat)`

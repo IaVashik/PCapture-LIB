@@ -35,7 +35,10 @@
 
 
     // Destroys the entity. 
-    function Destroy() {
+    function Destroy(fireDelay = 0, eventName = "global") {
+        if(fireDelay != 0)
+            return ScheduleEvent.Add(eventName, this.Destroy, fireDelay, null, this)
+        
         this.CBaseEntity.Destroy()
         this.CBaseEntity = null
     }
@@ -46,8 +49,11 @@
      *
      * @param {number} fireDelay - Delay in seconds before applying.
     */
-    function Kill(fireDelay = 0) {
-        EntFireByHandle(CBaseEntity, "kill", "", fireDelay)
+    function Kill(fireDelay = 0, eventName = "global") {
+        if(fireDelay != 0)
+            return ScheduleEvent.Add(eventName, this.Kill, fireDelay, null, this)
+
+        EntFireByHandle(CBaseEntity, "kill")
         this.CBaseEntity = null
     }
 
@@ -58,7 +64,10 @@
      * This method utilizes an env_entity_dissolver entity to create the dissolve effect. If the entity doesn't have a targetname, 
      * a unique targetname is assigned to it before initiating the dissolve process. 
      */
-    function Dissolve() {
+    function Dissolve(fireDelay = 0, eventName = "global") {
+        if(fireDelay != 0)
+            return ScheduleEvent.Add(eventName, this.Dissolve, fireDelay, null, this)
+
         if(this.GetName() == "")
             this.SetUniqueName("targetname")
         dissolver.SetKeyValue("target", this.GetName())
@@ -123,14 +132,16 @@
         if(this.IsPlayer()) return this.GetUserData("Eye").GetForwardVector()
     }
 
-
     /*
      * Sets the key-value pair of the entity.  
      *
      * @param {string} key - The key of the key-value pair.
      * @param {int|float|Vector|string} value - The value of the key-value pair.
     */
-    function SetKeyValue(key, value) {
+    function SetKeyValue(key, value, fireDelay = 0, eventName = "global") {
+        if(fireDelay != 0)
+            return ScheduleEvent.Add(eventName, this.SetKeyValue, fireDelay, [key, value], this)
+
         this.SetUserData(key, value)
 
         switch (typeof value) {
@@ -186,19 +197,47 @@
         this.addOutput(outputName, "!self", "RunScriptCode", script, delay, fires)
     }
 
+    function EmitSound(soundName, fireDelay = 0, eventName = "global") {
+        if(fireDelay != 0)
+            return ScheduleEvent.Add(eventName, this.EmitSound, fireDelay, [soundName], this)
+
+        this.CBaseEntity.EmitSound(soundName)
+    }
 
     /* 
-     * Emits a sound with optional delay.
+     * Emits a sound with optional delay. // todo!
      *
      * @param {string} soundName - The name of the sound to play.
-     * @param {number} timeDelay - Delay in seconds before playing the sound. (optional)
+     * @param {number} fireDelay - Delay in seconds before playing the sound. (optional)
      * @param {string} eventName - The name of the event used for scheduling. (optional)
     */
-    function EmitSoundEx(soundName, timeDelay = 0, eventName = this) {
-        if(timeDelay == 0)
-            return this.CBaseEntity.EmitSound(soundName)
-            
-        ScheduleEvent.Add(eventName, this.EmitSound, timeDelay, [soundName], this)
+    function EmitSoundEx(soundName, fireDelay = 0, eventName = "global") {
+        if(fireDelay != 0)
+            return ScheduleEvent.Add(eventName, this.EmitSoundEx, fireDelay, [soundName], this)
+        
+        // SO FKING CURSED WORKAROUND EVER!
+        local soundEnt = entLib.CreateProp("prop_physics", Vector(), "cable/rope.vmt") //! Setting CBaseAnimating to non-studio model cable/rope.vmt  (type:2)
+        soundEnt.SetOrigin(this.GetOrigin())
+        soundEnt.SetParent(this)
+
+        local soundTime = macros.GetSoundDuration(soundName)
+        ScheduleEvent.Add(soundEnt, soundEnt.Destroy, soundTime, null, soundEnt)
+        this.SetUserData(soundName, soundEnt)
+
+        soundEnt.EmitSound(soundName)
+    }
+
+    function StopSoundEx(soundName, fireDelay = 0, eventName = "global") {
+        if(fireDelay != 0) {
+            return ScheduleEvent.Add(eventName, this.StopSoundEx, fireDelay, [soundName], this)
+        }
+
+        local soundEnt = this.GetUserData(soundName)
+        if(!soundEnt || !soundEnt.IsValid()) return
+
+        ScheduleEvent.TryCancel(soundEnt)
+        soundEnt.SetOrigin(Vector(0, 0, 10000))
+        ScheduleEvent.Add(soundEnt, soundEnt.Destroy, 0.03, null, soundEnt)
     }
 
 
@@ -207,7 +246,10 @@
      *
      * @param {string} name - The targetname to be set.
     */
-    function SetName(name) {
+    function SetName(name, fireDelay = 0, eventName = "global") {
+        if(fireDelay != 0)
+            return ScheduleEvent.Add(eventName, this.SetName, fireDelay, [name], this)
+        
         this.SetKeyValue("targetname", name)
     }
 
@@ -216,7 +258,10 @@
      *
      * @param {string} prefix - The prefix to be used for the unique targetname. (optional, default="u")
     */
-    function SetUniqueName(prefix = "u") {
+    function SetUniqueName(prefix = "pcapEnt", fireDelay = 0, eventName = "global") {
+        if(fireDelay != 0)
+            return ScheduleEvent.Add(eventName, this.SetUniqueName, fireDelay, [prefix], this)
+        
         this.SetKeyValue("targetname", UniqueString(prefix))
     }
 
@@ -227,16 +272,18 @@
      * @param {string|CBaseEntity|pcapEntity} parent - The parent entity object or its targetname.
      * @param {number} fireDelay - Delay in seconds before applying.
     */
-    function SetParent(parentEnt, fireDelay = 0) {
+    function SetParent(parentEnt, fireDelay = 0, eventName = "global") {
+        if(fireDelay != 0)
+            return ScheduleEvent.Add(eventName, this.SetParent, fireDelay, [parentEnt], this)
+        
         this.SetUserData("parent", parentEnt)
         if(typeof parentEnt != "string") {
-            if(parentEnt.GetName() == "") {
-                parentEnt.SetUniqueName("parent")
-            }
+            if(parentEnt.GetName() == "") 
+                parentEnt.__KeyValueFromString("targetname", UniqueString("parent"));
             parentEnt = parentEnt.GetName()
         }
         
-        EntFireByHandle(this.CBaseEntity, "SetParent", parentEnt, fireDelay)
+        EntFireByHandle(this.CBaseEntity, "SetParent", parentEnt)            
     }
 
     /*
@@ -255,8 +302,11 @@
      * @param {number} solidType - The type of collision.
      * @param {number} fireDelay - Delay in seconds before applying.
     */
-    function SetCollision(solidType, fireDelay = 0) {
-        EntFireByHandle(this.CBaseEntity, "SetSolidtype", solidType.tostring(), fireDelay, null, null)
+    function SetCollision(solidType, fireDelay = 0, eventName = "global") {
+        if(fireDelay != 0)
+            return ScheduleEvent.Add(eventName, this.SetCollision, fireDelay, [solidType], this)
+        
+        EntFireByHandle(this.CBaseEntity, "SetSolidtype", solidType.tostring()) // todo?
         this.SetUserData("Solidtype", solidType)
     }
 
@@ -266,9 +316,8 @@
      *
      * @param {number} collisionGroup - The collision group.
     */
-    function SetCollisionGroup(collisionGroup) {
-        this.SetKeyValue("CollisionGroup", collisionGroup)
-        this.SetUserData("CollisionGroup", collisionGroup)
+    function SetCollisionGroup(collisionGroup, fireDelay = 0, eventName = "global") {
+        this.SetKeyValue("CollisionGroup", collisionGroup, fireDelay, eventName)
     }
     
 
@@ -278,8 +327,11 @@
      * @param {string} animationName - The name of the animation to play.
      * @param {number} fireDelay - Delay in seconds before starting the animation.
     */
-    function SetAnimation(animationName, fireDelay = 0) {
-        EntFireByHandle(this.CBaseEntity, "SetAnimation", animationName, fireDelay)
+    function SetAnimation(animationName, fireDelay = 0, eventName = "global") {
+        if(fireDelay != 0)
+            return ScheduleEvent.Add(eventName, this.SetAnimation, fireDelay, [animationName], this)
+        
+        EntFireByHandle(this.CBaseEntity, "SetAnimation", animationName)
         this.SetUserData("animation", animationName)
     }
 
@@ -291,8 +343,11 @@
      * @param {number} fireDelay - Delay in seconds before applying.
      * Note: Don't forget to set "rendermode" to 5 for alpha to work.
     */
-    function SetAlpha(opacity, fireDelay = 0) {
-        EntFireByHandle(this.CBaseEntity, "Alpha", opacity.tostring(), fireDelay, null, null)
+    function SetAlpha(opacity, fireDelay = 0, eventName = "global") {
+        if(fireDelay != 0)
+            return ScheduleEvent.Add(eventName, this.SetAlpha, fireDelay, [opacity], this)
+        
+        EntFireByHandle(this.CBaseEntity, "Alpha", opacity.tostring())
         this.SetUserData("alpha", opacity)
     }
 
@@ -303,10 +358,14 @@
      * @param {string|Vector} colorValue - The color value as a string (e.g., "255 0 0") or a Vector.
      * @param {number} fireDelay - Delay in seconds before applying.
     */
-    function SetColor(colorValue, fireDelay = 0) {
+    function SetColor(colorValue, fireDelay = 0, eventName = "global") {
+        if(fireDelay != 0)
+            return ScheduleEvent.Add(eventName, this.SetColor, fireDelay, [colorValue], this)
+        
         if(typeof colorValue == "Vector") 
             colorValue = macros.VecToStr(colorValue)
-        EntFireByHandle(this.CBaseEntity, "Color", colorValue, fireDelay, null, null)
+
+        EntFireByHandle(this.CBaseEntity, "Color", colorValue)
         this.SetUserData("color", colorValue)
     }
 
@@ -317,8 +376,11 @@
      * @param {number} skin - The skin number.
      * @param {number} fireDelay - Delay in seconds before applying.
     */
-    function SetSkin(skin, fireDelay = 0) {
-        EntFireByHandle(this.CBaseEntity, "skin", skin.tostring(), fireDelay, null, null)
+    function SetSkin(skin, fireDelay = 0, eventName = "global") { 
+        if(fireDelay != 0)
+            return ScheduleEvent.Add(eventName, this.SetSkin, fireDelay, [skin], this)
+        
+        EntFireByHandle(this.CBaseEntity, "skin", skin.tostring())
         this.SetUserData("skin", skin)
     }
 
@@ -329,10 +391,29 @@
      * @param {boolean} isEnabled - True to enable drawing, false to disable.
      * @param {number} fireDelay - Delay in seconds before applying.
     */
-    function SetDrawEnabled(isEnabled, fireDelay = 0) {
+    function SetDrawEnabled(isEnabled, fireDelay = 0, eventName = "global") {
+        if(fireDelay != 0)
+            return ScheduleEvent.Add(eventName, this.SetDrawEnabled, fireDelay, [isEnabled], this)
+        
         local action = isEnabled ? "EnableDraw" : "DisableDraw"
-        EntFireByHandle(this.CBaseEntity, action, "", fireDelay)
+        EntFireByHandle(this.CBaseEntity, action)
         this.SetUserData("IsDraw", isEnabled)
+    }
+
+    function Disable(fireDelay = 0, eventName = "global") {
+        if(fireDelay != 0)
+            return ScheduleEvent.Add(eventName, this.Disable, fireDelay, null, this)
+        
+        EntFireByHandle(this.CBaseEntity, "Disable")
+        this.SetTraceIgnore(true)
+    }
+
+    function Enable(fireDelay = 0, eventName = "global") {
+        if(fireDelay != 0)
+            return ScheduleEvent.Add(eventName, this.Enable, fireDelay, null, this)
+        
+        EntFireByHandle(this.CBaseEntity, "Enable")
+        this.SetTraceIgnore(false)
     }
 
     /*
@@ -349,7 +430,10 @@
      * 
      * @param {boolean} isEnabled - True to ignore the entity during traces, false otherwise.
     */
-    function SetTraceIgnore(isEnabled) {
+    function SetTraceIgnore(isEnabled, fireDelay = 0, eventName = "global") {
+        if(fireDelay != 0)
+            return ScheduleEvent.Add(eventName, this.SetTraceIgnore, fireDelay, [isEnabled], this)
+        
         this.SetUserData("TracePlusIgnore", isEnabled)
     }
 
@@ -358,9 +442,11 @@
      *
      * @param {number} flag - The spawnflags value to set.
     */
-    function SetSpawnflags(flag) {
-        this.SetKeyValue("CollisionGroup", flag)
-        this.SetUserData("spawnflags", flag)
+    function SetSpawnflags(flag, fireDelay = 0, eventName = "global") {
+        if(fireDelay != 0)
+            return ScheduleEvent.Add(eventName, this.SetSpawnflags, fireDelay, [flag], this)
+        
+        this.SetUserData("SpawnFlags", flag)
     }
 
 
@@ -370,9 +456,13 @@
      * @param {number} scaleValue - The scale value.
      * @param {number} fireDelay - Delay in seconds before applying.
     */
-    function SetModelScale(scaleValue, fireDelay = 0) {
-        EntFireByHandle(this.CBaseEntity, "addoutput", "ModelScale " + scaleValue, fireDelay, null, null)
+    function SetModelScale(scaleValue, fireDelay = 0, eventName = "global") {
+        if(fireDelay != 0)
+            return ScheduleEvent.Add(eventName, this.SetModelScale, fireDelay, [scaleValue], this)
+        
+        EntFireByHandle(this.CBaseEntity, "addoutput", "ModelScale " + scaleValue)
         this.SetUserData("ModelScale", scaleValue)
+        // hack for entity update
         EntFireByHandle(this, "SetBodyGroup", "1"); EntFireByHandle(this, "SetBodyGroup", "0", 0.02)
     }
 
@@ -423,8 +513,11 @@
      * @param {any} value - The value to set.
      * @param {number} fireDelay - Delay in seconds before applying.
     */
-    function SetContext(name, value, fireDelay = 0) {
-        EntFireByHandle(this.CBaseEntity, "AddContext", (name + ":" + value), fireDelay)
+    function SetContext(name, value, fireDelay = 0, eventName = "global") {
+        if(fireDelay != 0)
+            return ScheduleEvent.Add(eventName, this.SetContext, fireDelay, [name, value], this)
+        
+        EntFireByHandle(this.CBaseEntity, "AddContext", (name + ":" + value))
         this.SetUserData(name, value)
     }
     
@@ -710,7 +803,6 @@
 
 function pcapEntity::ConnectOutput(output, funcName) this.CBaseEntity.ConnectOutput(output, funcName)
 function pcapEntity::DisconnectOutput(output, funcName) this.CBaseEntity.DisconnectOutput(output, funcName)
-function pcapEntity::EmitSound(sound_name) this.CBaseEntity.EmitSound(sound_name)
 function pcapEntity::PrecacheSoundScript(sound_name) this.CBaseEntity.PrecacheSoundScript(sound_name)
 function pcapEntity::IsSequenceFinished() return this.CBaseEntity.IsSequenceFinished()
 function pcapEntity::SpawnEntity() this.CBaseEntity.SpawnEntity()
@@ -743,3 +835,4 @@ function pcapEntity::SetHealth(health) this.CBaseEntity.SetHealth(health)
 function pcapEntity::SetMaxHealth(health) this.CBaseEntity.SetMaxHealth(health)
 function pcapEntity::SetModel(model_name) this.CBaseEntity.SetModel(model_name)
 function pcapEntity::SetOrigin(vector) this.CBaseEntity.SetOrigin(vector)
+function pcapEntity::SetVelocity(vector) this.CBaseEntity.SetVelocity(vector)
