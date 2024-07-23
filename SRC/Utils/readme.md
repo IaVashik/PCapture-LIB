@@ -391,6 +391,25 @@ macros.Precache("my_sound.wav") // Precache a single sound
 macros.Precache(["sound1.wav", "sound2.wav"]) // Precache multiple sounds
 ```
 
+### `macros.GetSoundDuration(soundName)`
+
+This function retrieves the duration of a sound by its name. It is useful for determining how long a sound will play, which can be used for synchronization or timing purposes in scripts.
+
+**Parameters:**
+
+* `soundName` (string): The name of the sound.
+
+**Returns:**
+
+* `number`: The duration of the sound in seconds.
+
+**Example:**
+
+```js
+local duration = macros.GetSoundDuration("my_sound.wav")
+printl("The duration of the sound is " + duration + " seconds.")
+```
+
 ### `macros.GetFromTable(table, key, defaultValue)`
 
 This macro retrieves a value from a table using the specified key. If the key is not found in the table, it returns a default value. This provides a concise way to access table values without having to check for key existence explicitly.
@@ -622,6 +641,36 @@ local triangle = macros.GetTriangle(v1, v2, v3)
 printl("Triangle centroid:", triangle.origin)
 printl("Triangle vertices:", triangle.vertices)
 ```
+
+
+### `macros.BuildAnimateFunction(name, propertySetterFunc)`
+
+This function creates a new animation function for animating a property of one or more entities. It simplifies the creation of animations by providing a reusable and customizable animation function.
+
+**Parameters:**
+
+* `name` (string): The name of the animation. This name is used to identify the animation internally.
+* `propertySetterFunc` (function): A function that takes an entity and a value, and sets a property on that entity. This function will be called repeatedly during the animation to update the property.
+
+**Returns:**
+
+* `function`: A function that can be used to start the animation. This function takes the following arguments:
+  * `entities` (array or pcapEntity): An array of entities or a single entity to animate.
+  * `startValue` (any): The starting value for the property.
+  * `endValue` (any): The ending value for the property.
+  * `time` (number): The duration of the animation in seconds.
+  * `animSetting` (table, optional): A table of additional animation settings. See the `AnimEvent` constructor for details.
+
+**Example:**
+
+```js
+local animateColor = macros.BuildAnimateFunction("ColorChange", function(ent, value) {
+    ent.SetColor(value)
+})
+
+animateColor(myEntity, Vector(255, 0, 0), Vector(0, 255, 0), 2) // Animate color change from red to green over 2 seconds
+```
+
 
 
 ## [Utils/scripts.nut](scripts.nut)
