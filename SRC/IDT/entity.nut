@@ -278,9 +278,10 @@
         
         this.SetUserData("parent", parentEnt)
         if(typeof parentEnt != "string") {
-            if(parentEnt.GetName() == "") 
-                parentEnt.__KeyValueFromString("targetname", UniqueString("parent"));
-            parentEnt = parentEnt.GetName()
+            local Pent = entLib.FromEntity(parentEnt)
+            if(Pent.GetName() == "") 
+                Pent.SetUniqueName("parent")
+            parentEnt = Pent.GetName()
         }
         
         EntFireByHandle(this.CBaseEntity, "SetParent", parentEnt)            
