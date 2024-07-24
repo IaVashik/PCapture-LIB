@@ -76,6 +76,7 @@
     */
     function SetIgnoredClasses(ignoreClassesArray) {
         this.ignoreClasses = arrayLib(ignoreClassesArray)
+        return this
     }
 
     /*
@@ -85,6 +86,7 @@
     */
     function SetPriorityClasses(priorityClassesArray) {
         this.priorityClasses = arrayLib(priorityClassesArray)
+        return this
     }
 
     /*
@@ -94,6 +96,7 @@
     */
     function SetIgnoredModels(ignoredModelsArray) {
         this.ignoredModels = arrayLib(ignoredModelsArray)
+        return this
     }
 
     /*
@@ -103,6 +106,7 @@
     */
     function SetErrorTolerance(tolerance) {
         this.errorTolerance = tolerance
+        return this
     }
 
 
@@ -113,6 +117,7 @@
     */
     function AppendIgnoredClass(className) {
         this.ignoreClasses.append(className)
+        return this
     }
 
     /*
@@ -122,6 +127,7 @@
     */
     function AppendPriorityClasses(className) {
         this.priorityClasses.append(className)
+        return this
     }
 
     /*
@@ -131,6 +137,7 @@
     */
     function AppendIgnoredModel(modelName) {
         this.ignoredModels.append(modelName)
+        return this
     }
 
 
@@ -179,6 +186,7 @@
     */
     function SetCollisionFilter(filterFunction) { // aka. SetHitFilter
         this.shouldRayHitEntity = filterFunction
+        return this
     }
 
     /*
@@ -188,6 +196,7 @@
     */
     function SetIgnoreFilter(filterFunction) {
         this.shouldIgnoreEntity = filterFunction
+        return this
     }
 
     /*

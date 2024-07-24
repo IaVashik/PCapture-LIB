@@ -12,9 +12,9 @@ This class stores various settings that control the behavior of traces, such as 
 
 **Properties:**
 
-* `ignoreClasses` (arrayLib): An array of entity classnames to ignore during traces.
-* `priorityClasses` (arrayLib): An array of entity classnames to prioritize during traces.
-* `ignoredModels` (arrayLib): An array of entity model names to ignore during traces.
+* `ignoreClasses` (arrayLib): An array of entity classnames to ignore during traces. Supports masks, e.g., `["trigger"]` will ignore all entities with "trigger" in their classnames.
+* `priorityClasses` (arrayLib): An array of entity classnames to prioritize during traces. Supports masks.
+* `ignoredModels` (arrayLib): An array of entity model names to ignore during traces. Supports masks.
 * `errorTolerance` (number): The maximum allowed distance between a trace's start and hit positions. Traces exceeding this tolerance may be considered inaccurate.
 * `shouldRayHitEntity` (function or null): A custom function to determine if a ray should hit an entity.
 * `shouldIgnoreEntity` (function or null): A custom function to determine if an entity should be ignored during a trace.
@@ -22,32 +22,61 @@ This class stores various settings that control the behavior of traces, such as 
 **Methods:**
 
 * `new(settingsTable)`: Creates a new `TracePlus.Settings` object with default values or from a table of settings.
-* `SetIgnoredClasses(ignoreClassesArray)`: Sets the list of entity classnames to ignore during traces.
-* `SetPriorityClasses(priorityClassesArray)`: Sets the list of entity classnames to prioritize during traces.
-* `SetIgnoredModels(ignoredModelsArray)`: Sets the list of entity model names to ignore during traces.
-* `SetErrorTolerance(tolerance)`: Sets the maximum allowed distance between trace start and hit positions.
-* `AppendIgnoredClass(className)`: Appends an entity classname to the list of ignored classes.
-* `AppendPriorityClasses(className)`: Appends an entity classname to the list of priority classes.
-* `AppendIgnoredModel(modelName)`: Appends an entity model name to the list of ignored models.
+* `SetIgnoredClasses(ignoreClassesArray)`: Sets the list of entity classnames to ignore during traces. **(Builder)**
+* `SetPriorityClasses(priorityClassesArray)`: Sets the list of entity classnames to prioritize during traces. **(Builder)**
+* `SetIgnoredModels(ignoredModelsArray)`: Sets the list of entity model names to ignore during traces. **(Builder)**
+* `SetErrorTolerance(tolerance)`: Sets the maximum allowed distance between trace start and hit positions. **(Builder)**
+* `AppendIgnoredClass(className)`: Appends an entity classname to the list of ignored classes. **(Builder)**
+* `AppendPriorityClasses(className)`: Appends an entity classname to the list of priority classes. **(Builder)**
+* `AppendIgnoredModel(modelName)`: Appends an entity model name to the list of ignored models. **(Builder)**
+* `SetCollisionFilter(filterFunction)`: Sets a custom function to determine if a ray should hit an entity. **(Builder)**
+* `SetIgnoreFilter(filterFunction)`: Sets a custom function to determine if an entity should be ignored during a trace. **(Builder)**
 * `GetIgnoreClasses()`: Returns the list of entity classnames to ignore during traces.
 * `GetPriorityClasses()`: Returns the list of entity classnames to prioritize during traces.
 * `GetIgnoredModels()`: Returns the list of entity model names to ignore during traces.
 * `GetErrorTolerance()`: Returns the maximum allowed distance between trace start and hit positions.
-* `SetCollisionFilter(filterFunction)`: Sets a custom function to determine if a ray should hit an entity.
-* `SetIgnoreFilter(filterFunction)`: Sets a custom function to determine if an entity should be ignored during a trace.
 * `GetCollisionFilter()`: Returns the custom collision filter function.
 * `GetIgnoreFilter()`: Returns the custom ignore filter function.
 * `ApplyCollisionFilter(entity, note)`: Applies the custom collision filter function to an entity.
 * `ApplyIgnoreFilter(entity, note)`: Applies the custom ignore filter function to an entity.
 * `UpdateIgnoreEntities(ignoreEntities, newEnt)`: Updates the list of entities to ignore during a trace, including the player entity.
 
-**Example:**
+**Examples:**
+
+**1. Creating `TracePlus.Settings` with all arguments:**
 
 ```js
-local traceSettings = TracePlus.Settings.new({
+local ignoreClasses = arrayLib.new("trigger_multiple", "func_brush")
+local priorityClasses = arrayLib.new("prop_physics")
+local ignoredModels = arrayLib.new("models/props/de_dust/hr_dust/dust_trashcan001.mdl")
+
+local s = TracePlus.Settings(ignoreClasses, priorityClasses, ignoredModels, 100)
+```
+
+**2. Creating `TracePlus.Settings` with specific settings using `new`:**
+
+```js
+local s = TracePlus.Settings.new({
     ignoreClasses = arrayLib.new("trigger_multiple", "func_brush"),
     errorTolerance = 100
-})
+}) 
+```
+
+**3. Creating `TracePlus.Settings` and setting properties with methods:**
+
+```js
+local s = TracePlus.Settings.new()
+s.SetIgnoredClasses(["trigger_"])
+s.AppendPriorityClasses(["player"])
+s.SetErrorTolerance(100)
+```
+
+**4. Using builder-style chained calls:**
+
+```js
+local s = TracePlus.Settings.new() 
+    .SetIgnoredClasses(arrayLib.new("trigger_multiple", "func_brush"))
+    .SetErrorTolerance(100)
 ```
 
 ## [TracePlus/results.nut](results.nut)
