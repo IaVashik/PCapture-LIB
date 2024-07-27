@@ -94,13 +94,13 @@
     /*
     * Filter the array by a predicate function.
     *
-    * @param {Function} func(index, value, newArray) - The predicate function. 
+    * @param {Function} condition(index, value, newArray) - The predicate function. 
     * @returns {arrayLib} - The filtered array.
     */
-    function filter(func) {
+    function filter(condition) {
         local newArray = arrayLib([])
         foreach(idx, val in arr) {
-            if(func(idx, val, newArray))
+            if(condition(idx, val, newArray))
                 newArray.append(val)
         }
         return newArray
@@ -175,6 +175,39 @@
     }
 
     /*
+    * Reduce the array to a single value.
+    *
+    * @param {Function} func - The reducer function, which takes the accumulator and current item as arguments.
+    * @param {any} initial - The initial value of the accumulator.
+    * @returns {any} - The reduced value.
+    */
+    function reduce(func, initial) {
+        local accumulator = initial
+        foreach(item in arr) {
+            accumulator = func(accumulator, item)
+        }
+        return accumulator
+    }
+
+    /*
+    * Return a new array with only unique elements.
+    *
+    * @returns {arrayLib} - The new array with unique elements.
+    */
+    function unique() {
+        local seen = {}
+        local result = arrayLib([])
+        
+        foreach(value in this.arr) {
+            if(value in seen) continue
+            seen[value] <- true    
+            result.append(value)
+        }
+
+        return result
+    }
+
+    /*
     * Pop a value off the end of the array.
     *
     * @returns {any} - The popped value.
@@ -193,10 +226,6 @@
     function push(val) {
         this.append(val)
     }
-
-    // function reduce(func) {
-
-    // }
 
     /*
     * Remove an element by index.
@@ -232,12 +261,12 @@
     /*
     * Slice a portion of the array.
     *
-    * @param {int} start - The start index.
-    * @param {int} end - The end index.
+    * @param {int} startIndex - The start index.
+    * @param {int} endIndex - The end index. (optional)
     * @returns {arrayLib} - The sliced array.
     */
-    function slice(start, end = null) {
-        return arrayLib(arr.slice(start, end || this.len()))
+    function slice(startIndex, endIndex = null) {
+        return arrayLib(arr.slice(startIndex, endIndex || this.len()))
     }
 
     /*

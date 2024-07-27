@@ -226,6 +226,43 @@ This method creates a new `arrayLib` object by applying a function to each eleme
 local squares = myArrayLib.map(function(x) { return x * x }) // Create an array of squares of the original elements
 ```
 
+### `reduce(func, initial)`
+Reduce the array to a single value.
+
+**Parameters:**
+
+* `func` (Function): The reducer function, which takes the accumulator and current item as arguments.
+* `initial` (any): The initial value of the accumulator.
+
+**Returns:**
+
+* (any): The reduced value.
+
+**Example:**
+
+```js
+local myArray = arrayLib([1, 2, 3, 4, 5])
+local sum = myArray.reduce(function(acc, item) {
+    return acc + item
+}, 0)
+printl(sum) // Output: 15
+```
+
+### `unique()`
+Return a new array with only unique elements.
+
+**Returns:**
+
+* (arrayLib): The new array with unique elements.
+
+**Example:**
+
+```js
+local myArray = arrayLib([1, 2, 2, 3, 4, 4, 5])
+local uniqueArray = myArray.unique()
+printl(uniqueArray) // Output: arrayLib([1, 2, 3, 4, 5])
+```
+
 ### `pop()`
 
 This method removes and returns the last element of the array.
@@ -628,9 +665,9 @@ Returns a new list with only the unique elements from the original list.
 **Example:**
 
 ```js
-local myList = [1, 2, 2, 3, 4, 4, 5]
+local myList = List(1, 2, 2, 3, 4, 4, 5, 2, 5)
 local uniqueList = myList.unique()
-printl(uniqueList) // Output: [1, 2, 3, 4, 5]
+printl(uniqueList) // Output: List(1, 2, 3, 4, 5)
 ```
 
 ### `clear()`
