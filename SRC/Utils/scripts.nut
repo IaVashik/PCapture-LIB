@@ -5,14 +5,10 @@
      * @param {string|function} script - The script to execute. Can be a function or a string.
      * @param {number} runDelay - The delay in seconds.
      * @param {array|null} args - Optional arguments to pass to the script function. 
-     * @param {entity|object} activator - The activator entity. (optional)
-     * @param {CBaseEntity|pcapEntity} caller - The caller entity. (optional)
+     * @param {object} scope - // TODO. (optional)
     */
-    delay = function(script, runDelay, args = null, activator = null, caller = null) { 
-        if (typeof script == "function")
-            return ScheduleEvent.Add("global", script, runDelay, args, caller)
-
-        EntFireByHandle(self, "runscriptcode", script, runDelay, activator, caller)
+    delay = function(script, runDelay = 0, args = null, scope = null) { 
+        ScheduleEvent.Add("global", script, runDelay, args, scope)
     },  
 
     /* 
@@ -29,21 +25,6 @@
             RunScriptCode.delay(RunScriptCode.loopy, runDelay, null, [script, runDelay, --loopCount, outputs], null)
         } else if (outputs)
             RunScriptCode.delay(outputs, 0)
-    },
-
-    /* 
-     * Schedules the execution of a script recursively at a fixed interval.
-     *
-     * This function schedules the provided script to run repeatedly at a specified interval. After each execution,
-     * the function schedules itself to run again, creating a loop that continues until you cancel the event
-     *
-     * @param {string|function} script - The script to be executed. Can be a function or a string containing code.
-     * @param {number} interval - The time interval between consecutive executions in seconds. (optional, default=tick) 
-     * @param {number} runDelay - The initial delay before the first execution in seconds. (optional, default=0) 
-     * @param {string} eventName - The name of the event used for scheduling. (optional, default="global")
-    */
-    setInterval = function(script, interval  = FrameTime(), runDelay = 0, eventName = "global") {
-        ScheduleEvent.AddInterval(eventName, script, interval, runDelay)
     },
 
     /* 

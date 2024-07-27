@@ -789,11 +789,14 @@ animateColor(myEntity, Vector(255, 0, 0), Vector(0, 255, 0), 2) // Animate color
 
 This file provides functions for running scripts with delays, loops, and intervals, offering more flexibility and control over script execution compared to standard VScripts mechanisms.
 
+#### Warning:
+Outdated module!!!
+
 ### `RunScriptCode`
 
 The `RunScriptCode` table contains functions for running scripts with different timing options.
 
-### `delay(script, runDelay, activator, caller, args)`
+### `delay(script, runDelay, activator, rgs, scope)`
 
 This function schedules the execution of a script after a specified delay.
 
@@ -802,8 +805,8 @@ This function schedules the execution of a script after a specified delay.
 * `script` (string or function): The script to execute. This can be a string containing VScripts code or a function object.
 * `runDelay` (number): The delay in seconds before executing the script.
 * `activator` (CBaseEntity or pcapEntity, optional): The activator entity (the entity that triggered the script execution).
-* `caller` (CBaseEntity or pcapEntity, optional): The caller entity (the entity that called the function).
 * `args` (array, optional): An array of arguments to pass to the script function (only used if `script` is a function).
+* `scope` (optional): Scope.
 
 **Example:**
 
@@ -832,25 +835,6 @@ RunScriptCode.loopy(function(i) {
 }, 0.5, 5, function() {
     printl("All loops completed!")
 })
-```
-
-### `setInterval(script, interval, runDelay, eventName)`
-
-This function schedules the execution of a script recursively at a fixed interval. It is similar to the `setInterval` function in JavaScript and is useful for creating tasks that need to be executed repeatedly at regular intervals.
-
-**Parameters:**
-
-* `script` (string or function): The script to execute. This can be a string containing VScripts code or a function object.
-* `interval` (number): The time interval in seconds between consecutive executions of the script.
-* `runDelay` (number, optional): The initial delay before the first execution of the script (default is 0).
-* `eventName` (string, optional): The name of the event used for scheduling (default is "global").
-
-**Example:**
-
-```js
-RunScriptCode.setInterval(function() {
-    // Do something every second
-}, 1)
 ```
 
 ### `fromStr(str)`
