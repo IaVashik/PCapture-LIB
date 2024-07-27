@@ -27,6 +27,48 @@ macros["GetFromTable"] <- function(table, key, defaultValue = null) {
     return defaultValue
 }
 
+/* 
+ * Gets a list of all keys in a table.
+ *
+ * @param {table} table - The table to retrieve the keys from.
+ * @returns {List} - A list containing all the keys in the table.
+*/ 
+macros["GetKeys"] <- function(table) {
+    local result = List()
+    foreach(key, _ in table) {
+        result.append(key)
+    }
+    return result
+}
+
+/*
+ * Gets a list of all values in a table.
+ *
+ * @param {table} table - The table to retrieve the values from.
+ * @returns {List} - A list containing all the values in the table.
+*/ 
+macros["GetValues"] <- function(table) {
+    local result = List()
+    foreach(value in table) {
+        result.append(value)
+    }
+    return result
+}
+
+/*
+ * Inverts a table, swapping keys and values.
+ *
+ * @param {table} table - The table to invert.
+ * @returns {table} - A new table with keys and values swapped.
+*/ 
+macros["InvertTable"] <- function(table) {
+    local result = {}
+    foreach(key, value in table) {
+        result[value] = key
+    }
+    return result
+}
+
 /*
  * Prints the keys and values of an iterable object to the console. 
  *
@@ -34,7 +76,38 @@ macros["GetFromTable"] <- function(table, key, defaultValue = null) {
 */
 macros["PrintIter"] <- function(iterable) {
     foreach(k, i in iterable) 
-        dev.fprint("{}: {}", k, i)
+        macros.fprint("{}: {}", k, i)
+}
+
+/*
+ * Generates a list of numbers within a specified range.
+ *
+ * @param {number} start - The starting value of the range.
+ * @param {number} end - The ending value of the range.
+ * @param {number} [step=1] - The increment between each value in the range.
+ * @returns {List} - A list of numbers within the specified range.
+*/ 
+macros["Range"] <- function(start, end, step = 1) {
+    local result = List()
+    for (local i = start; i <= end; i += step) {
+        result.append(i)
+    }
+    return result
+}
+
+/*
+ * Generates an iterator that yields numbers within a specified range.
+ *
+ * @param {number} start - The starting value of the range.
+ * @param {number} end - The ending value of the range.
+ * @param {number} [step=1] - The increment between each value in the range.
+ * @yields {number} - The next number in the range.
+*/ 
+macros["RangeIter"] <- function(start, end, step = 1) {
+    for (local i = start; i <= end; i += step) {
+        yield i
+    }
+    return null
 }
 
 /*
@@ -72,10 +145,6 @@ macros["format"] <- function(msg, ...) {
         result += parts[i];
         if (i < args.len()) {
             local txt = args[i]
-            try{
-                txt = txt.tostring()
-            } catch(_) {}
-
             result += txt;
         }
     }

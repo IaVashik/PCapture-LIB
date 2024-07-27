@@ -434,6 +434,66 @@ local healthValue = macros.GetFromTable(settings, "health") // Get the "health" 
 local armorValue = macros.GetFromTable(settings, "ammo", 0) // Get the "ammo" value, defaulting to 0 if not found
 ```
 
+### `macros.GetKeys`
+
+Returns a list of all keys from the provided table.
+
+**Parameters:**
+
+* `table` (object): The table from which to extract the keys.
+
+**Returns:**
+
+* `List`: A list containing all the keys from the provided table.
+
+**Example:**
+
+```js
+local myTable = {a = 1, b = 2, c = 3}
+local keys = macros.GetKeys(myTable)
+printl(keys)  // Outputs: List of keys: ["a", "b", "c"]
+```
+
+### `macros.GetValues`
+
+Returns a list of all values from the provided table.
+
+**Parameters:**
+
+* `table` (object): The table from which to extract the values.
+
+**Returns:**
+
+* `List`: A list containing all the values from the provided table.
+
+**Example:**
+
+```js
+local myTable = {a = 1, b = 2, c = 3}
+local values = macros.GetValues(myTable)
+printl(values)  // Outputs: List of values: [1, 2, 3]
+```
+
+### `InvertTable(table)`
+Inverts a table, swapping keys and values.
+
+**Parameters:**
+
+* `table` (table): The table to invert.
+
+**Returns:**
+
+* (table): A new table with keys and values swapped.
+
+**Example:**
+
+```js
+local myTable = {"a": 1, "b": 2, "c": 3}
+local invertedTable = macros.InvertTable(myTable)
+printl(invertedTable) // Output: {1: "a", 2: "b", 3: "c"}
+```
+
+
 ### `macros.PrintIter(iterable)`
 
 This macro prints the keys and values of an iterable object to the console. It is useful for inspecting the contents of arrays, tables, and other iterable data structures.
@@ -450,6 +510,55 @@ local myTable = {
     age = 42
 }
 macros.PrintIter(myTable) // Output: "name: Bob", "age: 42"
+```
+
+
+### `Range(start, end, step)`
+Generates a list of numbers within a specified range.
+
+**Parameters:**
+
+* `start` (number): The starting value of the range.
+* `end` (number): The ending value of the range.
+* `step` (number, optional): The increment between each value in the range (default is 1).
+
+**Returns:**
+
+* (List): A list of numbers within the specified range.
+
+**Example:**
+
+```js
+local rangeList = macros.Range(1, 5)
+printl(rangeList) // Output: List[1, 2, 3, 4, 5]
+
+local rangeListWithStep = macros.Range(1, 10, 2)
+printl(rangeListWithStep) // Output: List[1, 3, 5, 7, 9]
+```
+
+### `RangeIter(start, end, step)`
+Generates an iterator that yields numbers within a specified range.
+
+**Parameters:**
+
+* `start` (number): The starting value of the range.
+* `end` (number): The ending value of the range.
+* `step` (number, optional): The increment between each value in the range (default is 1).
+
+**Yields:**
+
+* (number): The next number in the range.
+
+**Example:**
+
+```js
+foreach(num in macros.RangeIter(1, 5)) {
+    printl(num) // Output: 1 2 3 4 5
+}
+
+foreach(num in macros.RangeIter(1, 10, 2)) {
+    printl(num) // Output: 1 3 5 7 9
+}
 ```
 
 ### `macros.GetDist(vec1, vec2)`
