@@ -1438,6 +1438,33 @@ myPcapEntity.ConnectOutputEx("OnTrigger", function() {
 })
 ```
 
+### `SetInputHook(inputName, closure)`
+Sets an input hook for a specified input name, attaching a closure to be executed when the input is triggered.
+
+**Parameters:**
+
+* `inputName` (string): The name of the input to hook.
+* `closure` (function): The function to execute when the input is triggered. This function should return `true` if the input should proceed normally, or `false` if the input should be blocked.
+
+**Example:**
+
+```js
+local myEntity = ...
+
+myEntity.SetInputHook("Use", function() {
+    printl("Use input triggered!")
+    return true // Allow the input to proceed
+})
+
+myEntity.SetInputHook("Kill", function() {
+    printl("Kill input blocked!")
+    return false // Block the input
+})
+
+```
+
+In this example, when the `Use` input is triggered for `myEntity`, the specified closure function will be executed, printing "Use input triggered!".
+
 ### `EmitSound(soundName, fireDelay, eventName)`
 Plays a sound from the entity with an optional delay.
 
@@ -1454,7 +1481,7 @@ myPcapEntity.EmitSoundEx("my_sound.wav", 1) // Play the sound after a 1-second d
 ```
 
 ### `EmitSoundEx(soundName, fireDelay, eventName)`
-Plays a sound with an optional delay. This method uses a workaround to play sounds from non-studio models, ensuring that the sound plays for its full duration and can be stopped correctly.
+Plays a sound with an optional delay. This method uses a workaround to play sounds from models, ensuring that the sound plays for its full duration and can be stopped correctly.
 
 **Parameters:**
 

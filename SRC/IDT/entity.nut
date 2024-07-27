@@ -14,6 +14,7 @@
         this.CBaseEntity = entity
         this.EntityScope = {}
         entity.ValidateScriptScope()
+        // entity.GetScriptScope().self <- this // todo whoa!
     }
 
 
@@ -195,6 +196,19 @@
         }
 
         this.addOutput(outputName, "!self", "RunScriptCode", script, delay, fires)
+    }
+
+    /*
+    * Connects a script function to an input of the entity, allowing external code to react to input events.
+    *
+    * @param {string} inputName - The name of the input to connect to.
+    * @param {function} closure - The function to execute when the input is triggered. 
+    *
+    * This function enables the association of custom logic with specific entity inputs, facilitating communication and interaction between entities and external scripts.
+    */
+    function SetInputHook(inputName, closure) {
+        if(this.ValidateScriptScope())
+            this.GetScriptScope()["Input" + inputName] <- closure
     }
 
     function EmitSound(soundName, fireDelay = 0, eventName = "global") {
@@ -809,7 +823,6 @@ function pcapEntity::IsSequenceFinished() return this.CBaseEntity.IsSequenceFini
 function pcapEntity::SpawnEntity() this.CBaseEntity.SpawnEntity()
 
 function pcapEntity::GetAngles() return this.CBaseEntity.GetAngles()
-function pcapEntity::GetScriptScope() return this.CBaseEntity.GetScriptScope()
 function pcapEntity::GetAngularVelocity() return this.CBaseEntity.GetAngularVelocity()
 function pcapEntity::GetBoundingMaxs() return this.CBaseEntity.GetBoundingMaxs()
 function pcapEntity::GetBoundingMins() return this.CBaseEntity.GetBoundingMins()
@@ -827,6 +840,7 @@ function pcapEntity::GetScriptId() return this.CBaseEntity.GetScriptId()
 function pcapEntity::GetUpVector() return this.CBaseEntity.GetUpVector()
 function pcapEntity::GetPartnername() return this.CBaseEntity.GetPartnername()
 function pcapEntity::ValidateScriptScope() return this.CBaseEntity.ValidateScriptScope()
+function pcapEntity::GetScriptScope() return this.CBaseEntity.GetScriptScope()
 function pcapEntity::EyePosition() return this.CBaseEntity.EyePosition()
 function pcapEntity::entindex() return this.CBaseEntity.entindex()
 
