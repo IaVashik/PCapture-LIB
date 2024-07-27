@@ -20,7 +20,7 @@
     Bbox = null,
 }
 
-const MAX_PORTAL_CAST_DEPTH = 7
+const MAX_PORTAL_CAST_DEPTH = 4
 
 IncludeScript("SRC/TracePlus/results")
 IncludeScript("SRC/TracePlus/trace_settings")
