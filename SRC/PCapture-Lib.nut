@@ -28,17 +28,19 @@ if("_lib_version_" in getroottable() && version.find("Debug") == null) {
     return
 }
 
-IncludeScript("SRC/Utils/init.nut")
 IncludeScript("SRC/Math/init.nut")
 IncludeScript("SRC/IDT/init.nut")
+IncludeScript("SRC/Utils/init.nut")
+
+::LibLogger <- LoggerLevels.Info
 
 IncludeScript("SRC/TracePlus/init.nut")
 IncludeScript("SRC/Animations/init.nut")
 IncludeScript("SRC/ActionScheduler/init.nut")
 IncludeScript("SRC/GameEvents/init.nut")
 IncludeScript("SRC/HUD/init.nut")
+// IncludeScript("SRC/_FEATURES/features")
 
-::LibLogger <- LoggerLevels.Info
 
 /*
  * This code initializes "eyes" for all players to enable retrieving their coordinates and viewing directions,
@@ -55,6 +57,13 @@ if(IsMultiplayer())
     ScheduleEvent.Add("global", AttachEyeControlToPlayers, 2)
 if(IsMultiplayer() && "TEAM_SINGLEPLAYER" in getroottable()) 
     ScheduleEvent.AddInterval("global", AttachEyeControlToPlayers, 1, 2)
+
+
+// Global settings for the portals correct working
+SetupLinkedPortals()
+local globalDetector = _CreatePortalDetector("CheckAllIDs", true)
+globalDetector.ConnectOutputEx("OnStartTouchPortal", function() {entLib.FromEntity(activator).SetTraceIgnore(false)})
+globalDetector.ConnectOutputEx("OnEndTouchPortal", function() {entLib.FromEntity(activator).SetTraceIgnore(true)})
 
 
 ::_lib_version_ <- version
