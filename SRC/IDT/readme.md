@@ -490,6 +490,24 @@ foreach(value in myList.iter()) {
 }
 ```
 
+### `rawIter()`
+Similar to `iter`, but returns the node instead of the node's value.
+
+**Returns:**
+
+* (iterator): An iterator for the nodes in the list.
+
+**Example:**
+
+```js
+foreach(node in myList.rawIter()) {
+    printl(node.next_ref.value)
+}
+// Output: 2
+//         3
+//         null
+```
+
 ### `append(value)`
 Appends a value to the end of the list.
 
@@ -600,6 +618,21 @@ Reverses the order of the elements in the list in-place.
 myList.reverse()
 ```
 
+### `unique()`
+Returns a new list with only the unique elements from the original list.
+
+**Returns:**
+
+* (List): The new list with unique elements.
+
+**Example:**
+
+```js
+local myList = [1, 2, 2, 3, 4, 4, 5]
+local uniqueList = myList.unique()
+printl(uniqueList) // Output: [1, 2, 3, 4, 5]
+```
+
 ### `clear()`
 Removes all elements from the list.
 
@@ -697,6 +730,65 @@ Creates a new list by applying a function to each element of this list.
 local squaredValues = myList.map(function(x) {
     return x * x // Square each element
 })
+```
+
+### `filter(condition)`
+Filter the list by a predicate function.
+
+**Parameters:**
+
+* `condition` (Function): The predicate function that takes `index`, `value`, and `newList` as parameters and returns a boolean.
+
+**Returns:**
+
+* (List): The filtered list.
+
+**Example:**
+
+```js
+local myList = List(1, 2, 3, 4, 5)
+local evenList = myList.filter(function(idx, val, newList) {
+    return val % 2 == 0
+})
+printl(evenList) // Output: [2, 4]
+```
+
+### `reduce(func, initial)`
+Applies a function to an accumulator and each element in the list (from left to right) to reduce it to a single value.
+
+**Parameters:**
+
+* `func` (Function): The function to apply to each element and accumulator.
+* `initial` (any): The initial value of the accumulator.
+
+**Returns:**
+
+* (any): The final reduced value.
+
+**Example:**
+
+```js
+local myList = List(1, 2, 3, 4, 5)
+local sum = myList.reduce(function(acc, item) {
+    return acc + item
+}, 0)
+printl(sum) // Output: 15
+```
+
+### `totable()`
+Convert the list to a table.
+
+**Returns:**
+
+* (table): The table representation.
+
+**Example:**
+
+```js
+local myList = List("a", "b", "c")
+local myTable = myList.totable()
+printl("b" in myTable) // Output: true
+printl(myTable) // Output: {"a": null, "b": null, "c": null}
 ```
 
 ### `toarray()`

@@ -80,7 +80,7 @@
 
         current_node.next_ref = next_node;
         next_node.prev_ref = current_node;
-        
+
         this.last_node = next_node;
         this.length++;
     }
@@ -217,6 +217,45 @@
         this.last_node = temp;
     }
 
+    /*
+     * Slice a portion of the list.
+     *
+     * @param {int} startIndex - The start index.
+     * @param {int} endIndex - The end index. (optional)
+     * @returns {List} - The sliced list.
+    */
+    function slice(startIndex, endIndex = null) {
+        if(!endIndex) endIndex = this.len()
+
+        local result = List()
+        foreach(idx, value in this.iter()) {
+            if(idx < startIndex || idx >= endIndex) continue
+            result.append(value)
+        }
+        return result
+    }
+
+    /*
+    * Resize the list.
+    *
+    * @param {int} size - The new size.
+    * @param {any} fill - The fill value for new slots.
+    */
+    function resize(size, fill = null) {
+        local diff = size - this.len()
+        
+        if(diff > 0) {
+            // Add elements
+            for(local i = 0; i < diff; i++)
+                this.append(fill)
+            return
+        }
+
+        // Remove elements
+        for (local i = 0; i < -diff; i++)
+            this.pop();
+    }
+
     function sort() {
         this.first_node.next_ref = _mergeSort(this.first_node.next_ref)
         
@@ -347,8 +386,21 @@
         this.length = 0;
     }
 
-    // More productive than the built-in iterator
+    /*
+     * More productive than the built-in iterator.
+    */
     function iter() {
+        local current = this.first_node.next_ref;
+        while (current) {
+            yield current.value
+            current = current.next_ref;
+        }
+    }
+
+    /*
+     * Similar to `iter`, but returns the node instead of the node's value.
+    */
+    function rawIter() {
         local current = this.first_node.next_ref;
         while (current) {
             yield current
@@ -366,7 +418,7 @@
         if(this.length == 0) return ""
         
         local string = ""
-        foreach(elem in this) {
+        foreach(elem in this.iter()) {
             string += elem + joinstr
         }
 
@@ -380,7 +432,7 @@
     * @returns {List} - The List instance for chaining.
     */
     function apply(func) {
-        foreach(idx, value in this) {
+        foreach(idx, value in this.iter()) {
             this[idx] = func(value)
         }
         return this
@@ -393,6 +445,7 @@
      * @returns {List} - The List instance for chaining.
     */
     function extend(other) {
+        //! TODO BRUH!!!
         foreach(val in other) 
             this.append(val)
         return this
@@ -406,19 +459,37 @@
     */
     function search(match) {
         if(typeof match == "function") {
-            foreach(idx, val in this) {
+            foreach(idx, val in this.iter()) {
                 if(match(val))
                     return idx
             }
         }
         else {
-            foreach(idx, val in this) {
+            foreach(idx, val in this.iter()) {
                 if(val == match)
                     return idx
             }
         }
 
         return null
+    }
+
+    /*
+     * Returns a new list with only the unique elements from the original list.
+     *
+     * @returns {List} - The new list with unique elements.
+    */
+    function unique() {
+        local seen = {}
+        local result = List()
+
+        foreach(value in this.iter()) {
+            if(value in seen) continue
+            seen[value] <- true    
+            result.append(value)
+        }
+
+        return result
     }
 
     /*
@@ -429,10 +500,54 @@
     */
     function map(func) {
         local newList = List()
-        foreach(value in this) {
+        foreach(value in this.iter()) {
             newList.append(func(value))
         }
         return newList
+    }
+
+    /*
+    * Filter the list by a predicate function.
+    *
+    * @param {Function} condition(index, value, newList) - The predicate function. 
+    * @returns {List} - The filtered list.
+    */
+    function filter(condition) {
+        local newList = List()
+        foreach(idx, val in this.iter()) {
+            if(condition(idx, val, newList))
+                newList.append(val)
+        }
+        return newList
+    }
+
+    /*
+     * Applies a function to an accumulator and each element in the list (from left to right)
+     * to reduce it to a single value.
+     *
+     * @param {function} func - The function to apply to each element and accumulator.
+     * @param {any} initial - The initial value of the accumulator.
+     * @returns {any} - The final reduced value.
+    */
+    function reduce(func, initial) {
+        local accumulator = initial
+        foreach(item in this.iter()) {
+            accumulator = func(accumulator, item)
+        }
+        return accumulator
+    }
+
+    /*
+    * Convert the list to a table.
+    *
+    * @returns {table} - The table representation.
+    */
+    function totable() {
+        local table = {}
+        foreach(element in this.iter()) {
+            if(element) table[element] <- null
+        }
+        return table
     }
 
     /*
@@ -442,7 +557,7 @@
     */
     function toarray() {
         local array = arrayLib(array(this.length))
-        foreach(idx, value in this) {
+        foreach(idx, value in this.iter()) {
             array[idx] = value
         }
         return array
@@ -464,7 +579,7 @@
     function _cmp(other) { // lmao, why? :O
         local thisSum = 0;
         local otherSum = 0;
-        foreach (val in this) { thisSum += val.value; }
+        foreach (val in this.iter()) { thisSum += val.value; }
         foreach (val in other) { otherSum += val.value; }
 
         if (thisSum > otherSum) {
