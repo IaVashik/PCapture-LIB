@@ -54,11 +54,11 @@
         return action.acall(actionArgs)
     }
 
-    /**
-    * Processes a generator action.
-    *
-    * @param {Generator} generator - The generator to be processed.
-    * @returns {any} - The result of processing the generator.
+    /*
+     * Processes a generator action.
+     * 
+     * @param {Generator} generator - The generator to be processed.
+     * @returns {any} - The result of processing the generator.
     */
     function processGenerator(generator, eventName) {
         local delay = resume generator

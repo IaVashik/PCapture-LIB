@@ -11,9 +11,9 @@
     tableIsValid = false;
     
     /*
-    * Constructor.
-    *
-    * @param {array} array - The initial array.
+     * Constructor.
+     * 
+     * @param {array} array - The initial array.
     */
     constructor(array = []) {
         if(typeof array == "arrayLib")
@@ -23,10 +23,10 @@
     }
 
     /*
-    * Create a new arrayLib instance from arguments.
-    *
-    * @param {...any} vargv - The values for the array.
-    * @returns {arrayLib} - The new arrayLib instance. 
+     * Create a new arrayLib instance from arguments.
+     * 
+     * @param {...any} vargv - The values for the array.
+     * @returns {arrayLib} - The new arrayLib instance. 
     */
     function new(...) {
         local arr = array(vargc)
@@ -37,10 +37,10 @@
     }
 
     /*
-    * Append a value to the array.
-    *
-    * @param {any} val - The value to append.
-    * @returns {arrayLib} - The arrayLib instance for chaining.
+     * Append a value to the array.
+     * 
+     * @param {any} val - The value to append.
+     * @returns {arrayLib} - The arrayLib instance for chaining.
     */
     function append(val) {
         this._pushToTable(val)
@@ -49,10 +49,10 @@
     }
 
     /*
-    * Apply a function to each element and modify the array in-place.
-    *
-    * @param {Function} func - The function to apply.
-    * @returns {arrayLib} - The arrayLib instance for chaining.
+     * Apply a function to each element and modify the array in-place.
+     * 
+     * @param {Function} func - The function to apply.
+     * @returns {arrayLib} - The arrayLib instance for chaining.
     */
     function apply(func) {
         foreach(idx, value in arr) {
@@ -63,9 +63,9 @@
     }
 
     /*
-    * Clear the array and table.
-    *
-    * @returns {arrayLib} - The arrayLib instance for chaining.
+     * Clear the array and table.
+     * 
+     * @returns {arrayLib} - The arrayLib instance for chaining.
     */
     function clear() {
         this.arr.clear()
@@ -75,10 +75,10 @@
     }
 
     /*
-    * Extend the array with another array.
-    *
-    * @param {array|arrayLib} other - The array to extend from.
-    * @returns {arrayLib} - The arrayLib instance for chaining.
+     * Extend the array with another array.
+     * 
+     * @param {array|arrayLib} other - The array to extend from.
+     * @returns {arrayLib} - The arrayLib instance for chaining.
     */
     function extend(other) {
         if(typeof other == "arrayLib") {
@@ -92,10 +92,10 @@
     }
 
     /*
-    * Filter the array by a predicate function.
-    *
-    * @param {Function} condition(index, value, newArray) - The predicate function. 
-    * @returns {arrayLib} - The filtered array.
+     * Filter the array by a predicate function.
+     * 
+     * @param {Function} condition(index, value, newArray) - The predicate function. 
+     * @returns {arrayLib} - The filtered array.
     */
     function filter(condition) {
         local newArray = arrayLib([])
@@ -107,10 +107,10 @@
     }
 
     /*
-    * Check if the array contains a value.
-    *
-    * @param {any} match - The value to find.
-    * @returns {boolean} - Whether the value is found.
+     * Check if the array contains a value.
+     * 
+     * @param {any} match - The value to find.
+     * @returns {boolean} - Whether the value is found.
     */
     function contains(match) { 
         if(!this.tableIsValid) this.totable()
@@ -118,10 +118,10 @@
     }
 
     /*
-    * Search for a value in the array.
-    *
-    * @param {any|Function} match - The value or predicate to search for.
-    * @returns {int|null} - The index of the match or null.
+     * Search for a value in the array.
+     * 
+     * @param {any|Function} match - The value or predicate to search for.
+     * @returns {int|null} - The index of the match or null.
     */
     function search(match) {
         if(typeof match == "function") {
@@ -141,10 +141,10 @@
     }
 
     /*
-    * Insert a value into the array.
-    *
-    * @param {int} idx - The index to insert at.
-    * @param {any} val - The value to insert.
+     * Insert a value into the array.
+     * 
+     * @param {int} idx - The index to insert at.
+     * @param {any} val - The value to insert.
     */
     function insert(idx, val) {
         this._pushToTable(val)
@@ -152,19 +152,19 @@
     }
 
     /*
-    * Get the array length.
-    *
-    * @returns {int} - The array length.
+     * Get the array length.
+     * 
+     * @returns {int} - The array length.
     */
     function len() {
         return this.arr.len()
     }
 
     /*
-    * Map the array to a new array via a function.
-    *
-    * @param {Function} func - The mapping function.
-    * @returns {arrayLib} - The mapped array.
+     * Map the array to a new array via a function.
+     * 
+     * @param {Function} func - The mapping function.
+     * @returns {arrayLib} - The mapped array.
     */
     function map(func) {
         local newArray = array(this.len())
@@ -175,11 +175,11 @@
     }
 
     /*
-    * Reduce the array to a single value.
-    *
-    * @param {Function} func - The reducer function, which takes the accumulator and current item as arguments.
-    * @param {any} initial - The initial value of the accumulator.
-    * @returns {any} - The reduced value.
+     * Reduce the array to a single value.
+     * 
+     * @param {Function} func - The reducer function, which takes the accumulator and current item as arguments.
+     * @param {any} initial - The initial value of the accumulator.
+     * @returns {any} - The reduced value.
     */
     function reduce(func, initial) {
         local accumulator = initial
@@ -190,9 +190,9 @@
     }
 
     /*
-    * Return a new array with only unique elements.
-    *
-    * @returns {arrayLib} - The new array with unique elements.
+     * Return a new array with only unique elements.
+     * 
+     * @returns {arrayLib} - The new array with unique elements.
     */
     function unique() {
         local seen = {}
@@ -208,9 +208,9 @@
     }
 
     /*
-    * Pop a value off the end of the array.
-    *
-    * @returns {any} - The popped value.
+     * Pop a value off the end of the array.
+     * 
+     * @returns {any} - The popped value.
     */
     function pop() {
         local pop = arr.pop()
@@ -219,18 +219,18 @@
     }
 
     /*
-    * Append a value to the array.
-    *
-    * @param {any} val - The value to append.
+     * Append a value to the array.
+     * 
+     * @param {any} val - The value to append.
     */
     function push(val) {
         this.append(val)
     }
 
     /*
-    * Remove an element by index.
-    *
-    * @param {int} idx - The index to remove.
+     * Remove an element by index.
+     * 
+     * @param {int} idx - The index to remove.
     */
     function remove(idx) {
         this._deleteFromTable(arr[idx])
@@ -238,10 +238,10 @@
     }
 
     /*
-    * Resize the array.
-    *
-    * @param {int} size - The new size.
-    * @param {any} fill - The fill value for new slots.
+     * Resize the array.
+     * 
+     * @param {int} size - The new size.
+     * @param {any} fill - The fill value for new slots.
     */
     function resize(size, fill = null) {
         arr.resize(size, fill);
@@ -249,9 +249,9 @@
     }
 
     /*
-    * Reverse the array in-place.
-    *
-    * @returns {arrayLib} - The reversed array.
+     * Reverse the array in-place.
+     * 
+     * @returns {arrayLib} - The reversed array.
     */
     function reverse() {
         arr.reverse();
@@ -259,21 +259,21 @@
     }
 
     /*
-    * Slice a portion of the array.
-    *
-    * @param {int} startIndex - The start index.
-    * @param {int} endIndex - The end index. (optional)
-    * @returns {arrayLib} - The sliced array.
+     * Slice a portion of the array.
+     * 
+     * @param {int} startIndex - The start index.
+     * @param {int} endIndex - The end index. (optional)
+     * @returns {arrayLib} - The sliced array.
     */
     function slice(startIndex, endIndex = null) {
         return arrayLib(arr.slice(startIndex, endIndex || this.len()))
     }
 
     /*
-    * Sort the array.
-    *
-    * @param {Function} func - Optional compare function.
-    * @returns {arrayLib} - The sorted array.
+     * Sort the array.
+     * 
+     * @param {Function} func - Optional compare function.
+     * @returns {arrayLib} - The sorted array.
     */
     function sort(func = null) {
         func ? arr.sort(func) : arr.sort()
@@ -281,19 +281,19 @@
     }
 
     /*
-    * Get the last element.
-    *
-    * @returns {any} - The last element.
+     * Get the last element.
+     * 
+     * @returns {any} - The last element.
     */
     function top() {
         return arr.top();
     }
 
     /*
-    * Join the array into a string.
-    *
-    * @param {string} joinstr - The separator string.
-    * @returns {string} - The joined string.
+     * Join the array into a string.
+     * 
+     * @param {string} joinstr - The separator string.
+     * @returns {string} - The joined string.
     */
     function join(joinstr = "") {
         if(this.len() == 0) return ""
@@ -306,11 +306,11 @@
     }
 
     /*
-    * Retrieve the element at the specified index in the array.
-    *
-    * @param {integer} idx - The index of the element to retrieve.
-    * @param {any} defaultVal - Optional default value to return if the index is out of bounds. Defaults to null.
-    * @returns {any} - The element at the specified index or the default value if the index is out of bounds.
+     * Retrieve the element at the specified index in the array.
+     * 
+     * @param {integer} idx - The index of the element to retrieve.
+     * @param {any} defaultVal - Optional default value to return if the index is out of bounds. Defaults to null.
+     * @returns {any} - The element at the specified index or the default value if the index is out of bounds.
     */
     function get(idx, defaultVal = null) {
         if(this.len() > idx)
@@ -319,10 +319,10 @@
     }
 
     /*
-    * Convert the array to a table.
-    *
-    * @param {boolean} reacreate - Whether to recreate the table.
-    * @returns {table} - The table representation.
+     * Convert the array to a table.
+     * 
+     * @param {boolean} reacreate - Whether to recreate the table.
+     * @returns {table} - The table representation.
     */
     function totable(reacreate = false) {
         if(this.table.len() > 0 && !reacreate) return this.table
@@ -344,9 +344,9 @@
     }
 
     /*
-    * Delete a value from the internal table.
-    *
-    * @param {any} val - The value to delete.
+     * Delete a value from the internal table.
+     * 
+     * @param {any} val - The value to delete.
     */
     function _deleteFromTable(val) {
         if(val in this.table)
@@ -354,9 +354,9 @@
     }
 
     /*
-    * Add a value to the internal table.
-    *
-    * @param {any} val - The value to add.
+     * Add a value to the internal table.
+     * 
+     * @param {any} val - The value to add.
     */
     function _pushToTable(val) {
         if(this.table.len() != 0)
@@ -369,32 +369,32 @@
     }
 
     /*
-    * Convert the array to a string.
-    *
-    * @returns {string} - The string representation.
+     * Convert the array to a string.
+     * 
+     * @returns {string} - The string representation.
     */
     function _tostring() return format("Array: [%s]", this.join(", "))
     
     /*
-    * Get the type name.
-    *
-    * @returns {"arrayLib"}
+     * Get the type name.
+     * 
+     * @returns {"arrayLib"}
     */
     function _typeof () return "arrayLib";
     
     /*
-    * Get an element by index.
-    *
-    * @param {int} idx - The index.
-    * @returns {any} - The element.
+     * Get an element by index.
+     * 
+     * @param {int} idx - The index.
+     * @returns {any} - The element.
     */
     function _get(idx) return arr[idx];
     
     /*
-    * Set an element by index.
-    *
-    * @param {int} idx - The index.
-    * @param {any} val - The new value.
+     * Set an element by index.
+     * 
+     * @param {int} idx - The index.
+     * @param {any} val - The new value.
     */
     function _set(idx, val) return arr[idx] = val;
 

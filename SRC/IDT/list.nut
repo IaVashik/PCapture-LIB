@@ -236,10 +236,10 @@
     }
 
     /*
-    * Resize the list.
-    *
-    * @param {int} size - The new size.
-    * @param {any} fill - The fill value for new slots.
+     * Resize the list.
+     * 
+     * @param {int} size - The new size.
+     * @param {any} fill - The fill value for new slots.
     */
     function resize(size, fill = null) {
         local diff = size - this.len()
@@ -426,10 +426,10 @@
     }
 
     /*
-    * Apply a function to each element and modify the list in-place.
-    *
-    * @param {Function} func - The function to apply.
-    * @returns {List} - The List instance for chaining.
+     * Apply a function to each element and modify the list in-place.
+     * 
+     * @param {Function} func - The function to apply.
+     * @returns {List} - The List instance for chaining.
     */
     function apply(func) {
         foreach(idx, value in this.iter()) {
@@ -507,10 +507,10 @@
     }
 
     /*
-    * Filter the list by a predicate function.
-    *
-    * @param {Function} condition(index, value, newList) - The predicate function. 
-    * @returns {List} - The filtered list.
+     * Filter the list by a predicate function.
+     * 
+     * @param {Function} condition(index, value, newList) - The predicate function. 
+     * @returns {List} - The filtered list.
     */
     function filter(condition) {
         local newList = List()
@@ -538,9 +538,9 @@
     }
 
     /*
-    * Convert the list to a table.
-    *
-    * @returns {table} - The table representation.
+     * Convert the list to a table.
+     * 
+     * @returns {table} - The table representation.
     */
     function totable() {
         local table = {}

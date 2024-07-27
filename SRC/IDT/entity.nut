@@ -64,7 +64,7 @@
      *
      * This method utilizes an env_entity_dissolver entity to create the dissolve effect. If the entity doesn't have a targetname, 
      * a unique targetname is assigned to it before initiating the dissolve process. 
-     */
+    */
     function Dissolve(fireDelay = 0, eventName = "global") {
         if(fireDelay != 0)
             return ScheduleEvent.Add(eventName, this.Dissolve, fireDelay, null, this)
@@ -199,12 +199,12 @@
     }
 
     /*
-    * Connects a script function to an input of the entity, allowing external code to react to input events.
-    *
-    * @param {string} inputName - The name of the input to connect to.
-    * @param {function} closure - The function to execute when the input is triggered. 
-    *
-    * This function enables the association of custom logic with specific entity inputs, facilitating communication and interaction between entities and external scripts.
+     * Connects a script function to an input of the entity, allowing external code to react to input events.
+     * 
+     * @param {string} inputName - The name of the input to connect to.
+     * @param {function} closure - The function to execute when the input is triggered. 
+     * 
+     * This function enables the association of custom logic with specific entity inputs, facilitating communication and interaction between entities and external scripts.
     */
     function SetInputHook(inputName, closure) {
         if(this.ValidateScriptScope())
