@@ -125,5 +125,8 @@ if("GetPlayerEx" in getroottable()) {
 
         player.SetUserData("Eye", eyePointEntity)
         AllPlayers.append(player)
+
+        // New portal pair:
+        InitPortalPair(AllPlayers.len())
     }
 }

@@ -379,11 +379,6 @@ if (traceResult.DidHit()) {
 }
 ```
 
-
-### `FindPartnersForPortals()` (init-func)
-
-This function finds and sets partner portals for linked portal doors and prop portals. It iterates through all entities of class "linked_portal_door" and "prop_portal" and attempts to find their corresponding partner portals. For linked portal doors, it retrieves the partner instance using `GetPartnerInstance()` and stores it as user data in both portals. For prop portals, it assumes the partner portal is the other prop_portal entity in the map and stores it as user data.
-
 ## [TracePlus/bbox_analyzer.nut](bbox_analyzer.nut)
 
 This file defines the `TraceLineAnalyzer` class for precise trace line analysis.

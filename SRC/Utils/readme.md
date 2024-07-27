@@ -137,7 +137,7 @@ if (!someEntity.IsValid()) {
     dev.error("Entity is invalid! Entity ID: {}", someEntity.GetID())
 }
 ```
-m
+
 ## [Utils/file.nut](file.nut)
 
 This file defines the `File` class for reading from and writing to files. Due to the way file operations are handled in VScripts, there is a specific requirement when reading data from a file: **a one-tick delay is needed after calling `updateInfo()` before accessing the file contents.** This ensures that the file has been properly read and the data is available in the cache array.
@@ -338,6 +338,84 @@ This function attaches eye control entities to all players in the game. It creat
 ```js
 AttachEyeControlToPlayers() // Attach eye control entities to all players
 ```
+
+## [Utils/portals.nut](portals.nut)
+
+### `::InitPortalPair(id)`
+Initializes a portal pair for portal casting (TracePlus Portal Casting). 
+
+By default, this function automatically initializes pair IDs in multiplayer. However, if you are using portal frames with unique pair IDs or custom logic that adds multiple different pair IDs to the game (such as multiportals), you must manually initialize `InitPortalPair` for proper operation with TracePlus Portal Casting.
+
+**Parameters:**
+
+* `id` (number): The ID of the portal pair.
+
+**Example:**
+
+```js
+// Initialize a portal pair with ID 1
+InitPortalPair(1)
+// Initialize a portal pair with ID 2
+InitPortalPair(4)
+```
+
+### `::IsBluePortal(ent)`
+Checks if the given entity is a blue portal.
+
+**Parameters:**
+
+* `ent` (pcapEntity): The entity to check.
+
+**Returns:**
+
+* (boolean): `True` if the entity is a blue portal, `False` is a orange portal.
+
+**Example:**
+
+```js
+local portal = entLib.FindByClassname("prop_portal")
+if (IsBluePortal(portal)) {
+    printl("This is a blue portal")
+} else {
+    printl("This is a orange portal")
+}
+```
+
+### `::FindPartnerForPropPortal(portal)`
+Finds the partner portal for a given `prop_portal` entity.
+
+**Parameters:**
+
+* `portal` (pcapEntity): The `prop_portal` entity to find the partner for.
+
+**Returns:**
+
+* (pcapEntity|null): The partner portal entity, or `null` if no partner is found.
+
+### `::_CreatePortalDetector(extraKey, extraValue)`
+Creates a `func_portal_detector` entity with specified key-value pairs and settings for portal detection.
+
+**This function is not part of the public API.**
+
+**Parameters:**
+
+* `extraKey` (string): The key for the additional setting.
+* `extraValue` (any): The value for the additional setting.
+
+**Returns:**
+
+* (entity): The created `func_portal_detector` entity.
+
+### `::SetupLinkedPortals()`
+Initializes linked portal doors for portal tracing.
+
+**This function is not part of the public API and called automatically at initialization.**
+
+This function iterates through all entities of class `linked_portal_door` and performs the following actions:
+1. Finds the partner portal entity using `GetPartnerInstance()`.
+2. Extracts bounding box dimensions from the portal's model name (assuming a specific naming convention).
+3. Rotates the bounding box dimensions based on the portal's angles.
+4. Sets the bounding box of the portal using the calculated dimensions.
 
 ## [Utils/macros.nut](macros.nut)
 

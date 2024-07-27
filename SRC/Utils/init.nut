@@ -11,6 +11,7 @@
 IncludeScript("SRC/Utils/debug")
 IncludeScript("SRC/Utils/file")
 IncludeScript("SRC/Utils/improvements")
+IncludeScript("SRC/Utils/portals")
 IncludeScript("SRC/Utils/macros")
 IncludeScript("SRC/Utils/scripts")
 IncludeScript("SRC/Utils/const")
