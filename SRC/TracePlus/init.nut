@@ -30,5 +30,6 @@ IncludeScript("PCapture-LIB/SRC/TracePlus/cheap_trace")
 IncludeScript("PCapture-LIB/SRC/TracePlus/bboxcast")
 IncludeScript("PCapture-LIB/SRC/TracePlus/portal_casting")
 
+if("IsVSquirrel3" in getroottable()) return 
 IncludeScript("PCapture-LIB/SRC/TracePlus/bbox_analyzer")
 IncludeScript("PCapture-LIB/SRC/TracePlus/calculate_normal")

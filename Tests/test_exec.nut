@@ -1,4 +1,4 @@
-IncludeScript("SRC/PCapture-Lib")
+IncludeScript("PCapture-LIB/SRC/PCapture-Lib")
 
 ::LibLogger <- LoggerLevels.Off
 

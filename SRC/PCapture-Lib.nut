@@ -28,6 +28,7 @@ if("_lib_version_" in getroottable() && version.find("Debug") == null) {
     return
 }
 
+IncludeScript("PCapture-LIB/SRC/_FEATURES/features_prerun")
 IncludeScript("PCapture-LIB/SRC/Math/init.nut")
 IncludeScript("PCapture-LIB/SRC/IDT/init.nut")
 IncludeScript("PCapture-LIB/SRC/Utils/init.nut")
@@ -40,7 +41,7 @@ IncludeScript("PCapture-LIB/SRC/Animations/init.nut")
 IncludeScript("PCapture-LIB/SRC/ActionScheduler/init.nut")
 IncludeScript("PCapture-LIB/SRC/ScriptEvents/init.nut")
 IncludeScript("PCapture-LIB/SRC/HUD/init.nut")
-// IncludeScript("PCapture-LIB/SRC/_FEATURES/features")
+IncludeScript("PCapture-LIB/SRC/_FEATURES/features_postrun")
 
 
 /*

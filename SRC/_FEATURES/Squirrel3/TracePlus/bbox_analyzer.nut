@@ -4,7 +4,7 @@
  * 
  * This class provides methods for tracing lines with more precision and considering entity priorities and ignore settings. 
 */
- ::TraceLineAnalyzer <- class {
+::TraceLineAnalyzer <- class {
     settings = null;
     hitpos = null;
     hitent = null;
@@ -163,6 +163,8 @@ function TraceLineAnalyzer::shouldHitEntity(ent, ignoreEntities, note) { // todo
     return true
 }
 
+// VSq3 logic
+
 // Check if an entity should be ignored based on the provided settings
 /*
 * Check if entity is a priority class.
@@ -173,7 +175,7 @@ function TraceLineAnalyzer::shouldHitEntity(ent, ignoreEntities, note) { // todo
 function TraceLineAnalyzer::_isPriorityEntity(entityClass) {
     if(settings.GetPriorityClasses().len() == 0) 
         return false
-    return settings.GetPriorityClasses().search(function(val):(entityClass) {
+    return settings.GetPriorityClasses().search(function(val) {
         return entityClass.find(val) >= 0
     }) != null
 }
@@ -189,7 +191,7 @@ function TraceLineAnalyzer::_isIgnoredEntity(entityClass) {
         return false
     if(settings.GetIgnoreClasses().contains("*"))
         return true
-    return settings.GetIgnoreClasses().search(function(val):(entityClass) {
+    return settings.GetIgnoreClasses().search(function(val) {
         return entityClass.find(val) >= 0
     }) != null
 }
@@ -203,7 +205,7 @@ function TraceLineAnalyzer::_isIgnoredEntity(entityClass) {
 function TraceLineAnalyzer::_isIgnoredModels(entityModel) {
     if(settings.GetIgnoredModels().len() == 0 || entityModel == "") 
         return false
-    return settings.GetIgnoredModels().search(function(val):(entityModel) {
+    return settings.GetIgnoredModels().search(function(val) {
         return entityModel.find(val) >= 0
     }) != null
 }
