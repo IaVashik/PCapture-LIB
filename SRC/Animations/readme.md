@@ -8,24 +8,20 @@ This file initializes the `Animations` module, defines the `AnimEvent` class for
 
 ### `AnimEvent`
 
-The `AnimEvent` class is used to encapsulate information about an animation event. It stores details such as the event name, delay, global delay, scope, outputs (functions to call when the animation finishes), the entities involved in the animation, and an optional lerp function for customizing the animation curve. 
+The `AnimEvent` class is used to encapsulate information about an animation event. It stores details such as the event name, delay, global delay, frame interval, maximum frames, scope, outputs (functions to call when the animation finishes), the entities involved in the animation, and an optional lerp function for customizing the animation curve. 
 
-#### `AnimEvent(settings, entities, time)`
+#### `AnimEvent(name, settings, entities, time = 0)`
 
 **Constructor**
 
-Creates a new `AnimEvent` object with the specified settings, entities, and animation duration. 
+Creates a new `AnimEvent` object with the specified name, settings, entities, and animation duration. 
 
 **Parameters:**
 
-* `settings` (table): A table containing optional settings for the animation event:
-    * `eventName` (string, optional): The name of the event (default is a unique string starting with "anim").
-    * `globalDelay` (number, optional): A global delay in seconds before the animation starts (default is 0).
-    * `outputs` (string or function, optional): A script or function to execute when the animation finishes.
-    * `scope` (object, optional): The scope in which to execute the action.
-    * `lerpFunc` (function, optional): A custom lerp function to use for interpolation. If not provided, the default lerp function for the relevant animation type is used.
-* `entities` (array): An array of entities to animate.
-* `time` (number): The duration of the animation in seconds.
+* `name` (string): The name of the animation type.
+* `settings` (table): A table containing optional settings for the animation event. See the **Animation Settings Table** section below for details.
+* `entities` (array, CBaseEntity, or pcapEntity): An array of entities, a single entity, or a pcapEntity to animate.
+* `time` (number, optional): The duration of the animation in seconds (default is 0).
 
 **Example:**
 
@@ -38,8 +34,9 @@ local animSettings = {
     outputs = function() {
         printl("Animation completed!")
     },
-    note = "Custom animation for fading entities",
-    lerpFunc = math.lerp.InOutElastic
+    lerpFunc = math.lerp.InOutElastic,
+    frameInterval = 0.1, // Custom frame interval
+    maxFrames = 30 // Custom maximum frames
 }
 
 local entitiesToAnimate = [
@@ -48,29 +45,42 @@ local entitiesToAnimate = [
 ]
 
 // Create the AnimEvent object 
-local animEvent = AnimEvent(animSettings, entitiesToAnimate, 2)
+local animEvent = AnimEvent("my_animation_type", animSettings, entitiesToAnimate, 2)
 
 // ... (Use animEvent with animate functions)
 ```
 
+### Animation Settings Table
+
+The `settings` table in the `AnimEvent` constructor can contain the following optional properties:
+
+* `eventName` (string, optional): The name of the event (default is a unique string based on the animation name).
+* `globalDelay` (number, optional): A global delay in seconds before the animation starts (default is 0).
+* `outputs` (string or function, optional): A script or function to execute when the animation finishes.
+* `scope` (object, optional): The scope in which to execute the action (default is the `AnimEvent` object itself).
+* `lerp` (function, optional): A custom lerp function to use for interpolation. If not provided, a linear interpolation function is used.
+* `note` (string, optional): A note or description for the animation event.
+* `frameInterval` (number, optional): The time interval between frames in seconds (default is the engine's frame time).
+* `fps` (number, optional): The desired frames per second for the animation, used to calculate `frameInterval` if it's not explicitly set (default is 60, maximum 60).
 
 
-### `applyAnimation(animSetting, valueCalculator, propertySetter, transitionFrames)`
+### `animate.applyAnimation(animInfo, valueCalculator, propertySetter, vars = null, transitionFrames = 0)`
 This function applies an animation over a specified duration, calculating and setting new values for a property at each frame. It is used internally by the various animation functions to handle the animation process.
 
 **Parameters:**
 
-* `animSetting` (AnimEvent): The `AnimEvent` object containing the animation settings and entities.
-* `valueCalculator` (function): A function that calculates the new value for the property at each frame. The function should take two arguments: current step, all steps
-* `propertySetter` (function): A function that sets the new value for the property on each entity. The function should take two arguments: entity, calculatedValue
-* `transitionFrames` (number): The total number of frames in the animation.
+* `animInfo` (AnimEvent): The `AnimEvent` object containing the animation settings and entities.
+* `valueCalculator` (function): A function that calculates the new value for the property at each frame. The function should take three arguments: current step, total steps, and optional variables.
+* `propertySetter` (function): A function that sets the new value for the property on each entity. The function should take two arguments: the entity and the calculated value.
+* `vars` (any, optional): Optional variables to pass to the `valueCalculator` function. Can be used for your custom animations
+* `transitionFrames` (number, optional): The total number of frames in the animation. If 0, it's calculated based on `animInfo.delay` and `animInfo.frameInterval` (default is 0).
 
 
 **Example:**
 
 ```js
-// ... (assuming you have animSetting, valueCalculator, and propertySetter defined)
-animate.applyAnimation(animSetting, valueCalculator, propertySetter) // Apply the animation
+// ... (assuming you have animInfo, valueCalculator, and propertySetter defined)
+animate.applyAnimation(animInfo, valueCalculator, propertySetter) // Apply the animation
 ```
 
 ## [Animations/alpha.nut](alpha.nut)
@@ -87,7 +97,7 @@ This function creates an animation that smoothly transitions the alpha (opacity)
 * `startOpacity` (number): The starting opacity value (0-255).
 * `endOpacity` (number): The ending opacity value (0-255).
 * `time` (number): The duration of the animation in seconds.
-* `animSetting` (table, optional): A table containing additional animation settings (see `AnimEvent` constructor for details).
+* `animSetting` (table, optional): A table containing additional animation settings (see **Animation Settings Table** in the `AnimEvent` constructor section for details).
 
 **Returns:**
 
