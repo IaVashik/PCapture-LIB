@@ -49,14 +49,18 @@
      * @returns {TraceSettings} - A new TraceSettings object.
     */
     function new(settingsTable = {}) {
+        printl(settingsTable)
         // Get the ignoreClasses setting from the settings table or use the default. 
-        local ignoreClasses = arrayLib(
-            macros.GetFromTable(
-                settingsTable, 
-                "ignoreClasses", 
-                clone(TracePlus.Settings.ignoreClasses)
-            )
+        local z = macros.GetFromTable(
+            settingsTable, 
+            "ignoreClasses", 
+            clone(TracePlus.Settings.ignoreClasses)
         )
+
+        printl(z)
+
+        local ignoreClasses = arrayLib(z)
+
         // Get the priorityClasses setting from the settings table or use the default. 
         local priorityClasses = arrayLib(macros.GetFromTable(settingsTable, "priorityClasses", clone(TracePlus.Settings.priorityClasses)))
         // Get the ignoredModels setting from the settings table or use the default. 
