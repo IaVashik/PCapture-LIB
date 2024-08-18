@@ -34,7 +34,7 @@
  * This function is not part of the public API.
  * 
  * This function iterates through all entities of class "linked_portal_door" and performs the following actions:
- * 1. Finds the partner portal entity using `GetPartnerInstance()`. 
+ * 1. Check if this entity has been processed before. 
  * 2. Extracts bounding box dimensions from the portal's model name (assuming a specific naming convention).
  * 3. Rotates the bounding box dimensions based on the portal's angles. 
  * 4. Sets the bounding box of the portal using the calculated dimensions. 
@@ -44,10 +44,13 @@
 ::SetupLinkedPortals <- function() {
     // Iterate through all linked_portal_door entities.  
     for(local portal; portal = entLib.FindByClassname("linked_portal_door", portal);) {
-        // Skip if the portal already has a partner set. 
-        if(portal.GetPartnerInstance()) 
+        // Skip if the portal already processed
+        if(portal.GetUserData("processed"))
             continue
     
+        portal.SetInputHook("Open", function() {entLib.FromEntity(self).SetTraceIgnore(false)})
+        portal.SetInputHook("Close", function() {entLib.FromEntity(self).SetTraceIgnore(true)})
+
         local partner = portal.GetPartnerInstance()
     
         // Skip if the portal model name is empty (no bounding box information available).  
@@ -61,6 +64,7 @@
         wpBBox = math.vector.abs(wpBBox) 
         // Set the bounding box of the portal using the calculated dimensions.  
         portal.SetBBox(wpBBox * -1, wpBBox)
+        portal.SetUserData("processed", true)
     }
 }
 

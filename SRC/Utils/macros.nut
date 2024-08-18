@@ -117,6 +117,8 @@ macros["RangeIter"] <- function(start, end, step = 1) {
  * @param {any} vargs... - Additional arguments to substitute into the placeholders.
 */
 macros["format"] <- function(msg, ...) {
+    if(msg.len() == 1) return msg
+    
     // If you are sure of what you are doing, you don't have to use it
     local subst_count = 0;
     for (local i = 0; i < msg.len() - 1; i++) {

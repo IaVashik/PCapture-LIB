@@ -412,7 +412,7 @@ Initializes linked portal doors for portal tracing.
 **This function is not part of the public API and called automatically at initialization.**
 
 This function iterates through all entities of class `linked_portal_door` and performs the following actions:
-1. Finds the partner portal entity using `GetPartnerInstance()`.
+1. Check if this entity has been processed before.
 2. Extracts bounding box dimensions from the portal's model name (assuming a specific naming convention).
 3. **Important:** For proper tracing, ensure that the `model` keyvalue of `linked_portal_door` contains `weight height`, as these values are used to calculate the bounding box.
 4. Rotates the bounding box dimensions based on the portal's angles.
