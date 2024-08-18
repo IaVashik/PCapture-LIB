@@ -1473,8 +1473,9 @@ myEntity.SetInputHook("Kill", function() {
 
 In this example, when the `Use` input is triggered for `myEntity`, the specified closure function will be executed, printing "Use input triggered!".
 
-### `EmitSound(soundName, fireDelay, eventName)`
-Plays a sound from the entity with an optional delay.
+
+### `EmitSound(soundName, fireDelay = 0, eventName = "global")`
+This function provides more control over sound playback compared to EmitSound. It allows you to adjust the volume, loop sounds that are not inherently loopable, and stop the sound playback using StopSoundEx.
 
 **Parameters:**
 
@@ -1485,26 +1486,38 @@ Plays a sound from the entity with an optional delay.
 **Example:**
 
 ```js
-myPcapEntity.EmitSoundEx("my_sound.wav", 1) // Play the sound after a 1-second delay
+myEntity.EmitSound("ambient/machines/thumper_hit.wav") // Play the sound immediately
+myEntity.EmitSound("ambient/machines/thumper_hit.wav", 2) // Play the sound after 2 seconds
 ```
 
-### `EmitSoundEx(soundName, fireDelay, eventName)`
-Plays a sound with an optional delay. This method uses a workaround to play sounds from models, ensuring that the sound plays for its full duration and can be stopped correctly.
+
+### `EmitSoundEx(soundName, volume = 10, looped = false, fireDelay = 0, eventName = "global")`
+
+Plays a sound on the entity with enhanced control over volume and looping. This method is an improved version of `EmitSound` and offers more precise control over sound playback. Unlike the standard `EmitSound`, this method allows you to adjust the volume and force looping for any sound, even those not inherently designed to loop.
+
+**How it Works:**
+
+This method achieves its functionality by creating a hidden `prop_physics` entity with the `ALWAYS_PRECACHED_MODEL` model. This entity is then attached to the calling entity and used as a dedicated sound emitter. The volume is controlled by manipulating the Z-coordinate of the hidden entity, effectively simulating distance-based attenuation. Looping is achieved by scheduling repeated calls to `EmitSound` on the hidden entity. This approach allows for dynamic volume control and looping of any sound, regardless of its original properties.
 
 **Parameters:**
 
 * `soundName` (string): The name of the sound to play.
+* `volume` (number, optional): The volume of the sound (0-10, default is 10).
+* `looped` (boolean, optional): Whether the sound should loop (default is false).
 * `fireDelay` (number, optional): The delay in seconds before playing the sound (default is 0).
 * `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
 ```js
-myPcapEntity.EmitSoundEx("my_sound.wav", 1) // Play the sound after a 1-second delay
+myEntity.EmitSoundEx("ambient/machines/thumper_hit.wav", 5, true) // Play the sound at half volume and loop it
+myEntity.EmitSoundEx("ambient/machines/thumper_hit.wav", 10, false, 2) // Play the sound at full volume after 2 seconds
 ```
 
-### `StopSoundEx(soundName, fireDelay, eventName)`
-Stops a sound played using `EmitSoundEx`.
+
+### `StopSoundEx(soundName, fireDelay = 0, eventName = "global")`
+
+Stops a sound previously started with `EmitSoundEx`. 
 
 **Parameters:**
 
@@ -1515,7 +1528,7 @@ Stops a sound played using `EmitSoundEx`.
 **Example:**
 
 ```js
-myPcapEntity.StopSoundEx("my_sound.wav", 0.5) // Stop the sound after 0.5 seconds
+myEntity.StopSoundEx("ambient/machines/thumper_hit.wav") // Stop the specified sound
 ```
 
 ### `SetName(name, fireDelay, eventName)`

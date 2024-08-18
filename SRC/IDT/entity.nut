@@ -40,6 +40,7 @@
         if(fireDelay != 0)
             return ScheduleEvent.Add(eventName, this.Destroy, fireDelay, null, this)
         
+        if(!this.CBaseEntity || !this.CBaseEntity.IsValid()) return
         this.CBaseEntity.Destroy()
         this.CBaseEntity = null
     }
@@ -160,7 +161,7 @@
     }
 
 
-        /*
+    /*
      * Connects an output of the entity to a target entity and input, allowing for parameter overrides, delays, and limited trigger counts.
      *
      * @param {string} outputName - The name of the output to connect.
@@ -211,6 +212,16 @@
             this.GetScriptScope()["Input" + inputName] <- closure
     }
 
+    /*
+     * Plays a sound on the entity.
+     *
+     * @param {string} soundName - The name of the sound to play.
+     * @param {number} fireDelay - An optional delay in seconds before playing the sound. (default: 0)
+     * @param {string} eventName - The name of the event to schedule the sound playback under. (default: "global")
+     *
+     * This function is an enhanced version of the built-in EmitSound method, allowing for delayed sound playback 
+     * and cancellation using ScheduleEvent.Cancel.
+    */
     function EmitSound(soundName, fireDelay = 0, eventName = "global") {
         if(fireDelay != 0)
             return ScheduleEvent.Add(eventName, this.EmitSound, fireDelay, [soundName], this)
@@ -218,29 +229,51 @@
         this.CBaseEntity.EmitSound(soundName)
     }
 
-    /* 
-     * Emits a sound with optional delay. // todo!
+    /*
+     * Plays a sound on the entity with advanced options, including volume control and looping.
      *
      * @param {string} soundName - The name of the sound to play.
-     * @param {number} fireDelay - Delay in seconds before playing the sound. (optional)
-     * @param {string} eventName - The name of the event used for scheduling. (optional)
+     * @param {number} volume - The volume of the sound (0-10). (default: 10)
+     * @param {boolean} looped - Whether the sound should loop. (default: false)
+     * @param {number} fireDelay - An optional delay in seconds before playing the sound. (default: 0)
+     * @param {string} eventName - The name of the event to schedule the sound playback under. (default: "global")
+     *
+     * This function provides more control over sound playback compared to EmitSound. It allows you to adjust the volume,
+     * loop sounds that are not inherently loopable, and stop the sound playback using StopSoundEx.
     */
-    function EmitSoundEx(soundName, fireDelay = 0, eventName = "global") {
+     function EmitSoundEx(soundName, volume = 10, looped = false, fireDelay = 0, eventName = "global") { // add volume and loop flag
         if(fireDelay != 0)
             return ScheduleEvent.Add(eventName, this.EmitSoundEx, fireDelay, [soundName], this)
         
+        local soundEnt = this.GetUserData(soundName)
+        if(soundEnt) // for updating volume if sound active
+            return soundEnt.SetAbsOrigin(this.GetOrigin() + Vector(0, 0, 3000 - volume * 300))
+        
         // SO FKING CURSED WORKAROUND EVER!
-        local soundEnt = entLib.CreateProp("prop_physics", Vector(), "cable/rope.vmt") //! Setting CBaseAnimating to non-studio model cable/rope.vmt  (type:2)
-        soundEnt.SetOrigin(this.GetOrigin())
+        local soundEnt = entLib.CreateProp("prop_physics", Vector(), ALWAYS_PRECACHED_MODEL)
+        soundEnt.SetAbsOrigin(this.GetOrigin() + Vector(0, 0, 3000 - volume * 3000))
         soundEnt.SetParent(this)
+        soundEnt.SetKeyValue("rendermode", 5)
+        soundEnt.SetAlpha(0)
 
         local soundTime = macros.GetSoundDuration(soundName)
-        ScheduleEvent.Add(soundEnt, soundEnt.Destroy, soundTime, null, soundEnt)
         this.SetUserData(soundName, soundEnt)
-
         soundEnt.EmitSound(soundName)
+        
+        if(!looped) return soundEnt.Destroy(soundTime)
+        ScheduleEvent.AddInterval(soundEnt, soundEnt.EmitSound, soundTime, soundTime, [soundName], soundEnt) // :>
     }
 
+    /*
+     * Stops a sound played using EmitSoundEx.
+     *
+     * @param {string} soundName - The name of the sound to stop.
+     * @param {number} fireDelay - An optional delay in seconds before stopping the sound. (default: 0)
+     * @param {string} eventName - The name of the event to schedule the sound stop under. (default: "global")
+     *
+     * This function allows you to interrupt sounds that were started using EmitSoundEx. It ensures the sound is stopped
+     * and the associated entity is cleaned up.
+    */
     function StopSoundEx(soundName, fireDelay = 0, eventName = "global") {
         if(fireDelay != 0) {
             return ScheduleEvent.Add(eventName, this.StopSoundEx, fireDelay, [soundName], this)
@@ -251,7 +284,7 @@
 
         ScheduleEvent.TryCancel(soundEnt)
         soundEnt.SetOrigin(Vector(0, 0, 10000))
-        ScheduleEvent.Add(soundEnt, soundEnt.Destroy, 0.03, null, soundEnt)
+        soundEnt.Destroy(0.04)
     }
 
 
