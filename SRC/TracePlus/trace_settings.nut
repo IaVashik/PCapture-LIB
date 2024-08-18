@@ -49,12 +49,16 @@
      * @returns {TraceSettings} - A new TraceSettings object.
     */
     function new(settingsTable = {}) {
-        printl(settingsTable)
+        printl("i get this:")
+        macros.PrintIter(settingsTable)
+        printl("------------")
+
         // Get the ignoreClasses setting from the settings table or use the default. 
+        local ok = clone(TracePlus.Settings.ignoreClasses)
         local z = macros.GetFromTable(
             settingsTable, 
             "ignoreClasses", 
-            clone(TracePlus.Settings.ignoreClasses)
+            ok
         )
 
         printl(z)
