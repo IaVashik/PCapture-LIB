@@ -33,6 +33,7 @@ IncludeScript("SRC/IDT/init.nut")
 IncludeScript("SRC/Utils/init.nut")
 
 ::LibLogger <- LoggerLevels.Info
+const ALWAYS_PRECACHED_MODEL = "models/weapons/w_portalgun.mdl"
 
 IncludeScript("SRC/TracePlus/init.nut")
 IncludeScript("SRC/Animations/init.nut")
