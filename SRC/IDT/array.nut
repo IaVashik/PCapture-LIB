@@ -29,6 +29,7 @@
      * @returns {arrayLib} - The new arrayLib instance. 
     */
     function new(...) {
+        if(IsVSquirrel3) return arrayLib(vargv)
         local arr = array(vargc)
         for(local i = 0; i< vargc; i++) {
             arr[i] = vargv[i]

@@ -45,6 +45,11 @@
         this.first_node = ListNode(0);
         this.last_node = this.first_node;
         
+        if(IsVSquirrel3) {
+            foreach(val in vargv) this.append(vargv[i])
+            return
+        }
+
         for(local i = 0; i< vargc; i++) {
             this.append(vargv[i])
         }
