@@ -64,6 +64,7 @@ if("GetPlayerEx" in getroottable()) {
     ScheduleEvent.Add(eventName, _EntFireByHandle, delay, [target, action, value, 0, activator, caller])
 }
 
+// todo what the fuck, lol
 ::EntFireEx <- function(target, action, value = "", delay = 0, activator = null, eventName = null) {
     if(!eventName)
         return EntFire(target, action, value, delay, activator)

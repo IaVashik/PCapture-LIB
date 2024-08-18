@@ -245,8 +245,9 @@
         if(fireDelay != 0)
             return ScheduleEvent.Add(eventName, this.EmitSoundEx, fireDelay, [soundName], this)
         
+        // for updating volume if sound active
         local soundEnt = this.GetUserData(soundName)
-        if(soundEnt) // for updating volume if sound active
+        if(soundEnt && soundEnt.IsValid()) 
             return soundEnt.SetAbsOrigin(this.GetOrigin() + Vector(0, 0, 3000 - volume * 300))
         
         // SO FKING CURSED WORKAROUND EVER!

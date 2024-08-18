@@ -38,7 +38,7 @@ const ALWAYS_PRECACHED_MODEL = "models/weapons/w_portalgun.mdl"
 IncludeScript("PCapture-LIB/SRC/TracePlus/init.nut")
 IncludeScript("PCapture-LIB/SRC/Animations/init.nut")
 IncludeScript("PCapture-LIB/SRC/ActionScheduler/init.nut")
-IncludeScript("PCapture-LIB/SRC/GameEvents/init.nut")
+IncludeScript("PCapture-LIB/SRC/ScriptEvents/init.nut")
 IncludeScript("PCapture-LIB/SRC/HUD/init.nut")
 // IncludeScript("PCapture-LIB/SRC/_FEATURES/features")
 
