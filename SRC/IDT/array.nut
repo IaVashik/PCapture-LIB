@@ -368,8 +368,9 @@
     }
 
 
-    function _cloned() {
-        return arrayLib(clone this.arr)
+    function _cloned(...) {
+        local arrCLoned = clone this.arr
+        return arrayLib(arrCLoned)
     }
 
     /*
