@@ -50,7 +50,13 @@
     */
     function new(settingsTable = {}) {
         // Get the ignoreClasses setting from the settings table or use the default. 
-        local ignoreClasses = arrayLib(macros.GetFromTable(settingsTable, "ignoreClasses", clone(TracePlus.Settings.ignoreClasses)))
+        local ignoreClasses = arrayLib(
+            macros.GetFromTable(
+                settingsTable, 
+                "ignoreClasses", 
+                clone(TracePlus.Settings.ignoreClasses)
+            )
+        )
         // Get the priorityClasses setting from the settings table or use the default. 
         local priorityClasses = arrayLib(macros.GetFromTable(settingsTable, "priorityClasses", clone(TracePlus.Settings.priorityClasses)))
         // Get the ignoredModels setting from the settings table or use the default. 
