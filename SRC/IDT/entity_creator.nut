@@ -7,14 +7,21 @@
      * @returns {pcapEntity} - The created entity object.
     */
     function CreateByClassname(classname, keyvalues = {}) {
-        local new_entity = entLib.FromEntity(Entities.CreateByClassname(classname))
+        if(!("CreateByClassname" in Entities)) { // for l4d2
+            keyvalues["classname"] <- classname
+            local newEntity = entLib.FromEntity(g_ModeScript.CreateSingleSimpleEntityFromTable(keyvalues))
+            pcapEntityCache[newEntity.CBaseEntity] <- newEntity
+            return newEntity
+        }
+        
+        local newEntity = entLib.FromEntity(Entities.CreateByClassname(classname))
         foreach(key, value in keyvalues) {
-            new_entity.SetKeyValue(key, value)
+            newEntity.SetKeyValue(key, value)
         }
 
-        pcapEntityCache[new_entity.CBaseEntity] <- new_entity
+        pcapEntityCache[newEntity.CBaseEntity] <- newEntity
 
-        return new_entity
+        return newEntity
     }
 
 
