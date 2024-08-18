@@ -373,7 +373,7 @@
         return arrayLib(arrCLoned)
     }
 
-    function clone() {
+    function cloned() {
         return arrayLib(clone this.arr)
     }
 

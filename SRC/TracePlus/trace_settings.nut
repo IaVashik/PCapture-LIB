@@ -53,7 +53,7 @@
         local z = macros.GetFromTable(
             settingsTable, 
             "ignoreClasses", 
-            TracePlus.Settings.ignoreClasses.clone()
+            TracePlus.Settings.ignoreClasses.cloned()
         )
 
         printl(z)
