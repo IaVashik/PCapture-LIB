@@ -229,7 +229,7 @@ if (ScheduleEvent.IsValid("my_event")) {
 }
 ```
 
-#### `ScheduleEvent.tryCancel(eventName, delay)`: **New in 3.0**
+#### `ScheduleEvent.TryCancel(eventName, delay)`:
 The same as `ScheduleEvent.Cancel`, but does not cause an error if the event is not found.
 
 **Parameters:**
@@ -237,15 +237,20 @@ The same as `ScheduleEvent.Cancel`, but does not cause an error if the event is 
 * `eventName` (string): The name of the event to cancel.
 * `delay` (number, optional): An optional delay in seconds before canceling the event.
 
+**Returns:**
+
+* (boolean): True if the event was found and canceled, false otherwise.
+
 **Example:**
 
 ```js
-ScheduleEvent.tryCancel("my_event") 
+ScheduleEvent.TryCancel("my_event") 
 ```
 
 ## [ActionScheduler/event_handler.nut](event_handler.nut)
 
 This file contains the `ScheduledEventsLoop` function, which processes scheduled events and actions.
+
 
 ### `ScheduledEventsLoop()`
 

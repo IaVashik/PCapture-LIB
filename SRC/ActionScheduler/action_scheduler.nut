@@ -126,11 +126,22 @@ ScheduleEvent["Cancel"] <- function(eventName, delay = 0) {
     if(developer() > 0) dev.trace("Event \"{}\" closed! Actial events: {}", eventName, macros.GetKeys(ScheduleEvent.eventsList))
 }
 
+/*
+ * Attempts to cancel a scheduled event with the given name, optionally after a delay.
+ *
+ * @param {string} eventName - The name of the event to cancel.
+ * @param {number} delay - An optional delay in seconds before attempting to cancel the event.
+ * @returns {boolean} - True if the event was found and canceled, false otherwise.
+ * 
+ * This function is similar to `ScheduleEvent.Cancel`, but it does not throw an error if the event is not found.
+ * It's useful for situations where you're unsure if an event exists and want to attempt cancellation without risking errors.
+*/
 ScheduleEvent["TryCancel"] <- function(eventName, delay = 0) {
     if(delay > 0) 
         return ScheduleEvent.Add("global", ScheduleEvent.TryCancel, delay, [eventName])
-    if(ScheduleEvent.IsValid(eventName)) 
-        ScheduleEvent.Cancel(eventName)
+    local isValid = ScheduleEvent.IsValid(eventName) 
+    if(isValid) ScheduleEvent.Cancel(eventName)
+    return isValid
 }
 
 
