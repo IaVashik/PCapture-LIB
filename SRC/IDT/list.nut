@@ -17,13 +17,16 @@
     }
 
     function drop() {
-        if(this.prev_ref)
-            this.prev_ref.next_ref = null
-        this.prev_ref = null
+        if(this.prev_ref) {
+            this.prev_ref.next_ref = this.next_ref;
+        }
         
-        if(this.next_ref)
-            this.next_ref.prev_ref = null
-        this.next_ref = null
+        if(this.next_ref) {
+            this.next_ref.prev_ref = this.prev_ref;
+        }
+        
+        this.prev_ref = null;
+        this.next_ref = null;
     }
 }
 
@@ -144,9 +147,11 @@
      * Removes the node at a specific index from the list.
      * 
      * @param {number} index - The index of the node to remove.
+     * @returns {any} - The value of the removed element.
     */
     function remove(idx) {
         local node = this.getNode(idx);
+        local value = node.value
         local next = node.next_ref;
         local prev = node.prev_ref;
         node.drop();
@@ -164,6 +169,7 @@
         } 
 
         this.length--;
+        return value
     }
 
     /*

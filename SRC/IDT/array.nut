@@ -231,10 +231,13 @@
      * Remove an element by index.
      * 
      * @param {int} idx - The index to remove.
+     * @returns {any} - The value of the removed element.
     */
     function remove(idx) {
+        local value = arr[idx]
         this._deleteFromTable(arr[idx])
         arr.remove(idx);
+        return value
     }
 
     /*

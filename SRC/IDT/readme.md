@@ -299,6 +299,10 @@ This method removes the element at the specified index from the array, shifting 
 
 * `index` (number): The index of the element to remove.
 
+**Returns:**
+
+* (any): The value of the removed element.
+
 **Example:**
 
 ```js
@@ -613,6 +617,10 @@ Removes the node at a specific index from the list.
 **Parameters:**
 
 * `index` (number): The index of the node to remove.
+
+**Returns:**
+
+* (any): The value of the removed element.
 
 **Example:**
 
