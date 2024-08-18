@@ -373,6 +373,10 @@
         return arrayLib(arrCLoned)
     }
 
+    function clone() {
+        return arrayLib(clone this.arr)
+    }
+
     /*
      * Convert the array to a string.
      * 
