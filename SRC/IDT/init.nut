@@ -10,12 +10,12 @@
 
 ::pcapEntityCache <- {}
 
-IncludeScript("SRC/IDT/entity")
-IncludeScript("SRC/IDT/entity_creator")
+IncludeScript("PCapture-LIB/SRC/IDT/entity")
+IncludeScript("PCapture-LIB/SRC/IDT/entity_creator")
 
-IncludeScript("SRC/IDT/array")
-IncludeScript("SRC/IDT/list")
-IncludeScript("SRC/IDT/tree_sort")
+IncludeScript("PCapture-LIB/SRC/IDT/array")
+IncludeScript("PCapture-LIB/SRC/IDT/list")
+IncludeScript("PCapture-LIB/SRC/IDT/tree_sort")
 
 // dissolve entity for pcapEnts
 if(("dissolver" in getroottable()) == false) {

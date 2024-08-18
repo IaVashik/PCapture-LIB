@@ -10,8 +10,8 @@
 
 ::math <- {}
 
-IncludeScript("SRC/Math/algebraic")
-IncludeScript("SRC/Math/utils_vector")
-IncludeScript("SRC/Math/lerp")
-IncludeScript("SRC/Math/quaternion")
-IncludeScript("SRC/Math/matrix")
+IncludeScript("PCapture-LIB/SRC/Math/algebraic")
+IncludeScript("PCapture-LIB/SRC/Math/utils_vector")
+IncludeScript("PCapture-LIB/SRC/Math/lerp")
+IncludeScript("PCapture-LIB/SRC/Math/quaternion")
+IncludeScript("PCapture-LIB/SRC/Math/matrix")

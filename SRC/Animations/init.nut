@@ -120,7 +120,7 @@ animate["applyAnimation"] <- function(animInfo, valueCalculator, propertySetter,
     if(developer() > 0) dev.trace("Created {} animation ({}) for {} actions", animInfo.animName, animInfo.eventName, actionsList.len())
 }
 
-IncludeScript("SRC/Animations/alpha")
-IncludeScript("SRC/Animations/color")
-IncludeScript("SRC/Animations/position")
-IncludeScript("SRC/Animations/angles")
+IncludeScript("PCapture-LIB/SRC/Animations/alpha")
+IncludeScript("PCapture-LIB/SRC/Animations/color")
+IncludeScript("PCapture-LIB/SRC/Animations/position")
+IncludeScript("PCapture-LIB/SRC/Animations/angles")

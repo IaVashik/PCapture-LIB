@@ -22,13 +22,13 @@
 
 const MAX_PORTAL_CAST_DEPTH = 4
 
-IncludeScript("SRC/TracePlus/results")
-IncludeScript("SRC/TracePlus/trace_settings")
+IncludeScript("PCapture-LIB/SRC/TracePlus/results")
+IncludeScript("PCapture-LIB/SRC/TracePlus/trace_settings")
 TracePlus.defaultSettings = TracePlus.Settings.new()
 
-IncludeScript("SRC/TracePlus/cheap_trace")
-IncludeScript("SRC/TracePlus/bboxcast")
-IncludeScript("SRC/TracePlus/portal_casting")
+IncludeScript("PCapture-LIB/SRC/TracePlus/cheap_trace")
+IncludeScript("PCapture-LIB/SRC/TracePlus/bboxcast")
+IncludeScript("PCapture-LIB/SRC/TracePlus/portal_casting")
 
-IncludeScript("SRC/TracePlus/bbox_analyzer")
-IncludeScript("SRC/TracePlus/calculate_normal")
+IncludeScript("PCapture-LIB/SRC/TracePlus/bbox_analyzer")
+IncludeScript("PCapture-LIB/SRC/TracePlus/calculate_normal")

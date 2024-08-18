@@ -28,19 +28,19 @@ if("_lib_version_" in getroottable() && version.find("Debug") == null) {
     return
 }
 
-IncludeScript("SRC/Math/init.nut")
-IncludeScript("SRC/IDT/init.nut")
-IncludeScript("SRC/Utils/init.nut")
+IncludeScript("PCapture-LIB/SRC/Math/init.nut")
+IncludeScript("PCapture-LIB/SRC/IDT/init.nut")
+IncludeScript("PCapture-LIB/SRC/Utils/init.nut")
 
 ::LibLogger <- LoggerLevels.Info
 const ALWAYS_PRECACHED_MODEL = "models/weapons/w_portalgun.mdl"
 
-IncludeScript("SRC/TracePlus/init.nut")
-IncludeScript("SRC/Animations/init.nut")
-IncludeScript("SRC/ActionScheduler/init.nut")
-IncludeScript("SRC/GameEvents/init.nut")
-IncludeScript("SRC/HUD/init.nut")
-// IncludeScript("SRC/_FEATURES/features")
+IncludeScript("PCapture-LIB/SRC/TracePlus/init.nut")
+IncludeScript("PCapture-LIB/SRC/Animations/init.nut")
+IncludeScript("PCapture-LIB/SRC/ActionScheduler/init.nut")
+IncludeScript("PCapture-LIB/SRC/GameEvents/init.nut")
+IncludeScript("PCapture-LIB/SRC/HUD/init.nut")
+// IncludeScript("PCapture-LIB/SRC/_FEATURES/features")
 
 
 /*
@@ -76,6 +76,6 @@ globalDetector.ConnectOutputEx("OnEndTouchPortal", function() {entLib.FromEntity
 */
 printl("\n----------------------------------------")
 printl("Welcome to " + _lib_version_)
-printl("Author: laVashik Production") // The Grand Archmage :P
+printl("Author: laVashik Production") // The God of VScripts :P
 printl("GitHub: https://github.com/IaVashik/PCapture-LIB")
 printl("----------------------------------------\n")

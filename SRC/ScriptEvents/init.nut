@@ -11,5 +11,5 @@
 
 ::AllScriptEvents <- {}
 
-IncludeScript("SRC/ScriptEvents/event_listener")
-IncludeScript("SRC/ScriptEvents/game_event")
+IncludeScript("PCapture-LIB/SRC/ScriptEvents/event_listener")
+IncludeScript("PCapture-LIB/SRC/ScriptEvents/game_event")

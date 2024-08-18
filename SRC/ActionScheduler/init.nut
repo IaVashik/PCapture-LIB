@@ -35,6 +35,6 @@ ScheduleEvent["_startThink"] <- function() {
     }
 }
 
-IncludeScript("SRC/ActionScheduler/action")
-IncludeScript("SRC/ActionScheduler/action_scheduler")
-IncludeScript("SRC/ActionScheduler/event_handler")
+IncludeScript("PCapture-LIB/SRC/ActionScheduler/action")
+IncludeScript("PCapture-LIB/SRC/ActionScheduler/action_scheduler")
+IncludeScript("PCapture-LIB/SRC/ActionScheduler/event_handler")
