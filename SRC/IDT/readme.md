@@ -1354,6 +1354,18 @@ if (myPcapEntity.IsPlayer()) {
 }
 ```
 
+### `isEqually(other)`
+Checks if this entity is equal to another entity based on their entity indices
+
+**Parameters:**
+
+* `other` (pcapEntity|CBaseEntity): The other entity to compare.
+
+**Returns:**
+
+* (boolean): True if the entities are equal, false otherwise.
+
+
 ### `EyePosition()`
 Gets the eye position of the player entity as a Vector. This is the position from which the player's view is rendered.
 
