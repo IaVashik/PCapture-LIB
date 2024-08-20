@@ -252,7 +252,7 @@
         
         // SO FKING CURSED WORKAROUND EVER!
         local soundEnt = entLib.CreateProp("prop_physics", Vector(), ALWAYS_PRECACHED_MODEL)
-        soundEnt.SetAbsOrigin(this.GetOrigin() + Vector(0, 0, 3000 - volume * 3000))
+        soundEnt.SetAbsOrigin(this.GetOrigin() + Vector(0, 0, 3000 - volume * 300))
         soundEnt.SetParent(this)
         soundEnt.SetKeyValue("rendermode", 5)
         soundEnt.SetAlpha(0)
