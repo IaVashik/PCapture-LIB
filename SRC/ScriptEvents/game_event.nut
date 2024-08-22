@@ -94,10 +94,12 @@ function VGameEvent::SetFilter(filterFunc) {
 /* 
  * Triggers the event if the trigger count allows and the filter function (if set) returns true. 
  *
- * @param {any} args - Optional arguments to pass to the actions function. 
+ * @param {array} args - Optional arguments to pass to the actions function. 
 */
-function VGameEvent::Trigger(args = []) {
-    if (this.actions != 0 && this.triggerCount != 0 && (this.filterFunction == null || this.filterFunction(args))) {
+function VGameEvent::Trigger(args) {
+    if(this.actions.len() == 0) return
+
+    if (this.triggerCount != 0 && (this.filterFunction == null || this.filterFunction(args))) {
         if (this.triggerCount > 0) {
             // Decrement the trigger count if it is not unlimited
             this.triggerCount-- 
@@ -111,9 +113,9 @@ function VGameEvent::Trigger(args = []) {
 /*
  * Forces the event to trigger, ignoring the filter function and trigger count. 
  * 
- * @param {any} args - Optional arguments to pass to the actions function. 
+ * @param {array} args - Optional arguments to pass to the actions function. 
 */
-function VGameEvent::ForceTrigger(args = []) {
+function VGameEvent::ForceTrigger(args) {
     args.insert(0, this)
     foreach(action in this.actions) {
         action.acall(args)

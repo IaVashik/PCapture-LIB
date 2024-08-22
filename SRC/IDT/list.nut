@@ -1,34 +1,12 @@
-::ListNode <- class {
-    value = null;
-    prev_ref = null;
-    next_ref = null;
+::ListNode <- function(value) return {
+    value = value,
+    prev_ref = null,
+    next_ref = null,
 
-    /*
-     * Constructor for a list node.
-     *
-     * @param {any} value - The value to store in the node.
-    */
-    constructor(value) {
-        this.value = value;
-    }
-
-    function _tostring() {
+    tostring = function () {
         return this.value.tostring();
     }
-
-    function drop() {
-        if(this.prev_ref) {
-            this.prev_ref.next_ref = this.next_ref;
-        }
-        
-        if(this.next_ref) {
-            this.next_ref.prev_ref = this.prev_ref;
-        }
-        
-        this.prev_ref = null;
-        this.next_ref = null;
-    }
-}
+} 
 
 //! Deleting nodes should cause a leak!
 ::List <- class {
@@ -154,7 +132,7 @@
         local value = node.value
         local next = node.next_ref;
         local prev = node.prev_ref;
-        node.drop();
+        // node.drop();
 
         if (prev) {
             prev.next_ref = next; 
@@ -182,7 +160,7 @@
         this.last_node = current.prev_ref;
         this.last_node.next_ref = null;
         this.length--
-        current.drop()
+        // current.drop()
         return current.value;
     }
 
@@ -383,7 +361,7 @@
         local current = this.first_node.next_ref;
         while (current) {
             local next_node = current.next_ref;
-            current.drop()
+            // current.drop()
             current = next_node;
         }
 
