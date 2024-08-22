@@ -1,4 +1,4 @@
-IncludeScript("SRC/PCapture-Lib")
+IncludeScript("PCapture-Lib/SRC/PCapture-Lib")
 
 ::LibLogger <- LoggerLevels.Off
 
@@ -30,10 +30,10 @@ IncludeScript("SRC/PCapture-Lib")
 
 function RunAllTests() {
     printl("\n~~~~~~~~~~~~~~~~~~~~~~~~~\nRUN ALL TESTS\n~~~~~~~~~~~~~~~~~~~~~~~~~")
-    IncludeScript("Tests/Math")
-    IncludeScript("Tests/IDT")
-    IncludeScript("Tests/Utils")
-    IncludeScript("Tests/ActionScheduler")
+    IncludeScript("PCapture-Lib/Tests/Math")
+    IncludeScript("PCapture-Lib/Tests/IDT")
+    IncludeScript("PCapture-Lib/Tests/Utils")
+    IncludeScript("PCapture-Lib/Tests/ActionScheduler")
 }
 
 if(getstackinfos(2) == null) {
