@@ -1,4 +1,33 @@
 // Expensive/Precise TraceLine logic
+
+// Класс для хранения данных об объекте
+class BufferedEntity {
+    entity = null;
+    origin = null;
+    isCubicBbox = null
+    bboxMax = null;
+    bboxMin = null;
+    len = null
+
+    constructor(entity) {
+        this.entity = entLib.FromEntity(entity)
+        this.origin = entity.GetOrigin()
+        this.len = ( entity.GetBoundingMaxs() - entity.GetBoundingMins() ).Length() / 2
+
+        this.isCubicBbox = floor((entity.GetBoundingMaxs() + entity.GetBoundingMins()).Length()) == 0
+        if(this.isCubicBbox) { // bbox квадратный
+            this.bboxMax = entity.GetBoundingMaxs() + this.origin
+            this.bboxMin = entity.GetBoundingMins() + this.origin
+        }
+        else { // bbox прямоугольный
+            this.bboxMax = this.entity.CreateAABB(7) + this.origin
+            this.bboxMin = this.entity.CreateAABB(0) + this.origin
+        }
+    }
+}
+
+const JumpPercent = 0.25
+
 /*
  * A class for performing precise trace line analysis. 
  * 
@@ -96,30 +125,123 @@
  * @param {string|null} note - An optional note associated with the trace. 
  * @returns {array} - An array containing the hit position and the hit entity (or null). 
 */
-function TraceLineAnalyzer::Trace(startPos, endPos, ignoreEntities, note) {
+// todo dist_coeff сосат, теперь это legacy
+function TraceLineAnalyzer::Trace(startPos, endPos, ignoreEntities, note = null) {
     // Get the hit position from the fast trace
     local hitPos = TracePlus.Cheap(startPos, endPos).GetHitpos()
-    // Calculate the distance between start and hit positions
     local dist = hitPos - startPos
-    // Calculate a distance coefficient for more precise tracing based on distance and error coefficient
-    local dist_coeff = abs(dist.Length() / settings.GetErrorTolerance()) + 1
-    // Calculate the number of steps based on distance and distance coefficient
-    local step = dist.Length() / 14 / dist_coeff
 
-    // Iterate through each step
-    for (local i = 0.0; i < step; i++) {
-        // Calculate the ray position for the current step
-        local rayPart = startPos + dist * (i / step)
-        // Find the entity at the ray point
-        // TODO!!! separate code! "*"
-        for (local ent;ent = entLib.FindByClassnameWithin("*", rayPart, 5 * dist_coeff, ent);) { // todo potential place for improvement
+    //* NEW LOGIC
+    local entBuffer = List()
+    local halfSegment = dist * JumpPercent * 0.5
+    local segmentsLenght = halfSegment * 2
+    local searchRadius = halfSegment.Length()
+   
+    // region old code
+    // // Dirt Search
+    // for(local segment = JumpPercent; segment < 1; segment += JumpPercent) {
+    //     local segmentCenter = startPos + dist * segment // середина сегмента
+    //     for (local ent;ent = Entities.FindByClassnameWithin(ent, "*", segmentCenter, searchRadius);) {
+    //         if (ent && this.shouldHitEntity(ent, ignoreEntities, note)) {
+    //             entBuffer.append(BufferedEntity(ent))
+    //         }
+    //     }
+    //     // dev.drawbox(segmentCenter, Vector(0, 125, 255), 6)
+
+    //     if(entBuffer.len() > 0) {
+    //         // тут уже речь про верные, успешные сегменты, надо бы нейм поправить!
+    //         local segmentStart = segmentCenter - halfSegment
+    //         local segmentEnd = segmentCenter + halfSegment
+    //         local segmentDist = segmentEnd - segmentStart
+            
+    //         local steps = searchRadius / 10 * 2
+             
+    //         // Deep search
+    //         for (local i = 0.0; i <= steps; i++) {
+    //             local rayPart = segmentStart + segmentDist * (i / steps)
+    //             // dev.drawbox(rayPart, Vector(0, 200, 100), 6)
+        
+    //             foreach(entInfo in entBuffer.iter()) {
+    //                 if(this.PointInBBox(rayPart, entInfo)) {
+    //                     DebugDrawBox(rayPart, Vector(3,3,3) * -1, Vector(3,3,3), 0, 255, 0, 170, 6)
+    //                     return [rayPart, entInfo.entity]
+    //                 }
+    //             }
+    //         }
+
+    //         entBuffer.clear()
+    //     }
+    // } 
+    // endregion
+
+    // dev.drawbox(startPos, Vector(255, 255, 255), 6)
+    // dev.drawbox(hitPos, Vector(255, 255, 255), 6)
+    for(local segment = 0; segment < 1; segment += JumpPercent) {
+        // DIRT Search
+        local segmentCenter = startPos + dist * (segment + JumpPercent * 0.5) // середина сегмента
+        for (local ent;ent = Entities.FindByClassnameWithin(ent, "*", segmentCenter, searchRadius);) {
             if (ent && this.shouldHitEntity(ent, ignoreEntities, note)) {
-                return [rayPart, ent] // no tuple? :>
+                entBuffer.append(BufferedEntity(ent))
             }
+        }
+        // dev.drawbox(segmentCenter, Vector(255, 0, 0), 6)
+        // DebugDrawLine(segmentCenter + halfSegment, segmentCenter - halfSegment, 255, 255, 255, false, 6)
+
+        // Fast Search
+        if(entBuffer.len() > 0) {
+            local segmentStart = segmentCenter - halfSegment
+            local segmentEnd = segmentCenter + halfSegment
+            local steps = searchRadius / 15 // нахуй надо!! юзаем также по сегментации как выше!!!
+            local closestPoint = null
+            for (local i = 0.0; i <= steps && closestPoint == null; i++) {
+                local rayPart = segmentStart + segmentsLenght * (i / steps)
+                foreach(entInfo in entBuffer.iter()) {
+                    local offset = rayPart - entInfo.origin
+                    local dis = (rayPart - entInfo.origin).Length()
+                    if(dis <= entInfo.len) {
+                        // DebugDrawBox(rayPart, Vector(3,3,3) * -1, Vector(3,3,3), 255, 255, 0, 10, 6)
+                        closestPoint = rayPart
+                        break
+                    }
+                }
+                // dev.drawbox(rayPart, Vector(255, 125, 0), 6)
+            }
+
+            // Deep Search
+            if(closestPoint != null) {
+                local len = segmentsLenght * 0.5
+                local segmentStart = closestPoint
+                local segmentEnd = segmentStart + len
+                local steps = searchRadius / 5
+                for (local i = 0.0; i <= steps; i++) {
+                    local rayPart = segmentStart + len * (i / steps)
+                    foreach(entInfo in entBuffer.iter()) {
+                        if(this.PointInBBox(rayPart, entInfo)) {
+                            // DebugDrawBox(rayPart, Vector(3,3,3) * -1, Vector(3,3,3), 0, 255, 0, 255, 6)
+                            return [rayPart, entInfo.entity]
+                        }
+                    }
+                    // dev.drawbox(rayPart, Vector(125, 200, 0), 6)
+                }
+            }
+            // dev.info("DROP {} ents", entBuffer.len())
+            // Очистка буфера
+            entBuffer.clear() // TODO improve perfomance
         }
     }
 
     return [hitPos, null]
+}
+
+function TraceLineAnalyzer::PointInBBox(point, entInfo) {
+    local max = entInfo.bboxMax
+    local min = entInfo.bboxMin
+
+    return (
+        point.x >= min.x && point.x <= max.x &&
+        point.y >= min.y && point.y <= max.y &&
+        point.z >= min.z && point.z <= max.z
+    )
 }
 
 // Check if an entity should be ignored based on the provided settings
@@ -174,9 +296,9 @@ function TraceLineAnalyzer::_isIgnoredModels(entityModel) {
 * @param {Entity|array} ignoreEntities - Entities being ignored. 
 * @returns {boolean} True if should ignore.
 */
-function TraceLineAnalyzer::shouldHitEntity(ent, ignoreEntities, note) { // todo rename
-    if(ent.GetUserData("TracePlusIgnore"))
-        return false
+function TraceLineAnalyzer::shouldHitEntity(ent, ignoreEntities, note) { 
+    // if(ent.GetUserData("TracePlusIgnore")) // todo 
+    //     return false
     
     if(settings.ApplyIgnoreFilter(ent, note))
         return false
@@ -189,11 +311,16 @@ function TraceLineAnalyzer::shouldHitEntity(ent, ignoreEntities, note) { // todo
         local type = typeof ignoreEntities 
         if (type == "array" || type == "arrayLib") {
             foreach (mask in ignoreEntities) {
-                if(ent.isEqually(mask)) return false
+                if(ent.entindex() == mask.entindex()) return false 
             }
         } 
-        
-        else if(ent.isEqually(ignoreEntities)) return false
+        else if(type == "List") {
+            foreach (mask in ignoreEntities.iter()) {
+                if(ent.entindex() == mask.entindex()) return false 
+            }
+        }
+        // (ignoreEntities instanceof CBaseEntity || type == "pcapEntity") 
+        else if(ent.entindex() == ignoreEntities.entindex()) return false
     }
 
     local classname = ent.GetClassname()
