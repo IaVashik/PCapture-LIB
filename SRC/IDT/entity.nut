@@ -484,6 +484,7 @@
             return ScheduleEvent.Add(eventName, this.SetTraceIgnore, fireDelay, [isEnabled], this)
         
         this.SetUserData("TracePlusIgnore", isEnabled)
+        TracePlusIgnoreEnts[this.CBaseEntity] <- isEnabled
     }
 
     /*
@@ -606,6 +607,15 @@
         return {min = min, max = max}
     }
 
+    //! TODO ADD TO DOCS
+    function GetBoundingCenter() {
+        local cachedResult = GetUserData("BoundingCenter")
+        if(cachedResult) return cachedResult
+
+        local result = (this.GetBoundingMaxs() - this.GetBoundingMins()) * 0.5
+        this.SetUserData("BoundingCenter", result)
+        return result
+    }
 
     /* 
      * Returns the axis-aligned bounding box (AABB) of the entity.
@@ -750,6 +760,10 @@
         if(stat == 4) 
             angles = Vector(45, 45, 45)
 
+        local cache = GetUserData("aabb-" + stat)
+        if(cache && (angles - cache[1]).Length() <= 10)
+            return cache[0]
+
         local all_vertex = this.getBBoxPoints()
         local x = array(8) // AVLTree() // todo FUCKING AVL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         local y = array(8)
@@ -763,11 +777,17 @@
 
         x.sort(); y.sort(); z.sort()
  
-        if(stat == 4) // centered
-            return ( Vector(x[7], y[7], z[7]) - Vector(x[0], y[0], z[0]) ) * 0.5
-        return Vector(x[stat], y[stat], z[stat])
+        local result
+        if(stat == 4) {// centered
+            result = ( Vector(x[7], y[7], z[7]) - Vector(x[0], y[0], z[0]) ) * 0.5
+        } 
+        else {
+            result = Vector(x[stat], y[stat], z[stat])
+        }
+        
+        this.SetUserData("aabb-" + stat , [result, angles])
+        return result
     }
-
 
     /*
      * Gets the 8 vertices of the axis-aligned bounding box.
