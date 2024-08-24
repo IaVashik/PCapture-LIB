@@ -19,6 +19,7 @@
     Cheap = null,
     Bbox = null,
 }
+::TracePlusIgnoreEnts <- {}
 
 const MAX_PORTAL_CAST_DEPTH = 4
 
