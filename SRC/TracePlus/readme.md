@@ -8,14 +8,13 @@ This file defines the `TracePlus.Settings` class, which encapsulates settings fo
 
 ### `TracePlus.Settings`
 
-This class stores various settings that control the behavior of traces, such as which entities and models to ignore, the error tolerance for trace distances, and custom filter functions.
+This class stores various settings that control the behavior of traces, such as which entities and models to ignore, and custom filter functions.
 
 **Properties:**
 
 * `ignoreClasses` (arrayLib): An array of entity classnames to ignore during traces. Supports masks, e.g., `["trigger"]` will ignore all entities with "trigger" in their classnames.
 * `priorityClasses` (arrayLib): An array of entity classnames to prioritize during traces. Supports masks.
 * `ignoredModels` (arrayLib): An array of entity model names to ignore during traces. Supports masks.
-* `errorTolerance` (number): The maximum allowed distance between a trace's start and hit positions. Traces exceeding this tolerance may be considered inaccurate.
 * `shouldRayHitEntity` (function or null): A custom function to determine if a ray should hit an entity.
 * `shouldIgnoreEntity` (function or null): A custom function to determine if an entity should be ignored during a trace.
 
@@ -25,7 +24,6 @@ This class stores various settings that control the behavior of traces, such as 
 * `SetIgnoredClasses(ignoreClassesArray)`: Sets the list of entity classnames to ignore during traces. **(Builder)**
 * `SetPriorityClasses(priorityClassesArray)`: Sets the list of entity classnames to prioritize during traces. **(Builder)**
 * `SetIgnoredModels(ignoredModelsArray)`: Sets the list of entity model names to ignore during traces. **(Builder)**
-* `SetErrorTolerance(tolerance)`: Sets the maximum allowed distance between trace start and hit positions. **(Builder)**
 * `AppendIgnoredClass(className)`: Appends an entity classname to the list of ignored classes. **(Builder)**
 * `AppendPriorityClasses(className)`: Appends an entity classname to the list of priority classes. **(Builder)**
 * `AppendIgnoredModel(modelName)`: Appends an entity model name to the list of ignored models. **(Builder)**
@@ -34,7 +32,6 @@ This class stores various settings that control the behavior of traces, such as 
 * `GetIgnoreClasses()`: Returns the list of entity classnames to ignore during traces.
 * `GetPriorityClasses()`: Returns the list of entity classnames to prioritize during traces.
 * `GetIgnoredModels()`: Returns the list of entity model names to ignore during traces.
-* `GetErrorTolerance()`: Returns the maximum allowed distance between trace start and hit positions.
 * `GetCollisionFilter()`: Returns the custom collision filter function.
 * `GetIgnoreFilter()`: Returns the custom ignore filter function.
 * `ApplyCollisionFilter(entity, note)`: Applies the custom collision filter function to an entity.
@@ -58,7 +55,6 @@ local s = TracePlus.Settings(ignoreClasses, priorityClasses, ignoredModels, 100)
 ```js
 local s = TracePlus.Settings.new({
     ignoreClasses = arrayLib.new("trigger_multiple", "func_brush"),
-    errorTolerance = 100
 }) 
 ```
 
@@ -68,7 +64,6 @@ local s = TracePlus.Settings.new({
 local s = TracePlus.Settings.new()
 s.SetIgnoredClasses(["trigger_"])
 s.AppendPriorityClasses(["player"])
-s.SetErrorTolerance(100)
 ```
 
 **4. Using builder-style chained calls:**
@@ -76,7 +71,7 @@ s.SetErrorTolerance(100)
 ```js
 local s = TracePlus.Settings.new() 
     .SetIgnoredClasses(arrayLib.new("trigger_multiple", "func_brush"))
-    .SetErrorTolerance(100)
+    .AppendPriorityClasses(List("player"))
 ```
 
 ## [TracePlus/results.nut](results.nut)

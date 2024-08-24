@@ -14,8 +14,6 @@
     // An array of entity model names to ignore during traces. 
     ignoredModels = arrayLib.new();
 
-    // The maximum allowed distance between a trace's start and hit positions. 
-    errorTolerance = 500; 
 
     // A custom function to determine if a ray should hit an entity. 
     shouldRayHitEntity = null;
@@ -29,15 +27,13 @@
      * @param {arrayLib} ignoreClasses - An array of entity classnames to ignore.
      * @param {arrayLib} priorityClasses - An array of entity classnames to prioritize. 
      * @param {arrayLib} ignoredModels - An array of entity model names to ignore.
-     * @param {number} errorTolerance - The maximum allowed distance between trace start and hit positions.
      * @param {function} shouldRayHitEntity - A custom function to determine if a ray should hit an entity.
      * @param {function} shouldIgnoreEntity - A custom function to determine if an entity should be ignored. 
     */
-    constructor(ignoreClasses, priorityClasses, ignoredModels, errorTolerance, shouldRayHitEntity, shouldIgnoreEntity) {
+    constructor(ignoreClasses, priorityClasses, ignoredModels, shouldRayHitEntity, shouldIgnoreEntity) {
         this.ignoreClasses = ignoreClasses
         this.priorityClasses = priorityClasses
         this.ignoredModels = ignoredModels
-        this.errorTolerance = errorTolerance
         this.shouldRayHitEntity = shouldRayHitEntity
         this.shouldIgnoreEntity = shouldIgnoreEntity
     }
@@ -56,8 +52,6 @@
         // Get the ignoredModels setting from the settings table or use the default. 
         local ignoredModels = arrayLib(macros.GetFromTable(settingsTable, "ignoredModels", clone(TracePlus.Settings.ignoredModels)))
         
-        // Get the errorTolerance setting from the settings table or use the default. 
-        local errorTolerance = macros.GetFromTable(settingsTable, "errorTolerance", TracePlus.Settings.errorTolerance)
         // Get the shouldRayHitEntity setting from the settings table or use the default.  
         local shouldRayHitEntity = macros.GetFromTable(settingsTable, "shouldRayHitEntity", null)
         // Get the shouldIgnoreEntity setting from the settings table or use the default. 
@@ -66,7 +60,7 @@
         // Create and return a new TraceSettings object with the specified or default settings. 
         return TracePlus.Settings(
             ignoreClasses, priorityClasses, ignoredModels, 
-            errorTolerance, shouldRayHitEntity, shouldIgnoreEntity
+            shouldRayHitEntity, shouldIgnoreEntity
         )
     }
 
@@ -100,17 +94,6 @@
         this.ignoredModels = arrayLib(ignoredModelsArray)
         return this
     }
-
-    /*
-     * Sets the maximum allowed distance between trace start and hit positions. 
-     *
-     * @param {number} tolerance - The maximum allowed distance in units. 
-    */
-    function SetErrorTolerance(tolerance) {
-        this.errorTolerance = tolerance
-        return this
-    }
-
 
     /*
      * Appends an entity classname to the list of ignored classes. 
@@ -170,16 +153,6 @@
     function GetIgnoredModels() {
         return this.ignoredModels
     }
-
-    /*
-     * Gets the maximum allowed distance between trace start and hit positions. 
-     *
-     * @returns {number} - The maximum allowed distance in units. 
-    */
-    function GetErrorTolerance() {
-        return this.errorTolerance
-    }
-
 
     /*
      * Sets a custom function to determine if a ray should hit an entity. 
@@ -272,7 +245,7 @@
     function _cloned() {
         return Settings(
             clone this.ignoreClasses, clone this.priorityClasses, clone this.ignoredModels, 
-            this.errorTolerance, this.shouldRayHitEntity, this.shouldIgnoreEntity
+            this.shouldRayHitEntity, this.shouldIgnoreEntity
         )
     }
 }
