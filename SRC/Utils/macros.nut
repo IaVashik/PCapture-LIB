@@ -227,6 +227,7 @@ macros["GetSoundDuration"] <- function(soundName) {
  * @returns {boolean} - True if the values are equal, false otherwise. 
 */
 macros["isEqually"] <- function(val1, val2) {
+    if(val1 instanceof CBaseEntity || val2 instanceof CBaseEntity) return val1.entindex() == val2.entindex()
     switch (typeof val1) {
         case "integer": 
             return val1 == val2 
