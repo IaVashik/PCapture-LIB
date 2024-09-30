@@ -152,7 +152,8 @@ This file contains utility functions for working with vectors, including checkin
 
 ### `math.vector.isEqually(vec1, vec2)`
 
-This function checks if two vectors are equal by comparing their rounded components. It is useful for comparing vectors with floating-point components, where small differences due to precision errors may occur.
+This function checks if two vectors are equal by comparing their integer components. 
+It effectively truncates the decimal part of each component before performing the comparison.
 
 **Parameters:**
 
@@ -172,6 +173,32 @@ if (math.vector.isEqually(vec1, vec2)) {
     // The vectors are considered equal (their rounded components are the same)
 }
 ```
+
+### `math.vector.isEqually2(vec1, vec2, precision)`
+
+This function checks if two vectors are approximately equal by rounding their components to a specified precision before comparing them. This is useful when dealing with floating-point numbers that might have minor discrepancies due to precision limitations.
+
+**Parameters:**
+
+* `vec1` (Vector): The first vector.
+* `vec2` (Vector): The second vector.
+* `precision` (int): The precision factor. For example, a precision of 1000 rounds to three decimal places (default: 1000).
+
+**Returns:**
+
+* (boolean): True if the vectors are approximately equal after rounding, false otherwise.
+
+**Example:**
+
+```js
+local vec1 = Vector(1.001, 2.002, 3.003)
+local vec2 = Vector(1.002, 2.001, 3.004)
+local isEqual = mVector.isEqually2(vec1, vec2, 100) // isEqual will be true (both round to 1.00, 2.00, 3.00)
+
+local isEqual2 = mVector.isEqually2(vec1, vec2, 1000) // isEqual2 will be false (1.001 != 1.002 etc.)
+```
+
+The key difference between `mVector.isEqually` and `mVector.isEqually2` is their approach to handling floating-point components. `mVector.isEqually` effectively truncates the decimal part and compares only the integer components. `mVector.isEqually2` provides a way to compare vectors with a specified precision, making it more robust in scenarios where minor floating-point differences are acceptable.
 
 ### `math.vector.mul(vec1, vec2)`
 
