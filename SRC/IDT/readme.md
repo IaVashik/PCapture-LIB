@@ -4,41 +4,67 @@ The `IDT` module provides enhanced versions of standard VScripts data structures
 
 ## [IDT/array.nut](array.nut)
 
-This file defines the `arrayLib` class, which is an enhanced version of the standard VScripts array. It provides various methods for manipulating, searching, sorting, and converting arrays, making them more versatile and easier to work with.
+This file defines the `ArrayEx` class, which is an enhanced version of the standard VScripts array. It provides various methods for manipulating, searching, sorting, and converting arrays, making them more versatile and easier to work with.
 
-### `arayLib(arrray)`
+### `ArrayEx(...)`
 
 **Constructor**
 
-Creates a new `arrayLib` object from an existing array.
+Creates a new `ArrayEx` object from a variable number of arguments. This constructor allows you to initialize the `ArrayEx` with the specified elements directly.
 
 **Parameters:**
 
-* `array` (array, optional): The initial array to use for the `arrayLib` object (defaults to an empty array with a capacity of 4).
+*   `...` (any): A variable number of arguments representing the initial elements of the array.
+
+**Example:**
+
+```js
+local myArrayEx = ArrayEx(1, "hello", Vector(0, 0, 0)) // Create an ArrayEx with three elements
+```
+
+### `ArrayEx.FromArray(array)`
+
+**Static Method**
+
+Creates a new `ArrayEx` object from an existing array. This method is useful when you want to convert a standard Squirrel array into an `ArrayEx` object, preserving its elements. If the input `array` is already an `ArrayEx` object, it's returned directly without creating a new object.
+
+**Parameters:**
+
+*   `array` (array): The initial array to use for the `ArrayEx` object.
+
+**Returns:**
+
+*   (ArrayEx): The newly created or the input `ArrayEx` object.
 
 **Example:**
 
 ```js
 local myArray = [1, 2, 3]
-local myArrayLib = arrayLib(myArray) // Create an arrayLib object from the existing array
+local myArrayEx = ArrayEx.FromArray(myArray) // Create an ArrayEx object from the existing array
+
+local existingArrayEx = ArrayEx(4, 5, 6)
+local sameArrayEx = ArrayEx.FromArray(existingArrayEx) // Returns the same ArrayEx object
 ```
 
-### `new(...)`
+### `ArrayEx.WithSize(numberOfItems, fillValue)`
 
-This static method creates a new `arrayLib` object from a variable number of arguments.
+**Static Method**
+
+Creates a new `ArrayEx` object with a specified size, optionally filling it with a default value. This method is handy for creating arrays of a predefined size with initial values.
 
 **Parameters:**
 
-* `...` (any): A variable number of arguments to add to the array.
+*   `numberOfItems` (int): The desired number of elements in the array.
+*   `fillValue` (any, optional): The value to fill the array with (defaults to `null`).
 
 **Returns:**
 
-* (arrayLib): The newly created `arrayLib` object.
+*   (ArrayEx): The newly created `ArrayEx` object.
 
 **Example:**
 
 ```js
-local myArrayLib = arrayLib.new(1, "hello", Vector(0, 0, 0)) // Create an arrayLib with three elements
+local myArrayEx = ArrayEx.WithSize(5, 0) // Creates an ArrayEx with 5 elements, each initialized to 0
 ```
 
 ### `append(value)`
@@ -51,7 +77,7 @@ This method appends a value to the end of the array. It automatically resizes th
 
 **Returns:**
 
-* (arrayLib): The `arrayLib` object itself (for method chaining).
+* (ArrayEx): The `ArrayEx` object itself (for method chaining).
 
 **Example:**
 
@@ -69,7 +95,7 @@ This method applies a function to each element of the array and modifies the arr
 
 **Returns:**
 
-* (arrayLib): The `arrayLib` object itself (for method chaining).
+* (ArrayEx): The `ArrayEx` object itself (for method chaining).
 
 **Example:**
 
@@ -83,7 +109,7 @@ This method removes all elements from the array and resets its length to 0.
 
 **Returns:**
 
-* (arrayLib): The `arrayLib` object itself (for method chaining).
+* (ArrayEx): The `ArrayEx` object itself (for method chaining).
 
 **Example:**
 
@@ -93,15 +119,15 @@ myArrayLib.clear() // Remove all elements from the array
 
 ### `extend(other)`
 
-This method extends the array by appending all elements from another array or `arrayLib` object to the end of this array. It automatically resizes the underlying array if necessary.
+This method extends the array by appending all elements from another array or `ArrayEx` object to the end of this array. It automatically resizes the underlying array if necessary.
 
 **Parameters:**
 
-* `other` (array or arrayLib): The array or `arrayLib` object to append elements from.
+* `other` (array or ArrayEx): The array or `ArrayEx` object to append elements from.
 
 **Returns:**
 
-* (arrayLib): The `arrayLib` object itself (for method chaining).
+* (ArrayEx): The `ArrayEx` object itself (for method chaining).
 
 **Example:**
 
@@ -112,19 +138,19 @@ myArrayLib.extend(otherArray) // Append the elements of otherArray to myArrayLib
 
 ### `filter(func)`
 
-This method creates a new `arrayLib` object containing only the elements that satisfy the predicate function.
+This method creates a new `ArrayEx` object containing only the elements that satisfy the predicate function.
 
 **Parameters:**
 
 * `func` (function): The predicate function that takes three arguments:
 * `index` (number): The index of the current element.
 * `value` (any): The value of the current element.
-* `newArray` (arrayLib): The new array being created.
+* `newArray` (ArrayEx): The new array being created.
 The function should return `true` if the element should be included in the new array, and `false` otherwise.
 
 **Returns:**
 
-* (arrayLib): A new `arrayLib` object containing the filtered elements.
+* (ArrayEx): A new `ArrayEx` object containing the filtered elements.
 
 **Example:**
 
@@ -210,7 +236,7 @@ local arrayLength = myArrayLib.len() // Get the length of the array
 
 ### `map(func)`
 
-This method creates a new `arrayLib` object by applying a function to each element of this array.
+This method creates a new `ArrayEx` object by applying a function to each element of this array.
 
 **Parameters:**
 
@@ -218,7 +244,7 @@ This method creates a new `arrayLib` object by applying a function to each eleme
 
 **Returns:**
 
-* (arrayLib): A new `arrayLib` object containing the mapped values.
+* (ArrayEx): A new `ArrayEx` object containing the mapped values.
 
 **Example:**
 
@@ -241,7 +267,7 @@ Reduce the array to a single value.
 **Example:**
 
 ```js
-local myArray = arrayLib([1, 2, 3, 4, 5])
+local myArray = ArrayEx.FromArray([1, 2, 3, 4, 5])
 local sum = myArray.reduce(function(acc, item) {
     return acc + item
 }, 0)
@@ -253,14 +279,14 @@ Return a new array with only unique elements.
 
 **Returns:**
 
-* (arrayLib): The new array with unique elements.
+* (ArrayEx): The new array with unique elements.
 
 **Example:**
 
 ```js
-local myArray = arrayLib([1, 2, 2, 3, 4, 4, 5])
+local myArray = ArrayEx.FromArray([1, 2, 2, 3, 4, 4, 5])
 local uniqueArray = myArray.unique()
-printl(uniqueArray) // Output: arrayLib([1, 2, 3, 4, 5])
+printl(uniqueArray) // Output: ArrayEx([1, 2, 3, 4, 5])
 ```
 
 ### `pop()`
@@ -330,7 +356,7 @@ This method reverses the order of elements in the array in-place.
 
 **Returns:**
 
-* (arrayLib): The `arrayLib` object itself (for method chaining).
+* (ArrayEx): The `ArrayEx` object itself (for method chaining).
 
 **Example:**
 
@@ -340,7 +366,7 @@ myArrayLib.reverse() // Reverse the order of elements in the array
 
 ### `slice(start, end)`
 
-This method returns a new `arrayLib` object containing a portion of the array.
+This method returns a new `ArrayEx` object containing a portion of the array.
 
 **Parameters:**
 
@@ -349,7 +375,7 @@ This method returns a new `arrayLib` object containing a portion of the array.
 
 **Returns:**
 
-* (arrayLib): A new `arrayLib` object containing the sliced elements.
+* (ArrayEx): A new `ArrayEx` object containing the sliced elements.
 
 **Example:**
 
@@ -371,7 +397,7 @@ If no comparison function is provided, the elements are sorted according to thei
 
 **Returns:**
 
-* (arrayLib): The `arrayLib` object itself (for method chaining).
+* (ArrayEx): The `ArrayEx` object itself (for method chaining).
 
 **Example:**
 
@@ -485,7 +511,7 @@ Improper use of the List class can lead to memory leaks, as the garbage collecto
 local myList = List(1, 2, 3)
 ```
 
-### `fromArray(array)`
+### `FromArray(array)`
 Creates a new `List` object from an existing array.
 
 **Parameters:**
@@ -500,7 +526,7 @@ Creates a new `List` object from an existing array.
 
 ```js
 local myArray = [1, 2, 3]
-local myList = List.fromArray(myArray)
+local myList = List.FromArray(myArray)
 ```
 
 ### `len()`
@@ -882,7 +908,7 @@ This file defines the `AVLTree` class, which represents a self-balancing binary 
 local myTree = AVLTree(5, 2, 8, 1, 3)
 ```
 
-### `fromArray(array)`
+### `FromArray(array)`
 Creates a new `AVLTree` object from an existing array.
 
 **Parameters:**
@@ -897,7 +923,7 @@ Creates a new `AVLTree` object from an existing array.
 
 ```js
 local myArray = [5, 2, 8, 1, 3]
-local myTree = AVLTree.fromArray(myArray)
+local myTree = AVLTree.FromArray(myArray)
 ```
 
 ### `len()`
@@ -913,17 +939,17 @@ Gets the number of nodes in the tree.
 local treeSize = myTree.len()
 ```
 
-### `toArray()`
+### `toarray()`
 Converts the tree to an array using inorder traversal (ascending order).
 
 **Returns:**
 
-* (arrayLib): An array containing the tree nodes in ascending order.
+* (ArrayEx): An array containing the tree nodes in ascending order.
 
 **Example:**
 
 ```js
-local sortedArray = myTree.toArray()
+local sortedArray = myTree.toarray()
 ```
 
 ### `tolist()`
@@ -1016,7 +1042,7 @@ Performs an inorder traversal of the tree and returns an array of nodes in ascen
 
 **Returns:**
 
-* (arrayLib): An array containing the tree nodes in ascending order.
+* (ArrayEx): An array containing the tree nodes in ascending order.
 
 **Example:**
 

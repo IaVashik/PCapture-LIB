@@ -3,7 +3,7 @@
 /* 
  * Precaches a sound script or a list of sound scripts for later use.
  * 
- * @param {string|array|arrayLib} sound_path - The path to the sound script or a list of paths.
+ * @param {string|array|ArrayEx} sound_path - The path to the sound script or a list of paths.
 */
 macros["Precache"] <- function(soundPath) {
     if(typeof soundPath == "string")
@@ -113,7 +113,7 @@ macros["RangeIter"] <- function(start, end, step = 1) {
 /*
  * Searches for a matching string in an array, considering wildcard '*'.
  *
- * @param {array|arrayLib} iter - The array to search in.
+ * @param {array|ArrayEx} iter - The array to search in.
  * @param {string} match - The string to search for.
  * @returns {int|null} - The index of the first matching element, or null if not found. 
  *           If the first element of iter is '*', returns 0. 
@@ -246,8 +246,10 @@ macros["GetSoundDuration"] <- function(soundName) {
  * @returns {boolean} - True if the values are equal, false otherwise. 
 */
 macros["isEqually"] <- function(val1, val2) {
-    if(val1 instanceof CBaseEntity || val2 instanceof CBaseEntity) return val1.entindex() == val2.entindex()
-    switch (typeof val1) {
+    if((typeof val1 == "instance" || typeof val2 == "instance") && (val1 instanceof CBaseEntity || val2 instanceof CBaseEntity)) 
+        return val1.entindex() == val2.entindex()
+    
+        switch (typeof val1) {
         case "integer": 
             return val1 == val2 
         case "float": 

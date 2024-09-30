@@ -23,7 +23,7 @@
         this.first_node = ListNode(0);
         this.last_node = this.first_node;
         
-        for(local i = 0; i< vargc; i++) {
+        for(local i = 0; i < vargc; i++) {
             this.append(vargv[i])
         }
     }
@@ -34,7 +34,7 @@
      * @param {array} array - The array to create the list from.
      * @returns {List} - The new list containing the elements from the array.
     */
-    function fromArray(array) {
+    function FromArray(array) {
         local list = List()
         foreach(val in array) 
             list.append(val)
@@ -540,7 +540,7 @@
      * @returns {array} - An array containing the elements of the list.
     */
     function toarray() {
-        local array = arrayLib(array(this.length))
+        local array = ArrayEx.WithSize(this.length)
         foreach(idx, value in this.iter()) {
             array[idx] = value
         }

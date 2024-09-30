@@ -3,16 +3,16 @@
 */
 TracePlus["Settings"] <- class {
     // An array of entity classnames to ignore during traces. 
-    ignoreClasses = arrayLib.new("viewmodel", "weapon_", "beam",
+    ignoreClasses = ArrayEx("viewmodel", "weapon_", "beam",
         "trigger_", "phys_", "env_", "point_", "info_", "vgui_", "logic_",
         "clone", "prop_portal", "portal_base2D", "func_clip", "func_instance",
         "func_portal_detector", 
         "worldspawn", "soundent", "player_manager", "bodyque", "ai_network"
     );
     // An array of entity classnames to prioritize during traces.  
-    priorityClasses = arrayLib.new();
+    priorityClasses = ArrayEx();
     // An array of entity model names to ignore during traces. 
-    ignoredModels = arrayLib.new();
+    ignoredModels = ArrayEx();
 
 
     // A custom function to determine if a ray should hit an entity. 
@@ -33,11 +33,11 @@ TracePlus["Settings"] <- class {
         local result = TracePlus.Settings()
 
         // Set the ignoreClasses setting from the settings table or use the default. 
-        result.SetIgnoredClasses(macros.GetFromTable(settingsTable, "ignoreClasses", clone(TracePlus.Settings.ignoreClasses))) // we need CoW!
+        result.SetIgnoredClasses(macros.GetFromTable(settingsTable, "ignoreClasses", TracePlus.Settings.ignoreClasses))
         // Set the priorityClasses setting from the settings table or use the default. 
-        result.SetPriorityClasses(macros.GetFromTable(settingsTable, "priorityClasses", clone(TracePlus.Settings.priorityClasses)))
+        result.SetPriorityClasses(macros.GetFromTable(settingsTable, "priorityClasses", TracePlus.Settings.priorityClasses))
         // Set the ignoredModels setting from the settings table or use the default. 
-        result.SetIgnoredModels(macros.GetFromTable(settingsTable, "ignoredModels", clone(TracePlus.Settings.ignoredModels)))
+        result.SetIgnoredModels(macros.GetFromTable(settingsTable, "ignoredModels", TracePlus.Settings.ignoredModels))
         
         // Set the shouldRayHitEntity setting from the settings table or use the default.  
         result.SetCollisionFilter(macros.GetFromTable(settingsTable, "shouldRayHitEntity", null))
@@ -55,30 +55,30 @@ TracePlus["Settings"] <- class {
     /*
      * Sets the list of entity classnames to ignore during traces.
      *
-     * @param {array|arrayLib} ignoreClassesArray - An array or arrayLib containing entity classnames to ignore. 
+     * @param {array|ArrayEx} ignoreClassesArray - An array or ArrayEx containing entity classnames to ignore. 
     */
     function SetIgnoredClasses(ignoreClassesArray) {
-        this.ignoreClasses = arrayLib(ignoreClassesArray)
+        this.ignoreClasses = ArrayEx.FromArray(ignoreClassesArray)
         return this
     }
 
     /*
      * Sets the list of entity classnames to prioritize during traces.
      *
-     * @param {array|arrayLib} priorityClassesArray - An array or arrayLib containing entity classnames to prioritize. 
+     * @param {array|ArrayEx} priorityClassesArray - An array or ArrayEx containing entity classnames to prioritize. 
     */
     function SetPriorityClasses(priorityClassesArray) {
-        this.priorityClasses = arrayLib(priorityClassesArray)
+        this.priorityClasses = ArrayEx.FromArray(priorityClassesArray)
         return this
     }
 
     /*
      * Sets the list of entity model names to ignore during traces.
      *
-     * @param {array|arrayLib} ignoredModelsArray - An array or arrayLib containing entity model names to ignore. 
+     * @param {array|ArrayEx} ignoredModelsArray - An array or ArrayEx containing entity model names to ignore. 
     */
     function SetIgnoredModels(ignoredModelsArray) {
-        this.ignoredModels = arrayLib(ignoredModelsArray)
+        this.ignoredModels = ArrayEx.FromArray(ignoredModelsArray)
         return this
     }
 
@@ -98,6 +98,10 @@ TracePlus["Settings"] <- class {
      * @param {string} className - The classname to append. 
     */
     function AppendIgnoredClass(className) {
+        // CoW Mechanism
+        if(this.ignoreClasses == TracePlus.Settings.ignoreClasses)
+            this.ignoreClasses = clone this.ignoreClasses
+        
         this.ignoreClasses.append(className)
         return this
     }
@@ -108,6 +112,10 @@ TracePlus["Settings"] <- class {
      * @param {string} className - The classname to append. 
     */
     function AppendPriorityClasses(className) {
+        // CoW Mechanism
+        if(this.priorityClasses == TracePlus.Settings.priorityClasses)
+            this.priorityClasses = clone this.priorityClasses
+        
         this.priorityClasses.append(className)
         return this
     }
@@ -118,6 +126,10 @@ TracePlus["Settings"] <- class {
      * @param {string} modelName - The model name to append. 
     */
     function AppendIgnoredModel(modelName) {
+        // CoW Mechanism
+        if(this.ignoredModels == TracePlus.Settings.ignoredModels)
+            this.ignoredModels = clone this.ignoredModels
+
         this.ignoredModels.append(modelName)
         return this
     }
@@ -127,7 +139,7 @@ TracePlus["Settings"] <- class {
     /* 
      * Gets the list of entity classnames to ignore during traces. 
      *
-     * @returns {arrayLib} - An arrayLib containing the ignored classnames. 
+     * @returns {ArrayEx} - An ArrayEx containing the ignored classnames. 
     */
     function GetIgnoreClasses() {
         return this.ignoreClasses
@@ -136,7 +148,7 @@ TracePlus["Settings"] <- class {
     /*
      * Gets the list of entity classnames to prioritize during traces. 
      *
-     * @returns {arrayLib} - An arrayLib containing the priority classnames. 
+     * @returns {ArrayEx} - An ArrayEx containing the priority classnames. 
     */
     function GetPriorityClasses() {
         return this.priorityClasses
@@ -145,7 +157,7 @@ TracePlus["Settings"] <- class {
     /*
      * Gets the list of entity model names to ignore during traces. 
      *
-     * @returns {arrayLib} - An arrayLib containing the ignored model names. 
+     * @returns {ArrayEx} - An ArrayEx containing the ignored model names. 
     */
     function GetIgnoredModels() {
         return this.ignoredModels
@@ -222,7 +234,7 @@ TracePlus["Settings"] <- class {
         // Check if any entities should be ignored during the trace 
         if (ignoreEntities) {
             // If ignoreEntities is an array, append the player entity to it 
-            if (typeof ignoreEntities == "array" || typeof ignoreEntities == "arrayLib") {
+            if (typeof ignoreEntities == "array" || typeof ignoreEntities == "ArrayEx") {
                 ignoreEntities.append(newEnt)
             }
             // If ignoreEntities is a single entity, create a new array with both the player and ignoreEntities 

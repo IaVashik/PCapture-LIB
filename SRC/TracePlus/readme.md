@@ -40,9 +40,9 @@ This class stores various settings that control the behavior of traces, such as 
 
 **Properties:**
 
-*   `ignoreClasses` (arrayLib): An array of entity classnames to ignore during traces. Supports masks, e.g., `["trigger_"]` will ignore all entities with "trigger\_" in their classnames.
-*   `priorityClasses` (arrayLib): An array of entity classnames to prioritize during traces. Supports masks.
-*   `ignoredModels` (arrayLib): An array of entity model names to ignore during traces. Supports masks.
+*   `ignoreClasses` (ArrayEx): An array of entity classnames to ignore during traces. Supports masks, e.g., `["trigger_"]` will ignore all entities with "trigger\_" in their classnames.
+*   `priorityClasses` (ArrayEx): An array of entity classnames to prioritize during traces. Supports masks.
+*   `ignoredModels` (ArrayEx): An array of entity model names to ignore during traces. Supports masks.
 *   `shouldRayHitEntity` (function or null): A custom function to determine if a ray should hit an entity. This function is used as a collision filter.
 *   `shouldIgnoreEntity` (function or null): A custom function to determine if an entity should be ignored during a trace. This function is used as an ignore filter.
 *   `depthAccuracy` (number): Controls the step size in the deep search algorithm of the `TraceLineAnalyzer` for bbox casts. Lower values increase precision but may impact performance. It's useful when the ray needs to hit very thin objects. (Default: 5, clamped between 0.3 and 15)
@@ -76,7 +76,7 @@ This class stores various settings that control the behavior of traces, such as 
 
 ```js
 local s = TracePlus.Settings.new({
-    ignoreClasses = arrayLib.new("trigger_multiple", "func_brush"),
+    ignoreClasses = ArrayEx("trigger_multiple", "func_brush"),
 }) 
 ```
 
@@ -94,7 +94,7 @@ s.SetBynaryRefinement(true) // Enable binary refinement for precise hit point ca
 
 ```js
 local s = TracePlus.Settings
-    .SetIgnoredClasses(arrayLib.new("trigger_multiple", "func_brush"))
+    .SetIgnoredClasses(ArrayEx("trigger_multiple", "func_brush"))
     .AppendPriorityClasses(List("player"))
     .SetDepthAccuracy(10) 
     .SetBynaryRefinement(false)
@@ -124,7 +124,7 @@ This class represents the result of a cheap (fast but less accurate) trace. It s
 * `DidHit()`: Returns `true` if the trace hit something, `false` otherwise.
 * `GetDir()`: Returns the direction vector of the trace as a Vector.
 * `GetPortalEntryInfo()`: Returns the portal entry information as a `CheapTraceResult` object, or `null` if no portal was entered.
-* `GetAggregatedPortalEntryInfo()`: Returns an `arrayLib` containing all portal entry information for the trace, including nested portals, as `CheapTraceResult` objects.
+* `GetAggregatedPortalEntryInfo()`: Returns an `ArrayEx` containing all portal entry information for the trace, including nested portals, as `CheapTraceResult` objects.
 * `GetImpactNormal()`: Calculates and returns the impact normal of the surface hit by the trace as a Vector.
 
 **Example:**

@@ -1,7 +1,7 @@
 /*
 * Enhanced arrays module.
 */
-::arrayLib <- class {
+::ArrayEx <- class {
     // The internal array. 
     arr = null
     length = 0;
@@ -11,36 +11,54 @@
     tableIsValid = false;
     
     /*
-     * Constructor.
+     * Constructor for ArrayEx.
      * 
-     * @param {array} array - The initial array.
+     * Creates a new ArrayEx object from a variable number of arguments.
+     *
+     * @param {...} ... - A variable number of arguments representing the initial elements of the array.
     */
-    constructor(array = []) {
-        if(typeof array == "arrayLib")
-            array = array.arr
-        this.arr = array
-        this.table = {}
+    constructor(...) {
+        this.arr = array(vargc);
+        this.table = {};
+        
+        for(local i = 0; i < vargc; i++) {
+            this.arr[i] = vargv[i]
+        }
     }
 
     /*
-     * Create a new arrayLib instance from arguments.
-     * 
-     * @param {...any} vargv - The values for the array.
-     * @returns {arrayLib} - The new arrayLib instance. 
+     * Creates a new ArrayEx object from an existing array.
+     *
+     * If the input array is already an ArrayEx object, it is returned directly.
+     *
+     * @param {array} array - The initial array to use for the ArrayEx object.
+     * @returns {ArrayEx} - The newly created or the input ArrayEx object.
     */
-    function new(...) {
-        local arr = array(vargc)
-        for(local i = 0; i< vargc; i++) {
-            arr[i] = vargv[i]
-        }
-        return arrayLib(arr)
+    function FromArray(array) {
+        if(typeof array == "ArrayEx") // dumb-ass protection :P
+            return array
+        
+        local arrayEx = ArrayEx()
+        arrayEx.arr = array
+        return arrayEx
     }
+
+    /*
+     * Creates a new ArrayEx object with a specified size, optionally filled with a default value.
+     *
+     * @param {int} numberOfItems - The desired number of elements in the array.
+     * @param {any} fillValue - The value to fill the array with (defaults to null).
+     * @returns {ArrayEx} - The newly created ArrayEx object.
+    */
+    function WithSize(numberOfItems, fillValue = null) {
+        return ArrayEx.FromArray(array(numberOfItems, fillValue))
+    } 
 
     /*
      * Append a value to the array.
      * 
      * @param {any} val - The value to append.
-     * @returns {arrayLib} - The arrayLib instance for chaining.
+     * @returns {ArrayEx} - The ArrayEx instance for chaining.
     */
     function append(val) {
         this._pushToTable(val)
@@ -52,7 +70,7 @@
      * Apply a function to each element and modify the array in-place.
      * 
      * @param {Function} func - The function to apply.
-     * @returns {arrayLib} - The arrayLib instance for chaining.
+     * @returns {ArrayEx} - The ArrayEx instance for chaining.
     */
     function apply(func) {
         foreach(idx, value in arr) {
@@ -65,7 +83,7 @@
     /*
      * Clear the array and table.
      * 
-     * @returns {arrayLib} - The arrayLib instance for chaining.
+     * @returns {ArrayEx} - The ArrayEx instance for chaining.
     */
     function clear() {
         this.arr.clear()
@@ -77,11 +95,11 @@
     /*
      * Extend the array with another array.
      * 
-     * @param {array|arrayLib} other - The array to extend from.
-     * @returns {arrayLib} - The arrayLib instance for chaining.
+     * @param {array|ArrayEx} other - The array to extend from.
+     * @returns {ArrayEx} - The ArrayEx instance for chaining.
     */
     function extend(other) {
-        if(typeof other == "arrayLib") {
+        if(typeof other == "ArrayEx") {
             other = other.arr
         }
 
@@ -95,10 +113,10 @@
      * Filter the array by a predicate function.
      * 
      * @param {Function} condition(index, value, newArray) - The predicate function. 
-     * @returns {arrayLib} - The filtered array.
+     * @returns {ArrayEx} - The filtered array.
     */
     function filter(condition) {
-        local newArray = arrayLib([])
+        local newArray = ArrayEx()
         foreach(idx, val in arr) {
             if(condition(idx, val, newArray))
                 newArray.append(val)
@@ -164,14 +182,14 @@
      * Map the array to a new array via a function.
      * 
      * @param {Function} func - The mapping function.
-     * @returns {arrayLib} - The mapped array.
+     * @returns {ArrayEx} - The mapped array.
     */
     function map(func) {
         local newArray = array(this.len())
         foreach(idx, value in arr) {
             newArray[idx] = func(value)
         }
-        return arrayLib(newArray)
+        return ArrayEx.FromArray(newArray)
     }
 
     /*
@@ -192,11 +210,11 @@
     /*
      * Return a new array with only unique elements.
      * 
-     * @returns {arrayLib} - The new array with unique elements.
+     * @returns {ArrayEx} - The new array with unique elements.
     */
     function unique() {
         local seen = {}
-        local result = arrayLib([])
+        local result = ArrayEx()
         
         foreach(value in this.arr) {
             if(value in seen) continue
@@ -254,7 +272,7 @@
     /*
      * Reverse the array in-place.
      * 
-     * @returns {arrayLib} - The reversed array.
+     * @returns {ArrayEx} - The reversed array.
     */
     function reverse() {
         arr.reverse();
@@ -266,17 +284,17 @@
      * 
      * @param {int} startIndex - The start index.
      * @param {int} endIndex - The end index. (optional)
-     * @returns {arrayLib} - The sliced array.
+     * @returns {ArrayEx} - The sliced array.
     */
     function slice(startIndex, endIndex = null) {
-        return arrayLib(arr.slice(startIndex, endIndex || this.len()))
+        return ArrayEx.FromArray(arr.slice(startIndex, endIndex || this.len()))
     }
 
     /*
      * Sort the array.
      * 
      * @param {Function} func - Optional compare function.
-     * @returns {arrayLib} - The sorted array.
+     * @returns {ArrayEx} - The sorted array.
     */
     function sort(func = null) {
         func ? arr.sort(func) : arr.sort()
@@ -368,7 +386,7 @@
 
 
     function _cloned() {
-        return arrayLib(clone this.arr)
+        return ArrayEx.FromArray(clone this.arr)
     }
 
     /*
@@ -381,9 +399,9 @@
     /*
      * Get the type name.
      * 
-     * @returns {"arrayLib"}
+     * @returns {"ArrayEx"}
     */
-    function _typeof () return "arrayLib";
+    function _typeof () return "ArrayEx";
     
     /*
      * Get an element by index.

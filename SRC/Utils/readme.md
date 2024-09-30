@@ -477,7 +477,7 @@ This macro precaches a sound script or a list of sound scripts for later use. Pr
 
 **Parameters:**
 
-* `soundPath` (string, array, or arrayLib): The path to the sound script or a list of paths to sound scripts, relative to the `sound` directory.
+* `soundPath` (string, array, or ArrayEx): The path to the sound script or a list of paths to sound scripts, relative to the `sound` directory.
 
 **Example:**
 
@@ -646,7 +646,7 @@ This macro searches for a matching string within an array, taking into account a
 
 **Parameters:**
 
-* `iter` (array or arrayLib): The array to search in.
+* `iter` (array or ArrayEx): The array to search in.
 * `match` (string): The string to search for.
 
 **Returns:**

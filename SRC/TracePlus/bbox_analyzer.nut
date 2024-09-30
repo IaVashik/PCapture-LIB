@@ -244,7 +244,7 @@ function TraceLineAnalyzer::shouldHitEntity(ent, ignoreEntities, note) {
     if(ignoreEntities) {
         // Processing for arrays
         local type = typeof ignoreEntities 
-        if (type == "array" || type == "arrayLib") {
+        if (type == "array" || type == "ArrayEx") {
             foreach (mask in ignoreEntities) {
                 if(ent.entindex() == mask.entindex()) return false 
             }

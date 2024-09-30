@@ -45,7 +45,7 @@
             return action.call(scope)
         }
         
-        if(typeof args != "array" && typeof args != "arrayLib" && typeof args != "List") {
+        if(typeof args != "array" && typeof args != "ArrayEx" && typeof args != "List") {
             throw("Invalid arguments for ScheduleEvent! The argument must be itterable, not (" + args + ")")
         }
 

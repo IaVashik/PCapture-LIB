@@ -35,7 +35,7 @@
                 if(type(event.action) == "function" || type(event.action) == "native function") {
                     printl("\nFUNCTION INFO")
                     foreach(key, val in event.action.getinfos()) {
-                        if(type(val) == "array") val = arrayLib(val)
+                        if(type(val) == "array") val = ArrayEx.FromArray(val)
                         macros.fprint("[{}] {}", key.toupper(), val)
                     }
                 }
