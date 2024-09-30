@@ -1,7 +1,7 @@
 /*
  * Settings for ray traces.
 */
- TracePlus["Settings"] <- class {
+TracePlus["Settings"] <- class {
     // An array of entity classnames to ignore during traces. 
     ignoreClasses = arrayLib.new("viewmodel", "weapon_", "beam",
         "trigger_", "phys_", "env_", "point_", "info_", "vgui_", "logic_",
@@ -20,23 +20,8 @@
     // A custom function to determine if an entity should be ignored during a trace. 
     shouldIgnoreEntity = null;
 
-
-    /*
-     * Constructor for TraceSettings.
-     *
-     * @param {arrayLib} ignoreClasses - An array of entity classnames to ignore.
-     * @param {arrayLib} priorityClasses - An array of entity classnames to prioritize. 
-     * @param {arrayLib} ignoredModels - An array of entity model names to ignore.
-     * @param {function} shouldRayHitEntity - A custom function to determine if a ray should hit an entity.
-     * @param {function} shouldIgnoreEntity - A custom function to determine if an entity should be ignored. 
-    */
-    constructor(ignoreClasses, priorityClasses, ignoredModels, shouldRayHitEntity, shouldIgnoreEntity) {
-        this.ignoreClasses = ignoreClasses
-        this.priorityClasses = priorityClasses
-        this.ignoredModels = ignoredModels
-        this.shouldRayHitEntity = shouldRayHitEntity
-        this.shouldIgnoreEntity = shouldIgnoreEntity
-    }
+    depthAccuracy = 5;
+    bynaryRefinement = false;
 
     /*
      * Creates a new TraceSettings object with default values or from a table of settings. 
@@ -45,23 +30,25 @@
      * @returns {TraceSettings} - A new TraceSettings object.
     */
     function new(settingsTable = {}) {
-        // Get the ignoreClasses setting from the settings table or use the default. 
-        local ignoreClasses = arrayLib(macros.GetFromTable(settingsTable, "ignoreClasses", clone(TracePlus.Settings.ignoreClasses)))
-        // Get the priorityClasses setting from the settings table or use the default. 
-        local priorityClasses = arrayLib(macros.GetFromTable(settingsTable, "priorityClasses", clone(TracePlus.Settings.priorityClasses)))
-        // Get the ignoredModels setting from the settings table or use the default. 
-        local ignoredModels = arrayLib(macros.GetFromTable(settingsTable, "ignoredModels", clone(TracePlus.Settings.ignoredModels)))
+        local result = TracePlus.Settings()
+
+        // Set the ignoreClasses setting from the settings table or use the default. 
+        result.SetIgnoredClasses(macros.GetFromTable(settingsTable, "ignoreClasses", clone(TracePlus.Settings.ignoreClasses))) // we need CoW!
+        // Set the priorityClasses setting from the settings table or use the default. 
+        result.SetPriorityClasses(macros.GetFromTable(settingsTable, "priorityClasses", clone(TracePlus.Settings.priorityClasses)))
+        // Set the ignoredModels setting from the settings table or use the default. 
+        result.SetIgnoredModels(macros.GetFromTable(settingsTable, "ignoredModels", clone(TracePlus.Settings.ignoredModels)))
         
-        // Get the shouldRayHitEntity setting from the settings table or use the default.  
-        local shouldRayHitEntity = macros.GetFromTable(settingsTable, "shouldRayHitEntity", null)
-        // Get the shouldIgnoreEntity setting from the settings table or use the default. 
-        local shouldIgnoreEntity = macros.GetFromTable(settingsTable, "shouldIgnoreEntity", null)
+        // Set the shouldRayHitEntity setting from the settings table or use the default.  
+        result.SetCollisionFilter(macros.GetFromTable(settingsTable, "shouldRayHitEntity", null))
+        // Set the shouldIgnoreEntity setting from the settings table or use the default. 
+        result.SetIgnoreFilter(macros.GetFromTable(settingsTable, "shouldIgnoreEntity", null))
+
+        // todo comment
+        result.SetDepthAccuracy(macros.GetFromTable(settingsTable, "depthAccuracy", 5))
+        result.SetBynaryRefinement(macros.GetFromTable(settingsTable, "bynaryRefinement", false))
         
-        // Create and return a new TraceSettings object with the specified or default settings. 
-        return TracePlus.Settings(
-            ignoreClasses, priorityClasses, ignoredModels, 
-            shouldRayHitEntity, shouldIgnoreEntity
-        )
+        return result
     }
 
 
@@ -92,6 +79,16 @@
     */
     function SetIgnoredModels(ignoredModelsArray) {
         this.ignoredModels = arrayLib(ignoredModelsArray)
+        return this
+    }
+
+    function SetDepthAccuracy(value) {
+        this.depthAccuracy = math.clamp(value, 0.3, 15)
+        return this
+    }
+
+    function SetBynaryRefinement(bool) {
+        this.bynaryRefinement = bool
         return this
     }
 

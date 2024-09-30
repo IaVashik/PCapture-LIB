@@ -105,7 +105,7 @@ results["Cheap"] <- class {
         if(this.surfaceNormal)
             return this.surfaceNormal
         
-        this.surfaceNormal = CalculateImpactNormal(this.GetStartPos(), this.hitpos, this)
+        this.surfaceNormal = CalculateImpactNormal(this.GetStartPos(), this.hitpos)
         return this.surfaceNormal 
     } 
 
@@ -286,7 +286,7 @@ results["Bbox"] <- class {
         if(hitEnt) {
             this.surfaceNormal = CalculateImpactNormalFromBbox(this.GetStartPos(), this.hitpos, hitEnt)
         } else {
-            this.surfaceNormal = CalculateImpactNormal(this.GetStartPos(), this.hitpos, this)
+            this.surfaceNormal = CalculateImpactNormal(this.GetStartPos(), this.hitpos)
         }
 
         return this.surfaceNormal

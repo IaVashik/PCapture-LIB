@@ -4,39 +4,42 @@
 class BufferedEntity {
     entity = null;
     origin = null;
-    isSquareBbox = null
     bboxMax = null;
     bboxMin = null;
     len = null
 
     constructor(entity) {
         this.entity = entLib.FromEntity(entity)
-        this.origin = entity.GetOrigin()
+        this.origin = entity.GetCenter()
         this.len = ( entity.GetBoundingMaxs() - entity.GetBoundingMins() ).Length() / 2 // or we can use `this.entity.GetBoundingCenter().Length()`
-
-        this.isSquareBbox = floor((entity.GetBoundingMaxs() + entity.GetBoundingMins()).Length()) == 0
-        if(this.isSquareBbox) { // bbox square
-            this.bboxMax = entity.GetBoundingMaxs() + this.origin
-            this.bboxMin = entity.GetBoundingMins() + this.origin
+        
+        // This is needed for optimization with avoiding a lot of quaternion rotations
+        local _origin = entity.GetOrigin()
+        if(this.entity.IsSquareBbox()) { // bbox square
+            this.bboxMax = entity.GetBoundingMaxs() + _origin
+            this.bboxMin = entity.GetBoundingMins() + _origin
         }
         else { // bbox rectangular
-            this.bboxMax = this.entity.CreateAABB(7) + this.origin
-            this.bboxMin = this.entity.CreateAABB(0) + this.origin
+            this.bboxMax = this.entity.CreateAABB(7) + _origin
+            this.bboxMin = this.entity.CreateAABB(0) + _origin
         }
     }
+    function _tostring() return this.entity.tostring()
 }
 
 const JumpPercent = 0.25
+::EntBufferTable <- {} // To avoid repeated operations on objects that do not change their position.
 
 /*
  * A class for performing precise trace line analysis. 
  * 
  * This class provides methods for tracing lines with more precision and considering entity priorities and ignore settings. 
 */
- ::TraceLineAnalyzer <- class {
+::TraceLineAnalyzer <- class {
     settings = null;
     hitpos = null;
     hitent = null;
+    eqVecFunc = math.vector.isEqually;
 
     /*
      * Constructor for TraceLineAnalyzer.
@@ -135,7 +138,7 @@ function TraceLineAnalyzer::Trace(startPos, endPos, ignoreEntities, note = null)
     local searchRadius = halfSegment.Length()
 
     local fastSearchSteps = searchRadius / 15
-    local deepSearchSteps = searchRadius / 5
+    local deepSearchSteps = searchRadius / this.settings.depthAccuracy
    
     for(local segment = 0; segment < 1; segment += JumpPercent) {
 
@@ -143,7 +146,16 @@ function TraceLineAnalyzer::Trace(startPos, endPos, ignoreEntities, note = null)
         local segmentCenter = startPos + dist * (segment + JumpPercent * 0.5)
         for (local ent;ent = Entities.FindByClassnameWithin(ent, "*", segmentCenter, searchRadius);) {
             if (ent && this.shouldHitEntity(ent, ignoreEntities, note)) {
-                entBuffer.append(BufferedEntity(ent)) // todo add cache?
+                local idx = ent.entindex()
+                // small cache system
+                if(idx in EntBufferTable && this.eqVecFunc(EntBufferTable[idx].origin, ent.GetOrigin())) {
+                    entBuffer.append(EntBufferTable[idx])
+                }
+                else {
+                    local BEnt = BufferedEntity(ent)
+                    EntBufferTable[idx] <- BEnt
+                    entBuffer.append(BEnt)
+                }
             }
         }
 
@@ -166,7 +178,7 @@ function TraceLineAnalyzer::Trace(startPos, endPos, ignoreEntities, note = null)
         }
 
         // Cleanup buffer
-        entBuffer.clear() // TODO improve perfomance
+        entBuffer.clear()
     }
 
     // Is entiti not found? Returning hitpos
@@ -174,24 +186,42 @@ function TraceLineAnalyzer::Trace(startPos, endPos, ignoreEntities, note = null)
 }
 
 function TraceLineAnalyzer::DeepSearch(segmentStart, deepSegmentsLenght, searchSteps, entInfo) {
-    local segmentEnd = segmentStart + deepSegmentsLenght 
+    local bMin = entInfo.bboxMin
+    local bMax = entInfo.bboxMax
+
     for (local i = 0.0; i <= searchSteps; i++) {
-        // todo it is possible to implement something like "binary search" here for additional optimization
         local rayPart = segmentStart + deepSegmentsLenght * (i / searchSteps)
-        if(this.PointInBBox(rayPart, entInfo))
+        
+        if(macros.PointInBBox(rayPart, bMin, bMax)) {
+            if(this.settings.bynaryRefinement) 
+                return [this.BinaryRefinementSearch(rayPart - deepSegmentsLenght, rayPart + deepSegmentsLenght, bMin, bMax), entInfo.entity]
             return [rayPart, entInfo.entity] // VSquirrel doesn't support tuples, so i use arrays
+        }
     }
 }
 
-function TraceLineAnalyzer::PointInBBox(point, entInfo) {
-    local max = entInfo.bboxMax
-    local min = entInfo.bboxMin
+function TraceLineAnalyzer::BinaryRefinementSearch(rayStart, rayEnd, bMin, bMax) {
+    // Binary search between rayStart and rayEnd
+    local closestHitPoint = null
+    local left = 0.0
+    local right = 1.0
 
-    return (
-        point.x >= min.x && point.x <= max.x &&
-        point.y >= min.y && point.y <= max.y &&
-        point.z >= min.z && point.z <= max.z
-    )
+    for(local i = 0; i < 10; i++) {
+        local middle = (left + right) / 2.0
+        local currentPoint = rayStart + (rayEnd - rayStart) * middle
+
+        if(macros.PointInBBox(currentPoint, bMin, bMax)) {
+            // If a point is inside bbox, we store it as a potential hit point
+            closestHitPoint = currentPoint
+            // Keep searching closer to the beginning (left half of the segment)
+            right = middle
+        } 
+        // If the point is outside bbox, continue searching near the end (right half of the segment)
+        else left = middle
+        
+    }
+
+    return closestHitPoint
 }
 
 /*
