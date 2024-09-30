@@ -9,7 +9,7 @@
 |    GitHud repo: https://github.com/IaVashik/PCapture-LIB                          |
 +----------------------------------------------------------------------------------+ */
 
-local version = "PCapture-Lib 3.0 Debug"
+local version = "PCapture-Lib 3.0 Alpha"
 
 // `Self` must be in any case, even if the script is run directly by the interpreter
 if (!("self" in this)) {
@@ -33,14 +33,13 @@ IncludeScript("PCapture-LIB/SRC/IDT/init.nut")
 IncludeScript("PCapture-LIB/SRC/Utils/init.nut")
 
 ::LibLogger <- LoggerLevels.Info
-const ALWAYS_PRECACHED_MODEL = "models/weapons/w_portalgun.mdl"
+const ALWAYS_PRECACHED_MODEL = "models/weapons/w_portalgun.mdl" // needed for pcapEntity::EmitSoundEx
 
 IncludeScript("PCapture-LIB/SRC/TracePlus/init.nut")
 IncludeScript("PCapture-LIB/SRC/Animations/init.nut")
 IncludeScript("PCapture-LIB/SRC/ActionScheduler/init.nut")
 IncludeScript("PCapture-LIB/SRC/ScriptEvents/init.nut")
 IncludeScript("PCapture-LIB/SRC/HUD/init.nut")
-// IncludeScript("PCapture-LIB/SRC/_FEATURES/features")
 
 
 /*
