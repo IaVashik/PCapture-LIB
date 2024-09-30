@@ -16,11 +16,24 @@
      * Draws the bounding box of an entity for the specified time.
      * 
      * @param {CBaseEntity|pcapEntity} ent - The entity to draw the bounding box for.
+     * @param {Vector} color - The color of the box.
      * @param {number} time - The duration of the display in seconds. 
     */
-    DrawEntityBBox = function(ent, time) {
+    DrawEntityBBox = function(ent, color, time) {
         if (developer() == 0) return
-        DebugDrawBox(ent.GetOrigin(), ent.GetBoundingMins(), ent.GetBoundingMaxs(), 255, 165, 0, 9, time)
+        DebugDrawBox(ent.GetOrigin(), ent.GetBoundingMins(), ent.GetBoundingMaxs(), color.x, color.y, color.z, 9, time)
+    },
+
+    /*
+     * Draws the AABB of an entity for the specified time.
+     * 
+     * @param {CBaseEntity|pcapEntity} ent - The entity to draw the bounding box for.
+     * @param {Vector} color - The color of the box.
+     * @param {number} time - The duration of the display in seconds. 
+    */
+    DrawEntityAABB = function(ent, color, time) {
+        if (developer() == 0) return
+        DebugDrawBox(ent.GetOrigin(), ent.CreateAABB(0), ent.CreateAABB(7), color.x, color.y, color.z, 9, time)
     },
 
     /*

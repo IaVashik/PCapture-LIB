@@ -27,20 +27,38 @@ All logging functions only work if the console command `developer` is set to a v
 
 The `dev` table contains various debugging utility functions.
 
-#### `DrawEntityBBox(ent, time)`
+#### `DrawEntityBBox(ent, color, time)`
 
 This function draws the bounding box of an entity using `DebugDrawBox` for the specified duration. It is helpful for visualizing the extents of an entity and debugging collision issues.
 
 **Parameters:**
 
 * `ent` (CBaseEntity or pcapEntity): The entity to draw the bounding box for.
+* `color` (Vector): The color of the box as a Vector with components (r, g, b).
 * `time` (number): The duration in seconds to display the bounding box.
 
 **Example:**
 
 ```js
 local myEntity = entLib.FindByClassname("prop_physics")
-dev.DrawEntityBBox(myEntity, 5) // Draw the bounding box for 5 seconds
+dev.DrawEntityBBox(myEntity, Vector(125, 0, 1255), 5) // Draw the bounding box for 5 seconds
+```
+
+#### `DrawEntityAABB(ent, color, time)`
+
+This function draws the AABB of an entity using `DebugDrawBox` for the specified duration.
+
+**Parameters:**
+
+* `ent` (CBaseEntity or pcapEntity): The entity to draw the bounding box for.
+* `color` (Vector): The color of the box as a Vector with components (r, g, b).
+* `time` (number): The duration in seconds to display the bounding box.
+
+**Example:**
+
+```js
+local myEntity = entLib.FindByClassname("prop_physics")
+dev.DrawEntityAABB(myEntity, Vector(125, 0, 1255), 5) // Draw the bounding box for 5 seconds
 ```
 
 #### `drawbox(vector, color, time)`
