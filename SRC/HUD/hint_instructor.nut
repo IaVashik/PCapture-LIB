@@ -1,7 +1,7 @@
 /*
  * A class for displaying hints using the "env_instructor_hint" entity. 
 */
- HUD["HintInstructor"] <- class {
+HUD["HintInstructor"] <- class {
     // The underlying pcapEntity object representing the "env_instructor_hint" entity.  
     CPcapEntity = null;
 
@@ -12,9 +12,9 @@
      * @param {number} holdtime - The duration in seconds to display the hint. (optional, default=5) 
      * @param {string} icon - The icon to display with the hint. (optional, default="icon_tip") 
      * @param {number} showOnHud - Whether to display the hint on the HUD or at the target entity's position (1 for HUD, 0 for target entity). (optional, default=1) 
-     * @param {string} targetname - The targetname of the "env_instructor_hint" entity. (optional, default="hint") 
+     * @param {string} targetname - The targetname of the "env_instructor_hint" entity. (optional, default="") 
     */
-    constructor(message, holdtime = 5, icon = "icon_tip", showOnHud = 1, targetname = "hint") {
+    constructor(message, holdtime = 5, icon = "icon_tip", showOnHud = 1, targetname = "") {
         this.CPcapEntity = entLib.CreateByClassname("env_instructor_hint", {
             // The text of your hint. 100 character limit.
             hint_caption = message,
@@ -42,6 +42,7 @@
     // Updates and redisplays the hint.  
     function Update() null
     
+    //* Something like builders methods
     // Changes the message of the hint. 
     function SetText(message) null 
     // Sets the bind to display with the hint icon.  
@@ -92,6 +93,7 @@ function HUD::HintInstructor::Update() {
 */
 function HUD::HintInstructor::SetText(message) {
     this.CPcapEntity.SetKeyValue("hint_caption", message)
+    return this
 }
  
 /* 
@@ -102,6 +104,7 @@ function HUD::HintInstructor::SetText(message) {
 function HUD::HintInstructor::SetBind(bind) {
     this.CPcapEntity.SetKeyValue("hint_binding", bind)
     this.CPcapEntity.SetKeyValue("hint_icon_onscreen", "use_binding")
+    return this
 }
 
 /*
@@ -113,6 +116,7 @@ function HUD::HintInstructor::SetBind(bind) {
 function HUD::HintInstructor::SetPositioning(value, ent = null) { // showOnHud
     this.CPcapEntity.SetKeyValue("hint_static", value)
     this.CPcapEntity.SetKeyValue("hint_target", ent)
+    return this
 }
 
 /* 
@@ -122,6 +126,7 @@ function HUD::HintInstructor::SetPositioning(value, ent = null) { // showOnHud
 */
 function HUD::HintInstructor::SetColor(color) {
     this.CPcapEntity.SetKeyValue("hint_color", color)
+    return this
 }
 
 /* 
@@ -131,6 +136,7 @@ function HUD::HintInstructor::SetColor(color) {
 */
 function HUD::HintInstructor::SetIconOnScreen(icon) {
     this.CPcapEntity.SetKeyValue("hint_icon_onscreen", icon)
+    return this
 }
 
 /* 
@@ -140,6 +146,7 @@ function HUD::HintInstructor::SetIconOnScreen(icon) {
 */
 function HUD::HintInstructor::SetIconOffScreen(icon) {
     this.CPcapEntity.SetKeyValue("hint_icon_offscreen", icon)
+    return this
 }   
 
 /* 
@@ -149,6 +156,7 @@ function HUD::HintInstructor::SetIconOffScreen(icon) {
 */
 function HUD::HintInstructor::SetHoldTime(time) {
     this.CPcapEntity.SetKeyValue("hint_timeout", time)
+    return this
 }
 
 /*
@@ -158,6 +166,7 @@ function HUD::HintInstructor::SetHoldTime(time) {
 */
 function HUD::HintInstructor::SetDistance(value) {
     this.CPcapEntity.SetKeyValue("hint_range", value)
+    return this
 }
 
 /*
@@ -171,4 +180,5 @@ function HUD::HintInstructor::SetEffects(sizePulsing, alphaPulsing, shaking) {
     this.CPcapEntity.SetKeyValue("hint_pulseoption", sizePulsing)
     this.CPcapEntity.SetKeyValue("hint_alphaoption", alphaPulsing)
     this.CPcapEntity.SetKeyValue("hint_shakeoption", shaking)
+    return this
 }
