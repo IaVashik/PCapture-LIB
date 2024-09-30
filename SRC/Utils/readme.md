@@ -137,20 +137,24 @@ if (!someEntity.IsValid()) {
     dev.error("Entity is invalid! Entity ID: {}", someEntity.GetID())
 }
 ```
-
 ## [Utils/file.nut](file.nut)
 
-This file defines the `File` class for reading from and writing to files. Due to the way file operations are handled in VScripts, there is a specific requirement when reading data from a file: **a one-tick delay is needed after calling `updateInfo()` before accessing the file contents.** This ensures that the file has been properly read and the data is available in the cache array.
+This file defines the `File` class for reading from and writing to files.  This class simplifies file interactions by providing convenient methods for writing and reading data. It utilizes a global cache to store file contents, allowing for efficient data access after a one-tick delay.
 
 ### `File(path)`
 
 **Constructor**
 
-This creates a new `File` object for the specified file path. The file extension ".log" is automatically added if it is not already present in the path. A cache array is also created in the global scope to store the lines of the file.
+This creates a new `File` object for the specified file path. The file extension ".log" is automatically added if it is not already present in the path. A cache array is also created in the global scope using the file name as the key to store the lines of the file.
 
 **Parameters:**
 
-* `path` (string): The path to the file, relative to the `cfg` directory.
+* `path` (string): The path to the file, relative to the `cfg` directory. The path should only contain the file name. Folders are not supported.
+
+**Note:**
+
+*   The file name cannot contain special characters, spaces, or forward slashes (/). Using such characters might lead to unexpected behavior or errors in file operations.
+*   To include a double quote character (") within the text being written to the file using the `write` method, use double escaping (\\"). For example, to write the string `He said, "Hello!"`, use `myFile.write("He said, \\"Hello!\\"")`.
 
 **Example:**
 
@@ -160,11 +164,11 @@ local myFile = File("my_data") // Creates a File object for "cfg/my_data.log"
 
 ### `write(text)`
 
-This method appends the given text to the end of the file.
+This method appends the given text to the end of the file. The text is automatically enclosed in double quotes and escaped for proper writing to the file.
 
 **Parameters:**
 
-* `text` (string): The text to append to the file.
+* `text` (string): The text to append to the file. To include a double quote within the text, use double escaping (\\").
 
 **Example:**
 
@@ -172,10 +176,23 @@ This method appends the given text to the end of the file.
 myFile.write("This is some data to write to the file.")
 ```
 
+### `writeRawData(text)`
 
-#### `readlines()`
+This method appends the given text to the end of the file without any automatic escaping or quoting. This allows for writing raw data or commands to the file.
 
-This method reads all lines from the file and returns them as an array of strings. The cache array is updated with the contents of the file. **Remember to call `updateInfo()` followed by a one-tick delay before using this method to ensure the data is available.**
+**Parameters:**
+
+* `text` (string): The raw text to append to the file.
+
+**Example:**
+
+```js
+myFile.writeRawData("script myVariable = \"This is a string!\";")
+```
+
+### `readlines()`
+
+This method reads all lines from the file and returns them as an array of strings. The global cache array associated with the file name is updated with the contents of the file. **Call `updateInfo()` and wait for one tick using `yield` or `RunScriptCode.delay()` before using this method to ensure the data is available in the cache.**
 
 **Returns:**
 
@@ -184,20 +201,19 @@ This method reads all lines from the file and returns them as an array of string
 **Example:**
 
 ```js
+// ScheduleEvent environment
 local file = File("MyFile")
 file.updateInfo()
-// We need a 1 tick delay
-RunScriptCode.delay(function() : (file) {
+yield 0.01 // Wait for one tick
 local lines = file.readlines()
 foreach (line in lines) {
-printl(line)
+    printl(line)
 }
-}, 0.01)
 ```
 
-#### `read()`
+### `read()`
 
-This method reads the entire contents of the file and returns it as a single string. **Remember to call `updateInfo()` followed by a one-tick delay before using this method to ensure the data is available.**
+This method reads the entire contents of the file and returns it as a single string. **Call `updateInfo()` and wait for one tick using `yield` or `RunScriptCode.delay()` before using this method to ensure the data is available in the cache.**
 
 **Returns:**
 
@@ -206,18 +222,17 @@ This method reads the entire contents of the file and returns it as a single str
 **Example:**
 
 ```js
+// ScheduleEvent environment
 local file = File("MyFile")
 file.updateInfo()
-// We need a 1 tick delay
-RunScriptCode.delay(function() : (file) {
-    local content = file.read()
-    printl(content)
-}, 0.01)
+yield 0.01 // Wait for one tick
+local content = file.read()
+printl(content)
 ```
 
-#### `clear()`
+### `clear()`
 
-This method clears the contents of the file by emptying the cache array and writing an empty array to the file.
+This method clears the contents of the file by emptying the global cache array associated with the file name and writing an empty array to the file.
 
 **Example:**
 
@@ -225,15 +240,31 @@ This method clears the contents of the file by emptying the cache array and writ
 myFile.clear() // Clear the contents of the file
 ```
 
-#### `updateInfo()`
+### `updateInfo()`
 
-This method updates information about the file by executing it as a script. This is necessary to ensure that the cache array is populated with the latest contents of the file before reading from it.
+This method updates information about the file by executing it as a script. This is necessary to ensure that the global cache array is populated with the latest contents of the file before reading from it using `readlines()` or `read()`.
 
 **Example:**
 
 ```js
 local file = File("MyFile")
 file.updateInfo() // Update the file information
+```
+
+**Usage Recommendations:**
+
+Due to the asynchronous nature of file operations in VScripts, it's highly recommended to use the `File` class within a scheduled environment, such as a `ScheduleEvent` or a custom timer function, and incorporate a one-tick delay using `yield` after calling `updateInfo()`. This ensures that the file operations are performed sequentially and the data is properly synchronized. For example:
+
+```js
+function myScheduledFunction() {
+    local file = File("MyFile")
+    file.updateInfo()
+    yield 0.1 // Wait
+    local lines = file.readlines()
+    // ... process file data
+}
+
+ScheduleEvent.Add("global", myScheduledFunction, 0) // Call myScheduledFunction
 ```
 
 ## [Utils/improvements.nut](improvements.nut)
