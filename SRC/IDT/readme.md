@@ -1901,6 +1901,25 @@ printl("Bounding box min:", bbox.min)
 printl("Bounding box max:", bbox.max)
 ```
 
+### `IsSquareBbox()`
+
+This function checks if the bounding box of an entity is a cube, meaning all sides of the bounding box have equal length.
+
+**Returns:**
+
+* (boolean): True if the bounding box is a cube, false otherwise.
+
+**Example:**
+
+```js
+local isCube = entity.IsSquareBbox() 
+if (isCube) {
+    // Bounding box is a cube
+} else {
+    // Bounding box is not a cube 
+}
+```
+
 ### `GetAABB()`
 Returns the axis-aligned bounding box (AABB) of the entity, which is a box that is aligned with the world axes and tightly encloses the entity.
 

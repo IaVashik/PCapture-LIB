@@ -104,10 +104,11 @@
      * @returns {Vector|null} - The eye position as a Vector, or null if the entity is not a player.
      * 
      * This method retrieves the position from which the player's view is rendered. It is important to note that this method only works with player entities.
-     * For non-player entities, it returns null. 
+     * For non-player entities, it returns GetCenter. 
     */
      function EyePosition() {
         if(this.IsPlayer()) return this.CBaseEntity.EyePosition()
+        return this.GetCenter()
     }
 
     /*
@@ -116,10 +117,11 @@
      * @returns {Vector|null} - The eye angles as a Vector representing pitch, yaw, and roll, or null if the entity is not a player.
      *
      * This method retrieves the orientation of the player's view. It is important to note that this method only works with player entities.
-     * For non-player entities, it returns null. 
+     * For non-player entities, it returns GetAngles. 
     */
     function EyeAngles() {
         if(this.IsPlayer()) return this.GetUserData("Eye").GetAngles()
+        return this.GetAngles()
     }
 
     /* 
@@ -128,10 +130,11 @@
      * @returns {Vector|null} - The forward vector as a Vector, or null if the entity is not a player.
      *
      * This method retrieves the direction in which the player is facing. It is important to note that this method only works with player entities.
-     * For non-player entities, it returns null.
+     * For non-player entities, it returns GetForwardVector.
     */
     function EyeForwardVector() {
         if(this.IsPlayer()) return this.GetUserData("Eye").GetForwardVector()
+        return this.GetForwardVector()
     }
 
     /*
@@ -607,6 +610,25 @@
         return {min = min, max = max}
     }
 
+    /*
+     * Checks if the bounding box of an entity is a cube (all sides have equal length).
+     *
+     * @returns {boolean} - True if the bounding box is a cube, false otherwise.
+    */
+    function IsSquareBbox() {
+        // Get the minimum and maximum coordinates of the bounding box
+        local mins = this.GetBoundingMins();
+        local maxs = this.GetBoundingMaxs();
+        
+        // Calculate the size of the bounding box along each axis
+        local sizeX = abs(maxs.x - mins.x)
+        local sizeY = abs(maxs.y - mins.y)
+        local sizeZ = abs(maxs.z - mins.z)
+
+        // Check if the sizes are equal along all axes
+        return sizeX == sizeY && sizeY == sizeZ;
+    }
+
     //! TODO ADD TO DOCS
     function GetBoundingCenter() {
         local cachedResult = GetUserData("BoundingCenter")
@@ -760,12 +782,12 @@
         if(stat == 4) 
             angles = Vector(45, 45, 45)
 
-        local cache = GetUserData("aabb-" + stat)
-        if(cache && (angles - cache[1]).Length() <= 10)
-            return cache[0]
+        local cache = GetUserData("aabbCache")
+        if(cache && (angles - cache[0]).Length() <= 10)
+            return Vector(cache[1][stat], cache[2][stat], cache[3][stat]) // todo what about state 4?
 
         local all_vertex = this.getBBoxPoints()
-        local x = array(8) // AVLTree() // todo FUCKING AVL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        local x = array(8)
         local y = array(8)
         local z = array(8)
 
@@ -785,7 +807,7 @@
             result = Vector(x[stat], y[stat], z[stat])
         }
         
-        this.SetUserData("aabb-" + stat , [result, angles])
+        this.SetUserData("aabbCache", [angles, x, y, z])
         return result
     }
 
@@ -800,7 +822,7 @@
         local angles = this.GetAngles()
     
         local getVertex = macros.GetVertex
-        return [
+        return [ // todo cache it?
             getVertex(max, min, min, angles), // 0 - Right-Bottom-Front
             getVertex(max, max, min, angles), // 1 - Right-Top-Front
             getVertex(min, max, min, angles), // 2 - Left-Top-Front
@@ -816,34 +838,34 @@
      * Gets the faces of the entity's bounding box as an array of triangle vertices.
      *
      * @returns {array} - An array of 12 Vector triplets, where each triplet represents the three vertices of a triangle face.
-     * 
     */
-     function getBBoxFaces() {
+    function getBBoxFaces() {
         local vertices = this.getBBoxPoints()
-        return [
+        local getTriangle = macros.GetTriangle
+        return [ // todo cache it?
             /* Bottom face triangles */ 
-            macros.GetTriangle(vertices[0], vertices[3], vertices[4]), // Face 0: Right-Bottom-Front, Left-Bottom-Front, Left-Bottom-Back
-            macros.GetTriangle(vertices[0], vertices[4], vertices[7]), // Face 1: Right-Bottom-Front, Left-Bottom-Back, Right-Bottom-Back
+            getTriangle(vertices[0], vertices[3], vertices[4]), // Face 0: Right-Bottom-Front, Left-Bottom-Front, Left-Bottom-Back
+            getTriangle(vertices[0], vertices[4], vertices[7]), // Face 1: Right-Bottom-Front, Left-Bottom-Back, Right-Bottom-Back
 
             /* Top face triangles */ 
-            macros.GetTriangle(vertices[1], vertices[2], vertices[5]), // Face 2: Right-Top-Front, Left-Top-Front, Left-Top-Back
-            macros.GetTriangle(vertices[1], vertices[5], vertices[6]), // Face 3: Right-Top-Front, Left-Top-Back, Right-Top-Back
+            getTriangle(vertices[1], vertices[2], vertices[5]), // Face 2: Right-Top-Front, Left-Top-Front, Left-Top-Back
+            getTriangle(vertices[1], vertices[5], vertices[6]), // Face 3: Right-Top-Front, Left-Top-Back, Right-Top-Back
 
             /* Left face triangles */ 
-            macros.GetTriangle(vertices[3], vertices[2], vertices[5]), // Face 4: Left-Bottom-Front, Left-Top-Front, Left-Top-Back 
-            macros.GetTriangle(vertices[3], vertices[5], vertices[4]), // Face 5: Left-Bottom-Front, Left-Top-Back, Left-Bottom-Back
+            getTriangle(vertices[3], vertices[2], vertices[5]), // Face 4: Left-Bottom-Front, Left-Top-Front, Left-Top-Back 
+            getTriangle(vertices[3], vertices[5], vertices[4]), // Face 5: Left-Bottom-Front, Left-Top-Back, Left-Bottom-Back
 
             /* Right face triangles */ 
-            macros.GetTriangle(vertices[0], vertices[1], vertices[6]), // Face 6: Right-Bottom-Front, Right-Top-Front, Right-Top-Back
-            macros.GetTriangle(vertices[0], vertices[6], vertices[7]), // Face 7: Right-Bottom-Front, Right-Top-Back, Right-Bottom-Back
+            getTriangle(vertices[0], vertices[1], vertices[6]), // Face 6: Right-Bottom-Front, Right-Top-Front, Right-Top-Back
+            getTriangle(vertices[0], vertices[6], vertices[7]), // Face 7: Right-Bottom-Front, Right-Top-Back, Right-Bottom-Back
 
             /* Front face triangles */ 
-            macros.GetTriangle(vertices[0], vertices[1], vertices[2]), // Face 8: Right-Bottom-Front, Right-Top-Front, Left-Top-Front 
-            macros.GetTriangle(vertices[0], vertices[2], vertices[3]), // Face 9: Right-Bottom-Front, Left-Top-Front, Left-Bottom-Front
+            getTriangle(vertices[0], vertices[1], vertices[2]), // Face 8: Right-Bottom-Front, Right-Top-Front, Left-Top-Front 
+            getTriangle(vertices[0], vertices[2], vertices[3]), // Face 9: Right-Bottom-Front, Left-Top-Front, Left-Bottom-Front
 
             /* Back face triangles */
-            macros.GetTriangle(vertices[7], vertices[6], vertices[5]), // Face 10: Right-Bottom-Back, Right-Top-Back, Left-Top-Back 
-            macros.GetTriangle(vertices[7], vertices[5], vertices[4])  // Face 11: Right-Bottom-Back, Left-Top-Back, Left-Bottom-Back 
+            getTriangle(vertices[7], vertices[6], vertices[5]), // Face 10: Right-Bottom-Back, Right-Top-Back, Left-Top-Back 
+            getTriangle(vertices[7], vertices[5], vertices[4])  // Face 11: Right-Bottom-Back, Left-Top-Back, Left-Bottom-Back 
         ]
     }
 
@@ -895,7 +917,6 @@ function pcapEntity::GetUpVector() return this.CBaseEntity.GetUpVector()
 function pcapEntity::GetPartnername() return this.CBaseEntity.GetPartnername()
 function pcapEntity::ValidateScriptScope() return this.CBaseEntity.ValidateScriptScope()
 function pcapEntity::GetScriptScope() return this.CBaseEntity.GetScriptScope()
-function pcapEntity::EyePosition() return this.CBaseEntity.EyePosition()
 function pcapEntity::entindex() return this.CBaseEntity.entindex()
 
 function pcapEntity::SetAbsOrigin(vector) this.CBaseEntity.SetAbsOrigin(vector)
