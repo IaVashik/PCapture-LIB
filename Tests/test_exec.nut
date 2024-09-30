@@ -30,10 +30,10 @@ IncludeScript("PCapture-Lib/SRC/PCapture-Lib")
 
 function RunAllTests() {
     printl("\n~~~~~~~~~~~~~~~~~~~~~~~~~\nRUN ALL TESTS\n~~~~~~~~~~~~~~~~~~~~~~~~~")
-    IncludeScript("PCapture-Lib/Tests/Math")
-    IncludeScript("PCapture-Lib/Tests/IDT")
-    IncludeScript("PCapture-Lib/Tests/Utils")
-    IncludeScript("PCapture-Lib/Tests/ActionScheduler")
+    IncludeScript("PCapture-LIB/Tests/Math")
+    IncludeScript("PCapture-LIB/Tests/IDT")
+    IncludeScript("PCapture-LIB/Tests/Utils")
+    IncludeScript("PCapture-LIB/Tests/ActionScheduler")
 }
 
 if(getstackinfos(2) == null) {

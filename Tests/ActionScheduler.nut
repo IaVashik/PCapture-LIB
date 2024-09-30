@@ -1,5 +1,5 @@
 // Events Module Unit Tests
-if(!("RunTests" in getroottable())) IncludeScript("Tests/test_exec")
+if(!("RunTests" in getroottable())) IncludeScript("PCapture-LIB/Tests/test_exec")
 
 events_tests <- {
     function schedule_event_test() {

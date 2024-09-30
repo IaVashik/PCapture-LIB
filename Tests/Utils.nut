@@ -1,11 +1,11 @@
 // Utils Module Unit Tests
-if(!("RunTests" in getroottable())) IncludeScript("Tests/test_exec")
+if(!("RunTests" in getroottable())) IncludeScript("PCapture-LIB/Tests/test_exec")
 
 utils_tests <- {
     // --- Debug Tests ---
     function debug_draw_entity_bbox_test() {
         local ent = GetPlayerEx()
-        dev.DrawEntityBBox(ent, 10.0)
+        dev.DrawEntityBBox(ent, Vector(125, 0, 0), 10.0)
     },
 
     function debug_log_test() {

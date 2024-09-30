@@ -1,121 +1,121 @@
 // IDT Module Unit Tests
-if(!("RunTests" in getroottable())) IncludeScript("Tests/test_exec")
+if(!("RunTests" in getroottable())) IncludeScript("PCapture-LIB/Tests/test_exec")
 
 idt_tests <- {
 
     // --- Array Tests ---
     function array_creation_test() {
-        local arr = arrayLib.new(1, 2, 3)
+        local arr = ArrayEx(1, 2, 3)
         return assert(arr.len() == 3 && arr[0] == 1 && arr[1] == 2 && arr[2] == 3)
     },
 
     function array_append_test() {
-        local arr = arrayLib.new()
+        local arr = ArrayEx()
         arr.append(1)
         arr.append(2)
         return assert(arr.len() == 2 && arr[0] == 1 && arr[1] == 2)
     },
 
     function array_apply_test() {
-        local arr = arrayLib.new(1, 2, 3)
+        local arr = ArrayEx(1, 2, 3)
         arr.apply(function(x) return x * 2)
         return assert(arr[0] == 2 && arr[1] == 4 && arr[2] == 6)
     },
 
     function array_clear_test() {
-        local arr = arrayLib.new(1, 2, 3)
+        local arr = ArrayEx(1, 2, 3)
         arr.clear()
         return assert(arr.len() == 0)
     },
 
     function array_extend_test() {
-        local arr1 = arrayLib.new(1, 2)
-        local arr2 = arrayLib.new(3, 4)
+        local arr1 = ArrayEx(1, 2)
+        local arr2 = ArrayEx(3, 4)
         arr1.extend(arr2)
         return assert(arr1.len() == 4 && arr1[2] == 3 && arr1[3] == 4)
     },
 
     function array_filter_test() {
-        local arr = arrayLib.new(1, 2, 3, 4)
+        local arr = ArrayEx(1, 2, 3, 4)
         local filtered = arr.filter(function(_, val, _) return val % 2 == 0)
         return assert(filtered.len() == 2 && filtered[0] == 2 && filtered[1] == 4)
     },
 
     function array_contains_test() {
-        local arr = arrayLib.new(1, 2, 3)
+        local arr = ArrayEx(1, 2, 3)
         return assert(arr.contains(2) && !arr.contains(4))
     },
 
     function array_search_test() {
-        local arr = arrayLib.new("apple", "banana", "cherry")
+        local arr = ArrayEx("apple", "banana", "cherry")
         return assert(arr.search("banana") == 1 && arr.search("grape") == null)
     },
 
     function array_insert_test() {
-        local arr = arrayLib.new(1, 3)
+        local arr = ArrayEx(1, 3)
         arr.insert(1, 2)
         return assert(arr.len() == 3 && arr[1] == 2)
     },
 
     function array_remove_test() {
-        local arr = arrayLib.new(1, 2, 3)
+        local arr = ArrayEx(1, 2, 3)
         arr.remove(1) 
         return assert(arr.len() == 2 && arr[1] == 3)
     },
 
     function array_pop_test() {
-        local arr = arrayLib.new(1, 2, 3)
+        local arr = ArrayEx(1, 2, 3)
         local poppedValue = arr.pop()
         return assert(arr.len() == 2 && poppedValue == 3)
     },
 
     function array_push_test() {
-        local arr = arrayLib.new(1, 2)
+        local arr = ArrayEx(1, 2)
         arr.push(3)
         return assert(arr.len() == 3 && arr[2] == 3)
     },
 
     function array_resize_test() {
-        local arr = arrayLib.new(1, 2)
+        local arr = ArrayEx(1, 2)
         arr.resize(4, 0)
         return assert(arr.len() == 4 && arr[2] == 0 && arr[3] == 0)
     },
 
     function array_reverse_test() {
-        local arr = arrayLib.new(1, 2, 3)
+        local arr = ArrayEx(1, 2, 3)
         arr.reverse()
         return assert(arr[0] == 3 && arr[1] == 2 && arr[2] == 1)
     },
 
     function array_slice_test() {
-        local arr = arrayLib.new(1, 2, 3, 4)
+        local arr = ArrayEx(1, 2, 3, 4)
         local sliced = arr.slice(1, 3)
         return assert(sliced.len() == 2 && sliced[0] == 2 && sliced[1] == 3)
     },
 
     function array_sort_test() {
-        local arr = arrayLib.new(3, 1, 2)
+        local arr = ArrayEx(3, 1, 2)
         arr.sort()
         return assert(arr[0] == 1 && arr[1] == 2 && arr[2] == 3)
     },
 
     function array_top_test() {
-        local arr = arrayLib.new(1, 2, 3)
+        local arr = ArrayEx(1, 2, 3)
         return assert(arr.top() == 3) 
     },
 
     function array_join_test() {
-        local arr = arrayLib.new("a", "b", "c")
+        local arr = ArrayEx("a", "b", "c")
         return assert(arr.join("-") == "a-b-c")
     },
 
     function array_get_test() {
-        local arr = arrayLib.new(1, 2, 3)
+        local arr = ArrayEx(1, 2, 3)
         return assert(arr.get(1) == 2 && arr.get(4, -1) == -1)
     },
 
     function array_tolist_test() {
-        local arr = arrayLib.new(1, 2, 3)
+        local arr = ArrayEx(1, 2, 3)
         local list = arr.tolist()
         return assert(list.len() == 3 && typeof list == "List")
     },
@@ -250,7 +250,7 @@ idt_tests <- {
     function list_toarray_test() {
         local list = List(1, 2, 3)
         local arr = list.toarray()
-        return assert(arr.len() == 3 && typeof arr == "arrayLib")
+        return assert(arr.len() == 3 && typeof arr == "ArrayEx")
     },
 
 
@@ -297,8 +297,8 @@ idt_tests <- {
 
 
     function tree_fromarray_test() {
-        local arr = arrayLib.new(3, 2, 1)
-        local tree = AVLTree.fromArray(arr)
+        local arr = ArrayEx(3, 2, 1)
+        local tree = AVLTree.FromArray(arr)
         return assert(tree.len() == 3 && tree[0] == 1 && tree[1] == 2 && tree[2] == 3)
     },
 
