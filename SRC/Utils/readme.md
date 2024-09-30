@@ -591,6 +591,82 @@ local myTable = {
 macros.PrintIter(myTable) // Output: "name: Bob", "age: 42"
 ```
 
+### `macros.MaskSearch(iter, match)`
+
+This macro searches for a matching string within an array, taking into account a wildcard character '\*'.
+
+**Parameters:**
+
+* `iter` (array or arrayLib): The array to search in.
+* `match` (string): The string to search for.
+
+**Returns:**
+
+* (int or null):
+    * The index of the first element in the array that contains the `match` string, even partially.
+    * `null` if no match is found.
+    * `0` if the first element of `iter` is "\*", indicating a wildcard match for any string.
+
+**Example:**
+
+```js
+local myArray = ["apple", "banana", "cherry"]
+local matchIndex = macros.MaskSearch(myArray, "an") // matchIndex will be 1 (index of "banana")
+
+local anotherArray = ["*", "grape", "orange"]
+local wildcardIndex = macros.MaskSearch(anotherArray, "any_string") // wildcardIndex will be 0 
+```
+
+### `macros.GetRectangle(v1, v2, v3, v4)`
+
+This macro creates a rectangle object defined by four vertices.
+
+**Parameters:**
+
+* `v1` (Vector): The first vertex.
+* `v2` (Vector): The second vertex.
+* `v3` (Vector): The third vertex.
+* `v4` (Vector): The fourth vertex.
+
+**Returns:**
+
+* (table): A table representing the rectangle, containing the following properties:
+    * `origin` (Vector): The center point of the rectangle, calculated as the average of the four vertices.
+    * `vertices` (array): An array containing the four vertices of the rectangle as Vector objects.
+
+**Example:**
+
+```js
+local v1 = Vector(0, 0, 0)
+local v2 = Vector(10, 0, 0)
+local v3 = Vector(10, 10, 0)
+local v4 = Vector(0, 10, 0)
+local rectangle = macros.GetRectangle(v1, v2, v3, v4)
+printl(rectangle.origin) // Output: Vector(5, 5, 0)
+```
+
+### `macros.PointInBBox(point, bMin, bMax)`
+
+This macro checks if a point lies within a bounding box defined by its minimum and maximum corner points.
+
+**Parameters:**
+
+* `point` (Vector): The point to check.
+* `bMin` (Vector): The minimum corner of the bounding box (smallest x, y, and z coordinates).
+* `bMax` (Vector): The maximum corner of the bounding box (largest x, y, and z coordinates).
+
+**Returns:**
+
+* (boolean): `true` if the point is inside the bounding box, `false` otherwise.
+
+**Example:**
+
+```js
+local point = Vector(5, 5, 5)
+local bMin = Vector(0, 0, 0)
+local bMax = Vector(10, 10, 10)
+local isInside = macros.PointInBBox(point, bMin, bMax) // isInside will be true
+```
 
 ### `Range(start, end, step)`
 Generates a list of numbers within a specified range.

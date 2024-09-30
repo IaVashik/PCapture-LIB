@@ -111,6 +111,25 @@ macros["RangeIter"] <- function(start, end, step = 1) {
 }
 
 /*
+ * Searches for a matching string in an array, considering wildcard '*'.
+ *
+ * @param {array|arrayLib} iter - The array to search in.
+ * @param {string} match - The string to search for.
+ * @returns {int|null} - The index of the first matching element, or null if not found. 
+ *           If the first element of iter is '*', returns 0. 
+*/
+macros["MaskSearch"] <- function(iter, match) {
+    if(iter.len() == 0) return null
+    if(iter[0] == "*") return 0
+
+    foreach(idx, val in iter) {
+        if(match.find(val) >= 0)
+            return idx
+    }
+    return null
+}
+
+/*
  * Prints a formatted message to the console.
  * 
  * @param {string} msg - The message string containing `{}` placeholders.
@@ -287,10 +306,7 @@ macros["GetPostfix"] <- function(name) {
 macros["GetEyeEndpos"] <- function(player, distance) {
     if(typeof player != "pcapEntity") 
         player = entLib.FromEntity(player)
-    if(player.IsPlayer())
-        return player.EyePosition() + player.EyeForwardVector() * distance
-    
-    return player.GetOrigin() + player.GetForwardVector() * distance // haha lmao
+    return player.EyePosition() + player.EyeForwardVector() * distance
 }
 
 /*
@@ -319,6 +335,38 @@ macros["GetTriangle"] <- function(v1, v2, v3) {
         origin = (v1 + v2 + v3) * 0.3333,
         vertices = [v1, v2, v3]
     }
+}
+
+/*
+ * Creates a rectangle object from four vertices. 
+ *
+ * @param {Vector} v1 - The first vertex.
+ * @param {Vector} v2 - The second vertex. 
+ * @param {Vector} v3 - The third vertex. 
+ * @param {Vector} v4 - The fourth vertex.
+ * @returns {table} - A table representing the rectangle with 'origin' and 'vertices' properties. 
+*/
+macros["GetRectangle"] <- function(v1, v2, v3, v4) {
+    return {
+        origin = (v1 + v2 + v3 + v4) * 0.25,
+        vertices = [v1, v2, v3, v4]
+    }
+}
+
+/*
+ * Checks if a point is inside a bounding box. 
+ * 
+ * @param {Vector} point - The point to check.
+ * @param {Vector} bMin - The minimum corner of the bounding box. 
+ * @param {Vector} bMax - The maximum corner of the bounding box. 
+ * @returns {boolean} - True if the point is inside the bounding box, false otherwise.
+*/
+macros["PointInBBox"] <- function(point, bMin, bMax) {
+    return (
+        point.x >= bMin.x && point.x <= bMax.x &&
+        point.y >= bMin.y && point.y <= bMax.y &&
+        point.z >= bMin.z && point.z <= bMax.z
+    )
 }
 
 
