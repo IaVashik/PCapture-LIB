@@ -17,6 +17,7 @@
     globalDelay = 0
     frameInterval = 0
     maxFrames = 60.0
+    autoOptimization = true
     outputs = null
     entities = []
     lerpFunc = null;
@@ -42,6 +43,7 @@
         this.lerpFunc = macros.GetFromTable(table, "lerp", function(t) return t)
         this.frameInterval = macros.GetFromTable(table, "frameInterval", FrameTime()) 
         this.maxFrames = macros.GetFromTable(table, "fps", 60.0)
+        this.autoOptimization = macros.GetFromTable(table, "optimization", true)
     } 
 
     /* 
@@ -94,7 +96,7 @@
 */
 animate["applyAnimation"] <- function(animInfo, valueCalculator, propertySetter, vars = null, transitionFrames = 0) {
     if(transitionFrames == 0) {
-        if (animInfo.delay / animInfo.frameInterval > animInfo.maxFrames)  
+        if (this.autoOptimization && animInfo.delay / animInfo.frameInterval > animInfo.maxFrames)  
             animInfo.frameInterval = animInfo.delay / animInfo.maxFrames
         
         transitionFrames = animInfo.delay / animInfo.frameInterval;
@@ -115,7 +117,7 @@ animate["applyAnimation"] <- function(animInfo, valueCalculator, propertySetter,
     }
 
     ScheduleEvent.AddActions(animInfo.eventName, actionsList, true)
-    animInfo.delay = FrameTime() * transitionFrames
+    animInfo.delay = animInfo.frameInterval * transitionFrames
 
     if(developer() > 0) dev.trace("Created {} animation ({}) for {} actions", animInfo.animName, animInfo.eventName, actionsList.len())
 }
