@@ -82,7 +82,7 @@ This method appends a value to the end of the array. It automatically resizes th
 **Example:**
 
 ```js
-myArrayLib.append(4) // Add the number 4 to the end of the array
+myArrayEx.append(4) // Add the number 4 to the end of the array
 ```
 
 ### `apply(func)`
@@ -100,7 +100,7 @@ This method applies a function to each element of the array and modifies the arr
 **Example:**
 
 ```js
-myArrayLib.apply(function(x) { return x * 2 }) // Multiply each element by 2
+myArrayEx.apply(function(x) { return x * 2 }) // Multiply each element by 2
 ```
 
 ### `clear()`
@@ -114,7 +114,7 @@ This method removes all elements from the array and resets its length to 0.
 **Example:**
 
 ```js
-myArrayLib.clear() // Remove all elements from the array
+myArrayEx.clear() // Remove all elements from the array
 ```
 
 ### `extend(other)`
@@ -133,7 +133,7 @@ This method extends the array by appending all elements from another array or `A
 
 ```js
 local otherArray = array("a", "b", "c")
-myArrayLib.extend(otherArray) // Append the elements of otherArray to myArrayLib
+myArrayEx.extend(otherArray) // Append the elements of otherArray to myArrayEx
 ```
 
 ### `filter(func)`
@@ -155,7 +155,7 @@ The function should return `true` if the element should be included in the new a
 **Example:**
 
 ```js
-local evenNumbers = myArrayLib.filter(function(index, value) {
+local evenNumbers = myArrayEx.filter(function(index, value) {
     return value % 2 == 0 // Check if the value is even
 })
 ```
@@ -175,7 +175,7 @@ This method checks if the array contains the specified value.
 **Example:**
 
 ```js
-if (myArrayLib.contains(5)) {
+if (myArrayEx.contains(5)) {
     // The array contains the value 5
 }
 ```
@@ -197,8 +197,8 @@ This method searches for a value or a matching element in the array and returns 
 **Example:**
 
 ```js
-local index = myArrayLib.search(5) // Find the index of the value 5
-local index2 = myArrayLib.search(function(x) { return x > 10 }) // Find the index of the first element greater than 10
+local index = myArrayEx.search(5) // Find the index of the value 5
+local index2 = myArrayEx.search(function(x) { return x > 10 }) // Find the index of the first element greater than 10
 ```
 
 ### `insert(index, value)`
@@ -217,7 +217,7 @@ This method inserts a value into the array at the specified index, shifting all 
 **Example:**
 
 ```js
-myArrayLib.insert(2, "new element") // Insert "new element" at index 2
+myArrayEx.insert(2, "new element") // Insert "new element" at index 2
 ```
 
 ### `len()`
@@ -231,7 +231,7 @@ This method returns the number of elements in the array.
 **Example:**
 
 ```js
-local arrayLength = myArrayLib.len() // Get the length of the array
+local arrayLength = myArrayEx.len() // Get the length of the array
 ```
 
 ### `map(func)`
@@ -249,7 +249,7 @@ This method creates a new `ArrayEx` object by applying a function to each elemen
 **Example:**
 
 ```js
-local squares = myArrayLib.map(function(x) { return x * x }) // Create an array of squares of the original elements
+local squares = myArrayEx.map(function(x) { return x * x }) // Create an array of squares of the original elements
 ```
 
 ### `reduce(func, initial)`
@@ -300,7 +300,7 @@ This method removes and returns the last element of the array.
 **Example:**
 
 ```js
-local lastElement = myArrayLib.pop() // Remove and return the last element of the array
+local lastElement = myArrayEx.pop() // Remove and return the last element of the array
 ```
 
 ### `push(value)`
@@ -314,7 +314,7 @@ This method appends a value to the end of the array. It is equivalent to `append
 **Example:**
 
 ```js
-myArrayLib.push(5) // Add the value 5 to the end of the array
+myArrayEx.push(5) // Add the value 5 to the end of the array
 ```
 
 ### `remove(index)`
@@ -332,7 +332,7 @@ This method removes the element at the specified index from the array, shifting 
 **Example:**
 
 ```js
-myArrayLib.remove(1) // Remove the element at index 1
+myArrayEx.remove(1) // Remove the element at index 1
 ```
 
 ### `resize(size, fill)`
@@ -347,7 +347,7 @@ This method resizes the array to the specified size. If the new size is larger t
 **Example:**
 
 ```js
-myArrayLib.resize(10, 0) // Resize the array to 10 elements, filling new elements with 0
+myArrayEx.resize(10, 0) // Resize the array to 10 elements, filling new elements with 0
 ```
 
 ### `reverse()`
@@ -361,7 +361,7 @@ This method reverses the order of elements in the array in-place.
 **Example:**
 
 ```js
-myArrayLib.reverse() // Reverse the order of elements in the array
+myArrayEx.reverse() // Reverse the order of elements in the array
 ```
 
 ### `slice(start, end)`
@@ -380,7 +380,7 @@ This method returns a new `ArrayEx` object containing a portion of the array.
 **Example:**
 
 ```js
-local slicedArray = myArrayLib.slice(1, 3) // Get a new array containing elements from index 1 to 2 (exclusive)
+local slicedArray = myArrayEx.slice(1, 3) // Get a new array containing elements from index 1 to 2 (exclusive)
 ```
 
 ### `sort(func)`
@@ -402,8 +402,8 @@ If no comparison function is provided, the elements are sorted according to thei
 **Example:**
 
 ```js
-myArrayLib.sort() // Sort the array in ascending order (default behavior)
-myArrayLib.sort(function(a, b) { return b - a }) // Sort the array in descending order
+myArrayEx.sort() // Sort the array in ascending order (default behavior)
+myArrayEx.sort(function(a, b) { return b - a }) // Sort the array in descending order
 ```
 
 ### `top()`
@@ -417,7 +417,7 @@ This method returns the last element of the array.
 **Example:**
 
 ```js
-local lastElement = myArrayLib.top() // Get the last element of the array
+local lastElement = myArrayEx.top() // Get the last element of the array
 ```
 
 ### `join(separator)`
@@ -435,7 +435,7 @@ This method joins the elements of the array into a string, separated by the spec
 **Example:**
 
 ```js
-local joinedString = myArrayLib.join(", ") // Join the array elements into a string separated by commas and spaces
+local joinedString = myArrayEx.join(", ") // Join the array elements into a string separated by commas and spaces
 ```
 
 ### `get(index, default)`
@@ -454,8 +454,8 @@ This method returns the element at the specified index in the array. If the inde
 **Example:**
 
 ```js
-local element = myArrayLib.get(2) // Get the element at index 2
-local element2 = myArrayLib.get(10, 0) // Get the element at index 10, or 0 if the index is out of bounds
+local element = myArrayEx.get(2) // Get the element at index 2
+local element2 = myArrayEx.get(10, 0) // Get the element at index 10, or 0 if the index is out of bounds
 ```
 
 ### `totable(recreate)`
@@ -473,7 +473,7 @@ This method converts the array to a table, using the array elements as keys and 
 **Example:**
 
 ```js
-local tableRepr = myArrayLib.totable() // Convert the array to a table
+local tableRepr = myArrayEx.totable() // Convert the array to a table
 ```
 
 ### `tolist()`
@@ -487,7 +487,7 @@ This method converts the array to a `List` object.
 **Example:**
 
 ```js
-local listRepr = myArrayLib.tolist() // Convert the array to a list
+local listRepr = myArrayEx.tolist() // Convert the array to a list
 ```
 
 ## [IDT/list.nut](list.nut)
