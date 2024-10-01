@@ -2,13 +2,37 @@
 
 The `ActionScheduler` module provides an enhanced system for creating and managing scheduled events in VScripts. It offers more flexibility and control compared to standard mechanisms like `EntFireByHandle`, allowing you to create complex sequences of actions, schedule them with precise timing, and cancel them as needed.
 
-## [ActionScheduler/action.nut](action.nut)
+## Table of Contents
+
+1.  [action.nut](#actionnut)
+    *   [`ScheduleAction` Class](#scheduleaction-class)
+        *   [`ScheduleAction(scope, action, timeDelay, args)`](#scheduleactionscope-action-timedelay-args)
+        *   [`run()`](#run)
+2.  [action\_scheduler.nut](#action_schedulernut)
+    *   [`Add`](#add)
+    *   [`AddInterval`](#addinterval)
+        *   [Using the `args` parameter](#using-the-args-parameter)
+        *   [Using the `scope` parameter](#using-the-scope-parameter)
+    *   [`AddActions`](#addactions)
+    *   [`Cancel`](#cancel)
+    *   [`CancelByAction`](#cancelbyaction)
+    *   [`CancelAll`](#cancelall)
+    *   [`GetEvent`](#getevent)
+    *   [`IsValid`](#isvalid)
+    *   [`TryCancel`](#trycancel)
+3.  [event\_handler.nut](#event_handlernut)
+    *   [`ScheduledEventsLoop()`](#scheduledeventsloop)
+4.  [Enhanced Scheduling Features](#enhanced-scheduling-features)
+    *   [Asynchronous Actions](#asynchronous-actions)
+    *   [Error Handling](#error-handling)
+
+## [ActionScheduler/action.nut](#actionnut)
 
 This file defines the `ScheduleAction` class, which represents a single action scheduled for execution at a specific time.
 
-### `ScheduleAction` Class
+### [`ScheduleAction` Class](#scheduleaction-class)
 
-#### `ScheduleAction(scope, action, timeDelay, args)`:
+#### [`ScheduleAction(scope, action, timeDelay, args)`:](#scheduleactionscope-action-timedelay-args)
 
 **Constructor** 
 
@@ -29,7 +53,7 @@ local myAction = ScheduleAction(myEntity, function() {
 }, 2)
 ```
 
-#### `run()`:
+#### [`run()`:](#run)
 Executes the scheduled action. If the action is a string, it is compiled into a function before execution. If arguments are provided, they are passed to the action function.
 
 **Example:**
@@ -38,13 +62,13 @@ Executes the scheduled action. If the action is a string, it is compiled into a 
 myAction.run()
 ```
 
-## [ActionScheduler/action_scheduler.nut](action_scheduler.nut)
+## [ActionScheduler/action\_scheduler.nut](#action_schedulernut)
 
 This file provides functions for creating and managing scheduled events, including adding actions, creating intervals, and canceling events.
 
 ### Functions
 
-#### `ScheduleEvent.Add(eventName, action, timeDelay, args, scope)`:
+#### [`ScheduleEvent.Add(eventName, action, timeDelay, args, scope)`:](#add)
 Adds a single action to a scheduled event with the specified name. If the event does not exist, it is created.
 
 **Parameters:**
@@ -63,7 +87,7 @@ ScheduleEvent.Add("my_event", function() {
 }, 1)
 ```
 
-#### `ScheduleEvent.AddInterval(eventName, action, interval, initialDelay, args, scope)`:
+#### [`ScheduleEvent.AddInterval(eventName, action, interval, initialDelay, args, scope)`:](#addinterval)
 Adds an action to a scheduled event that will be executed repeatedly at a fixed interval.
 
 **Parameters:**
@@ -83,7 +107,7 @@ ScheduleEvent.AddInterval("my_event", function() {
 }, 1)
 ```
 
-##### Using the `args` parameter 
+##### [Using the `args` parameter](#using-the-args-parameter)
 
 The `args` parameter allows you to pass additional arguments to the scheduled action when it is executed. This can be useful for providing context or data that the action needs to perform its task. 
 
@@ -96,7 +120,7 @@ ScheduleEvent.Add("my_event", function(name) {
 }, 2, ["Theta"])  // Pass an array containing the name "Theta" as the args parameter.
 ```
 
-##### Using the `scope` parameter
+##### [Using the `scope` parameter](#using-the-scope-parameter)
 
 The `scope` parameter is essential for correctly handling delayed events within classes.  It allows you to specify the context in which the scheduled action will be executed.  When you schedule an action within a class method, passing `this` as the `scope` ensures that the action has access to the class instance's properties and methods.
 
@@ -127,7 +151,7 @@ class MyClass {
 }
 ```
 
-#### `ScheduleEvent.AddActions(eventName, actions, noSort)`:
+#### [`ScheduleEvent.AddActions(eventName, actions, noSort)`:](#addactions)
 Adds multiple actions to a scheduled event.
 
 **Parameters:**
@@ -147,7 +171,7 @@ local actions = [
 ScheduleEvent.AddActions("my_event", actions) // Actions will be sorted by execution time
 ```
 
-#### `ScheduleEvent.Cancel(eventName, delay)`:
+#### [`ScheduleEvent.Cancel(eventName, delay)`:](#cancel)
 Cancels all scheduled actions within an event with the given name.
 
 **Parameters:**
@@ -161,7 +185,7 @@ Cancels all scheduled actions within an event with the given name.
 ScheduleEvent.Cancel("my_event") // Cancel the "my_event" event
 ```
 
-#### `ScheduleEvent.CancelByAction(action, delay)`:
+#### [`ScheduleEvent.CancelByAction(action, delay)`:](#cancelbyaction)
 Cancels all scheduled actions that match the given action.
 
 **Parameters:**
@@ -181,7 +205,7 @@ ScheduleEvent.Add("my_test_event", test, 1)
 ScheduleEvent.CancelByAction(test)
 ```
 
-#### `ScheduleEvent.CancelAll()`:
+#### [`ScheduleEvent.CancelAll()`:](#cancelall)
 Cancels all scheduled events and actions.
 
 **Example:**
@@ -190,7 +214,7 @@ Cancels all scheduled events and actions.
 ScheduleEvent.CancelAll() // Cancel all scheduled events and actions
 ```
 
-#### `ScheduleEvent.GetEvent(eventName)`:
+#### [`ScheduleEvent.GetEvent(eventName)`:](#getevent)
 Retrieves a scheduled event by name as a `List` of `ScheduleAction` objects.
 
 **Parameters:**
@@ -210,7 +234,7 @@ if (eventActions) {
 }
 ```
 
-#### `ScheduleEvent.IsValid(eventName)`:
+#### [`ScheduleEvent.IsValid(eventName)`:](#isvalid)
 Checks if a scheduled event with the given name exists and has scheduled actions.
 
 **Parameters:**
@@ -229,7 +253,7 @@ if (ScheduleEvent.IsValid("my_event")) {
 }
 ```
 
-#### `ScheduleEvent.TryCancel(eventName, delay)`:
+#### [`ScheduleEvent.TryCancel(eventName, delay)`:](#trycancel)
 The same as `ScheduleEvent.Cancel`, but does not cause an error if the event is not found.
 
 **Parameters:**
@@ -247,18 +271,18 @@ The same as `ScheduleEvent.Cancel`, but does not cause an error if the event is 
 ScheduleEvent.TryCancel("my_event") 
 ```
 
-## [ActionScheduler/event_handler.nut](event_handler.nut)
+## [ActionScheduler/event\_handler.nut](#event_handlernut)
 
 This file contains the `ScheduledEventsLoop` function, which processes scheduled events and actions.
 
 
-### `ScheduledEventsLoop()`
+### [`ScheduledEventsLoop()`](#scheduledeventsloop)
 
 This function iterates over all scheduled events and checks if the execution time for the first action in each event has arrived. If so, it executes the action and removes it from the event's list of actions. If an event has no more actions remaining, it is removed from the list of scheduled events. The function then schedules itself to run again after a short delay to continue processing events. **This function is called automatically by the ActionScheduler module**
 
-## Enhanced Scheduling Features
+## [Enhanced Scheduling Features](#enhanced-scheduling-features)
 
-### Asynchronous Actions
+### [Asynchronous Actions](#asynchronous-actions)
 
 You can now introduce delays within your scheduled actions using the `yield` keyword. This allows you to create more dynamic and responsive sequences of actions without relying on nested callbacks or complex timing logic.
 
@@ -294,7 +318,7 @@ In this example, the `"global"` event demonstrates how `yield` can be used to cr
 
 The `"async_loop"` event showcases how you can leverage `yield` to create asynchronous loops. In this case, the loop continuously prints the player's origin every 0.2 seconds. The `yield 0.2` statement ensures that the loop doesn't block other scheduled events and allows for responsive execution.
 
-### Error Handling
+### [Error Handling](#error-handling)
 
 The `ScheduledEventsLoop` now includes robust error handling for scheduled events. If an error occurs during the execution of a scheduled action, the following information will be printed to the console:
 
