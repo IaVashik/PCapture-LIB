@@ -4,7 +4,7 @@
  * This class encapsulates information about an action that is scheduled to be executed at a specific time.
 */
 ::ScheduleAction <- class {
-    //  The entity that created the event. * 
+    // The entity that created the event. 
     scope = null;
     // The action to execute when the scheduled time arrives.  
     action = null;
@@ -38,18 +38,18 @@
      * @returns {any} - The result of the action function. 
     */
     function run() {
-        if(type(action) == "string")
-            action = compilestring(action)
+        if(type(this.action) == "string")
+            this.action = compilestring(action)
 
-        if(args == null) {
-            return action.call(scope)
+        if(this.args == null) {
+            return this.action.call(scope)
         }
         
-        if(typeof args != "array" && typeof args != "ArrayEx" && typeof args != "List") {
+        if(typeof this.args != "array" && typeof this.args != "ArrayEx" && typeof this.args != "List") {
             throw("Invalid arguments for ScheduleEvent! The argument must be itterable, not (" + args + ")")
         }
 
-        local actionArgs = [scope]
+        local actionArgs = [this.scope]
         actionArgs.extend(this.args)
         return action.acall(actionArgs)
     }
@@ -75,12 +75,8 @@
     function _typeof() return "ScheduleAction"
     function _tostring() return "ScheduleAction: (" + this.executionTime + ")"
     function _cmp(other) {    
-        if (this.executionTime > other.executionTime) {
-            return 1;
-        } else if (this.executionTime < other.executionTime) {
-            return -1;
-        } else {
-            return 0; 
-        }
+        if (this.executionTime > other.executionTime) return 1;
+        else if (this.executionTime < other.executionTime) return -1;
+        return 0; 
     }
 }

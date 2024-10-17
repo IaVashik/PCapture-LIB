@@ -64,9 +64,7 @@ ScheduleEvent["AddInterval"] <- function(eventName, action, interval, initialDel
             local result = event.run()
 
             if(typeof result == "generator") {
-                while(delay = resume result) {
-                    yield delay
-                }
+                while(delay = resume result) yield delay
             }
 
             yield interval
@@ -99,7 +97,7 @@ ScheduleEvent["AddActions"] <- function(eventName, actions, noSort = false) {
     if(typeof actions == "List") {
         ScheduleEvent.eventsList[eventName] <- actions
     } else {
-        ScheduleEvent.eventsList[eventName] <- List.fromArray(actions)
+        ScheduleEvent.eventsList[eventName] <- List.FromArray(actions)
     }
 
     if(developer() > 0) dev.trace("Created new Event \"{}\" with {} actions.", eventName, actions.len())
