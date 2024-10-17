@@ -8,7 +8,9 @@
 |       animations for alpha, color, and object movement in your VScripts.         |
 +----------------------------------------------------------------------------------+ */
 
-::animate <- {}
+::animate <- {
+    RT = {}
+}
 
 ::AnimEvent <- class {
     animName = null;
@@ -21,6 +23,7 @@
     outputs = null
     entities = []
     lerpFunc = null;
+    filterCallback = null;
     scope = null;
 
     /*
@@ -41,6 +44,7 @@
         this.outputs = macros.GetFromTable(table, "outputs", null)
         this.scope = macros.GetFromTable(table, "scope", this)
         this.lerpFunc = macros.GetFromTable(table, "lerp", function(t) return t)
+        this.filterCallback = macros.GetFromTable(table, "filterCallback", function(a,b,c,d) return null)
         this.frameInterval = macros.GetFromTable(table, "frameInterval", FrameTime()) 
         this.maxFrames = macros.GetFromTable(table, "fps", 60.0)
         this.autoOptimization = macros.GetFromTable(table, "optimization", true)
@@ -96,7 +100,7 @@
 */
 animate["applyAnimation"] <- function(animInfo, valueCalculator, propertySetter, vars = null, transitionFrames = 0) {
     if(transitionFrames == 0) {
-        if (this.autoOptimization && animInfo.delay / animInfo.frameInterval > animInfo.maxFrames)  
+        if (animInfo.autoOptimization && animInfo.delay / animInfo.frameInterval > animInfo.maxFrames)  
             animInfo.frameInterval = animInfo.delay / animInfo.maxFrames
         
         transitionFrames = animInfo.delay / animInfo.frameInterval;
@@ -122,7 +126,56 @@ animate["applyAnimation"] <- function(animInfo, valueCalculator, propertySetter,
     if(developer() > 0) dev.trace("Created {} animation ({}) for {} actions", animInfo.animName, animInfo.eventName, actionsList.len())
 }
 
+/*
+ * Facade function for applying real-time animations in an asynchronous environment.
+ * 
+ * This function schedules the real-time animation to be processed using `_applyRTAnimation`.
+ * The actual animation is executed without pre-calculating all the frames, 
+ * which allows for more flexibility, especially when handling long animations or situations where the animation might need to be interrupted.
+ *
+ * The arguments are the same as those for `applyAnimation`.
+*/
+animate["applyRTAnimation"] <- function(animInfo, valueCalculator, propertySetter, vars = null, transitionFrames = 0) {
+    if(transitionFrames == 0)
+        transitionFrames = animInfo.delay / animInfo.frameInterval;
+
+    ScheduleEvent.Add(
+        animInfo.eventName, 
+        animate._applyRTAnimation, 
+        animInfo.globalDelay, 
+        [animInfo, valueCalculator, propertySetter, vars, transitionFrames], 
+        this
+    )
+
+    // calc delay
+    animInfo.delay = animInfo.frameInterval * transitionFrames
+}
+
+/*
+ * Applies the animation in real-time, evaluating each frame as it occurs without pre-calculating.
+ * 
+ * This function works similarly to `applyAnimation`, but rather than calculating all the steps in advance,
+ * it applies `propertySetter` in real-time for each frame. This is useful in cases where you might need
+ * to interrupt or alter the animation at runtime using `filterCallback`, or if the animation is too long
+ * for VSquirrel to process upfront.
+*/
+animate["_applyRTAnimation"] <- function(animInfo, valueCalculator, propertySetter, vars, transitionFrames) {
+    transitionFrames = ceil(transitionFrames) 
+    if(developer() > 0) dev.trace("Started {} realtime animation ({})", animInfo.animName, animInfo.eventName)
+
+    for(local step = 0; step <= transitionFrames; step++) {
+        if(animInfo.filterCallback(animInfo, transitionFrames, step, vars)) break
+
+        local newValue = valueCalculator(step, transitionFrames, vars)
+        foreach(ent in animInfo.entities)
+            propertySetter(ent, newValue)
+
+        yield animInfo.frameInterval
+    }
+}
+
 IncludeScript("PCapture-LIB/SRC/Animations/alpha")
 IncludeScript("PCapture-LIB/SRC/Animations/color")
 IncludeScript("PCapture-LIB/SRC/Animations/position")
 IncludeScript("PCapture-LIB/SRC/Animations/angles")
+IncludeScript("PCapture-LIB/SRC/Animations/forward")

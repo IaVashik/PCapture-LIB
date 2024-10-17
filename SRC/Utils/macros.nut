@@ -404,3 +404,27 @@ macros["BuildAnimateFunction"] <- function(name, propertySetterFunc) {
         return animSetting.delay
     }
 }
+
+/*
+ * Same as BuildAnimateFunction, only for creating RealTime animations.
+*/
+macros["BuildRTAnimateFunction"] <- function(name, propertySetterFunc) {
+    return function(entities, startValue, endValue, time, animSetting = {}) : (name, propertySetterFunc) {
+        local animSetting = AnimEvent(name, animSetting, entities, time) 
+        local varg = {
+            start = startValue,
+            delta = endValue - startValue,
+            lerpFunc = animSetting.lerpFunc
+        }
+
+        animate.applyRTAnimation(
+            animSetting,
+            function(step, steps, v) {return v.start + v.delta * v.lerpFunc(step / steps)},
+            propertySetterFunc
+            varg
+        ) 
+
+        animSetting.callOutputs() 
+        return animSetting.delay
+    }
+}

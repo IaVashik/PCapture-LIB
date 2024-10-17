@@ -31,3 +31,27 @@ animate["AnglesTransitionByTime"] <- function(entities, startAngles, endAngles, 
     animSetting.callOutputs()
     return animSetting.delay
 }
+
+animate.RT["AnglesTransitionByTime"] <- function(entities, startAngles, endAngles, time, animSetting = {}) {
+    local animSetting = AnimEvent("angles", animSetting, entities, time)
+
+    local deltaAngleX = ((((endAngles.x - startAngles.x) % 360) + 540) % 360) - 180;
+    local deltaAngleY = ((((endAngles.y - startAngles.y) % 360) + 540) % 360) - 180;
+    local deltaAngleZ = ((((endAngles.z - startAngles.z) % 360) + 540) % 360) - 180;
+    
+    local vars = {
+        startAngles = startAngles,
+        angleDelta = Vector(deltaAngleX, deltaAngleY, deltaAngleZ),
+        lerpFunc = animSetting.lerpFunc
+    }
+
+    animate.applyRTAnimation(
+        animSetting, 
+        function(step, steps, v){return v.startAngles + v.angleDelta * v.lerpFunc(step / steps)},
+        function(ent, newAngle) {ent.SetAbsAngles(newAngle)},
+        vars
+    )
+    
+    animSetting.callOutputs()
+    return animSetting.delay
+}
