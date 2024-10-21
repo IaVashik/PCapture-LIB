@@ -83,7 +83,7 @@ function HUD::HintInstructor::Disable() {
  * Updates and redisplays the hint. 
 */
 function HUD::HintInstructor::Update() {
-    this.CPcapEntity.Enable()
+    this.Enable()
 }
 
 /*

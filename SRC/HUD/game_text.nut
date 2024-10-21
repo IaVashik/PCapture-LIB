@@ -4,6 +4,7 @@
 HUD["ScreenText"] <- class {
     // The underlying pcapEntity object representing the "game_text" entity. 
     CPcapEntity = null;
+    holdtime = 0;
     
     /*
      * Constructor for a ScreenText object.
@@ -14,6 +15,7 @@ HUD["ScreenText"] <- class {
      * @param {string} targetname - The targetname of the "game_text" entity. (optional) 
     */
     constructor(position, message, holdtime = 10, targetname = "") {
+        this.holdtime = holdtime
         this.CPcapEntity = entLib.CreateByClassname("game_text", {
             // Set initial properties for the text display entity
             channel = 2,
@@ -65,7 +67,9 @@ HUD["ScreenText"] <- class {
  * Displays the on-screen text. 
 */
 function HUD::ScreenText::Enable() {
+    this.CPcapEntity.SetKeyValue("holdtime", this.holdtime)
     EntFireByHandle(this.CPcapEntity, "Display")
+    return this
 }
 
 /*
@@ -80,7 +84,7 @@ function HUD::ScreenText::Disable() {
  * Updates and redisplays the on-screen text. 
 */
 function HUD::ScreenText::Update() {
-    this.CPcapEntity.Enable()
+    this.Enable()
 }
 
 /*
@@ -159,6 +163,7 @@ function HUD::ScreenText::SetFadeOut(value) {
  * @param {number} time - The hold time in seconds.  
 */
 function HUD::ScreenText::SetHoldTime(time) {
+    this.holdtime = time
     this.CPcapEntity.SetKeyValue("holdtime", time)
     return this
 }
