@@ -44,7 +44,7 @@
         this.outputs = macros.GetFromTable(table, "outputs", null)
         this.scope = macros.GetFromTable(table, "scope", this)
         this.lerpFunc = macros.GetFromTable(table, "lerp", function(t) return t)
-        this.filterCallback = macros.GetFromTable(table, "filterCallback", function(a,b,c,d) return null)
+        this.filterCallback = macros.GetFromTable(table, "filterCallback", function(a,b,c,d,e) return null)
         this.frameInterval = macros.GetFromTable(table, "frameInterval", FrameTime()) 
         this.maxFrames = macros.GetFromTable(table, "fps", 60.0)
         this.autoOptimization = macros.GetFromTable(table, "optimization", true)
@@ -54,7 +54,7 @@
      * Calls the outputs associated with the animation event. 
     */
     function callOutputs() {
-        if (this.outputs)
+        if(this.outputs)
             ScheduleEvent.Add(this.eventName, this.outputs, this.delay + this.globalDelay, null, this.scope)
     }
 
@@ -164,9 +164,9 @@ animate["_applyRTAnimation"] <- function(animInfo, valueCalculator, propertySett
     if(developer() > 0) dev.trace("Started {} realtime animation ({})", animInfo.animName, animInfo.eventName)
 
     for(local step = 0; step <= transitionFrames; step++) {
-        if(animInfo.filterCallback(animInfo, transitionFrames, step, vars)) break
-
         local newValue = valueCalculator(step, transitionFrames, vars)
+        if(animInfo.filterCallback(animInfo, newValue, transitionFrames, step, vars)) break // todo fix it
+
         foreach(ent in animInfo.entities)
             propertySetter(ent, newValue)
 
@@ -178,4 +178,4 @@ IncludeScript("PCapture-LIB/SRC/Animations/alpha")
 IncludeScript("PCapture-LIB/SRC/Animations/color")
 IncludeScript("PCapture-LIB/SRC/Animations/position")
 IncludeScript("PCapture-LIB/SRC/Animations/angles")
-IncludeScript("PCapture-LIB/SRC/Animations/forward")
+// IncludeScript("PCapture-LIB/SRC/Animations/forward")

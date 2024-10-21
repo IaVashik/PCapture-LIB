@@ -55,7 +55,7 @@ The `settings` table in the `AnimEvent` constructor can contain the following op
 *   `frameInterval` (number, optional): The time interval between frames in seconds (default is the engine's frame time).
 *   `fps` (number, optional): The desired frames per second for the animation, used to calculate `frameInterval` if it's not explicitly set (default is 60, maximum 60).
 *   `optimization` (bool, optional): Enables or disables automatic optimization. When enabled, the animation will automatically adjust the frame interval to ensure a maximum of `maxFrames` frames are used, improving performance for longer animations. (default is true).
-*   `filterCallback` (function, optional): A callback function that is called before each frame of a real-time animation.  It receives `animInfo`, `transitionFrames`, `currentStep`, and `vars` as arguments. If it returns `true`, the animation is interrupted. (Used only with real-time animations).
+*   `filterCallback` (function, optional): A callback function that is called before each frame of a real-time animation.  It receives `animInfo`, `newValue`, `transitionFrames`, `currentStep`, and `vars` as arguments. If it returns `true`, the animation is interrupted. (Used only with real-time animations).
 
 
 ### [`animate.applyAnimation(animInfo, valueCalculator, propertySetter, vars, transitionFrames)`](#applyanimation)
