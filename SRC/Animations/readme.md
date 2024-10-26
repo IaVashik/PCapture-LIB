@@ -308,6 +308,7 @@ This function creates a new animation function for animating a property of one o
 
 *   `name` (string): The name of the property to animate (e.g., "alpha", "color", "position").
 *   `propertySetterFunc` (function): A function that sets the new value for the property on each entity. The function should take two arguments: the entity and the calculated value.
+*   `valueCalculator` (function): A custom function that calculates the animated value for each step. (optional)
 
 **Returns:**
 

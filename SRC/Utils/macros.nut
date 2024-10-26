@@ -210,10 +210,11 @@ macros["GetDist"] <- function(vec1, vec2) {
  * Converts a string to a Vector object.
  * 
  * @param {string} str - The string representation of the vector, e.g., "x y z".
+ * @param {string} sep - The separator string.
  * @returns {Vector} - The converted vector.
 */
-macros["StrToVec"] <- function(str) {
-    local str_arr = split(str, " ")
+macros["StrToVec"] <- function(str, sep = " ") {
+    local str_arr = split(str, sep)
     local vec = Vector(str_arr[0].tofloat(), str_arr[1].tofloat(), str_arr[2].tofloat())
     return vec
 }
@@ -222,10 +223,10 @@ macros["StrToVec"] <- function(str) {
  * Converts a Vector object to a string representation.
  * 
  * @param {Vector} vec - The vector to convert. 
- * @returns {string} - The string representation of the vector, e.g., "x y z". 
+ * @returns {string} - The separator string.
 */
-macros["VecToStr"] <- function(vec) {
-    return vec.x + " " + vec.y + " " + vec.z 
+macros["VecToStr"] <- function(vec, sep = " ") {
+    return vec.x + sep + vec.y + sep + vec.z 
 }
 
 /*
@@ -377,6 +378,7 @@ macros["PointInBBox"] <- function(point, bMin, bMax) {
  * 
  * @param {string} name - The name of the animation. This name is used to identify the animation internally. 
  * @param {function} propertySetterFunc - A function that takes an entity and a value, and sets a property on that entity. This function will be called repeatedly during the animation to update the property.
+ * @param {function} valueCalculator (optional) - A custom function that calculates the animated value for each step. 
  * @returns {function} - A function that can be used to start the animation. This function takes the following arguments:
  *   * `entities` {array|pcapEntity} - An array of entities or a single entity to animate.
  *   * `startValue` {any} - The starting value for the property.
@@ -384,8 +386,8 @@ macros["PointInBBox"] <- function(point, bMin, bMax) {
  *   * `time` {number} - The duration of the animation in seconds.
  *   * `animSetting` {table} (optional) - A table of additional animation settings. See the `AnimEvent` constructor for details.
 */
-macros["BuildAnimateFunction"] <- function(name, propertySetterFunc) {
-    return function(entities, startValue, endValue, time, animSetting = {}) : (name, propertySetterFunc) {
+macros["BuildAnimateFunction"] <- function(name, propertySetterFunc, valueCalculator = null) {
+    return function(entities, startValue, endValue, time, animSetting = {}) : (name, propertySetterFunc, valueCalculator) {
         local animSetting = AnimEvent(name, animSetting, entities, time) 
         local varg = {
             start = startValue,
@@ -395,7 +397,7 @@ macros["BuildAnimateFunction"] <- function(name, propertySetterFunc) {
 
         animate.applyAnimation(
             animSetting,
-            function(step, steps, v) {return v.start + v.delta * v.lerpFunc(step / steps)},
+            valueCalculator ? valueCalculator : function(step, steps, v) {return v.start + v.delta * v.lerpFunc(step / steps)},
             propertySetterFunc
             varg
         ) 
@@ -408,8 +410,8 @@ macros["BuildAnimateFunction"] <- function(name, propertySetterFunc) {
 /*
  * Same as BuildAnimateFunction, only for creating RealTime animations.
 */
-macros["BuildRTAnimateFunction"] <- function(name, propertySetterFunc) {
-    return function(entities, startValue, endValue, time, animSetting = {}) : (name, propertySetterFunc) {
+macros["BuildRTAnimateFunction"] <- function(name, propertySetterFunc, valueCalculator = null) {
+    return function(entities, startValue, endValue, time, animSetting = {}) : (name, propertySetterFunc, valueCalculator) {
         local animSetting = AnimEvent(name, animSetting, entities, time) 
         local varg = {
             start = startValue,
@@ -419,7 +421,7 @@ macros["BuildRTAnimateFunction"] <- function(name, propertySetterFunc) {
 
         animate.applyRTAnimation(
             animSetting,
-            function(step, steps, v) {return v.start + v.delta * v.lerpFunc(step / steps)},
+            valueCalculator ? valueCalculator : function(step, steps, v) {return v.start + v.delta * v.lerpFunc(step / steps)},
             propertySetterFunc
             varg
         ) 

@@ -793,6 +793,7 @@ This macro converts a string representation of a vector (e.g., "x y z") to a `Ve
 **Parameters:**
 
 * `str` (string): The string representation of the vector.
+* `sep` (String): The separator string..
 
 **Returns:**
 
@@ -812,6 +813,7 @@ This macro converts a `Vector` object to a string representation (e.g., "x y z")
 **Parameters:**
 
 * `vec` (Vector): The `Vector` object to convert.
+* `sep` (String): The separator string..
 
 **Returns:**
 
@@ -821,7 +823,8 @@ This macro converts a `Vector` object to a string representation (e.g., "x y z")
 
 ```js
 local position = Vector(10, 20, 30)
-local positionString = macros.VecToStr(position) // Convert the position vector to a string
+local positionString = macros.VecToStr(position, " | ") // Convert the position vector to a string
+printl(positionString) // output: "10 | 20 | 30"
 ```
 
 ### `macros.isEqually(val1, val2)` (TODO! more examples)
@@ -967,6 +970,7 @@ This function creates a new animation function for animating a property of one o
 
 * `name` (string): The name of the animation. This name is used to identify the animation internally.
 * `propertySetterFunc` (function): A function that takes an entity and a value, and sets a property on that entity. This function will be called repeatedly during the animation to update the property.
+* `valueCalculator` (function): A custom function that calculates the animated value for each step. (optional)
 
 **Returns:**
 
