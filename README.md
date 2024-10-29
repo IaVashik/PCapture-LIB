@@ -36,7 +36,7 @@
 
 1. **Installation:** Copy the PCapture-Lib folder into your Portal 2 scripts directory (`portal2/scripts/vscripts`).
 
-2. **Initialization:** Include the library in your VScripts using `require("PCapture-Lib")`.
+2. **Initialization:** Include the library in your VScripts using `IncludeScript("PCapture-Lib")` or `IncludeScript("PCapture-Lib/SRC/PCapture-Lib")`.
 
 3. **Documentation:** Refer to the [documentation](Short_Documentation.md) for detailed information on each module and its functions. A quick reference guide is also available [link to short-dock].
 
