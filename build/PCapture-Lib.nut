@@ -9,7 +9,7 @@
 |    GitHud repo: https://github.com/IaVashik/PCapture-LIB                          |
 +----------------------------------------------------------------------------------+ */
 
-local version = "PCapture-Lib 3.0 Release-Candidate"
+local version = "PCapture-Lib 3.0 Stable"
 
 // `Self` must be in any case, even if the script is run directly by the interpreter
 if (!("self" in this)) {
@@ -406,107 +406,108 @@ lerp["SmoothStep"] <- function(edge0, edge1, value) {
 lerp["FLerp"] <- function( f1, f2, i1, i2, value ) {
     return f1 + (f2 - f1) * (value - i1) / (i2 - i1);
 }
-
-
 // More info here: https://gizma.com/easing/
 
-lerp["InSine"] <- function(t) { 
+math["ease"] <- {}
+local ease = math["ease"]
+
+ease["InSine"] <- function(t) { 
     return 1 - cos((t * PI) / 2);
 }
 
-lerp["OutSine"] <- function(t) { 
+ease["OutSine"] <- function(t) { 
     return sin((t * PI) / 2);
 }
 
-lerp["InOutSine"] <- function(t) { 
+ease["InOutSine"] <- function(t) { 
     return -(cos(PI * t) - 1) / 2;
 }
 
-lerp["InQuad"] <- function(t) { 
+ease["InQuad"] <- function(t) { 
     return t * t; 
 }
 
-lerp["OutQuad"] <- function(t) { 
+ease["OutQuad"] <- function(t) { 
     return 1 - (1 - t) * (1 - t); 
 }
 
-lerp["InOutQuad"] <- function(t) { 
+ease["InOutQuad"] <- function(t) { 
     return t < 0.5 ? 2 * t * t : 1 - pow(-2 * t + 2, 2) / 2;
 }
 
-lerp["InCubic"] <- function(t) { 
+ease["InCubic"] <- function(t) { 
     return t * t * t;
 }
 
-lerp["OutCubic"] <- function(t) { 
+ease["OutCubic"] <- function(t) { 
     return 1 - pow(1 - t, 3);
 }
 
-lerp["InOutCubic"] <- function(t) { 
+ease["InOutCubic"] <- function(t) { 
     return t < 0.5 ? 4 * t * t * t : 1 - pow(-2 * t + 2, 3) / 2;
 }
 
-lerp["InQuart"] <- function(t) {
+ease["InQuart"] <- function(t) {
     return t * t * t * t; 
 }
 
-lerp["OutQuart"] <- function(t) { 
+ease["OutQuart"] <- function(t) { 
     return 1 - pow(1 - t, 4);
 }
 
-lerp["InOutQuart"] <- function(t) { 
+ease["InOutQuart"] <- function(t) { 
     return t < 0.5 ? 8 * t * t * t * t : 1 - pow(-2 * t + 2, 4) / 2;
 }
 
-lerp["InQuint"] <- function(t) { 
+ease["InQuint"] <- function(t) { 
     return t * t * t * t * t;
 }
 
-lerp["OutQuint"] <- function(t) { 
+ease["OutQuint"] <- function(t) { 
     return 1 - pow(1 - t, 5);
 }
 
-lerp["InOutQuint"] <- function(t) { 
+ease["InOutQuint"] <- function(t) { 
     return t < 0.5 ? 16 * t * t * t * t * t : 1 - pow(-2 * t + 2, 5) / 2;
 }
 
-lerp["InExpo"] <- function(t) { 
+ease["InExpo"] <- function(t) { 
     return t == 0 ? 0 : pow(2, 10 * t - 10);
 }
 
-lerp["OutExpo"] <- function(t) { 
+ease["OutExpo"] <- function(t) { 
     return t == 1 ? 1 : 1 - pow(2, -10 * t);
 }
 
-lerp["InOutExpo"] <- function(t) { 
+ease["InOutExpo"] <- function(t) { 
     return t == 0 ? 0 : t == 1 ? 1 : t < 0.5 ? pow(2, 20 * t - 10) / 2 : (2 - pow(2, -20 * t + 10)) / 2;
 }
 
-lerp["InCirc"] <- function(t) { 
+ease["InCirc"] <- function(t) { 
     return 1 - sqrt(1 - pow(t, 2));
 }
 
-lerp["OutCirc"] <- function(t) { 
+ease["OutCirc"] <- function(t) { 
     return sqrt(1 - pow(t - 1, 2));
 }
 
-lerp["InOutCirc"] <- function(t) { 
+ease["InOutCirc"] <- function(t) { 
     return t < 0.5 ? (1 - sqrt(1 - pow(2 * t, 2))) / 2 : (sqrt(1 - pow(-2 * t + 2, 2)) + 1) / 2;
 }
 
-lerp["InBack"] <- function(t) { 
+ease["InBack"] <- function(t) { 
     local c1 = 1.70158;
     local c3 = c1 + 1;
     return c3 * t * t * t - c1 * t * t;
 }
 
-lerp["OutBack"] <- function(t) { 
+ease["OutBack"] <- function(t) { 
     local c1 = 1.70158;
     local c3 = c1 + 1;
     return 1 + c3 * pow(t - 1, 3) + c1 * pow(t - 1, 2);
 }
 
-lerp["InOutBack"] <- function(t) { 
+ease["InOutBack"] <- function(t) { 
     local c1 = 1.70158;
     local c2 = c1 * 1.525;
     return t < 0.5
@@ -514,7 +515,7 @@ lerp["InOutBack"] <- function(t) {
        : (pow(2 * t - 2, 2) * ((c2 + 1) * (t * 2 - 2) + c2) + 2) / 2;
 }
 
-lerp["InElastic"] <- function(t) { 
+ease["InElastic"] <- function(t) { 
     local c4 = (2 * PI) / 3;
     return t == 0
         ? 0
@@ -523,7 +524,7 @@ lerp["InElastic"] <- function(t) {
         : -pow(2, 10 * t - 10) * sin((t * 10 - 10.75) * c4);
 }
 
-lerp["OutElastic"] <- function(t) { 
+ease["OutElastic"] <- function(t) { 
     local c4 = (2 * PI) / 3;
     return t == 0
     ? 0
@@ -532,7 +533,7 @@ lerp["OutElastic"] <- function(t) {
     : pow(2, -10 * t) * sin((t * 10 - 0.75) * c4) + 1;
 }
 
-lerp["InOutElastic"] <- function(t) { 
+ease["InOutElastic"] <- function(t) { 
     local c5 = (2 * PI) / 4.5;
     return t == 0
     ? 0
@@ -543,11 +544,11 @@ lerp["InOutElastic"] <- function(t) {
     : (pow(2, -20 * t + 10) * sin((20 * t - 11.125) * c5)) / 2 + 1;
 }
 
-lerp["InBounce"] <- function(t) { 
-    return 1 - math.lerp.OutBounce(1 - t); // todo
+ease["InBounce"] <- function(t) { 
+    return 1 - math.ease.OutBounce(1 - t); // todo
 }
 
-lerp["OutBounce"] <- function(t) { 
+ease["OutBounce"] <- function(t) { 
     local n1 = 7.5625;
     local d1 = 2.75;
     if (t < 1 / d1) {
@@ -561,10 +562,10 @@ lerp["OutBounce"] <- function(t) {
     }
 }
 
-lerp["InOutBounce"] <- function(t) { 
+ease["InOutBounce"] <- function(t) { 
     return t < 0.5
-    ? (1 - math.lerp.OutBounce(1 - 2 * t)) / 2
-    : (1 + math.lerp.OutBounce(2 * t - 1)) / 2;
+    ? (1 - math.ease.OutBounce(1 - 2 * t)) / 2
+    : (1 + math.ease.OutBounce(2 * t - 1)) / 2;
 }
 math["Quaternion"] <- class {
     x = null;
@@ -1182,6 +1183,7 @@ math["Matrix"] <- class {
         this.CBaseEntity = entity
         this.EntityScope = {}
         entity.ValidateScriptScope()
+        // this.uniqueId = UniqueString("pcapEntity")
         // entity.GetScriptScope().self <- this // todo whoa!
     }
 
@@ -1344,7 +1346,7 @@ math["Matrix"] <- class {
      * 
      * This method provides a way to establish connections between entities, allowing them to trigger actions on each other based on outputs and inputs. 
     */
-     function addOutput(outputName, target, input, param = "", delay = 0, fires = -1) {
+     function AddOutput(outputName, target, input, param = "", delay = 0, fires = -1) {
         if(typeof target == "instance" || typeof target == "pcapEntity")
             target = target.GetName()
         this.SetKeyValue(outputName, target + "\x001B" + input + "\x001B" + param + "\x001B" + delay + "\x001B" + fires)
@@ -1367,7 +1369,7 @@ math["Matrix"] <- class {
             script = funcName + "()"
         }
 
-        this.addOutput(outputName, "!self", "RunScriptCode", script, delay, fires)
+        this.AddOutput(outputName, "!self", "RunScriptCode", script, delay, fires)
     }
 
     /*
@@ -1681,7 +1683,7 @@ math["Matrix"] <- class {
         if(fireDelay != 0)
             return ScheduleEvent.Add(eventName, this.SetModelScale, fireDelay, [scaleValue], this)
         
-        EntFireByHandle(this.CBaseEntity, "addoutput", "ModelScale " + scaleValue)
+        EntFireByHandle(this.CBaseEntity, "AddOutput", "ModelScale " + scaleValue)
         this.SetUserData("ModelScale", scaleValue)
         // hack for entity update
         EntFireByHandle(this, "SetBodyGroup", "1"); EntFireByHandle(this, "SetBodyGroup", "0", 0.02)
@@ -4028,33 +4030,6 @@ if(("dissolver" in getroottable()) == false) {
         SendToConsole("exec " + path)
     }
 }
-class ConsoleListener {
-    file = null
-    constructor() {
-        // this.file = File(UniqueString("console_grab")) 
-        this.file = File("console_grab") 
-        printl(this.file.name)
-    }
-
-    function RunCommand(cmd) {
-        local fuck = "script " + this.file.name + ".append(@\\\""
-        SendToConsole("con_logfile cfg/" + this.file.path)
-        SendToConsole("script printl(\"" + fuck + "\")")
-        SendToConsole(cmd)
-        SendToConsole("script printl(\"\\\")\")")
-        SendToConsole("con_logfile off")
-    }
-
-    function GetOutput() {
-        return this.file.readlines().top()
-    }
-
-    function Upd() {
-        this.file.updateInfo()
-    }
-}
-
-
 if("GetPlayerEx" in getroottable()) {
     return
 }
@@ -4128,8 +4103,6 @@ if("GetPlayerEx" in getroottable()) {
     ScheduleEvent.Add(eventName, EntFire, delay, [target, action, value, 0, activator])
 }
 
-::AllPlayers <- []
-
 /*
 * Retrieves a player entity with extended functionality.
 *
@@ -4137,63 +4110,18 @@ if("GetPlayerEx" in getroottable()) {
 * @returns {pcapEntity} - An extended player entity with additional methods.
 */
 ::GetPlayerEx <- function(index = 0) {
-    if(IsMultiplayer()) {
-        if(index >= AllPlayers.len()) return
-        return AllPlayers[index]
-    }
+    if(!IsMultiplayer()) 
+        return entLib.FromEntity(GetPlayer())
 
-    return entLib.FromEntity(GetPlayer())
-}
-
-/* 
- * Gets an array of all players in the game. 
- *
- * @returns {array} - An array of pcapEntity objects representing the players. 
-*/
-::GetPlayers <- function() { // -> array
-    return AllPlayers
-}
-
-
-/* 
- * Attaches eye control entities to all players in the game. 
- *
- * This function creates logic_measure_movement and info_target entities for each player to track their eye position and angles. 
- * It is called automatically at the initialization of the library and periodically in multiplayer games. 
-*/
-::AttachEyeControlToPlayers <- function() {
-    for(local player; player = entLib.FindByClassname("player", player);) {
-        if(player.GetUserData("Eye")) continue
-
-        local controlName = UniqueString("eyeControl")
-        local eyeControlEntity = entLib.CreateByClassname("logic_measure_movement", {
-            targetname = controlName, measuretype = 1}
-        )
-
-        local eyeName = UniqueString("eyePoint")
-        local eyePointEntity = entLib.CreateByClassname("info_target", {targetname = eyeName})
-
-        local playerName = player.GetName() == "" ? "!player" : player.GetName()
-
-        EntFireByHandle(eyeControlEntity, "setmeasuretarget", playerName)
-        EntFireByHandle(eyeControlEntity, "setmeasurereference", controlName);
-        EntFireByHandle(eyeControlEntity, "SetTargetReference", controlName);
-        EntFireByHandle(eyeControlEntity, "Settarget", eyeName);
-        EntFireByHandle(eyeControlEntity, "Enable")
-
-        player.SetUserData("Eye", eyePointEntity)
-        AllPlayers.append(player)
-
-        // New portal pair:
-        InitPortalPair(AllPlayers.len())
-    }
+    if(index >= AllPlayers.len()) return null
+    return AllPlayers[index]
 }
 /*
  * Creates a `func_portal_detector` entity with specified key-value pairs and settings for portal detection.
  * 
  * This function is not part of the public API.
 */
- ::_CreatePortalDetector <- function(extraKey, extraValue) {
+::_CreatePortalDetector <- function(extraKey, extraValue) {
     local detector = entLib.CreateByClassname("func_portal_detector", {solid = 3, CollisionGroup = 10})
     detector.SetKeyValue(extraKey, extraValue)
     detector.SetBBox(Vector(32000, 32000, 32000) * -1, Vector(32000, 32000, 32000))
@@ -4844,6 +4772,118 @@ const SOLID_CUSTOM = 5
 
 // Uses VPhysics engine for realistic physics. 
 const SOLID_VPHYSICS = 6 
+if("AllPlayers" in getroottable()) return
+
+::AllPlayers <- ArrayEx()
+
+/* 
+ * Gets an array of all players in the game. 
+ *
+ * @returns {array} - An array of pcapEntity objects representing the players. 
+*/
+::GetPlayers <- function() { // -> ArrayEx
+    return AllPlayers
+}
+
+
+/* 
+ * Tracks players joining the game and initializes their. 
+ *
+ * This function iterates over all player entities in the game, attaching eye control 
+ * and initializing new portal pairs for each new player. It calls OnPlayerJoin for 
+ * each player added to the AllPlayers list.
+*/
+::TrackPlayerJoins <- function() {
+    for(local player; player = entLib.FindByClassname("player", player);) {
+        if(player.GetUserData("Eye")) continue // if already inited (AllPlayers.contains(player))
+        
+        // Attach eye control to the new player
+        AttachEyeControl(player)
+        // Initialize a new portal pair for this player:
+        InitPortalPair(AllPlayers.len())
+        
+        AllPlayers.append(player)
+        // Trigger join event
+        OnPlayerJoined(player)
+    }
+}
+
+/* 
+ * Handles player events in MP, such as health checks and death events. 
+ *
+ * This function iterates over all players in the AllPlayers list, checking if 
+ * each player is valid and updating their state accordingly. It calls OnDeath 
+ * for dead players and schedules their respawn logic.
+*/
+::HandlePlayerEventsMP <- function() {
+    foreach(player in AllPlayers){
+        if(!player.IsValid()) {
+            OnPlayerLeft(player)
+            AllPlayers.remove(AllPlayers.search(player))
+            continue
+        }
+
+        if(player.GetHealth() > 0 || player.GetHealth() == -999) continue
+
+        OnDeath(player)
+        ScheduleEvent.Add("global", _monitorRespawn, 0, null, player)
+        player.SetHealth(-999)
+    }
+}
+
+::HandlePlayerEventsSP <- function() {
+    local h = AllPlayers[0].GetHealth()
+    if(h > 0 || h == -999) return
+    OnPlayerDeath(AllPlayers[0])
+    AllPlayers[0].SetHealth(-999)
+}
+
+/* 
+ * Monitors player respawn status. 
+*/
+function _monitorRespawn() {
+    while(true) {
+        if(this.GetHealth() > 0)
+            return OnPlayerRespawn(this)
+        yield 0.3
+    }
+}
+
+
+/* 
+ * Attaches eye control entities to all players in the game. 
+ *
+ * This function creates logic_measure_movement and info_target entities for each player to track their eye position and angles. 
+ * It is called automatically at the initialization of the library and periodically in multiplayer games. 
+*/
+function AttachEyeControl(player) {
+    if(player.GetUserData("Eye")) return
+
+    local controlName = UniqueString("eyeControl")
+    local eyeControlEntity = entLib.CreateByClassname("logic_measure_movement", {
+        targetname = controlName, measuretype = 1}
+    )
+
+    local eyeName = UniqueString("eyePoint")
+    local eyePointEntity = entLib.CreateByClassname("info_target", {targetname = eyeName})
+
+    local playerName = player.GetName() == "" ? "!player" : player.GetName()
+
+    EntFireByHandle(eyeControlEntity, "setmeasuretarget", playerName)
+    EntFireByHandle(eyeControlEntity, "setmeasurereference", controlName);
+    EntFireByHandle(eyeControlEntity, "SetTargetReference", controlName);
+    EntFireByHandle(eyeControlEntity, "Settarget", eyeName);
+    EntFireByHandle(eyeControlEntity, "Enable")
+
+    player.SetUserData("Eye", eyePointEntity)
+}
+
+
+// Empty Hooks
+function OnPlayerJoined(player) {}
+function OnPlayerLeft(player) {}
+function OnPlayerDeath(player) {}
+function OnPlayerRespawn(player) {}
 
 
 ::LibLogger <- LoggerLevels.Info
@@ -6482,11 +6522,11 @@ ScheduleEvent["IsValid"] <- function(eventName) {
         local event 
         // Process events until the list is empty or the next event's time hasn't arrived yet.  
         while(eventInfo.len() > 0 && Time() >= (event = eventInfo.first()).executionTime) {
-            local gtor = event.action
-            if(typeof event.action == "generator" || typeof (gtor = event.run()) == "generator") {
-                event.processGenerator(gtor, eventName)
-            }
             try {
+                local gtor = event.action
+                if(typeof event.action == "generator" || typeof (gtor = event.run()) == "generator") {
+                    event.processGenerator(gtor, eventName)
+                }
             }
             catch(exception) {
                 //* Stack unwinding
@@ -6963,7 +7003,7 @@ animate.RT["AnglesTransitionByTime"] <- function(entities, startAngles, endAngle
 /* 
  * Listens for and handles custom "game events".
 */
- ::EventListener <- {
+::EventListener <- {
     /*
      * Notifies the listener of a triggered event.
      *
@@ -7499,20 +7539,28 @@ function HUD::HintInstructor::SetEffects(sizePulsing, alphaPulsing, shaking) {
 
 
 /*
- * This code initializes "eyes" for all players to enable retrieving their coordinates and viewing directions,
- * serving as a workaround due to the lack of the EyeForward function in Portal 2.
+ * Initializes eye tracking for all players, allowing retrieval of their coordinates and viewing directions.
+ * This serves as a workaround for the absence of the EyeForward function in Portal 2.
  *
- * If the session is multiplayer, it reinitializes the eyes after 1 second to ensure players are properly set up,
- * as players initialize with a slight delay of 1-2 seconds in multiplayer mode.
+ * In multiplayer sessions, it reinitializes eye tracking after 1 second to ensure that players are set up 
+ * correctly, as there is typically a slight delay (1-2 seconds) in player initialization.
  *
- * Additionally, if running in the Portal 2 Multiplayer Mod (P2MM), it sets up a repeated initialization every second,
- * to accommodate new players joining the session dynamically.
+ * When running in the Portal 2 Multiplayer Mod (P2MM), it schedules repeated initialization every second 
+ * to dynamically accommodate new players joining the session.
 */
-AttachEyeControlToPlayers()
-if(IsMultiplayer()) 
-    ScheduleEvent.Add("global", AttachEyeControlToPlayers, 2)
-if(IsMultiplayer() && "TEAM_SINGLEPLAYER" in getroottable()) 
-    ScheduleEvent.AddInterval("global", AttachEyeControlToPlayers, 1, 2)
+
+TrackPlayerJoins()
+if(IsMultiplayer()) {
+    ScheduleEvent.Add("global", TrackPlayerJoins, 2) // Thanks Volve for making it take so long for players to initialize
+    ScheduleEvent.AddInterval("global", HandlePlayerEventsMP, 0.3)
+    
+    if("TEAM_SINGLEPLAYER" in getroottable()) 
+        // This session is running in P2MM, actively monitoring players.
+        ScheduleEvent.AddInterval("global", TrackPlayerJoins, 1, 2)
+} 
+else {
+    ScheduleEvent.AddInterval("global", HandlePlayerEventsSP, 0.5)
+} 
 
 
 // Global settings for the portals correct working
