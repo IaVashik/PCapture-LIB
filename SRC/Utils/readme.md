@@ -2,6 +2,79 @@
 
 The `Utils` module provides a collection of utility functions for script execution, debugging, file operations, and working with entities in VScripts. It aims to simplify common tasks and enhance the development experience.
 
+## Table of Contents
+
+* [`Utils/debug.nut`](#utilsdebugnut)
+	* [`LoggerLevels`](#loggerlevels)
+	* [`DrawEntityBBox(ent, color, time)`](#drawentitybboxent-color-time)
+	* [`DrawEntityAABB(ent, color, time)`](#drawentityaabbent-color-time)
+	* [`drawbox(vector, color, time)`](#drawboxvector-color-time)
+	* [`trace(msg, ...)`](#tracemsg)
+	* [`debug(msg, ...)`](#debugmsg)
+	* [`info(msg, ...)`](#infomsg)
+	* [`warning(msg, ...)`](#warningmsg)
+	* [`error(msg, ...)`](#errormsg)
+* [`Utils/file.nut`](#utilsfilenut)
+	* [`File(path)`](#filepath)
+	* [`write(text)`](#writetext)
+	* [`writeRawData(text)`](#writerawdatatext)
+	* [`readlines()`](#readlines)
+	* [`read()`](#read)
+	* [`clear()`](#clear)
+	* [`updateInfo()`](#updateinfo)
+* [`Utils/improvements.nut`](#utilsimprovementsnut)
+	* [`FrameTime()`](#frametime)
+	* [`UniqueString(prefix)`](#uniquestringprefix)
+	* [`EntFireByHandle(target, action, value, delay, activator, caller)`](#entfirebyhandletarget-action-value-delay-activator-caller)
+	* [`GetPlayerEx(index)`](#getplayerexindex)
+* [`ActionScheduler/player_hooks.nut`](#actionschedulerplayer_hooksnut)
+	* [`GetPlayers()`](#getplayers)
+	* [`TrackPlayerJoins()`](#trackplayerjoins)
+	* [`HandlePlayerEventsMP()`](#handleplayereventsmp)
+	* [`HandlePlayerEventsSP()`](#handleplayereventssp)
+	* [`AttachEyeControl(player)`](#attacheyecontrolplayer)
+	* [`Hooks List`](#hooks-customizable-functions)
+		* [`OnPlayerJoined(player)`](#onplayerjoinedplayer)
+		* [`OnPlayerLeft(player)`](#onplayerleftplayer)
+		* [`OnPlayerDeath(player)`](#onplayerdeathplayer)
+		* [`OnPlayerRespawn(player)`](#onplayerrespawnplayer)
+* [`Utils/portals.nut`](#utilsportalsnut)
+	* [`InitPortalPair(id)`](#initportalpairid)
+	* [`IsBluePortal(ent)`](#isblueportalent)
+	* [`FindPartnerForPropPortal(portal)`](#findpartnerforpropportalportal)
+	* [`SetupLinkedPortals()`](#setuplinkedportals)
+* [`Utils/macros.nut`](#utilsmacrosnut)
+	* [`Precache(soundPath)`](#macrosprecachesoundpath)
+	* [`GetSoundDuration(soundName)`](#macrosgetsounddurationsoundname)
+	* [`format(msg, ...)`](#formatmsg)
+	* [`fprint(msg, ...)`](#fprintmsg)
+	* [`GetFromTable(table, key, defaultValue)`](#macrosgetfromtabletable-key-defaultvalue)
+	* [`GetKeys`](#macrosgetkeys)
+	* [`GetValues`](#macrosgetvalues)
+	* [`InvertTable(table)`](#inverttabletable)
+	* [`PrintIter(iterable)`](#macrosprintiteriterable)
+	* [`MaskSearch(iter, match)`](#macrosmasksearchiter-match)
+	* [`GetRectangle(v1, v2, v3, v4)`](#macrosgetrectanglev1-v2-v3-v4)
+	* [`PointInBBox(point, bMin, bMax)`](#macrospointinbboxpoint-bmin-bmax)
+	* [`Range(start, end, step)`](#rangestart-end-step)
+	* [`RangeIter(start, end, step)`](#rangeiterstart-end-step)
+	* [`GetDist(vec1, vec2)`](#macrosgetdistvec1-vec2)
+	* [`StrToVec(str)`](#macrosstrtovecstr)
+	* [`VecToStr(vec)`](#macrosvectostrvec)
+	* [`isEqually(val1, val2)`](#macrosisequallyval1-val2)
+	* [`GetPrefix(name)`](#macrosgetprefixname)
+	* [`GetPostfix(name)`](#macrosgetpostfixname)
+	* [`GetEyeEndpos(player, distance)`](#macrosgeteyeendposplayer-distance)
+	* [`GetVertex(x, y, z, ang)`](#macrosgetvertexx-y-z-ang)
+	* [`GetTriangle()`](#macrosgettriangle)
+	* [`BuildAnimateFunction(name, propertySetterFunc, valueCalculator)`](#macrosbuildanimatefunctionname-propertysetterfunc-valueCalculator)
+	* [`BuildRTAnimateFunction(name, propertySetterFunc, valueCalculator)`](#macrosbuildrtanimatefunctionname-propertysetterfunc-valueCalculator)
+* [`Utils/scripts.nut`](#utilsscriptsnut)
+	* [`RunScriptCode`](#runscriptcode)
+	* [`delay(script, runDelay, activator, rgs, scope)`](#delayscript-rundelay-activator-rgs-scope)
+	* [`loopy(script, runDelay, loopCount, outputs)`](#loopyscript-rundelay-loopcount-outputs)
+	* [`fromStr(str)`](#fromstrstr)
+
 ## [Utils/debug.nut](debug.nut)
 
 This file contains functions for debugging and logging messages to the console, as well as visualizing entity bounding boxes.
@@ -20,14 +93,9 @@ To use these levels, you need to set the `LibLogger` variable after initializing
 LibLogger = LoggerLevels.Trace
 ```
 
-#### Developer Mode
 All logging functions only work if the console command `developer` is set to a value higher than 0.
 
-### dev
-
-The `dev` table contains various debugging utility functions.
-
-#### `DrawEntityBBox(ent, color, time)`
+### `DrawEntityBBox(ent, color, time)`
 
 This function draws the bounding box of an entity using `DebugDrawBox` for the specified duration. It is helpful for visualizing the extents of an entity and debugging collision issues.
 
@@ -44,7 +112,7 @@ local myEntity = entLib.FindByClassname("prop_physics")
 dev.DrawEntityBBox(myEntity, Vector(125, 0, 1255), 5) // Draw the bounding box for 5 seconds
 ```
 
-#### `DrawEntityAABB(ent, color, time)`
+### `DrawEntityAABB(ent, color, time)`
 
 This function draws the AABB of an entity using `DebugDrawBox` for the specified duration.
 
@@ -365,7 +433,7 @@ printl(player.EyePosition()) // Print the player's eye position
 
 This module manages player-related events and provides hooks for custom logic. It maintains a list of all players in the game and offers functions to track player joins, departures, deaths, and respawns.
 
-### [`GetPlayers()`](#getplayers)
+### `GetPlayers()`
 
 This function returns an array of all players in the game as `pcapEntity` objects.
 
@@ -382,28 +450,28 @@ foreach (player in players) {
 }
 ```
 
-### [`TrackPlayerJoins()`](#trackplayerjoins)
+### `TrackPlayerJoins()`
 
 Tracks players joining the game. It iterates through all player entities, initializes their eye control, creates portal pairs (if applicable), adds them to the `AllPlayers` array, and triggers the `OnPlayerJoined` hook.
 
 > [!NOTE]  
 > This function is called automatically
 
-### [`HandlePlayerEventsMP()`](#handleplayermp)
+### `HandlePlayerEventsMP()`
 
 Handles player events in multiplayer mode, including health checks and death events. It iterates through the `AllPlayers` array, checks player validity, calls `OnDeath` and schedules respawn logic for dead players, and removes disconnected players from the `AllPlayers` array.  Sets player health to -999 to prevent repeated death triggers.
 
 > [!NOTE]  
 > This function is called automatically
 
-### [`HandlePlayerEventsSP()`](#handleplayereventssp)
+### `HandlePlayerEventsSP()`
 
 Handles player events in single-player mode, similar to `HandlePlayerEventsMP`, but simplified for a single player.  Sets player health to -999 to prevent repeated death triggers.
 
 > [!NOTE]  
 > This function is called automatically
 
-### [`_monitorRespawn(player)`](#_monitorrespawnplayer)
+### `_monitorRespawn(player)`
 
 Internal function to monitor a player's respawn status.  This function is called by `ScheduleEvent.Add` within `HandlePlayerEventsMP`.  It continuously checks the player's health and triggers the `OnPlayerRespawn` hook upon successful respawn.
 
@@ -415,7 +483,7 @@ Internal function to monitor a player's respawn status.  This function is called
 > This function is called automatically by `HandlePlayerEventsMP`
 
 
-### [`AttachEyeControl(player)`](#attacheyecontrolplayer)
+### `AttachEyeControl(player)`
 
 Attaches eye control entities to a player. This function creates `logic_measure_movement` and `info_target` entities to track the player's eye position and angles.
 
@@ -430,7 +498,7 @@ Attaches eye control entities to a player. This function creates `logic_measure_
 
 The following functions are provided as hooks for custom logic. They are initially empty and can be overridden by the user.
 
-### [`OnPlayerJoined(player)`](#onplayerjoinedplayer)
+### `OnPlayerJoined(player)`
 
 Called when a player joins the game.
 
@@ -438,7 +506,7 @@ Called when a player joins the game.
 
 * `player` (pcapEntity): The player who joined.
 
-### [`OnPlayerLeft(player)`](#onplayerleftplayer)
+### `OnPlayerLeft(player)`
 
 Called when a player leaves the game.
 
@@ -446,7 +514,7 @@ Called when a player leaves the game.
 
 * `player` (pcapEntity): The player who left.
 
-### [`OnPlayerDeath(player)`](#onplayerdeathplayer)
+### `OnPlayerDeath(player)`
 
 Called when a player dies.
 
@@ -455,7 +523,7 @@ Called when a player dies.
 * `player` (pcapEntity): The player who died.
 
 
-### [`OnPlayerRespawn(player)`](#onplayerrespawnplayer)
+### `OnPlayerRespawn(player)`
 
 Called when a player respawns.
 
@@ -581,7 +649,7 @@ printl("The duration of the sound is " + duration + " seconds.")
 ```
 
 
-#### `format(msg, ...)`
+### `macros.format(msg, ...)`
 
 This function formats a message string by replacing placeholders (`{}`) with values from the provided arguments. It is similar to the `string.format` function in other programming languages and is used for creating formatted output.
 
@@ -599,7 +667,7 @@ local message = macros.format("My name is {} and I am {} years old.", name, age)
 printl(message) // Output: "My name is Vashik and I am 20 years old."
 ```
 
-#### `fprint(msg, ...)`
+### `macros.fprint(msg, ...)`
 
 This function combines the functionality of `macros.format` and `printl`. It formats a message string with placeholders and then prints the formatted message to the console.
 
@@ -677,7 +745,7 @@ local values = macros.GetValues(myTable)
 printl(values)  // Outputs: List of values: [1, 2, 3]
 ```
 
-### `InvertTable(table)`
+### `macros.InvertTable(table)`
 Inverts a table, swapping keys and values.
 
 **Parameters:**
@@ -792,7 +860,7 @@ local bMax = Vector(10, 10, 10)
 local isInside = macros.PointInBBox(point, bMin, bMax) // isInside will be true
 ```
 
-### `Range(start, end, step)`
+### `macros.Range(start, end, step)`
 Generates a list of numbers within a specified range.
 
 **Parameters:**
@@ -815,7 +883,7 @@ local rangeListWithStep = macros.Range(1, 10, 2)
 printl(rangeListWithStep) // Output: List[1, 3, 5, 7, 9]
 ```
 
-### `RangeIter(start, end, step)`
+### `macros.RangeIter(start, end, step)`
 Generates an iterator that yields numbers within a specified range.
 
 **Parameters:**
@@ -1037,34 +1105,35 @@ printl("Triangle vertices:", triangle.vertices)
 ```
 
 
-### `macros.BuildAnimateFunction(name, propertySetterFunc)`
+### `macros.BuildAnimateFunction(name, propertySetterFunc, valueCalculator)`
 
 This function creates a new animation function for animating a property of one or more entities. It simplifies the creation of animations by providing a reusable and customizable animation function.
 
 **Parameters:**
 
-* `name` (string): The name of the animation. This name is used to identify the animation internally.
-* `propertySetterFunc` (function): A function that takes an entity and a value, and sets a property on that entity. This function will be called repeatedly during the animation to update the property.
-* `valueCalculator` (function): A custom function that calculates the animated value for each step. (optional)
+*   `name` (string): The name of the property to animate (e.g., "alpha", "color", "position").
+*   `propertySetterFunc` (function): A function that sets the new value for the property on each entity. The function should take two arguments: the entity and the calculated value.
+*   `valueCalculator` (function): A custom function that calculates the animated value for each step. (optional)
 
 **Returns:**
 
-* `function`: A function that can be used to start the animation. This function takes the following arguments:
-  * `entities` (array or pcapEntity): An array of entities or a single entity to animate.
-  * `startValue` (any): The starting value for the property.
-  * `endValue` (any): The ending value for the property.
-  * `time` (number): The duration of the animation in seconds.
-  * `animSetting` (table, optional): A table of additional animation settings. See the `AnimEvent` constructor for details.
+*   (function): A new animation function that can be used to animate the specified property.
 
 **Example:**
 
 ```js
-local animateColor = macros.BuildAnimateFunction("ColorChange", function(ent, value) {
-    ent.SetColor(value)
-})
-
-animateColor(myEntity, Vector(255, 0, 0), Vector(0, 255, 0), 2) // Animate color change from red to green over 2 seconds
+animate["PitchTransition"] <- macros.BuildAnimateFunction("pitch", 
+    function(ent, newPitch) {
+        ent.SetKeyValue("pitch", newPitch)
+        EntFireByHandle(ent, "pitch", newPitch.tostring())
+    }
+)
 ```
+
+### `macros.BuildRTAnimateFunction(name, propertySetterFunc, valueCalculator)`
+
+This function works identically to `macros.BuildAnimateFunction`, but creates a real-time animation function.  The generated function will use `applyRTAnimation` internally, allowing for interruptions and more dynamic behavior.  The parameters and return value are the same as `BuildAnimateFunction`.
+
 
 
 

@@ -2,6 +2,20 @@
 
 This module provides a framework for creating and managing custom "game events" within VScript, similar to Source Engine's Game Events. These events, referred to as VGameEvents (VScript Game Events), allow for modular and extensible scripting by enabling different parts of your code to communicate and react to specific occurrences without direct coupling. This is particularly useful for creating custom mechanics and extending existing functionality.
 
+## Table of Contents
+
+* [`ScriptEvent/game_event.nut`](#scripteventgame_eventnut)
+	* [`VGameEvent(eventName, triggerCount = -1, actionsList = null)`](#vgameeventeventname-triggercount---1-actionslist--null)
+	* [`AddAction(actionFunction)`](#addactionactionfunction)
+	* [`ClearActions()`](#clearactions)
+	* [`SetFilter(filterFunc)`](#setfilterfilterfunc)
+	* [`Trigger(args = null)`](#triggerargs--null)
+	* [`ForceTrigger(args = null)`](#forcetriggerargs--null)
+* [`ScriptEvent/event_listener.nut`](#scripteventevent_listenernut)
+	* [`Notify(eventName, ...)`](#notifyeventname)
+	* [`GetEvent(EventName)`](#geteventeventname)
+* [`Creating and Using VGameEvents`](#creating-and-using-vgameevents)
+
 ## [ScriptEvent/game_event.nut](game_event.nut)
 
 ### `VGameEvent`
@@ -159,7 +173,7 @@ Retrieves a VGameEvent object by its name.
 local myEvent = EventListener.GetEvent("my_custom_event")
 ```
 
-### Creating and Using VGameEvents
+## Creating and Using VGameEvents
 
 1. **Define your events:** Create `VGameEvent` objects, typically in a central location, giving them descriptive names.
 

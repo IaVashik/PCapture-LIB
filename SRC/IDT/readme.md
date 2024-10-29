@@ -1,6 +1,166 @@
+
 # IDT Module (Improved Data Types)
 
 The `IDT` module provides enhanced versions of standard VScripts data structures, including arrays, lists, and trees, with additional methods and functionality to improve efficiency and flexibility.
+
+## Table of Contents
+
+1. [IDT/array.nut](#idtarraynut)
+    * [`ArrayEx(...)`](#arrayex)
+    * [`FromArray(array)`](#arrayexfromarrayarray)
+    * [`WithSize(numberOfItems, fillValue)`](#arrayexwithsizenumberofitems-fillvalue)
+    * [`append(value)`](#appendvalue)
+    * [`apply(func)`](#applyfunc)
+    * [`clear()`](#clear)
+    * [`extend(other)`](#extendother)
+    * [`filter(func)`](#filterfunc)
+    * [`contains(value)`](#containsvalue)
+    * [`search(value or func)`](#searchvalue-or-func)
+    * [`insert(index, value)`](#insertindex-value)
+    * [`len()`](#len)
+    * [`map(func)`](#mapfunc)
+    * [`reduce(func, initial)`](#reducefunc-initial)
+    * [`unique()`](#unique)
+    * [`pop()`](#pop)
+    * [`push(value)`](#pushvalue)
+    * [`remove(index)`](#removeindex)
+    * [`resize(size, fill)`](#resizesize-fill)
+    * [`reverse()`](#reverse)
+    * [`slice(start, end)`](#slicestart-end)
+    * [`sort(func)`](#sortfunc)
+    * [`top()`](#top)
+    * [`join(separator)`](#joinseparator)
+    * [`get(index, default)`](#getindex-default)
+    * [`totable(recreate)`](#totablerecreate)
+    * [`tolist()`](#tolist)
+2. [IDT/list.nut](#idtlistnut)
+    * [`List(...)`](#list)
+    * [`FromArray(array)`](#fromarrayarray)
+    * [`len()`](#len)
+    * [`iter()`](#iter)
+    * [`rawIter()`](#rawiter)
+    * [`append(value)`](#appendvalue)
+    * [`insert(index, value)`](#insertindex-value)
+    * [`getNode(index)`](#getnodeindex)
+    * [`get(index, defaultValue)`](#getindex-defaultvalue)
+    * [`remove(index)`](#removeindex)
+    * [`pop()`](#pop)
+    * [`top()`](#top)
+    * [`reverse()`](#reverse)
+    * [`unique()`](#unique)
+    * [`clear()`](#clear)
+    * [`join(separator)`](#joinseparator)
+    * [`apply(func)`](#applyfunc)
+    * [`extend(other)`](#extendother)
+    * [`search(value or func)`](#searchvalue-or-func)
+    * [`map(func)`](#mapfunc)
+    * [`filter(condition)`](#filtercondition)
+    * [`reduce(func, initial)`](#reducefunc-initial)
+    * [`totable()`](#totable)
+    * [`toarray()`](#toarray)
+    * [`SwapNode(node1, node2)`](#swapnodenode1-node2)
+3. [IDT/tree_sort.nut](#idttree_sortnut)
+    * [`AVLTree(...)`](#avltree)
+    * [`FromArray(array)`](#fromarrayarray)
+    * [`len()`](#len)
+    * [`toarray()`](#toarray)
+    * [`tolist()`](#tolist)
+    * [`insert(key)`](#insertkey)
+    * [`search(value)`](#searchvalue)
+    * [`remove(value)`](#removevalue)
+    * [`GetMin()`](#getmin)
+    * [`GetMax()`](#getmax)
+    * [`inorderTraversal()`](#inordertraversal)
+    * [`printTree()`](#printtree)
+    * [`Comparison with `](#comparison-with)
+* [`*Choosing the Right Data Structure**](#choosing-the-right-data-structure)
+4. [IDT/entity_creator.nut](#idtentity_creatornut)
+    * [`CreateByClassname(classname, keyvalues)`](#createbyclassnameclassname-keyvalues)
+    * [`CreateProp(classname, origin, modelname, activity, keyvalues)`](#createpropclassname-origin-modelname-activity-keyvalues)
+    * [`FromEntity(CBaseEntity)`](#fromentitycbaseentity)
+    * [`FindByClassname(classname, start_ent)`](#findbyclassnameclassname-start_ent)
+    * [`FindByClassnameWithin(classname, origin, radius, start_ent)`](#findbyclassnamewithinclassname-origin-radius-start_ent)
+    * [`FindByName(targetname, start_ent)`](#findbynametargetname-start_ent)
+    * [`FindByNameWithin(targetname, origin, radius, start_ent)`](#findbynamewithintargetname-origin-radius-start_ent)
+    * [`FindByModel(model, start_ent)`](#findbymodelmodel-start_ent)
+    * [`FindByModelWithin(model, origin, radius, start_ent)`](#findbymodelwithinmodel-origin-radius-start_ent)
+    * [`FindInSphere(origin, radius, start_ent)`](#findinsphereorigin-radius-start_ent)
+5. [IDT/entity.nut](#idtentitynut)
+    *   **Entity State and Lifecycle:**
+        *   [`GetIndex()`](#getindex)
+        *   [`IsValid()`](#isvalid)
+        *   [`IsPlayer()`](#isplayer)
+        *   [`isEqually(other)`](#isequallyother)
+        *   [`Destroy(fireDelay, eventName)`](#destroyfiredelay-eventname)
+        *   [`Kill(fireDelay, eventName)`](#killfiredelay-eventname)
+        *   [`Dissolve(fireDelay, eventName)`](#dissolvefiredelay-eventname)
+        *   [`Disable(fireDelay, eventName)`](#disablefiredelay-eventname)
+        *   [`Enable(fireDelay, eventName)`](#enablefiredelay-eventname)
+        *   [`IsDrawEnabled()`](#isdrawenabled)
+
+    *   **Naming:**
+        *   [`SetName(name, fireDelay, eventName)`](#setnamename-firedelay-eventname)
+        *   [`SetUniqueName(prefix, fireDelay, eventName)`](#setuniquenameprefix-firedelay-eventname)
+        *   [`GetNamePrefix()`](#getnameprefix)
+        *   [`GetNamePostfix()`](#getnamepostfix)
+
+    *   **Players Methods:**
+        *   [`EyePosition()`](#eyeposition)
+        *   [`EyeAngles()`](#eyeangles)
+        *   [`EyeForwardVector()`](#eyeforwardvector)
+
+    *   **Transformations:**
+        *   [`SetAngles(x, y, z)`](#setanglesx-y-z)
+        *   [`SetAbsAngles(angles)`](#setabsanglesangles)
+        *   [`SetCenter(vector)`](#setcentervector)
+        *   [`SetParent(parentEnt, fireDelay, eventName)`](#setparentparentent-firedelay-eventname)
+        *   [`GetParent()`](#getparent)
+        *   [`SetModelScale(scaleValue, fireDelay, eventName)`](#setmodelscalescalevalue-firedelay-eventname)
+        *   [`GetModelScale()`](#getmodelscale)
+
+    *   **Appearance:**
+        *   [`SetAlpha(opacity, fireDelay, eventName)`](#setalphaopacity-firedelay-eventname)
+        *   [`SetColor(colorValue, fireDelay, eventName)`](#setcolorcolorvalue-firedelay-eventname)
+        *   [`SetSkin(skin, fireDelay, eventName)`](#setskinskin-firedelay-eventname)
+        *   [`SetDrawEnabled(isEnabled, fireDelay, eventName)`](#setdrawenabledisenabled-firedelay-eventname)
+        *   [`SetAnimation(animationName, fireDelay, eventName)`](#setanimationanimationname-firedelay-eventname)
+        *   [`GetAlpha()`](#getalpha)
+        *   [`GetColor()`](#getcolor)
+        *   [`GetSkin()`](#getskin)
+        *   [`GetPartnerInstance()`](#getpartnerinstance)
+
+    *   **Key Values and Data:**
+        *   [`SetKeyValue(key, value, fireDelay, eventName)`](#setkeyvaluekey-value-firedelay-eventname)
+        *   [`SetUserData(name, value)`](#setuserdataname-value)
+        *   [`GetUserData(name)`](#getuserdataname)
+        *   [`GetKeyValue(key)`](#getkeyvaluekey)
+        *   [`SetContext(name, value, fireDelay, eventName)`](#setcontextname-value-firedelay-eventname)
+
+    *   **Collision and Physics:**
+        *   [`SetCollision(solidType, fireDelay, eventName)`](#setcollisionsolidtype-firedelay-eventname)
+        *   [`SetCollisionGroup(collisionGroup, fireDelay, eventName)`](#setcollisiongroupcollisiongroup-firedelay-eventname)
+        *   [`SetTraceIgnore(isEnabled, fireDelay, eventName)`](#settraceignoreisenabled-firedelay-eventname)
+        *   [`SetSpawnflags(flag, fireDelay, eventName)`](#setspawnflagsflag-firedelay-eventname)
+        *   [`GetSpawnflags()`](#getspawnflags)
+
+    *   **Sound:**
+        *   [`EmitSound(soundName, fireDelay = 0, eventName = "global")`](#emitsoundsoundname-firedelay--0-eventname--global)
+        *   [`EmitSoundEx(soundName, volume = 10, looped = false, fireDelay = 0, eventName = "global")`](#emitsoundexsoundname-volume--10-looped--false-firedelay--0-eventname--global)
+        *   [`StopSoundEx(soundName, fireDelay = 0, eventName = "global")`](#stopsoundexsoundname-firedelay--0-eventname--global)
+
+    *   **Outputs and Inputs:**
+        *   [`AddOutput(outputName, target, input, param, delay, fires)`](#AddOutputoutputname-target-input-param-delay-fires)
+        *   [`ConnectOutputEx(outputName, script, delay, fires)`](#connectoutputexoutputname-script-delay-fires)
+        *   [`SetInputHook(inputName, closure)`](#setinputhookinputname-closure)
+
+    *   **Bounding Box and Position:**
+        *   [`SetBBox(minBounds, maxBounds)`](#setbboxminbounds-maxbounds)
+        *   [`GetBBox()`](#getbbox)
+        *   [`IsSquareBbox()`](#issquarebbox)
+        *   [`GetAABB()`](#getaabb)
+        *   [`CreateAABB(stat)`](#createaabbstat)
+        *   [`getBBoxPoints()`](#getbboxpoints)
+        *   [`getBBoxFaces()`](#getbboxfaces)
 
 ## [IDT/array.nut](array.nut)
 
@@ -22,7 +182,7 @@ Creates a new `ArrayEx` object from a variable number of arguments. This constru
 local myArrayEx = ArrayEx(1, "hello", Vector(0, 0, 0)) // Create an ArrayEx with three elements
 ```
 
-### `ArrayEx.FromArray(array)`
+### `FromArray(array)`
 
 **Static Method**
 
@@ -46,7 +206,7 @@ local existingArrayEx = ArrayEx(4, 5, 6)
 local sameArrayEx = ArrayEx.FromArray(existingArrayEx) // Returns the same ArrayEx object
 ```
 
-### `ArrayEx.WithSize(numberOfItems, fillValue)`
+### `WithSize(numberOfItems, fillValue)`
 
 **Static Method**
 
@@ -1447,7 +1607,7 @@ Sets a key-value pair for the entity. This modifies the entity's properties and 
 myPcapEntity.SetKeyValue("health", 100) // Set the entity's health to 100
 ```
 
-### `addOutput(outputName, target, input, param, delay, fires)`
+### `AddOutput(outputName, target, input, param, delay, fires)`
 Sets an output for the entity, connecting it to a target entity and input.
 
 **Parameters:**
@@ -1462,7 +1622,7 @@ Sets an output for the entity, connecting it to a target entity and input.
 **Example:**
 
 ```js
-myPcapEntity.addOutput("OnTrigger", "targetEntity", "Kill", "", 0.5, 1)
+myPcapEntity.AddOutput("OnTrigger", "targetEntity", "Kill", "", 0.5, 1)
 // Connect the "OnTrigger" output to the "Kill" input of "targetEntity" with a 0.5-second delay and fire only once
 ```
 

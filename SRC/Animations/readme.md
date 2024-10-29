@@ -5,12 +5,10 @@ The `Animations` module provides functions for creating various animations in VS
 ## Table of Contents
 
 1.  [init.nut](#initnut)
-    *   [`AnimEvent`](#animevent)
-        *   [`AnimEvent(name, settings, entities, time)`](#animeventname-settings-entities-time)
+    *   [`AnimEvent(name, settings, entities, time)`](#animeventname-settings-entities-time)
     *   [Animation Settings Table (propertySetter)](#animation-settings-table-propertysetter)
     *   [`applyAnimation`](#applyanimation)
     *   [`applyRTAnimation`](#applyrtanimation)
-    *   [`_applyRTAnimation`](#_applyrtanimation)
 2.  [alpha.nut](#alphanut)
     *   [`AlphaTransition`](#alphatransition)
 3.  [color.nut](#colornut)
@@ -22,15 +20,13 @@ The `Animations` module provides functions for creating various animations in VS
     *   [`AnglesTransitionByTime`](#anglestransitionbytime)
 6. [Custom Animation Functions](#custom-animation-functions)
 
-## [Animations/init.nut](#initnut)
+## [Animations/init.nut](init.nut)
 
 This file initializes the `Animations` module, defines the `AnimEvent` class for managing animation events, and includes the necessary script files for the module's functionality.
 
-### [`AnimEvent`](#animevent)
+### `AnimEvent(name, settings, entities, time = 0)`
 
 The `AnimEvent` class is used internally by the animation functions to store and manage information about an animation event. It is not intended for direct use in your scripts.
-
-#### [`AnimEvent(name, settings, entities, time = 0)`](#animeventname-settings-entities-time)
 
 **Constructor**
 
@@ -43,7 +39,7 @@ Creates a new `AnimEvent` object with the specified name, settings, entities, an
 *   `entities` (array, CBaseEntity, or pcapEntity): An array of entities, a single entity, or a pcapEntity to animate.
 *   `time` (number, optional): The duration of the animation in seconds (default is 0).
 
-### [Animation Settings Table (propertySetter)](#animation-settings-table-propertysetter)
+### Animation Settings Table (propertySetter)
 
 The `settings` table in the `AnimEvent` constructor can contain the following optional properties:
 
@@ -58,7 +54,7 @@ The `settings` table in the `AnimEvent` constructor can contain the following op
 *   `filterCallback` (function, optional): A callback function that is called before each frame of a real-time animation.  It receives `animInfo`, `newValue`, `transitionFrames`, `currentStep`, and `vars` as arguments. If it returns `true`, the animation is interrupted. (Used only with real-time animations).
 
 
-### [`animate.applyAnimation(animInfo, valueCalculator, propertySetter, vars, transitionFrames)`](#applyanimation)
+### `animate.applyAnimation(animInfo, valueCalculator, propertySetter, vars, transitionFrames)`
 
 This function applies an animation over a specified duration, calculating and setting new values for a property at each frame. It is used internally by the various animation functions to handle the animation process, and can also be used to create custom animation functions.
 
@@ -78,7 +74,7 @@ animate.applyAnimation(animInfo, valueCalculator, propertySetter) // Apply the a
 ```
 
 
-### [`animate.applyRTAnimation(animInfo, valueCalculator, propertySetter, vars, transitionFrames)`](#applyrtanimation)
+### `animate.applyRTAnimation(animInfo, valueCalculator, propertySetter, vars, transitionFrames)`
 
 Facade function for applying real-time animations in an asynchronous environment. This function schedules the real-time animation to be processed using `_applyRTAnimation`. The actual animation is executed without pre-calculating all the frames, which allows for more flexibility, especially when handling long animations or situations where the animation might need to be interrupted using a `filterCallback`.  The arguments are the same as those for `applyAnimation`.
 
@@ -91,17 +87,17 @@ animate.applyRTAnimation(animInfo, valueCalculator, propertySetter) // Apply the
 ```
 
 
-### [`animate._applyRTAnimation(animInfo, valueCalculator, propertySetter, vars, transitionFrames)`](#_applyrtanimation)
+### `animate._applyRTAnimation(animInfo, valueCalculator, propertySetter, vars, transitionFrames)`
 
 Applies the animation in real-time, evaluating each frame as it occurs without pre-calculating.  This function works similarly to `applyAnimation`, but rather than calculating all the steps in advance, it applies `propertySetter` in real-time for each frame. This is useful in cases where you might need to interrupt or alter the animation at runtime using `filterCallback`, or if the animation is too long for VSquirrel to process upfront.  The arguments are the same as those for `applyAnimation`. This function is intended for internal use and should generally be called through `applyRTAnimation`.
 
 
 
-## [Animations/alpha.nut](#alphanut)
+## [Animations/alpha.nut](alpha.nut)
 
 This file provides the `animate.AlphaTransition` function for creating animations that transition the alpha (opacity) of entities over time.  A real-time version is available as `animate.RT.AlphaTransition`.
 
-### [`animate.AlphaTransition(entities, startOpacity, endOpacity, time, animSetting)`](#alphatransition)
+### `animate.AlphaTransition(entities, startOpacity, endOpacity, time, animSetting)`
 
 This function creates an animation that smoothly transitions the alpha (opacity) of entities from the starting value to the ending value over a specified time.
 
@@ -132,11 +128,11 @@ animate.RT.AlphaTransition(myEntity, 255, 0, 50) // Fade out the entity over 50 
 ```
 
 
-## [Animations/color.nut](#colornut)
+## [Animations/color.nut](color.nut)
 
 This file provides the `animate.ColorTransition` function for creating animations that transition the color of entities over time. A real-time version is available as `animate.RT.ColorTransition`.
 
-### [`animate.ColorTransition(entities, startColor, endColor, time, animSetting)`](#colortransition)
+### `animate.ColorTransition(entities, startColor, endColor, time, animSetting)`
 
 This function creates an animation that smoothly transitions the color of entities from the starting color to the ending color over a specified time.
 
@@ -168,12 +164,12 @@ animate.RT.ColorTransition(myEntity, "255 0 0", "0 255 0", 17) // Change the ent
 
 
 
-## [Animations/position.nut](#positionnut)
+## [Animations/position.nut](position.nut)
 
 This file provides the `animate.PositionTransitionByTime` and `animate.PositionTransitionBySpeed` functions for creating animations that transition the position of entities over time. Real-time versions are available as `animate.RT.PositionTransitionByTime` and `animate.RT.PositionTransitionBySpeed`.
 
 
-### [`animate.PositionTransitionByTime(entities, startPos, endPos, time, animSetting)`](#positiontransitionbytime)
+### `animate.PositionTransitionByTime(entities, startPos, endPos, time, animSetting)`
 
 This function creates an animation that moves entities from the starting position to the ending position over a specified time based on increments of time.
 
@@ -220,7 +216,7 @@ animate.RT.PositionTransitionByTime(myEntity, startPos, endPos, 5, animSettings)
 ```
 
 
-### [`animate.PositionTransitionBySpeed(entities, startPos, endPos, speed, animSetting)`](#positiontransitionbyspeed)
+### `animate.PositionTransitionBySpeed(entities, startPos, endPos, speed, animSetting)`
 
 This function creates an animation that transitions the position of entities over time based on a specified speed. The animation calculates the time it takes to travel from the start position to the end position based on the provided speed and creates a smooth transition of the entities' positions over that duration.
 
@@ -257,11 +253,11 @@ animate.RT.PositionTransitionBySpeed(myEntity, startPos, endPos, 50) // Animate 
 
 
 
-## [Animations/angles.nut](#anglesnut)
+## [Animations/angles.nut](angles.nut)
 
 This file provides the `animate.AnglesTransitionByTime` function for creating animations that transition the angles of entities over time.  A real-time version is available as `animate.RT.AnglesTransitionByTime`.
 
-### [`animate.AnglesTransitionByTime(entities, startAngles, endAngles, time, animSetting)`](#anglestransitionbytime)
+### `animate.AnglesTransitionByTime(entities, startAngles, endAngles, time, animSetting)`
 
 This function creates an animation that smoothly changes the angles of entities from the starting angles to the ending angles over a specified time.
 
@@ -296,39 +292,11 @@ animate.RT.AnglesTransitionByTime(myEntity, startAngles, endAngles, 2) // Rotate
 ```
 
 
-## [Custom Animation Functions](#custom-animation-functions)
+## Custom Animation Functions
 
 You can create your own custom animation functions using the `macros.BuildAnimateFunction` and `animate.applyAnimation` functions. Real-time versions of custom animations can be created by using `macros.BuildRTAnimateFunction` and `animate.applyRTAnimation`.
 
-### `macros.BuildAnimateFunction(name, propertySetterFunc)`
-
-This function creates a new animation function for animating a property of one or more entities. It simplifies the creation of animations by providing a reusable and customizable animation function.
-
-**Parameters:**
-
-*   `name` (string): The name of the property to animate (e.g., "alpha", "color", "position").
-*   `propertySetterFunc` (function): A function that sets the new value for the property on each entity. The function should take two arguments: the entity and the calculated value.
-*   `valueCalculator` (function): A custom function that calculates the animated value for each step. (optional)
-
-**Returns:**
-
-*   (function): A new animation function that can be used to animate the specified property.
-
-**Example:**
-
-```js
-animate["PitchTransition"] <- macros.BuildAnimateFunction("pitch", 
-    function(ent, newPitch) {
-        ent.SetKeyValue("pitch", newPitch)
-        EntFireByHandle(ent, "pitch", newPitch.tostring())
-    }
-)
-```
-
-### `macros.BuildRTAnimateFunction(name, propertySetterFunc)`
-
-This function works identically to `macros.BuildAnimateFunction`, but creates a real-time animation function.  The generated function will use `applyRTAnimation` internally, allowing for interruptions and more dynamic behavior.  The parameters and return value are the same as `BuildAnimateFunction`.
-
+#### [More info here](../Utils/readme.md#macrosbuildanimatefunctionname-propertysetterfunc-valueCalculator)
 
 ### `animate.applyAnimation(animInfo, valueCalculator, propertySetter, vars, transitionFrames)` | `animate.applyRTAnimation(animInfo, valueCalculator, propertySetter, vars, transitionFrames)`
 

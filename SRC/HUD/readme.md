@@ -7,51 +7,49 @@ The `HUD` module provides functions and classes for creating and managing Heads-
 
 1.  [HUD/init.nut](#hudinitnut)
 2.  [HUD/ScreenText.nut](#hudscreentextnut)
-    *   [`HUD.ScreenText`](#hudscreentext)
-        *   [`HUD.ScreenText(position, message, holdtime, targetname)`](#hudscreentextposition-message-holdtime-targetname)
-        *   [`HUD.ScreenText.Enable()`](#hudscreentextenable)
-        *   [`HUD.ScreenText.Disable()`](#hudscreentextdisable)
-        *   [`HUD.ScreenText.Update()`](#hudscreentextupdate)
-        *   [`HUD.ScreenText.SetText(message)`](#hudscreentextsettextmessage)
-        *   [`HUD.ScreenText.SetChannel(value)`](#hudscreentextsetchannelvalue)
-        *   [`HUD.ScreenText.SetColor(string_color)`](#hudscreentextsetcolorstring_color)
-        *   [`HUD.ScreenText.SetColor2(string_color)`](#hudscreentextsetcolor2string_color)
-        *   [`HUD.ScreenText.SetEffect(value)`](#hudscreentextseteffectvalue)
-        *   [`HUD.ScreenText.SetFadeIn(value)`](#hudscreentextsetfadeinvalue)
-        *   [`HUD.ScreenText.SetFadeOut(value)`](#hudscreentextsetfadeoutvalue)
-        *   [`HUD.ScreenText.SetHoldTime(time)`](#hudscreentextsetholdtimetime)
-        *   [`HUD.ScreenText.SetPos(Vector)`](#hudscreentextsetposvector)
-        *   [**builder-pattern-usage**](#hudscreentext-builder-pattern-usage)
+    * [`HUD.ScreenText(position, message, holdtime, targetname)`](#hudscreentextposition-message-holdtime-targetname)
+        * [`Enable()`](#hudscreentextenable)
+        * [`Disable()`](#hudscreentextdisable)
+        * [`Update()`](#hudscreentextupdate)
+        * [`SetText(message)`](#hudscreentextsettextmessage)
+        * [`SetChannel(value)`](#hudscreentextsetchannelvalue)
+        * [`SetColor(string_color)`](#hudscreentextsetcolorstring_color)
+        * [`SetColor2(string_color)`](#hudscreentextsetcolor2string_color)
+        * [`SetEffect(value)`](#hudscreentextseteffectvalue)
+        * [`SetFadeIn(value)`](#hudscreentextsetfadeinvalue)
+        * [`SetFadeOut(value)`](#hudscreentextsetfadeoutvalue)
+        * [`SetHoldTime(time)`](#hudscreentextsetholdtimetime)
+        * [`SetPos(Vector)`](#hudscreentextsetposvector)
+    * [**builder-pattern-usage**](#hudscreentext-builder-pattern-usage)
 3.  [HUD/HintInstructor.nut](#hudhintinstructornut)
-    *   [`HUD.HintInstructor`](#hudhintinstructor)
-        *   [`HUD.HintInstructor(message, holdtime, icon, showOnHud, targetname)`](#hudhintinstructormessage-holdtime-icon-showonhud-targetname)
-        *   [`HUD.HintInstructor.Enable()`](#hudhintinstructorenable)
-        *   [`HUD.HintInstructor.Disable()`](#hudhintinstructordisable)
-        *   [`HUD.HintInstructor.Update()`](#hudhintinstructorupdate)
-        *   [`HUD.HintInstructor.SetText(message)`](#hudhintinstructorsettextmessage)
-        *   [`HUD.HintInstructor.SetBind(bind)`](#hudhintinstructorsetbindbind)
-        *   [`HUD.HintInstructor.SetPositioning(value, ent)`](#hudhintinstructorsetpositioningvalue-ent)
-        *   [`HUD.HintInstructor.SetColor(string_color)`](#hudhintinstructorsetcolorstring_color)
-        *   [`HUD.HintInstructor.SetIconOnScreen(icon)`](#hudhintinstructorseticononscreenicon)
-        *   [`HUD.HintInstructor.SetIconOffScreen(bind)`](#hudhintinstructorseticonoffscreenscreenbind)
-        *   [`HUD.HintInstructor.SetHoldTime(time)`](#hudhintinstructorsetholdtimetime)
-        *   [`HUD.HintInstructor.SetDistance(value)`](#hudhintinstructorsetdistancevalue)
-        *   [`HUD.HintInstructor.SetEffects(sizePulsing, alphaPulsing, shaking)`](#hudhintinstructorseteffectssizepulsing-alphapulsing-shaking)
-        *   [**builder-pattern-usage**](#hudhintinstructor-builder-pattern-usage)
+    * [`HUD.HintInstructor(message, holdtime, icon, showOnHud, targetname)`](#hudhintinstructormessage-holdtime-icon-showonhud-targetname)
+        * [`Enable()`](#hudhintinstructorenable)
+        * [`Disable()`](#hudhintinstructordisable)
+        * [`Update()`](#hudhintinstructorupdate)
+        * [`SetText(message)`](#hudhintinstructorsettextmessage)
+        * [`SetBind(bind)`](#hudhintinstructorsetbindbind)
+        * [`SetPositioning(value, ent)`](#hudhintinstructorsetpositioningvalue-ent)
+        * [`SetColor(string_color)`](#hudhintinstructorsetcolorstring_color)
+        * [`SetIconOnScreen(icon)`](#hudhintinstructorseticononscreenicon)
+        * [`SetIconOffScreen(bind)`](#hudhintinstructorseticonoffscreenscreenbind)
+        * [`SetHoldTime(time)`](#hudhintinstructorsetholdtimetime)
+        * [`SetDistance(value)`](#hudhintinstructorsetdistancevalue)
+        * [`SetEffects(sizePulsing, alphaPulsing, shaking)`](#hudhintinstructorseteffectssizepulsing-alphapulsing-shaking)
+    * [**builder-pattern-usage**](#hudhintinstructor-builder-pattern-usage)
 
-## [HUD/init.nut](#hudinitnut)
+## [HUD/init.nut](init.nut)
 
 This file initializes the `HUD` module by declaring a global table `::HUD` which will store all HUD-related functions and classes.
 
-## [HUD/ScreenText.nut](#hudscreentextnut)
+## [HUD/ScreenText.nut](ScreenText.nut)
 
 This file provides the `HUD.ScreenText` class for creating and managing on-screen text elements using the "game\_text" entity.
 
-### [`HUD.ScreenText`](#hudscreentext)
+### `HUD.ScreenText`
 
 The `HUD.ScreenText` class represents an on-screen text element that can be displayed, hidden, and updated dynamically. It provides a convenient way to create and manage "game\_text" entities without writing extensive code.
 
-#### [`HUD.ScreenText(position, message, holdtime, targetname)`](#hudscreentextposition-message-holdtime-targetname)
+#### `HUD.ScreenText(position, message, holdtime, targetname)`
 
 **Constructor**
 
@@ -71,7 +69,7 @@ local textPos = Vector(0.5, 0.5, 0) // Center of the screen
 local myText = HUD.ScreenText(textPos, "Hello, world!", 5, "my_text_element") // Display for 5 seconds with a target name
 ```
 
-#### [`HUD.ScreenText.Enable()`](#hudscreentextenable)
+#### `HUD.ScreenText.Enable()`
 
 Displays the on-screen text.
 
@@ -82,7 +80,7 @@ myText.Enable() // Make the text visible
 myText2.Enable(2) // Make the text visible for 2 seconds
 ```
 
-#### [`HUD.ScreenText.Disable()`](#hudscreentextdisable)
+#### `HUD.ScreenText.Disable()`
 
 Hides the on-screen text.
 
@@ -92,7 +90,7 @@ Hides the on-screen text.
 myText.Disable() // Hide the text
 ```
 
-#### [`HUD.ScreenText.Update()`](#hudscreentextupdate)
+#### `HUD.ScreenText.Update()`
 
 Updates and redisplays the on-screen text. This can be used to refresh the text if its properties have been changed.
 
@@ -102,7 +100,7 @@ Updates and redisplays the on-screen text. This can be used to refresh the text 
 myText.SetText("New message").Update() // Change the message and update the display
 ```
 
-#### [`HUD.ScreenText.SetText(message)`](#hudscreentextsettextmessage)
+#### `HUD.ScreenText.SetText(message)`
 
 Changes the message of the text display.
 
@@ -120,7 +118,7 @@ Changes the message of the text display.
 myText.SetText("Updated message") // Change the text
 ```
 
-#### [`HUD.ScreenText.SetChannel(value)`](#hudscreentextsetchannelvalue)
+#### `HUD.ScreenText.SetChannel(value)`
 
 Sets the channel of the text display. The channel determines the rendering order of the text (higher channels are drawn on top of lower channels).
 
@@ -138,7 +136,7 @@ Sets the channel of the text display. The channel determines the rendering order
 myText.SetChannel(3) // Set the channel to 3
 ```
 
-#### [`HUD.ScreenText.SetColor(string_color)`](#hudscreentextsetcolorstring_color)
+#### `HUD.ScreenText.SetColor(string_color)`
 
 Sets the primary color of the text display as a string.
 
@@ -156,7 +154,7 @@ Sets the primary color of the text display as a string.
 myText.SetColor("0 255 0") // Set the color to green
 ```
 
-#### [`HUD.ScreenText.SetColor2(string_color)`](#hudscreentextsetcolor2string_color)
+#### `HUD.ScreenText.SetColor2(string_color)`
 
 Sets the secondary color of the text display as a string. The secondary color is used for effects like outlines or shadows.
 
@@ -174,7 +172,7 @@ Sets the secondary color of the text display as a string. The secondary color is
 myText.SetColor2("0 0 0") // Set the secondary color to black
 ```
 
-#### [`HUD.ScreenText.SetEffect(value)`](#hudscreentextseteffectvalue)
+#### `HUD.ScreenText.SetEffect(value)`
 
 Sets the effect of the text display.
 
@@ -192,7 +190,7 @@ Sets the effect of the text display.
 myText.SetEffect(1) // Set the effect to a specific index
 ```
 
-#### [`HUD.ScreenText.SetFadeIn(value)`](#hudscreentextsetfadeinvalue)
+#### `HUD.ScreenText.SetFadeIn(value)`
 
 Sets the fade-in time of the text display.
 
@@ -210,7 +208,7 @@ Sets the fade-in time of the text display.
 myText.SetFadeIn(1) // Fade in over 1 second
 ```
 
-#### [`HUD.ScreenText.SetFadeOut(value)`](#hudscreentextsetfadeoutvalue)
+#### `HUD.ScreenText.SetFadeOut(value)`
 
 Sets the fade-out time of the text display.
 
@@ -228,7 +226,7 @@ Sets the fade-out time of the text display.
 myText.SetFadeOut(2) // Fade out over 2 seconds
 ```
 
-#### [`HUD.ScreenText.SetHoldTime(time)`](#hudscreentextsetholdtimetime)
+#### `HUD.ScreenText.SetHoldTime(time)`
 
 Sets the hold time (duration) of the text display.
 
@@ -246,7 +244,7 @@ Sets the hold time (duration) of the text display.
 myText.SetHoldTime(8) // Display for 8 seconds
 ```
 
-#### [`HUD.ScreenText.SetPos(Vector)`](#hudscreentextsetposvector)
+#### `HUD.ScreenText.SetPos(Vector)`
 
 Sets the position of the text display.
 
@@ -265,7 +263,7 @@ local newPos = Vector(0.25, 0.75, 0)
 myText.SetPos(newPos) // Move the text to a new position
 ```
 
-#### [**Builder Pattern Usage:**](#hudscreentext-builder-pattern-usage)
+#### **Builder Pattern Usage:**
 
 The methods of `HUD.ScreenText` can be chained together using the builder pattern, allowing you to configure the text element in a concise and readable way. Each method returns the `HUD.ScreenText` object itself, so you can call multiple methods in sequence.
 
@@ -282,15 +280,15 @@ HUD.ScreenText(Vector(0, 0.5, 0), "My Text", 999)
 ```
 
 
-## [HUD/HintInstructor.nut](#hudhintinstructornut)
+## [HUD/HintInstructor.nut](HintInstructor.nut)
 
 This file provides the `HUD.HintInstructor` class for creating and managing hints using the "env\_instructor\_hint" entity.
 
-### [`HUD.HintInstructor`](#hudhintinstructor)
+### `HUD.HintInstructor`
 
 The `HUD.HintInstructor` class represents a hint element that can be displayed, hidden, and updated dynamically. It provides a convenient way to create and manage "env\_instructor\_hint" entities without writing extensive code.
 
-#### [`HUD.HintInstructor(message, holdtime, icon, showOnHud, targetname)`](#hudhintinstructormessage-holdtime-icon-showonhud-targetname)
+#### `HUD.HintInstructor(message, holdtime, icon, showOnHud, targetname)`
 
 **Constructor**
 
@@ -310,7 +308,7 @@ Creates a new `HUD.HintInstructor` object with the specified message, hold time,
 local myHint = HUD.HintInstructor("Press E to interact", 3, "icon_interact", 1, "my_hint_element") // Display for 3 seconds with a custom icon and target name
 ```
 
-#### [`HUD.HintInstructor.Enable()`](#hudhintinstructorenable)
+#### `HUD.HintInstructor.Enable()`
 
 Displays the hint.
 
@@ -320,7 +318,7 @@ Displays the hint.
 myHint.Enable() // Show the hint
 ```
 
-#### [`HUD.HintInstructor.Disable()`](#hudhintinstructordisable)
+#### `HUD.HintInstructor.Disable()`
 
 Hides the hint.
 
@@ -330,7 +328,7 @@ Hides the hint.
 myHint.Disable() // Hide the hint
 ```
 
-#### [`HUD.HintInstructor.Update()`](#hudhintinstructorupdate)
+#### `HUD.HintInstructor.Update()`
 
 Updates and redisplays the hint. This can be used to refresh the hint if its properties have been changed.
 
@@ -340,7 +338,7 @@ Updates and redisplays the hint. This can be used to refresh the hint if its pro
 myHint.SetText("New hint message").Update() // Change the message and update the display
 ```
 
-#### [`HUD.HintInstructor.SetText(message)`](#hudhintinstructorsettextmessage)
+#### `HUD.HintInstructor.SetText(message)`
 
 Changes the message of the hint.
 
@@ -358,7 +356,7 @@ Changes the message of the hint.
 myHint.SetText("Updated hint message") // Change the text
 ```
 
-#### [`HUD.HintInstructor.SetBind(bind)`](#hudhintinstructorsetbindbind)
+#### `HUD.HintInstructor.SetBind(bind)`
 
 Sets the bind to display with the hint icon and updates the icon to "use\_binding".
 
@@ -376,7 +374,7 @@ Sets the bind to display with the hint icon and updates the icon to "use\_bindin
 myHint.SetBind("+use") // Display the "+use" bind with the icon
 ```
 
-#### [`HUD.HintInstructor.SetPositioning(value, ent)`](#hudhintinstructorsetpositioningvalue-ent)
+#### `HUD.HintInstructor.SetPositioning(value, ent)`
 
 Sets the positioning of the hint (on HUD or at target entity).
 
@@ -396,7 +394,7 @@ local targetEntity = Entities.FindByName(null, "my_target_entity")
 myHint.SetPositioning(0, targetEntity) // Display the hint at the target entity's position
 ```
 
-#### [`HUD.HintInstructor.SetColor(string_color)`](#hudhintinstructorsetcolorstring_color)
+#### `HUD.HintInstructor.SetColor(string_color)`
 
 Sets the color of the hint text as a string.
 
@@ -414,7 +412,7 @@ Sets the color of the hint text as a string.
 myHint.SetColor("0, 255, 0") // Set the color to green
 ```
 
-#### [`HUD.HintInstructor.SetIconOnScreen(icon)`](#hudhintinstructorseticononscreenicon)
+#### `HUD.HintInstructor.SetIconOnScreen(icon)`
 
 Sets the icon to display when the hint is on-screen.
 
@@ -432,7 +430,7 @@ Sets the icon to display when the hint is on-screen.
 myHint.SetIconOnScreen("icon_interact") // Set a custom icon
 ```
 
-#### [`HUD.HintInstructor.SetIconOffScreen(bind)`](#hudhintinstructorseticonoffscreenscreenbind)
+#### `HUD.HintInstructor.SetIconOffScreen(bind)`
 
 Sets the icon to display when the hint is off-screen.
 
@@ -450,7 +448,7 @@ Sets the icon to display when the hint is off-screen.
 myHint.SetIconOffScreen("icon_arrow") // Set a custom off-screen icon
 ```
 
-#### [`HUD.HintInstructor.SetHoldTime(time)`](#hudhintinstructorsetholdtimetime)
+#### `HUD.HintInstructor.SetHoldTime(time)`
 
 Sets the hold time (duration) of the hint.
 
@@ -468,7 +466,7 @@ Sets the hold time (duration) of the hint.
 myHint.SetHoldTime(10) // Display for 10 seconds
 ```
 
-#### [`HUD.HintInstructor.SetDistance(value)`](#hudhintinstructorsetdistancevalue)
+#### `HUD.HintInstructor.SetDistance(value)`
 
 Sets the distance at which the hint is visible.
 
@@ -486,7 +484,7 @@ Sets the distance at which the hint is visible.
 myHint.SetDistance(500) // Make the hint visible within 500 units
 ```
 
-#### [`HUD.HintInstructor.SetEffects(sizePulsing, alphaPulsing, shaking)`](#hudhintinstructorseteffectssizepulsing-alphapulsing-shaking)
+#### `HUD.HintInstructor.SetEffects(sizePulsing, alphaPulsing, shaking)`
 
 Sets the visual effects for the hint.
 
@@ -506,7 +504,7 @@ Sets the visual effects for the hint.
 myHint.SetEffects(1, 0, 1) // Enable size pulsing and shaking
 ```
 
-#### [**Builder Pattern Usage:**](#hudhintinstructor-builder-pattern-usage)
+#### **Builder Pattern Usage:**
 
 Similar to `HUD.ScreenText`, the methods of `HUD.HintInstructor` can also be chained together using the builder pattern, providing a fluent way to configure hint elements.
 

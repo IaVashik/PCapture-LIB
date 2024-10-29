@@ -177,7 +177,7 @@
      * 
      * This method provides a way to establish connections between entities, allowing them to trigger actions on each other based on outputs and inputs. 
     */
-     function addOutput(outputName, target, input, param = "", delay = 0, fires = -1) {
+     function AddOutput(outputName, target, input, param = "", delay = 0, fires = -1) {
         if(typeof target == "instance" || typeof target == "pcapEntity")
             target = target.GetName()
         this.SetKeyValue(outputName, target + "\x001B" + input + "\x001B" + param + "\x001B" + delay + "\x001B" + fires)
@@ -200,7 +200,7 @@
             script = funcName + "()"
         }
 
-        this.addOutput(outputName, "!self", "RunScriptCode", script, delay, fires)
+        this.AddOutput(outputName, "!self", "RunScriptCode", script, delay, fires)
     }
 
     /*
@@ -514,7 +514,7 @@
         if(fireDelay != 0)
             return ScheduleEvent.Add(eventName, this.SetModelScale, fireDelay, [scaleValue], this)
         
-        EntFireByHandle(this.CBaseEntity, "addoutput", "ModelScale " + scaleValue)
+        EntFireByHandle(this.CBaseEntity, "AddOutput", "ModelScale " + scaleValue)
         this.SetUserData("ModelScale", scaleValue)
         // hack for entity update
         EntFireByHandle(this, "SetBodyGroup", "1"); EntFireByHandle(this, "SetBodyGroup", "0", 0.02)

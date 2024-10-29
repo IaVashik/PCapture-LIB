@@ -2,6 +2,99 @@
 
 The `Math` module provides various mathematical functions and objects for use in VScripts, including those for linear interpolation, quaternions, vectors, and matrices. It aims to extend the standard mathematical capabilities of VScripts and simplify common mathematical operations.
 
+## Table of Contents
+
+- [Math/algebraic.nut](#mathalgebraicnut)
+	- [`min(...)`](#mathmin)
+	- [`max(...)`](#mathmax)
+	- [`clamp(number, min, max)`](#mathclampnumber-min-max)
+	- [`round(value, precision)`](#mathroundvalue-precision)
+	- [`Sign(x)`](#mathsignx)
+	- [`copysign(value, sign)`](#mathcopysignvalue-sign)
+	- [`RemapVal(val, A, B, C, D)`](#mathremapvalval-a-b-c-d)
+- [Math/utils\_vector.nut](#mathutils_vectornut)
+	- [`vector.isEqually(vec1, vec2)`](#mathvectorisequallyvec1-vec2)
+	- [`vector.isEqually2(vec1, vec2, precision)`](#mathvectorisequally2vec1-vec2-precision)
+	- [`vector.mul(vec1, vec2)`](#mathvectormulvec1-vec2)
+	- [`vector.rotate(vec, angle)`](#mathvectorrotatevec-angle)
+	- [`vector.unrotate(vec, angle)`](#mathvectorunrotatevec-angle)
+	- [`vector.random(min, max)`](#mathvectorrandommin-max)
+	- [`vector.reflect(dir, normal)`](#mathvectorreflectdir-normal)
+	- [`vector.clamp(vec, min, max)`](#mathvectorclampvec-min-max)
+	- [`vector.resize(vec, newLength)`](#mathvectorresizevec-newlength)
+	- [`vector.round(vec, precision)`](#mathvectorroundvec-precision)
+	- [`vector.sign(vec)`](#mathvectorsignvec)
+	- [`vector.abs(vector)`](#mathvectorabsvector)
+- [Math/lerp.nut](#mathlerpnut)
+	- [`lerp.number(start, end, t)`](#mathlerpnumberstart-end-t)
+	- [`lerp.vector(start, end, t)`](#mathlerpvectorstart-end-t)
+	- [`lerp.color(start, end, t)`](#mathlerpcolorstart-end-t)
+	- [`lerp.sVector(start, end, t)`](#mathlerpsvectorstart-end-t)
+	- [`lerp.SmoothStep(edge0, edge1, x)`](#mathlerpsmoothstepedge0-edge1-x)
+	- [`lerp.FLerp(f1, f2, i1, i2, x)`](#mathlerpflerpf1-f2-i1-i2-x)
+- [Math/easing_equation.nut](#easingequationnut)
+	- [`ease.InSine(t)`](#matheaseinsinet)
+	- [`ease.OutSine(t)`](#matheaseoutsinet)
+	- [`ease.InOutSine(t)`](#matheaseinoutsinet)
+	- [`ease.InQuad(t)`](#matheaseinquadt)
+	- [`ease.OutQuad(t)`](#matheaseoutquadt)
+	- [`ease.InOutQuad(t)`](#matheaseinoutquadt)
+	- [`ease.InCubic(t)`](#matheaseincubict)
+	- [`ease.OutCubic(t)`](#matheaseoutcubict)
+	- [`ease.InOutCubic(t)`](#matheaseinoutcubict)
+	- [`ease.InQuart(t)`](#matheaseinquartt)
+	- [`ease.OutQuart(t)`](#matheaseoutquartt)
+	- [`ease.InOutQuart(t)`](#matheaseinoutquartt)
+	- [`ease.InQuint(t)`](#matheaseinquintt)
+	- [`ease.OutQuint(t)`](#matheaseoutquintt)
+	- [`ease.InOutQuint(t)`](#matheaseinoutquintt)
+	- [`ease.InExpo(t)`](#matheaseinexpot)
+	- [`ease.OutExpo(t)`](#matheaseoutexpot)
+	- [`ease.InOutExpo(t)`](#matheaseinoutexpot)
+	- [`ease.InCirc(t)`](#matheaseincirct)
+	- [`ease.OutCirc(t)`](#matheaseoutcirct)
+	- [`ease.InOutCirc(t)`](#matheaseinoutcirct)
+	- [`ease.InBack(t)`](#matheaseinbackt)
+	- [`ease.OutBack(t)`](#matheaseoutbackt)
+	- [`ease.InOutBack(t)`](#matheaseinoutbackt)
+	- [`ease.InElastic(t)`](#matheaseinelastict)
+	- [`ease.OutElastic(t)`](#matheaseoutelastict)
+	- [`ease.InOutElastic(t)`](#matheaseinoutelastict)
+	- [`ease.InBounce(t)`](#matheaseinbouncet)
+	- [`ease.OutBounce(t)`](#matheaseoutbouncet)
+	- [`ease.InOutBounce(t)`](#matheaseinoutbouncet)
+- [Math/quaternion.nut](#mathquaternionnut)
+	- [`Quaternion(x, y, z, w)`](#quaternionx-y-z-w)
+		- [`fromEuler(angles)`](#fromeulerangles)
+		- [`fromVector(vector)`](#fromvectorvector)
+		- [`rotateVector(vector)`](#rotatevectorvector)
+		- [`unrotateVector(vector)`](#unrotatevectorvector)
+		- [`slerp(targetQuaternion, t)`](#slerptargetquaternion-t)
+		- [`normalize()`](#normalize)
+		- [`dot(other)`](#dotother)
+		- [`length()`](#length)
+		- [`inverse()`](#inverse)
+		- [`fromAxisAngle(axis, angle)`](#fromaxisangleaxis-angle)
+		- [`toAxisAngle()`](#toaxisangle)
+		- [`toVector()`](#tovector)
+		- [`isEqually(other)`](#isequallyother)
+		- [`cmp(other)`](#cmpother)
+- [Math/matrix.nut](#mathmatrixnut)
+	- [`Matrix(a, b, c, d, e, f, g, h, k)`](#matrixa-b-c-d-e-f-g-h-k)
+		- [`fromEuler(angles)`](#fromeulerangles-1)
+		- [`rotateVector(point)`](#rotatevectorpoint)
+		- [`unrotateVector(point)`](#unrotatevectorpoint)
+		- [`transpose()`](#transpose)
+		- [`inverse()`](#inverse-1)
+		- [`determinant()`](#determinant)
+		- [`scale(factor)`](#scalefactor)
+		- [`rotateX(angle)`](#rotatexangle)
+		- [`_mul(other)`](#_mulother)
+		- [`_add(other)`](#_addother)
+		- [`_sub(other)`](#_subother)
+		- [`isEqually(other)`](#isequallyother-1)
+		- [`cmp(other)`](#cmpother-1)
+  
 ## [Math/algebraic.nut](algebraic.nut)
 
 This file contains basic algebraic functions such as finding minimum and maximum values, clamping numbers, rounding, and remapping values.
@@ -377,7 +470,7 @@ local vec = Vector(-14, 0, 2)
 local signVec = math.vector.sign(vec) // signVec will be Vector(-1, 0, 1)
 ```
 
-#### `math.vector.abs(vector)`
+### `math.vector.abs(vector)`
 
 This function calculates the absolute value of each component in a vector and returns a new vector with the absolute values.
 
@@ -529,8 +622,11 @@ This function performs linear interpolation between two values with custom inter
 local result = math.lerp.FLerp(10, 20, 0, 10, 5) // result will be 15 (linear interpolation with custom parameters)
 ```
 
+## [Math/easing_equation.nut](easing_equation.nut)
 
-### `math.lerp.InSine(t)`
+More info about `easing` lerp function you can found here: https://gizma.com/easing/
+
+### `math.ease.InSine(t)`
 
 This function applies an ease-in sine interpolation to a value.  The animation starts slowly and accelerates towards the end. 
 
@@ -542,10 +638,10 @@ This function applies an ease-in sine interpolation to a value.  The animation s
 
 **Example:**
 ```js
-local value = math.lerp.InSine(0.5)  // Returns a value around 0.29 
+local value = math.ease.InSine(0.5)  // Returns a value around 0.29 
 ```
 
-### `math.lerp.OutSine(t)`
+### `math.ease.OutSine(t)`
 
 This function applies an ease-out sine interpolation to a value.  The animation starts quickly and decelerates towards the end.
 
@@ -557,10 +653,10 @@ This function applies an ease-out sine interpolation to a value.  The animation 
 
 **Example:**
 ```js
-local value = math.lerp.OutSine(0.5)  // Returns a value around 0.71
+local value = math.ease.OutSine(0.5)  // Returns a value around 0.71
 ```
 
-### `math.lerp.InOutSine(t)`
+### `math.ease.InOutSine(t)`
 
 This function applies an ease-in-out sine interpolation to a value. The animation starts slowly, accelerates in the middle, and decelerates again towards the end.
 
@@ -573,10 +669,10 @@ This function applies an ease-in-out sine interpolation to a value. The animatio
 **Example:** 
 
 ```js
-local value = math.lerp.InOutSine(0.5) // Returns 0.5
+local value = math.ease.InOutSine(0.5) // Returns 0.5
 ```
 
-### `math.lerp.InQuad(t)`
+### `math.ease.InQuad(t)`
 
 This function applies an ease-in quadratic interpolation to a value. The animation starts slowly and accelerates gradually towards the end.
 
@@ -589,10 +685,10 @@ This function applies an ease-in quadratic interpolation to a value. The animati
 **Example:** 
 
 ```js
-local value = math.lerp.InQuad(0.5) // Returns 0.25
+local value = math.ease.InQuad(0.5) // Returns 0.25
 ```
 
-### `math.lerp.OutQuad(t)`
+### `math.ease.OutQuad(t)`
 
 This function applies an ease-out quadratic interpolation to a value. The animation starts quickly and decelerates gradually towards the end.
 
@@ -605,10 +701,10 @@ This function applies an ease-out quadratic interpolation to a value. The animat
 **Example:** 
 
 ```js
-local value = math.lerp.OutQuad(0.5) // Returns 0.75 
+local value = math.ease.OutQuad(0.5) // Returns 0.75 
 ```
 
-### `math.lerp.InOutQuad(t)`
+### `math.ease.InOutQuad(t)`
 
 This function applies an ease-in-out quadratic interpolation to a value.  The animation starts slowly, accelerates in the middle, and then decelerates towards the end. 
 
@@ -620,10 +716,10 @@ This function applies an ease-in-out quadratic interpolation to a value.  The an
 
 **Example:**
 ```js 
-local value = math.lerp.InOutQuad(0.5) // Returns 0.5
+local value = math.ease.InOutQuad(0.5) // Returns 0.5
 ```
 
-### `math.lerp.InCubic(t)`
+### `math.ease.InCubic(t)`
 
 This function applies an ease-in cubic interpolation to a value.  The animation starts even slower than the quadratic ease-in and accelerates more dramatically towards the end. 
 
@@ -636,10 +732,10 @@ This function applies an ease-in cubic interpolation to a value.  The animation 
 **Example:** 
 
 ```js
-local value = math.lerp.InCubic(0.5) // Returns 0.125
+local value = math.ease.InCubic(0.5) // Returns 0.125
 ```
 
-### `math.lerp.OutCubic(t)`
+### `math.ease.OutCubic(t)`
 
 This function applies an ease-out cubic interpolation to a value.  The animation starts quickly and decelerates more gradually than the quadratic ease-out towards the end. 
 
@@ -651,10 +747,10 @@ This function applies an ease-out cubic interpolation to a value.  The animation
 
 **Example:**
 ```js
-local value = math.lerp.OutCubic(0.5) // Returns 0.875
+local value = math.ease.OutCubic(0.5) // Returns 0.875
 ```
 
-### `math.lerp.InOutCubic(t)`
+### `math.ease.InOutCubic(t)`
 
 This function applies an ease-in-out cubic interpolation to a value. The animation starts slowly, accelerates in the middle, and then decelerates smoothly towards the end. 
 
@@ -667,10 +763,10 @@ This function applies an ease-in-out cubic interpolation to a value. The animati
 
 **Example:**
 ```js
-local value = math.lerp.InOutCubic(0.5) // Returns 0.5
+local value = math.ease.InOutCubic(0.5) // Returns 0.5
 ```
 
-### `math.lerp.InQuart(t)`
+### `math.ease.InQuart(t)`
 
 This function applies an ease-in quartic (fourth power) interpolation to a value. This creates an even more pronounced acceleration than the cubic ease-in, starting very slowly and then quickly ramping up in speed. 
 
@@ -683,10 +779,10 @@ This function applies an ease-in quartic (fourth power) interpolation to a value
 
 **Example:**
 ```js
-local value = math.lerp.InQuart(0.5) // Returns 0.0625
+local value = math.ease.InQuart(0.5) // Returns 0.0625
 ```
 
-### `math.lerp.OutQuart(t)` 
+### `math.ease.OutQuart(t)` 
 
 This function applies an ease-out quartic (fourth power) interpolation to a value. This creates a very smooth deceleration, starting quickly and then slowly easing to a stop. 
 
@@ -700,10 +796,10 @@ This function applies an ease-out quartic (fourth power) interpolation to a valu
 
 **Example:**
 ```js 
-local value = math.lerp.OutQuart(0.5) // Returns 0.9375
+local value = math.ease.OutQuart(0.5) // Returns 0.9375
 ```
 
-### `math.lerp.InOutQuart(t)`
+### `math.ease.InOutQuart(t)`
 
 This function applies an ease-in-out quartic (fourth power) interpolation to a value.  The animation begins slowly, speeds up in the middle, and then gracefully slows down as it approaches the end value.
 
@@ -716,10 +812,10 @@ This function applies an ease-in-out quartic (fourth power) interpolation to a v
 **Example:** 
 
 ```js
-local value = math.lerp.InOutQuart(0.5) // Returns 0.5
+local value = math.ease.InOutQuart(0.5) // Returns 0.5
 ```
 
-### `math.lerp.InQuint(t)`
+### `math.ease.InQuint(t)`
 
 This function applies an ease-in quintic (fifth power) interpolation to a value. This is the most extreme of the power-based ease-in functions, with a very slow start and a very rapid acceleration towards the end.
 
@@ -731,10 +827,10 @@ This function applies an ease-in quintic (fifth power) interpolation to a value.
 
 **Example:**
 ```js
-local value = math.lerp.InQuint(0.5) // Returns 0.03125
+local value = math.ease.InQuint(0.5) // Returns 0.03125
 ```
 
-### `math.lerp.OutQuint(t)`
+### `math.ease.OutQuint(t)`
 
 This function applies an ease-out quintic (fifth power) interpolation to a value. This provides the smoothest deceleration of the power-based ease-out functions, starting quickly and very gradually coming to a halt.
 
@@ -746,10 +842,10 @@ This function applies an ease-out quintic (fifth power) interpolation to a value
 
 **Example:**
 ```js
-local value = math.lerp.OutQuint(0.5) // Returns 0.96875
+local value = math.ease.OutQuint(0.5) // Returns 0.96875
 ```
 
-### `math.lerp.InOutQuint(t)`
+### `math.ease.InOutQuint(t)`
 
 This function applies an ease-in-out quintic (fifth power) interpolation to a value.  The animation starts gently, accelerates significantly in the middle, and then smoothly decelerates as it reaches the final value.
 
@@ -763,10 +859,10 @@ This function applies an ease-in-out quintic (fifth power) interpolation to a va
 
 **Example:**
 ```js
-local value = math.lerp.InOutQuint(0.5) // Returns 0.5 
+local value = math.ease.InOutQuint(0.5) // Returns 0.5 
 ``` 
 
-### `math.lerp.InExpo(t)`
+### `math.ease.InExpo(t)`
 
 This function applies an ease-in exponential interpolation to a value. The animation starts slowly and then accelerates rapidly towards the end.
 
@@ -778,10 +874,10 @@ This function applies an ease-in exponential interpolation to a value. The anima
 
 **Example:**
 ```js
-local value = math.lerp.InExpo(0.5) // Returns a value close to 0.03
+local value = math.ease.InExpo(0.5) // Returns a value close to 0.03
 ```
 
-### `math.lerp.OutExpo(t)`
+### `math.ease.OutExpo(t)`
 
 This function applies an ease-out exponential interpolation to a value. The animation starts quickly and then decelerates rapidly towards the end. 
 
@@ -794,10 +890,10 @@ This function applies an ease-out exponential interpolation to a value. The anim
 
 **Example:**
 ```js
-local value = math.lerp.OutExpo(0.5) // Returns a value close to 0.97
+local value = math.ease.OutExpo(0.5) // Returns a value close to 0.97
 ```
 
-### `math.lerp.InOutExpo(t)`
+### `math.ease.InOutExpo(t)`
 
 This function applies an ease-in-out exponential interpolation to a value.  The animation starts and ends slowly, with a sharp acceleration and deceleration in the middle.
 
@@ -811,10 +907,10 @@ This function applies an ease-in-out exponential interpolation to a value.  The 
 **Example:** 
 
 ```js
-local value = math.lerp.InOutExpo(0.5) // Returns 0.5
+local value = math.ease.InOutExpo(0.5) // Returns 0.5
 ```
 
-### `math.lerp.InCirc(t)` 
+### `math.ease.InCirc(t)` 
 
 This function applies an ease-in circular interpolation to a value.  The animation starts slowly with a subtle curve and gradually accelerates towards the end. 
 
@@ -827,10 +923,10 @@ This function applies an ease-in circular interpolation to a value.  The animati
 
 **Example:**
 ```js
-local value = math.lerp.InCirc(0.5) // Returns a value close to 0.13
+local value = math.ease.InCirc(0.5) // Returns a value close to 0.13
 ``` 
 
-### `math.lerp.OutCirc(t)` 
+### `math.ease.OutCirc(t)` 
 
 This function applies an ease-out circular interpolation to a value.  The animation starts quickly and decelerates with a subtle curve, ending smoothly.
 
@@ -842,10 +938,10 @@ This function applies an ease-out circular interpolation to a value.  The animat
 
 **Example:**
 ```js
-local value = math.lerp.OutCirc(0.5) // Returns a value close to 0.87 
+local value = math.ease.OutCirc(0.5) // Returns a value close to 0.87 
 ```
 
-### `math.lerp.InOutCirc(t)`
+### `math.ease.InOutCirc(t)`
 
 This function applies an ease-in-out circular interpolation to a value.  The animation starts and ends slowly, with a smooth, rounded acceleration and deceleration in the middle. 
 
@@ -857,10 +953,10 @@ This function applies an ease-in-out circular interpolation to a value.  The ani
 
 **Example:**
 ```js
-local value = math.lerp.InOutCirc(0.5) // Returns 0.5 
+local value = math.ease.InOutCirc(0.5) // Returns 0.5 
 ```
 
-### `math.lerp.InBack(t)` 
+### `math.ease.InBack(t)` 
 
 This function applies an ease-in back interpolation to a value.  The animation starts by briefly going back slightly before moving forward, creating an \"anticipation\" or \"overshoot\" effect at the beginning.
 
@@ -873,10 +969,10 @@ This function applies an ease-in back interpolation to a value.  The animation s
 **Example:** 
 
 ```js
-local value = math.lerp.InBack(0.5) // Returns a value close to -0.13
+local value = math.ease.InBack(0.5) // Returns a value close to -0.13
 ``` 
 
-### `math.lerp.OutBack(t)`
+### `math.ease.OutBack(t)`
 
 This function applies an ease-out back interpolation to a value. The animation ends by briefly overshooting the final value before settling, creating an \"overshoot\" effect at the end.
 
@@ -889,10 +985,10 @@ This function applies an ease-out back interpolation to a value. The animation e
 
 **Example:**
 ```js 
-local value = math.lerp.OutBack(0.5) // Returns a value close to 1.13
+local value = math.ease.OutBack(0.5) // Returns a value close to 1.13
 ```
 
-### `math.lerp.InOutBack(t)` 
+### `math.ease.InOutBack(t)` 
 
 This function applies an ease-in-out back interpolation to a value.  The animation starts and ends with a slight \"overshoot\" effect, creating a more dramatic and bouncy movement.
 
@@ -905,10 +1001,10 @@ This function applies an ease-in-out back interpolation to a value.  The animati
 **Example:** 
 
 ```js 
-local value = math.lerp.InOutBack(0.5) // Returns 0.5 
+local value = math.ease.InOutBack(0.5) // Returns 0.5 
 ```
 
-### `math.lerp.InElastic(t)`
+### `math.ease.InElastic(t)`
 
 This function applies an ease-in elastic interpolation to a value. The animation starts with a \"winding up\" or \"stretching\" effect before moving forward, creating a bouncy, springy feel. 
 
@@ -922,10 +1018,10 @@ This function applies an ease-in elastic interpolation to a value. The animation
 
 **Example:**
 ```js
-local value = math.lerp.InElastic(0.5) // Returns a value close to -0.05 
+local value = math.ease.InElastic(0.5) // Returns a value close to -0.05 
 ```
 
-### `math.lerp.OutElastic(t)`
+### `math.ease.OutElastic(t)`
 
 This function applies an ease-out elastic interpolation to a value.  The animation ends with a \"springy\" overshoot effect, as if the value bounces back slightly before settling at its final position.
 
@@ -939,10 +1035,10 @@ This function applies an ease-out elastic interpolation to a value.  The animati
 **Example:** 
 
 ```js
-local value = math.lerp.OutElastic(0.5) // Returns a value close to 1.05
+local value = math.ease.OutElastic(0.5) // Returns a value close to 1.05
 ```
 
-### `math.lerp.InOutElastic(t)` 
+### `math.ease.InOutElastic(t)` 
 
 This function applies an ease-in-out elastic interpolation to a value.  The animation combines the \"winding up\" effect of ease-in elastic with the \"springy\" overshoot of ease-out elastic, creating a more pronounced bouncy movement. 
 
@@ -955,10 +1051,10 @@ This function applies an ease-in-out elastic interpolation to a value.  The anim
 
 **Example:**
 ```js
-local value = math.lerp.InOutElastic(0.5) // Returns 0.5 
+local value = math.ease.InOutElastic(0.5) // Returns 0.5 
 ``` 
 
-### `math.lerp.InBounce(t)` 
+### `math.ease.InBounce(t)` 
 
 This function applies an ease-in bounce interpolation to a value. The animation starts with a series of bounces, gradually increasing in size until it reaches the final value.
 
@@ -970,10 +1066,10 @@ This function applies an ease-in bounce interpolation to a value. The animation 
 
 **Example:**
 ```js 
-local value = math.lerp.InBounce(0.5) // Returns a value close to 0.72 
+local value = math.ease.InBounce(0.5) // Returns a value close to 0.72 
 ``` 
 
-### `math.lerp.OutBounce(t)`
+### `math.ease.OutBounce(t)`
 
 This function applies an ease-out bounce interpolation to a value. The animation ends with a series of bounces, gradually decreasing in size until it settles at the final value.
 
@@ -985,10 +1081,10 @@ This function applies an ease-out bounce interpolation to a value. The animation
 
 **Example:**
 ```js
-local value = math.lerp.OutBounce(0.5) // Returns a value close to 0.28 
+local value = math.ease.OutBounce(0.5) // Returns a value close to 0.28 
 ```
 
-### `math.lerp.InOutBounce(t)`
+### `math.ease.InOutBounce(t)`
 
 This function applies an ease-in-out bounce interpolation to a value.  The animation combines the bouncing effect of both ease-in and ease-out bounce, creating a symmetrical bouncing movement.
 
@@ -1002,11 +1098,8 @@ This function applies an ease-in-out bounce interpolation to a value.  The anima
 **Example:** 
 
 ```js
-local value = math.lerp.InOutBounce(0.5) // Returns 0.5 
+local value = math.ease.InOutBounce(0.5) // Returns 0.5 
 ```
-
-#### More info about `easing` lerp function you can found here: https://gizma.com/easing/
-
 
 ## [Math/quaternion.nut](quaternion.nut)
 
