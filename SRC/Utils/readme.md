@@ -361,7 +361,11 @@ local player = GetPlayerEx()
 printl(player.EyePosition()) // Print the player's eye position
 ```
 
-### `GetPlayers()`
+## [ActionScheduler/player_hooks.nut](#actionschedulerplayer_hooksnut)
+
+This module manages player-related events and provides hooks for custom logic. It maintains a list of all players in the game and offers functions to track player joins, departures, deaths, and respawns.
+
+### [`GetPlayers()`](#getplayers)
 
 This function returns an array of all players in the game as `pcapEntity` objects.
 
@@ -378,19 +382,90 @@ foreach (player in players) {
 }
 ```
 
-### `AttachEyeControlToPlayers()` (Init-func)
+### [`TrackPlayerJoins()`](#trackplayerjoins)
 
-This function attaches eye control entities to all players in the game. It creates `logic_measure_movement` and `info_target` entities for each player to track their eye position and angles. This information can then be accessed using the `EyePosition`, `EyeAngles`, and `EyeForwardVector` methods of the `pcapEntity` class. This function is called automatically during library initialization and periodically in multiplayer games to ensure that eye control entities are attached to any new players that join the game.
+Tracks players joining the game. It iterates through all player entities, initializes their eye control, creates portal pairs (if applicable), adds them to the `AllPlayers` array, and triggers the `OnPlayerJoined` hook.
 
-**Example:**
+> [!NOTE]  
+> This function is called automatically
 
-```js
-AttachEyeControlToPlayers() // Attach eye control entities to all players
-```
+### [`HandlePlayerEventsMP()`](#handleplayermp)
+
+Handles player events in multiplayer mode, including health checks and death events. It iterates through the `AllPlayers` array, checks player validity, calls `OnDeath` and schedules respawn logic for dead players, and removes disconnected players from the `AllPlayers` array.  Sets player health to -999 to prevent repeated death triggers.
+
+> [!NOTE]  
+> This function is called automatically
+
+### [`HandlePlayerEventsSP()`](#handleplayereventssp)
+
+Handles player events in single-player mode, similar to `HandlePlayerEventsMP`, but simplified for a single player.  Sets player health to -999 to prevent repeated death triggers.
+
+> [!NOTE]  
+> This function is called automatically
+
+### [`_monitorRespawn(player)`](#_monitorrespawnplayer)
+
+Internal function to monitor a player's respawn status.  This function is called by `ScheduleEvent.Add` within `HandlePlayerEventsMP`.  It continuously checks the player's health and triggers the `OnPlayerRespawn` hook upon successful respawn.
+
+**Parameters:**
+
+* `player` (pcapEntity): The player whose respawn status is being monitored.
+
+> [!NOTE]  
+> This function is called automatically by `HandlePlayerEventsMP`
+
+
+### [`AttachEyeControl(player)`](#attacheyecontrolplayer)
+
+Attaches eye control entities to a player. This function creates `logic_measure_movement` and `info_target` entities to track the player's eye position and angles.
+
+**Parameters:**
+
+* `player` (pcapEntity): The player to attach the eye control to.
+
+> [!NOTE]  
+> This function is called automatically
+
+## Hooks (Customizable Functions)
+
+The following functions are provided as hooks for custom logic. They are initially empty and can be overridden by the user.
+
+### [`OnPlayerJoined(player)`](#onplayerjoinedplayer)
+
+Called when a player joins the game.
+
+**Parameters:**
+
+* `player` (pcapEntity): The player who joined.
+
+### [`OnPlayerLeft(player)`](#onplayerleftplayer)
+
+Called when a player leaves the game.
+
+**Parameters:**
+
+* `player` (pcapEntity): The player who left.
+
+### [`OnPlayerDeath(player)`](#onplayerdeathplayer)
+
+Called when a player dies.
+
+**Parameters:**
+
+* `player` (pcapEntity): The player who died.
+
+
+### [`OnPlayerRespawn(player)`](#onplayerrespawnplayer)
+
+Called when a player respawns.
+
+**Parameters:**
+
+* `player` (pcapEntity): The player who respawned.
 
 ## [Utils/portals.nut](portals.nut)
 
-### `::InitPortalPair(id)`
+### `InitPortalPair(id)`
 Initializes a portal pair for portal casting (TracePlus Portal Casting). 
 
 By default, this function automatically initializes pair IDs in multiplayer. However, if you are using portal frames with unique pair IDs or custom logic that adds multiple different pair IDs to the game (such as multiportals), you must manually initialize `InitPortalPair` for proper operation with TracePlus Portal Casting.
@@ -408,7 +483,7 @@ InitPortalPair(1)
 InitPortalPair(4)
 ```
 
-### `::IsBluePortal(ent)`
+### `IsBluePortal(ent)`
 Checks if the given entity is a blue portal.
 
 **Parameters:**
@@ -430,7 +505,7 @@ if (IsBluePortal(portal)) {
 }
 ```
 
-### `::FindPartnerForPropPortal(portal)`
+### `FindPartnerForPropPortal(portal)`
 Finds the partner portal for a given `prop_portal` entity.
 
 **Parameters:**
@@ -441,7 +516,7 @@ Finds the partner portal for a given `prop_portal` entity.
 
 * (pcapEntity|null): The partner portal entity, or `null` if no partner is found.
 
-### `::_CreatePortalDetector(extraKey, extraValue)`
+### `_CreatePortalDetector(extraKey, extraValue)`
 Creates a `func_portal_detector` entity with specified key-value pairs and settings for portal detection.
 
 **This function is not part of the public API.**
@@ -455,7 +530,7 @@ Creates a `func_portal_detector` entity with specified key-value pairs and setti
 
 * (entity): The created `func_portal_detector` entity.
 
-### `::SetupLinkedPortals()`
+### `SetupLinkedPortals()`
 Initializes linked portal doors for portal tracing.
 
 **This function is not part of the public API and called automatically at initialization.**
