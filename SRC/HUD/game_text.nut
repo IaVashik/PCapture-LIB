@@ -66,8 +66,8 @@ HUD["ScreenText"] <- class {
 /*
  * Displays the on-screen text. 
 */
-function HUD::ScreenText::Enable() {
-    this.CPcapEntity.SetKeyValue("holdtime", this.holdtime)
+function HUD::ScreenText::Enable(holdtime = null) {
+    this.CPcapEntity.SetKeyValue("holdtime", holdtime ? holdtime : this.holdtime)
     EntFireByHandle(this.CPcapEntity, "Display")
     return this
 }

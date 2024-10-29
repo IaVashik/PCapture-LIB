@@ -79,6 +79,7 @@ Displays the on-screen text.
 
 ```js
 myText.Enable() // Make the text visible
+myText2.Enable(2) // Make the text visible for 2 seconds
 ```
 
 #### [`HUD.ScreenText.Disable()`](#hudscreentextdisable)
