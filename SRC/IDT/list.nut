@@ -1,22 +1,14 @@
-::ListNode <- class {
-    value = null;
-    prev_ref = null;
-    next_ref = null;
+::ListNode <- function(value) return {
+    value = value,
+    prev_ref = null,
+    next_ref = null,
 
-    /*
-     * Constructor for a list node.
-     *
-     * @param {any} value - The value to store in the node.
-    */
-    constructor(value) {
-        this.value = value;
-    }
-
-    function _tostring() {
+    tostring = function () {
         return this.value.tostring();
     }
-}
+} 
 
+//! Deleting nodes should cause a leak!
 ::List <- class {
     length = 0;
     first_node = null;
@@ -31,7 +23,7 @@
         this.first_node = ListNode(0);
         this.last_node = this.first_node;
         
-        for(local i = 0; i< vargc; i++) {
+        for(local i = 0; i < vargc; i++) {
             this.append(vargv[i])
         }
     }
@@ -42,7 +34,7 @@
      * @param {array} array - The array to create the list from.
      * @returns {List} - The new list containing the elements from the array.
     */
-    function fromArray(array) {
+    function FromArray(array) {
         local list = List()
         foreach(val in array) 
             list.append(val)
@@ -69,7 +61,7 @@
 
         current_node.next_ref = next_node;
         next_node.prev_ref = current_node;
-        
+
         this.last_node = next_node;
         this.length++;
     }
@@ -133,11 +125,14 @@
      * Removes the node at a specific index from the list.
      * 
      * @param {number} index - The index of the node to remove.
+     * @returns {any} - The value of the removed element.
     */
     function remove(idx) {
         local node = this.getNode(idx);
+        local value = node.value
         local next = node.next_ref;
         local prev = node.prev_ref;
+        // node.drop();
 
         if (prev) {
             prev.next_ref = next; 
@@ -152,6 +147,7 @@
         } 
 
         this.length--;
+        return value
     }
 
     /*
@@ -164,6 +160,7 @@
         this.last_node = current.prev_ref;
         this.last_node.next_ref = null;
         this.length--
+        // current.drop()
         return current.value;
     }
 
@@ -204,6 +201,45 @@
         this.last_node = temp;
     }
 
+    /*
+     * Slice a portion of the list.
+     *
+     * @param {int} startIndex - The start index.
+     * @param {int} endIndex - The end index. (optional)
+     * @returns {List} - The sliced list.
+    */
+    function slice(startIndex, endIndex = null) {
+        if(!endIndex) endIndex = this.len()
+
+        local result = List()
+        foreach(idx, value in this.iter()) {
+            if(idx < startIndex || idx >= endIndex) continue
+            result.append(value)
+        }
+        return result
+    }
+
+    /*
+     * Resize the list.
+     * 
+     * @param {int} size - The new size.
+     * @param {any} fill - The fill value for new slots.
+    */
+    function resize(size, fill = null) {
+        local diff = size - this.len()
+        
+        if(diff > 0) {
+            // Add elements
+            for(local i = 0; i < diff; i++)
+                this.append(fill)
+            return
+        }
+
+        // Remove elements
+        for (local i = 0; i < -diff; i++)
+            this.pop();
+    }
+
     function sort() {
         this.first_node.next_ref = _mergeSort(this.first_node.next_ref)
         
@@ -227,19 +263,19 @@
 
     function _mergeSort(head) {
         if (head == null || head.next_ref == null) {
-            return head  // Список с одним или нулём элементов уже отсортирован
+            return head  // List with one or zero elements already sorted
         }
     
-        /* Разделение списка на две части. */
+        // Splitting the list into two parts
         local middle = _findMiddleNode(head)
         local nextToMiddle = middle.next_ref 
         middle.next_ref = null 
     
-        /* Рекурсивная сортировка двух половин. */ 
+        // Recursive sorting of two halves
         local left = _mergeSort(head)
         local right = _mergeSort(nextToMiddle) 
     
-        /* Слияние отсортированных половин. */
+        // Merging sorted halves
         return _merge(left, right) 
     }
     
@@ -270,10 +306,49 @@
             current = current.next_ref
         } 
     
-        /* Добавление оставшихся элементов. */
+        // Add the remaining elements
         current.next_ref = left != null ? left : right
     
         return dummyHead.next_ref 
+    }
+
+    function SwapNode(node1, node2) {
+        if (node1 == node2) return
+    
+        //  Update references of previous nodes
+        if (node1.prev_ref) {
+            node1.prev_ref.next_ref = node2
+        } else {
+            this.first_node = node2
+        }
+    
+        if (node2.prev_ref) {
+            node2.prev_ref.next_ref = node1
+        } else {
+            this.first_node = node1
+        }
+    
+        //  Update links for the following nodes
+        if (node1.next_ref) {
+            node1.next_ref.prev_ref = node2
+        } else {
+            this.last_node = node2
+        }
+    
+        if (node2.next_ref) {
+            node2.next_ref.prev_ref = node1
+        } else {
+            this.last_node = node1
+        }
+    
+        //  Exchange the `prev_ref` and `next_ref` references of the nodes themselves
+        local temp = node1.prev_ref
+        node1.prev_ref = node2.prev_ref
+        node2.prev_ref = temp
+    
+        temp = node1.next_ref
+        node1.next_ref = node2.next_ref
+        node2.next_ref = temp
     }
 
 
@@ -281,9 +356,40 @@
      * Removes all elements from the list.
     */
     function clear() {
+        if(this.length == 0) return
+        
+        local current = this.first_node.next_ref;
+        while (current) {
+            local next_node = current.next_ref;
+            // current.drop()
+            current = next_node;
+        }
+
         this.first_node.next_ref = null;
         this.last_node = this.first_node;
         this.length = 0;
+    }
+
+    /*
+     * More productive than the built-in iterator.
+    */
+    function iter() {
+        local current = this.first_node.next_ref;
+        while (current) {
+            yield current.value
+            current = current.next_ref;
+        }
+    }
+
+    /*
+     * Similar to `iter`, but returns the node instead of the node's value.
+    */
+    function rawIter() {
+        local current = this.first_node.next_ref;
+        while (current) {
+            yield current
+            current = current.next_ref;
+        }
     }
 
     /*
@@ -296,20 +402,21 @@
         if(this.length == 0) return ""
         
         local string = ""
-        foreach(elem in this) {
+        foreach(elem in this.iter()) {
             string += elem + joinstr
         }
+
         return joinstr.len() != 0 ? string.slice(0, joinstr.len() * -1) : string
     }
 
     /*
-    * Apply a function to each element and modify the list in-place.
-    *
-    * @param {Function} func - The function to apply.
-    * @returns {List} - The List instance for chaining.
+     * Apply a function to each element and modify the list in-place.
+     * 
+     * @param {Function} func - The function to apply.
+     * @returns {List} - The List instance for chaining.
     */
     function apply(func) {
-        foreach(idx, value in this) {
+        foreach(idx, value in this.iter()) {
             this[idx] = func(value)
         }
         return this
@@ -322,6 +429,7 @@
      * @returns {List} - The List instance for chaining.
     */
     function extend(other) {
+        //! TODO BRUH!!!
         foreach(val in other) 
             this.append(val)
         return this
@@ -335,13 +443,13 @@
     */
     function search(match) {
         if(typeof match == "function") {
-            foreach(idx, val in this) {
+            foreach(idx, val in this.iter()) {
                 if(match(val))
                     return idx
             }
         }
         else {
-            foreach(idx, val in this) {
+            foreach(idx, val in this.iter()) {
                 if(val == match)
                     return idx
             }
@@ -350,26 +458,23 @@
         return null
     }
 
-    // function binarySearch(value) {
-    //     this.sort() // Сортировка списка перед поиском
+    /*
+     * Returns a new list with only the unique elements from the original list.
+     *
+     * @returns {List} - The new list with unique elements.
+    */
+    function unique() {
+        local seen = {}
+        local result = List()
 
-    //     local low = 0
-    //     local high = this.length - 1
-    //     local mid
+        foreach(value in this.iter()) {
+            if(value in seen) continue
+            seen[value] <- true    
+            result.append(value)
+        }
 
-    //     while (low <= high) {
-    //         mid = floor((low + high) / 2)
-    //         if (this[mid] < value) {
-    //             low = mid + 1
-    //         } else if (this[mid] > value) {
-    //             high = mid - 1 
-    //         } else {
-    //             return mid  // Элемент найден 
-    //         }
-    //     }
-
-    //     return null  // Элемент не найден 
-    // }
+        return result
+    }
 
     /*
      * Creates a new list by applying a function to each element of this list.
@@ -379,10 +484,54 @@
     */
     function map(func) {
         local newList = List()
-        foreach(value in this) {
+        foreach(value in this.iter()) {
             newList.append(func(value))
         }
         return newList
+    }
+
+    /*
+     * Filter the list by a predicate function.
+     * 
+     * @param {Function} condition(index, value, newList) - The predicate function. 
+     * @returns {List} - The filtered list.
+    */
+    function filter(condition) {
+        local newList = List()
+        foreach(idx, val in this.iter()) {
+            if(condition(idx, val, newList))
+                newList.append(val)
+        }
+        return newList
+    }
+
+    /*
+     * Applies a function to an accumulator and each element in the list (from left to right)
+     * to reduce it to a single value.
+     *
+     * @param {function} func - The function to apply to each element and accumulator.
+     * @param {any} initial - The initial value of the accumulator.
+     * @returns {any} - The final reduced value.
+    */
+    function reduce(func, initial) {
+        local accumulator = initial
+        foreach(item in this.iter()) {
+            accumulator = func(accumulator, item)
+        }
+        return accumulator
+    }
+
+    /*
+     * Convert the list to a table.
+     * 
+     * @returns {table} - The table representation.
+    */
+    function totable() {
+        local table = {}
+        foreach(element in this.iter()) {
+            if(element) table[element] <- null
+        }
+        return table
     }
 
     /*
@@ -391,8 +540,8 @@
      * @returns {array} - An array containing the elements of the list.
     */
     function toarray() {
-        local array = arrayLib(array(this.length))
-        foreach(idx, value in this) {
+        local array = ArrayEx.WithSize(this.length)
+        foreach(idx, value in this.iter()) {
             array[idx] = value
         }
         return array
@@ -404,6 +553,7 @@
     function _get(idx) return this.getNode(idx).value;
     function _set(idx, val) return this.getNode(idx).value = val
 
+    //* OUTDATED! The standard iterator, it's terrible! Use `.iter()` method
     function _nexti(previdx) {
         if(this.len() == 0) return null
         if (previdx == null) return 0;
@@ -413,7 +563,7 @@
     function _cmp(other) { // lmao, why? :O
         local thisSum = 0;
         local otherSum = 0;
-        foreach (val in this) { thisSum += val.value; }
+        foreach (val in this.iter()) { thisSum += val.value; }
         foreach (val in other) { otherSum += val.value; }
 
         if (thisSum > otherSum) {

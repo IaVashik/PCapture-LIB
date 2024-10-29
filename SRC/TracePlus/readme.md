@@ -2,59 +2,109 @@
 
 The `TracePlus` module enhances the ray tracing capabilities in VScripts by providing more precise and feature-rich tracing functions, including support for portals and custom trace settings. It aims to improve the accuracy and flexibility of ray tracing operations in VScripts development.
 
-## [TracePlus/settings.nut](settings.nut)
+## Table of Contents
 
-This file defines the `TracePlus.Settings` class, which encapsulates settings for ray traces.
+1. [TracePlus/settings.nut](#traceplussettingsnut)
+   * [`TracePlus.Settings`](#traceplussettings)
+2. [TracePlus/results.nut](#traceplusresultsnut)
+   * [`CheapTraceResult`](#cheaptraceresult)
+   * [`BboxTraceResult`](#bboxresult)
+3. [TracePlus/cheap\_trace.nut](#tracepluscheap_tracenut)
+   * [`TracePlus.Cheap(startPos, endPos)`](#tracepluscheapstartpos-endpos)
+   * [`TracePlus.FromEyes.Cheap(distance, player)`](#traceplusfromeyescheapdistance-player)
+4. [TracePlus/bboxcast.nut](#traceplusbboxcastnut)
+   * [`TracePlus.Bbox(startPos, endPos, ignoreEntities, settings, note)`](#traceplusbboxstartpos-endpos-ignoreentities-settings-note)
+   * [`TracePlus.FromEyes.Bbox(distance, player, ignoreEntities, settings)`](#traceplusfromeyesbboxdistance-player-ignoreentities-settings)
+5. [Portal Castings - How to Use](#portal-castings---how-to-use)
+   * [`prop_portal`](#prop_portal)
+   * [`linked_portal_door`](#linked_portal_door)
+   * [Disabling Portals](#disabling-portals)
+6. [TracePlus/portal\_casting.nut](#traceplusportal_castingnut)
+   * [`TracePlus.PortalCheap(startPos, endPos)`](#traceplusportalcheapstartpos-endpos)
+   * [`TracePlus.FromEyes.PortalCheap(distance, player)`](#traceplusfromeyesportalcheapdistance-player)
+   * [`TracePlus.PortalBbox(startPos, endPos, ignoreEntities, settings, note)`](#traceplusportalbboxstartpos-endpos-ignoreentities-settings-note)
+   * [`TracePlus.FromEyes.PortalBbox(distance, player, ignoreEntities, settings)`](#traceplusfromeyesportalbboxdistance-player-ignoreentities-settings)
+7. [TracePlus/bbox\_analyzer.nut](#traceplusbbox_analyzernut)
+   * [`TraceLineAnalyzer`](#tracelineanalyzer)
+8. [TracePlus/calculate\_normal.nut](#tracepluscalculate_normalnut)
+   * [Global Functions:](#global-functions)
 
-### `TracePlus.Settings`
 
-This class stores various settings that control the behavior of traces, such as which entities and models to ignore, the error tolerance for trace distances, and custom filter functions.
+## [TracePlus/settings.nut](#traceplussettingsnut)
+
+This file defines the `TracePlus.Settings` class, which encapsulates settings for ray traces, including options for entity filtering, model filtering, custom collision and ignore filters, and parameters for precise trace line analysis in the `TraceLineAnalyzer` class. 
+
+### [`TracePlus.Settings`](#traceplussettings)
+
+This class stores various settings that control the behavior of traces, such as which entities and models to ignore, custom filter functions, and parameters for precise trace line analysis.
 
 **Properties:**
 
-* `ignoreClasses` (arrayLib): An array of entity classnames to ignore during traces.
-* `priorityClasses` (arrayLib): An array of entity classnames to prioritize during traces.
-* `ignoredModels` (arrayLib): An array of entity model names to ignore during traces.
-* `errorTolerance` (number): The maximum allowed distance between a trace's start and hit positions. Traces exceeding this tolerance may be considered inaccurate.
-* `shouldRayHitEntity` (function or null): A custom function to determine if a ray should hit an entity.
-* `shouldIgnoreEntity` (function or null): A custom function to determine if an entity should be ignored during a trace.
+*   `ignoreClasses` (ArrayEx): An array of entity classnames to ignore during traces. Supports masks, e.g., `["trigger_"]` will ignore all entities with "trigger\_" in their classnames.
+*   `priorityClasses` (ArrayEx): An array of entity classnames to prioritize during traces. Supports masks.
+*   `ignoredModels` (ArrayEx): An array of entity model names to ignore during traces. Supports masks.
+*   `shouldRayHitEntity` (function or null): A custom function to determine if a ray should hit an entity. This function is used as a collision filter.
+*   `shouldIgnoreEntity` (function or null): A custom function to determine if an entity should be ignored during a trace. This function is used as an ignore filter.
+*   `depthAccuracy` (number): Controls the step size in the deep search algorithm of the `TraceLineAnalyzer` for bbox casts. Lower values increase precision but may impact performance. It's useful when the ray needs to hit very thin objects. (Default: 5, clamped between 0.3 and 15)
+*   `bynaryRefinement` (boolean): Enables an additional search level in the `TraceLineAnalyzer` for bbox casts to further improve the accuracy of the hit point. It's crucial when precise hit point calculation is needed, especially for accurate surface normal calculation. (Default: false)
 
 **Methods:**
 
-* `new(settingsTable)`: Creates a new `TracePlus.Settings` object with default values or from a table of settings.
-* `SetIgnoredClasses(ignoreClassesArray)`: Sets the list of entity classnames to ignore during traces.
-* `SetPriorityClasses(priorityClassesArray)`: Sets the list of entity classnames to prioritize during traces.
-* `SetIgnoredModels(ignoredModelsArray)`: Sets the list of entity model names to ignore during traces.
-* `SetErrorTolerance(tolerance)`: Sets the maximum allowed distance between trace start and hit positions.
-* `AppendIgnoredClass(className)`: Appends an entity classname to the list of ignored classes.
-* `AppendPriorityClasses(className)`: Appends an entity classname to the list of priority classes.
-* `AppendIgnoredModel(modelName)`: Appends an entity model name to the list of ignored models.
-* `GetIgnoreClasses()`: Returns the list of entity classnames to ignore during traces.
-* `GetPriorityClasses()`: Returns the list of entity classnames to prioritize during traces.
-* `GetIgnoredModels()`: Returns the list of entity model names to ignore during traces.
-* `GetErrorTolerance()`: Returns the maximum allowed distance between trace start and hit positions.
-* `SetCollisionFilter(filterFunction)`: Sets a custom function to determine if a ray should hit an entity.
-* `SetIgnoreFilter(filterFunction)`: Sets a custom function to determine if an entity should be ignored during a trace.
-* `GetCollisionFilter()`: Returns the custom collision filter function.
-* `GetIgnoreFilter()`: Returns the custom ignore filter function.
-* `ApplyCollisionFilter(entity, note)`: Applies the custom collision filter function to an entity.
-* `ApplyIgnoreFilter(entity, note)`: Applies the custom ignore filter function to an entity.
-* `UpdateIgnoreEntities(ignoreEntities, newEnt)`: Updates the list of entities to ignore during a trace, including the player entity.
+*   `new(settingsTable)`: Creates a new `TracePlus.Settings` object with default values or initializes it from a table of settings.
+*   `SetIgnoredClasses(ignoreClassesArray)`: Sets the list of entity classnames to ignore during traces. **(Builder)**
+*   `SetPriorityClasses(priorityClassesArray)`: Sets the list of entity classnames to prioritize during traces. **(Builder)**
+*   `SetIgnoredModels(ignoredModelsArray)`: Sets the list of entity model names to ignore during traces. **(Builder)**
+*   `SetDepthAccuracy(value)`: Sets the depth accuracy value for the `TraceLineAnalyzer`. **(Builder)**
+*   `SetBynaryRefinement(bool)`: Enables or disables binary refinement for the `TraceLineAnalyzer`. **(Builder)**
+*   `AppendIgnoredClass(className)`: Appends an entity classname to the list of ignored classes. **(Builder)**
+*   `AppendPriorityClasses(className)`: Appends an entity classname to the list of priority classes. **(Builder)**
+*   `AppendIgnoredModel(modelName)`: Appends an entity model name to the list of ignored models. **(Builder)**
+*   `SetCollisionFilter(filterFunction)`: Sets a custom function to determine if a ray should hit an entity (collision filter). **(Builder)**
+*   `SetIgnoreFilter(filterFunction)`: Sets a custom function to determine if an entity should be ignored during a trace (ignore filter). **(Builder)**
+*   `GetIgnoreClasses()`: Returns the list of entity classnames to ignore during traces.
+*   `GetPriorityClasses()`: Returns the list of entity classnames to prioritize during traces.
+*   `GetIgnoredModels()`: Returns the list of entity model names to ignore during traces.
+*   `GetCollisionFilter()`: Returns the custom collision filter function.
+*   `GetIgnoreFilter()`: Returns the custom ignore filter function.
+*   `ApplyCollisionFilter(entity, note)`: Applies the custom collision filter function to an entity.
+*   `ApplyIgnoreFilter(entity, note)`: Applies the custom ignore filter function to an entity.
+*   `UpdateIgnoreEntities(ignoreEntities, newEnt)`: Updates the list of entities to ignore during a trace, including the player entity.
 
-**Example:**
+**Examples:**
+
+**1. Creating `TracePlus.Settings` with specific settings using `new`:**
 
 ```js
-local traceSettings = TracePlus.Settings.new({
-    ignoreClasses = arrayLib.new("trigger_multiple", "func_brush"),
-    errorTolerance = 100
-})
+local s = TracePlus.Settings.new({
+    ignoreClasses = ArrayEx("trigger_multiple", "func_brush"),
+}) 
 ```
 
-## [TracePlus/results.nut](results.nut)
+**2. Creating `TracePlus.Settings` and setting properties with methods:**
+
+```js
+local s = TracePlus.Settings.new()
+s.SetIgnoredClasses(["trigger_"])
+s.AppendPriorityClasses(["player"])
+s.SetDepthAccuracy(2) // Increase depth accuracy for hitting thin objects 
+s.SetBynaryRefinement(true) // Enable binary refinement for precise hit point calculation
+```
+
+**3. Using builder-style chained calls:**
+
+```js
+local s = TracePlus.Settings
+    .SetIgnoredClasses(ArrayEx("trigger_multiple", "func_brush"))
+    .AppendPriorityClasses(List("player"))
+    .SetDepthAccuracy(10) 
+    .SetBynaryRefinement(false)
+```
+
+## [TracePlus/results.nut](#traceplusresultsnut)
 
 This file defines classes representing the results of different types of traces, providing methods for accessing information about the trace and its outcome.
 
-### `CheapTraceResult`
+### [`CheapTraceResult`](#cheaptraceresult)
 
 This class represents the result of a cheap (fast but less accurate) trace. It stores information about the trace, such as the start and end positions, hit position, hit fraction, and portal entry information.
 
@@ -74,7 +124,7 @@ This class represents the result of a cheap (fast but less accurate) trace. It s
 * `DidHit()`: Returns `true` if the trace hit something, `false` otherwise.
 * `GetDir()`: Returns the direction vector of the trace as a Vector.
 * `GetPortalEntryInfo()`: Returns the portal entry information as a `CheapTraceResult` object, or `null` if no portal was entered.
-* `GetAggregatedPortalEntryInfo()`: Returns an `arrayLib` containing all portal entry information for the trace, including nested portals, as `CheapTraceResult` objects.
+* `GetAggregatedPortalEntryInfo()`: Returns an `ArrayEx` containing all portal entry information for the trace, including nested portals, as `CheapTraceResult` objects.
 * `GetImpactNormal()`: Calculates and returns the impact normal of the surface hit by the trace as a Vector.
 
 **Example:**
@@ -91,7 +141,7 @@ if (traceResult.DidHit()) {
 }
 ```
 
-### `BboxTraceResult`
+### [`BboxTraceResult`](#bboxresult)
 
 This class represents the result of a bbox cast (trace with a bounding box). It extends the `CheapTraceResult` class and adds information about the hit entity and trace settings.
 
@@ -123,11 +173,11 @@ if (hitEntity) {
 }
 ```
 
-## [TracePlus/cheap_trace.nut](cheap_trace.nut)
+## [TracePlus/cheap\_trace.nut](#tracepluscheap_tracenut)
 
 This file provides functions for performing cheap (fast but less accurate) traces.
 
-### `TracePlus.Cheap(startPos, endPos)`
+### [`TracePlus.Cheap(startPos, endPos)`](#tracepluscheapstartpos-endpos)
 
 This function performs a cheap trace from the specified start and end positions. It uses the standard `TraceLine` function internally but returns a `CheapTraceResult` object with additional information.
 
@@ -149,7 +199,7 @@ if (traceResult.DidHit()) {
 }
 ```
 
-### `TracePlus.FromEyes.Cheap(distance, player)`
+### [`TracePlus.FromEyes.Cheap(distance, player)`](#traceplusfromeyescheapdistance-player)
 
 This function performs a cheap trace from the player's eyes in the direction they are looking.
 
@@ -169,11 +219,11 @@ local player = GetPlayerEx()
 local traceResult = TracePlus.FromEyes.Cheap(100, player) // Trace 100 units in front of the player
 ```
 
-## [TracePlus/bboxcast.nut](bboxcast.nut)
+## [TracePlus/bboxcast.nut](#traceplusbboxcastnut)
 
 This file provides functions for performing bbox casts (traces with bounding boxes).
 
-### `TracePlus.Bbox(startPos, endPos, ignoreEntities, settings, note)`
+### [`TracePlus.Bbox(startPos, endPos, ignoreEntities, settings, note)`](#traceplusbboxstartpos-endpos-ignoreentities-settings-note)
 
 This function performs a bbox cast from the specified start and end positions. It uses a more precise algorithm than `TraceLine` to check for collisions with entities' bounding boxes.
 
@@ -198,7 +248,7 @@ if (traceResult.DidHit()) {
 }
 ```
 
-### `TracePlus.FromEyes.Bbox(distance, player, ignoreEntities, settings)`
+### [`TracePlus.FromEyes.Bbox(distance, player, ignoreEntities, settings)`](#traceplusfromeyesbboxdistance-player-ignoreentities-settings)
 
 This function performs a bbox cast from the player's eyes in the direction they are looking.
 
@@ -223,23 +273,23 @@ if (traceResult.DidHit()) {
 ```
 
 
-## Portal Castings - How to Use
+## [Portal Castings - How to Use](#portal-castings---how-to-use)
 
 To ensure the correct functionality of portal casting, it's crucial to follow these guidelines:
 
-### `prop_portal`
+### [`prop_portal`](#prop_portal)
 
 If `prop_portal` is created manually and has a non-zero `paidId`, you need to add the keyvalue `health` with a value matching the `paidId`. This is necessary for more accurate partner portal detection.
 
 todo: add photo
 
-### `linked_portal_door`
+### [`linked_portal_door`](#linked_portal_door)
 
 For correct operation, you need to create the keyvalue `model` with the portal's `width height` values. For example: `128 64`. The `model` keyvalue is used by the `TracePlus` module to calculate the bounding box of the portal.
 
 todo: add photo
 
-### Disabling Portals
+### [Disabling Portals](#disabling-portals)
 
 * To correctly disable portals for a `pcapEntity` portal, you need to call the `SetTraceIgnore` method. You can achieve this by adding the `OnUser1` output to the portal entity and connecting it to a script that calls `SetTraceIgnore`.
 
@@ -251,11 +301,11 @@ todo: add photo
 * For advanced scenarios, you can create custom filter functions for `TracePlus.Settings` to define specific rules for ray tracing collisions and entity ignoring.
 
 
-## [TracePlus/portal_casting.nut](portal_casting.nut)
+## [TracePlus/portal\_casting.nut](#traceplusportal_castingnut)
 
 This file contains functions for handling portal interactions during traces.
 
-### `TracePlus.PortalCheap(startPos, endPos)`
+### [`TracePlus.PortalCheap(startPos, endPos)`](#traceplusportalcheapstartpos-endpos)
 
 This function performs a cheap trace with portal support. It takes into account portal entities and adjusts the trace path accordingly.
 
@@ -277,7 +327,7 @@ if (traceResult.DidHit()) {
 }
 ```
 
-### `TracePlus.FromEyes.PortalCheap(distance, player)`
+### [`TracePlus.FromEyes.PortalCheap(distance, player)`](#traceplusfromeyesportalcheapdistance-player)
 
 This function performs a cheap trace with portal support from the player's eyes. It takes into account portal entities and adjusts the trace path accordingly.
 
@@ -301,7 +351,7 @@ if (traceResult.DidHit()) {
 ```
 
 
-### `TracePlus.PortalBbox(startPos, endPos, ignoreEntities, settings, note)`
+### [`TracePlus.PortalBbox(startPos, endPos, ignoreEntities, settings, note)`](#traceplusportalbboxstartpos-endpos-ignoreentities-settings-note)
 
 This function performs a bbox cast with portal support. It takes into account portal entities and adjusts the trace path accordingly.
 
@@ -326,7 +376,7 @@ if (traceResult.DidHit()) {
 }
 ```
 
-### `TracePlus.FromEyes.PortalBbox(distance, player, ignoreEntities, settings)`
+### [`TracePlus.FromEyes.PortalBbox(distance, player, ignoreEntities, settings)`](#traceplusfromeyesportalbboxdistance-player-ignoreentities-settings)
 
 This function performs a bbox cast with portal support from the player's eyes.
 
@@ -350,16 +400,11 @@ if (traceResult.DidHit()) {
 }
 ```
 
+## [TracePlus/bbox\_analyzer.nut](#traceplusbbox_analyzernut)
 
-### `FindPartnersForPortals()` (init-func)
+This file defines the `TraceLineAnalyzer` class for precise trace line analysis, which is a core component of the BBox Casting algorithm.
 
-This function finds and sets partner portals for linked portal doors and prop portals. It iterates through all entities of class "linked_portal_door" and "prop_portal" and attempts to find their corresponding partner portals. For linked portal doors, it retrieves the partner instance using `GetPartnerInstance()` and stores it as user data in both portals. For prop portals, it assumes the partner portal is the other prop_portal entity in the map and stores it as user data.
-
-## [TracePlus/bbox_analyzer.nut](bbox_analyzer.nut)
-
-This file defines the `TraceLineAnalyzer` class for precise trace line analysis.
-
-### `TraceLineAnalyzer`
+### [`TraceLineAnalyzer`](#tracelineanalyzer)
 
 This class provides methods for tracing lines with more precision and considering entity priorities and ignore settings. It subdivides the trace into smaller segments and checks for entity collisions along the way, taking into account the trace settings. **It's required for the Bboxcast**
 
@@ -376,54 +421,25 @@ This class provides methods for tracing lines with more precision and considerin
 * `_isIgnoredEntity(entityClass)`: Checks if an entity should be ignored based on the trace settings.
 * `_hitEntity(ent, ignoreEntities, note)`: Checks if the trace should consider a hit with the given entity, taking into account the trace settings and ignore list.
 
-## [TracePlus/calculate_normal.nut](calculate_normal.nut)
+**BBox Casting Algorithm:**
 
-This file provides functions for calculating the impact normal of a surface hit by a trace.
+The `TraceLineAnalyzer` class implements a sophisticated BBox Casting algorithm for accurate and efficient collision detection. A detailed description of the algorithm, including its steps, optimizations, and code examples, can be found in the [bbox\_analyzer.md](bbox_analyzer.md) file.
 
-### `CalculateImpactNormal(startPos, hitPos, traceResult)`
+## [TracePlus/calculate\_normal.nut](#tracepluscalculate_normalnut)
 
-This function calculates the impact normal of a surface hit by a trace. It uses two additional traces to find intersection points near the hit position and then calculates the normal vector based on the cross product of the vectors formed by these points and the hit position.
+This file provides functions for calculating the impact normal of a surface hit by a trace. It offers three distinct algorithms to address different scenarios, ensuring both accuracy and efficiency in determining the surface orientation at the hit point.
 
-**Parameters:**
+### [Global Functions:](#global-functions)
 
-* `startPos` (Vector): The start position of the original trace.
-* `hitPos` (Vector): The hit position of the original trace.
-* `traceResult` (TraceResult): The trace result object.
+*   **`CalculateImpactNormal(startPos, hitPos)`:**
+    Calculates the impact normal of a surface hit by a trace, primarily for world geometry. It utilizes the "three-ray method" to determine the surface orientation. This method involves performing three cheap traces – one from the original hit position and two from slightly offset positions – to create a triangle. The normal of this triangle represents the surface normal. This approach is efficient but might not be suitable for dynamic entities.
+    
+*   **`CalculateImpactNormalFromBbox(startPos, hitPos, hitEntity)`:**
+    Calculates the impact normal of a surface for dynamic entities, utilizing the hit entity's bounding box. It employs an optimized algorithm that assumes one of the hit point's coordinates is shared by at least four vertices of the bounding box. This assumption allows for efficient identification of the hit face and calculation of its normal. If this optimized method fails to find a suitable face, it falls back to `CalculateImpactNormalFromBbox2`.
+    
+*   **`CalculateImpactNormalFromBbox2(startPos, hitPos, hitEntity)`:**
+    Calculates the impact normal of a surface for dynamic entities as a fallback method when `CalculateImpactNormalFromBbox` cannot determine a reliable normal. It identifies the three closest vertices of the bounding box to the hit point and uses them to form a triangle. The normal of this triangle is then used as an approximation of the surface normal. This method is less precise than `CalculateImpactNormalFromBbox` but is more robust in handling inaccurate hit points.
+    
+**Impact Normal Calculation Algorithms:**
 
-**Returns:**
-
-* (Vector): The calculated impact normal vector.
-
-**Explanation:**
-
-1. **Trace Direction:** The function starts by calculating the normalized direction vector of the original trace, which points from the start position to the hit position.
-2. **New Start Positions:** Two new start positions for additional traces are calculated by offsetting the original start position slightly along two perpendicular directions to the trace direction. This ensures that the additional traces will hit the surface at different points, allowing for the calculation of the normal vector.
-3. **Additional Traces:** Two cheap traces are performed from the new start positions in the same direction as the original trace. The hit positions of these traces are stored as intersection points.
-4. **Edge Vectors:** Two edge vectors are calculated by subtracting the hit position of the original trace from the hit positions of the two additional traces. These vectors represent two edges of the surface that was hit.
-5. **Cross Product:** The cross product of the two edge vectors is calculated to obtain a vector that is perpendicular to both edges and thus represents the normal vector of the surface.
-6. **Normalization:** The resulting normal vector is normalized to have a length of 1.
-7. **Result:** The function returns the normalized normal vector, which represents the orientation of the surface hit by the trace.
-
-
-### `CalculateImpactNormalFromBbox(startPos, hitPos, traceResult)`
-
-This function calculates the impact normal of a surface hit by a trace using the bounding box of the hit entity. It provides a more accurate and efficient way to calculate normals compared to the traditional method of using additional traces and trigonometry.
-
-**Parameters:**
-
-* `startPos` (Vector): The start position of the trace.
-* `hitPos` (Vector): The hit position of the trace.
-* `traceResult` (BboxTraceResult): The trace result object containing information about the hit entity.
-
-**Returns:**
-
-* (Vector): The calculated impact normal vector.
-
-**Explanation:**
-
-1. **Hit Entity and BBox Vertices:** The function first retrieves the hit entity from the trace result object and then obtains the eight vertices of the entity's bounding box using the `pcapEntity.getBBoxPoints()` method.
-2. **Trace Direction:** The direction vector of the trace is calculated by subtracting the start position from the hit position and normalizing the resulting vector.
-3. **Closest Vertices:** The function then finds the three vertices of the bounding box that are closest to the hit position. These three vertices define the face of the bounding box that the trace hit.
-4. **Face Normal Calculation:** The normal vector of the face is calculated using the cross product of two edge vectors of the face.
-5. **Normal Direction Check:** The dot product of the face normal and the trace direction vector is calculated to determine if the normal vector is pointing in the correct direction (away from the trace). If the dot product is positive, the normal vector is inverted.
-6. **Result:** The function returns the final calculated normal vector, which represents the orientation of the surface hit by the trace.
+A detailed description of the algorithms used in `calculate_normal.nut`, including their steps, limitations, and considerations, can be found in the [calculate\_normal.md](calculate_normal.md) file.

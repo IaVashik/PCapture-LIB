@@ -8,7 +8,7 @@
  * @param {table} animSetting - A table containing additional animation settings. (optional) 
  * @returns {number} The duration of the animation in seconds. 
 */
- animate["ColorTransition"] <- function(entities, startColor, endColor, time, animSetting = {}) {
+animate["ColorTransition"] <- function(entities, startColor, endColor, time, animSetting = {}) {
     local animSetting = AnimEvent("color", animSetting, entities, time)
     local vars = {
         startColor = startColor,
@@ -17,6 +17,25 @@
     }
 
     animate.applyAnimation(
+        animSetting, 
+        function(step, transitionFrames, v) {return math.lerp.color(v.startColor, v.endColor, v.lerpFunc(step / transitionFrames))},
+        function(ent, newColor) {ent.SetColor(newColor)},
+        vars
+    )
+    
+    animSetting.callOutputs()
+    return animSetting.delay
+}
+
+animate.RT["ColorTransition"] <- function(entities, startColor, endColor, time, animSetting = {}) {
+    local animSetting = AnimEvent("color", animSetting, entities, time)
+    local vars = {
+        startColor = startColor,
+        endColor = endColor,
+        lerpFunc = animSetting.lerpFunc
+    }
+
+    animate.applyRTAnimation(
         animSetting, 
         function(step, transitionFrames, v) {return math.lerp.color(v.startColor, v.endColor, v.lerpFunc(step / transitionFrames))},
         function(ent, newColor) {ent.SetColor(newColor)},

@@ -1,44 +1,230 @@
+
 # IDT Module (Improved Data Types)
 
 The `IDT` module provides enhanced versions of standard VScripts data structures, including arrays, lists, and trees, with additional methods and functionality to improve efficiency and flexibility.
 
+## Table of Contents
+
+1. [IDT/array.nut](#idtarraynut)
+    * [`ArrayEx(...)`](#arrayex)
+    * [`FromArray(array)`](#arrayexfromarrayarray)
+    * [`WithSize(numberOfItems, fillValue)`](#arrayexwithsizenumberofitems-fillvalue)
+    * [`append(value)`](#appendvalue)
+    * [`apply(func)`](#applyfunc)
+    * [`clear()`](#clear)
+    * [`extend(other)`](#extendother)
+    * [`filter(func)`](#filterfunc)
+    * [`contains(value)`](#containsvalue)
+    * [`search(value or func)`](#searchvalue-or-func)
+    * [`insert(index, value)`](#insertindex-value)
+    * [`len()`](#len)
+    * [`map(func)`](#mapfunc)
+    * [`reduce(func, initial)`](#reducefunc-initial)
+    * [`unique()`](#unique)
+    * [`pop()`](#pop)
+    * [`push(value)`](#pushvalue)
+    * [`remove(index)`](#removeindex)
+    * [`resize(size, fill)`](#resizesize-fill)
+    * [`reverse()`](#reverse)
+    * [`slice(start, end)`](#slicestart-end)
+    * [`sort(func)`](#sortfunc)
+    * [`top()`](#top)
+    * [`join(separator)`](#joinseparator)
+    * [`get(index, default)`](#getindex-default)
+    * [`totable(recreate)`](#totablerecreate)
+    * [`tolist()`](#tolist)
+2. [IDT/list.nut](#idtlistnut)
+    * [`List(...)`](#list)
+    * [`FromArray(array)`](#fromarrayarray)
+    * [`len()`](#len)
+    * [`iter()`](#iter)
+    * [`rawIter()`](#rawiter)
+    * [`append(value)`](#appendvalue)
+    * [`insert(index, value)`](#insertindex-value)
+    * [`getNode(index)`](#getnodeindex)
+    * [`get(index, defaultValue)`](#getindex-defaultvalue)
+    * [`remove(index)`](#removeindex)
+    * [`pop()`](#pop)
+    * [`top()`](#top)
+    * [`reverse()`](#reverse)
+    * [`unique()`](#unique)
+    * [`clear()`](#clear)
+    * [`join(separator)`](#joinseparator)
+    * [`apply(func)`](#applyfunc)
+    * [`extend(other)`](#extendother)
+    * [`search(value or func)`](#searchvalue-or-func)
+    * [`map(func)`](#mapfunc)
+    * [`filter(condition)`](#filtercondition)
+    * [`reduce(func, initial)`](#reducefunc-initial)
+    * [`totable()`](#totable)
+    * [`toarray()`](#toarray)
+    * [`SwapNode(node1, node2)`](#swapnodenode1-node2)
+3. [IDT/tree_sort.nut](#idttree_sortnut)
+    * [`AVLTree(...)`](#avltree)
+    * [`FromArray(array)`](#fromarrayarray)
+    * [`len()`](#len)
+    * [`toarray()`](#toarray)
+    * [`tolist()`](#tolist)
+    * [`insert(key)`](#insertkey)
+    * [`search(value)`](#searchvalue)
+    * [`remove(value)`](#removevalue)
+    * [`GetMin()`](#getmin)
+    * [`GetMax()`](#getmax)
+    * [`inorderTraversal()`](#inordertraversal)
+    * [`printTree()`](#printtree)
+    * [`Comparison with `](#comparison-with)
+* [`*Choosing the Right Data Structure**](#choosing-the-right-data-structure)
+4. [IDT/entity_creator.nut](#idtentity_creatornut)
+    * [`CreateByClassname(classname, keyvalues)`](#createbyclassnameclassname-keyvalues)
+    * [`CreateProp(classname, origin, modelname, activity, keyvalues)`](#createpropclassname-origin-modelname-activity-keyvalues)
+    * [`FromEntity(CBaseEntity)`](#fromentitycbaseentity)
+    * [`FindByClassname(classname, start_ent)`](#findbyclassnameclassname-start_ent)
+    * [`FindByClassnameWithin(classname, origin, radius, start_ent)`](#findbyclassnamewithinclassname-origin-radius-start_ent)
+    * [`FindByName(targetname, start_ent)`](#findbynametargetname-start_ent)
+    * [`FindByNameWithin(targetname, origin, radius, start_ent)`](#findbynamewithintargetname-origin-radius-start_ent)
+    * [`FindByModel(model, start_ent)`](#findbymodelmodel-start_ent)
+    * [`FindByModelWithin(model, origin, radius, start_ent)`](#findbymodelwithinmodel-origin-radius-start_ent)
+    * [`FindInSphere(origin, radius, start_ent)`](#findinsphereorigin-radius-start_ent)
+5. [IDT/entity.nut](#idtentitynut)
+    *   **Entity State and Lifecycle:**
+        *   [`GetIndex()`](#getindex)
+        *   [`IsValid()`](#isvalid)
+        *   [`IsPlayer()`](#isplayer)
+        *   [`isEqually(other)`](#isequallyother)
+        *   [`Destroy(fireDelay, eventName)`](#destroyfiredelay-eventname)
+        *   [`Kill(fireDelay, eventName)`](#killfiredelay-eventname)
+        *   [`Dissolve(fireDelay, eventName)`](#dissolvefiredelay-eventname)
+        *   [`Disable(fireDelay, eventName)`](#disablefiredelay-eventname)
+        *   [`Enable(fireDelay, eventName)`](#enablefiredelay-eventname)
+        *   [`IsDrawEnabled()`](#isdrawenabled)
+
+    *   **Naming:**
+        *   [`SetName(name, fireDelay, eventName)`](#setnamename-firedelay-eventname)
+        *   [`SetUniqueName(prefix, fireDelay, eventName)`](#setuniquenameprefix-firedelay-eventname)
+        *   [`GetNamePrefix()`](#getnameprefix)
+        *   [`GetNamePostfix()`](#getnamepostfix)
+
+    *   **Players Methods:**
+        *   [`EyePosition()`](#eyeposition)
+        *   [`EyeAngles()`](#eyeangles)
+        *   [`EyeForwardVector()`](#eyeforwardvector)
+
+    *   **Transformations:**
+        *   [`SetAngles(x, y, z)`](#setanglesx-y-z)
+        *   [`SetAbsAngles(angles)`](#setabsanglesangles)
+        *   [`SetCenter(vector)`](#setcentervector)
+        *   [`SetParent(parentEnt, fireDelay, eventName)`](#setparentparentent-firedelay-eventname)
+        *   [`GetParent()`](#getparent)
+        *   [`SetModelScale(scaleValue, fireDelay, eventName)`](#setmodelscalescalevalue-firedelay-eventname)
+        *   [`GetModelScale()`](#getmodelscale)
+
+    *   **Appearance:**
+        *   [`SetAlpha(opacity, fireDelay, eventName)`](#setalphaopacity-firedelay-eventname)
+        *   [`SetColor(colorValue, fireDelay, eventName)`](#setcolorcolorvalue-firedelay-eventname)
+        *   [`SetSkin(skin, fireDelay, eventName)`](#setskinskin-firedelay-eventname)
+        *   [`SetDrawEnabled(isEnabled, fireDelay, eventName)`](#setdrawenabledisenabled-firedelay-eventname)
+        *   [`SetAnimation(animationName, fireDelay, eventName)`](#setanimationanimationname-firedelay-eventname)
+        *   [`GetAlpha()`](#getalpha)
+        *   [`GetColor()`](#getcolor)
+        *   [`GetSkin()`](#getskin)
+        *   [`GetPartnerInstance()`](#getpartnerinstance)
+
+    *   **Key Values and Data:**
+        *   [`SetKeyValue(key, value, fireDelay, eventName)`](#setkeyvaluekey-value-firedelay-eventname)
+        *   [`SetUserData(name, value)`](#setuserdataname-value)
+        *   [`GetUserData(name)`](#getuserdataname)
+        *   [`GetKeyValue(key)`](#getkeyvaluekey)
+        *   [`SetContext(name, value, fireDelay, eventName)`](#setcontextname-value-firedelay-eventname)
+
+    *   **Collision and Physics:**
+        *   [`SetCollision(solidType, fireDelay, eventName)`](#setcollisionsolidtype-firedelay-eventname)
+        *   [`SetCollisionGroup(collisionGroup, fireDelay, eventName)`](#setcollisiongroupcollisiongroup-firedelay-eventname)
+        *   [`SetTraceIgnore(isEnabled, fireDelay, eventName)`](#settraceignoreisenabled-firedelay-eventname)
+        *   [`SetSpawnflags(flag, fireDelay, eventName)`](#setspawnflagsflag-firedelay-eventname)
+        *   [`GetSpawnflags()`](#getspawnflags)
+
+    *   **Sound:**
+        *   [`EmitSound(soundName, fireDelay = 0, eventName = "global")`](#emitsoundsoundname-firedelay--0-eventname--global)
+        *   [`EmitSoundEx(soundName, volume = 10, looped = false, fireDelay = 0, eventName = "global")`](#emitsoundexsoundname-volume--10-looped--false-firedelay--0-eventname--global)
+        *   [`StopSoundEx(soundName, fireDelay = 0, eventName = "global")`](#stopsoundexsoundname-firedelay--0-eventname--global)
+
+    *   **Outputs and Inputs:**
+        *   [`AddOutput(outputName, target, input, param, delay, fires)`](#AddOutputoutputname-target-input-param-delay-fires)
+        *   [`ConnectOutputEx(outputName, script, delay, fires)`](#connectoutputexoutputname-script-delay-fires)
+        *   [`SetInputHook(inputName, closure)`](#setinputhookinputname-closure)
+
+    *   **Bounding Box and Position:**
+        *   [`SetBBox(minBounds, maxBounds)`](#setbboxminbounds-maxbounds)
+        *   [`GetBBox()`](#getbbox)
+        *   [`IsSquareBbox()`](#issquarebbox)
+        *   [`GetAABB()`](#getaabb)
+        *   [`CreateAABB(stat)`](#createaabbstat)
+        *   [`getBBoxPoints()`](#getbboxpoints)
+        *   [`getBBoxFaces()`](#getbboxfaces)
+
 ## [IDT/array.nut](array.nut)
 
-This file defines the `arrayLib` class, which is an enhanced version of the standard VScripts array. It provides various methods for manipulating, searching, sorting, and converting arrays, making them more versatile and easier to work with.
+This file defines the `ArrayEx` class, which is an enhanced version of the standard VScripts array. It provides various methods for manipulating, searching, sorting, and converting arrays, making them more versatile and easier to work with.
 
-### `arayLib(arrray)`
+### `ArrayEx(...)`
 
 **Constructor**
 
-Creates a new `arrayLib` object from an existing array.
+Creates a new `ArrayEx` object from a variable number of arguments. This constructor allows you to initialize the `ArrayEx` with the specified elements directly.
 
 **Parameters:**
 
-* `array` (array, optional): The initial array to use for the `arrayLib` object (defaults to an empty array with a capacity of 4).
+*   `...` (any): A variable number of arguments representing the initial elements of the array.
+
+**Example:**
+
+```js
+local myArrayEx = ArrayEx(1, "hello", Vector(0, 0, 0)) // Create an ArrayEx with three elements
+```
+
+### `FromArray(array)`
+
+**Static Method**
+
+Creates a new `ArrayEx` object from an existing array. This method is useful when you want to convert a standard Squirrel array into an `ArrayEx` object, preserving its elements. If the input `array` is already an `ArrayEx` object, it's returned directly without creating a new object.
+
+**Parameters:**
+
+*   `array` (array): The initial array to use for the `ArrayEx` object.
+
+**Returns:**
+
+*   (ArrayEx): The newly created or the input `ArrayEx` object.
 
 **Example:**
 
 ```js
 local myArray = [1, 2, 3]
-local myArrayLib = arrayLib(myArray) // Create an arrayLib object from the existing array
+local myArrayEx = ArrayEx.FromArray(myArray) // Create an ArrayEx object from the existing array
+
+local existingArrayEx = ArrayEx(4, 5, 6)
+local sameArrayEx = ArrayEx.FromArray(existingArrayEx) // Returns the same ArrayEx object
 ```
 
-### `new(...)`
+### `WithSize(numberOfItems, fillValue)`
 
-This static method creates a new `arrayLib` object from a variable number of arguments.
+**Static Method**
+
+Creates a new `ArrayEx` object with a specified size, optionally filling it with a default value. This method is handy for creating arrays of a predefined size with initial values.
 
 **Parameters:**
 
-* `...` (any): A variable number of arguments to add to the array.
+*   `numberOfItems` (int): The desired number of elements in the array.
+*   `fillValue` (any, optional): The value to fill the array with (defaults to `null`).
 
 **Returns:**
 
-* (arrayLib): The newly created `arrayLib` object.
+*   (ArrayEx): The newly created `ArrayEx` object.
 
 **Example:**
 
 ```js
-local myArrayLib = arrayLib.new(1, "hello", Vector(0, 0, 0)) // Create an arrayLib with three elements
+local myArrayEx = ArrayEx.WithSize(5, 0) // Creates an ArrayEx with 5 elements, each initialized to 0
 ```
 
 ### `append(value)`
@@ -51,12 +237,12 @@ This method appends a value to the end of the array. It automatically resizes th
 
 **Returns:**
 
-* (arrayLib): The `arrayLib` object itself (for method chaining).
+* (ArrayEx): The `ArrayEx` object itself (for method chaining).
 
 **Example:**
 
 ```js
-myArrayLib.append(4) // Add the number 4 to the end of the array
+myArrayEx.append(4) // Add the number 4 to the end of the array
 ```
 
 ### `apply(func)`
@@ -69,12 +255,12 @@ This method applies a function to each element of the array and modifies the arr
 
 **Returns:**
 
-* (arrayLib): The `arrayLib` object itself (for method chaining).
+* (ArrayEx): The `ArrayEx` object itself (for method chaining).
 
 **Example:**
 
 ```js
-myArrayLib.apply(function(x) { return x * 2 }) // Multiply each element by 2
+myArrayEx.apply(function(x) { return x * 2 }) // Multiply each element by 2
 ```
 
 ### `clear()`
@@ -83,53 +269,53 @@ This method removes all elements from the array and resets its length to 0.
 
 **Returns:**
 
-* (arrayLib): The `arrayLib` object itself (for method chaining).
+* (ArrayEx): The `ArrayEx` object itself (for method chaining).
 
 **Example:**
 
 ```js
-myArrayLib.clear() // Remove all elements from the array
+myArrayEx.clear() // Remove all elements from the array
 ```
 
 ### `extend(other)`
 
-This method extends the array by appending all elements from another array or `arrayLib` object to the end of this array. It automatically resizes the underlying array if necessary.
+This method extends the array by appending all elements from another array or `ArrayEx` object to the end of this array. It automatically resizes the underlying array if necessary.
 
 **Parameters:**
 
-* `other` (array or arrayLib): The array or `arrayLib` object to append elements from.
+* `other` (array or ArrayEx): The array or `ArrayEx` object to append elements from.
 
 **Returns:**
 
-* (arrayLib): The `arrayLib` object itself (for method chaining).
+* (ArrayEx): The `ArrayEx` object itself (for method chaining).
 
 **Example:**
 
 ```js
 local otherArray = array("a", "b", "c")
-myArrayLib.extend(otherArray) // Append the elements of otherArray to myArrayLib
+myArrayEx.extend(otherArray) // Append the elements of otherArray to myArrayEx
 ```
 
 ### `filter(func)`
 
-This method creates a new `arrayLib` object containing only the elements that satisfy the predicate function.
+This method creates a new `ArrayEx` object containing only the elements that satisfy the predicate function.
 
 **Parameters:**
 
 * `func` (function): The predicate function that takes three arguments:
 * `index` (number): The index of the current element.
 * `value` (any): The value of the current element.
-* `newArray` (arrayLib): The new array being created.
+* `newArray` (ArrayEx): The new array being created.
 The function should return `true` if the element should be included in the new array, and `false` otherwise.
 
 **Returns:**
 
-* (arrayLib): A new `arrayLib` object containing the filtered elements.
+* (ArrayEx): A new `ArrayEx` object containing the filtered elements.
 
 **Example:**
 
 ```js
-local evenNumbers = myArrayLib.filter(function(index, value) {
+local evenNumbers = myArrayEx.filter(function(index, value) {
     return value % 2 == 0 // Check if the value is even
 })
 ```
@@ -149,7 +335,7 @@ This method checks if the array contains the specified value.
 **Example:**
 
 ```js
-if (myArrayLib.contains(5)) {
+if (myArrayEx.contains(5)) {
     // The array contains the value 5
 }
 ```
@@ -171,8 +357,8 @@ This method searches for a value or a matching element in the array and returns 
 **Example:**
 
 ```js
-local index = myArrayLib.search(5) // Find the index of the value 5
-local index2 = myArrayLib.search(function(x) { return x > 10 }) // Find the index of the first element greater than 10
+local index = myArrayEx.search(5) // Find the index of the value 5
+local index2 = myArrayEx.search(function(x) { return x > 10 }) // Find the index of the first element greater than 10
 ```
 
 ### `insert(index, value)`
@@ -191,7 +377,7 @@ This method inserts a value into the array at the specified index, shifting all 
 **Example:**
 
 ```js
-myArrayLib.insert(2, "new element") // Insert "new element" at index 2
+myArrayEx.insert(2, "new element") // Insert "new element" at index 2
 ```
 
 ### `len()`
@@ -205,12 +391,12 @@ This method returns the number of elements in the array.
 **Example:**
 
 ```js
-local arrayLength = myArrayLib.len() // Get the length of the array
+local arrayLength = myArrayEx.len() // Get the length of the array
 ```
 
 ### `map(func)`
 
-This method creates a new `arrayLib` object by applying a function to each element of this array.
+This method creates a new `ArrayEx` object by applying a function to each element of this array.
 
 **Parameters:**
 
@@ -218,12 +404,49 @@ This method creates a new `arrayLib` object by applying a function to each eleme
 
 **Returns:**
 
-* (arrayLib): A new `arrayLib` object containing the mapped values.
+* (ArrayEx): A new `ArrayEx` object containing the mapped values.
 
 **Example:**
 
 ```js
-local squares = myArrayLib.map(function(x) { return x * x }) // Create an array of squares of the original elements
+local squares = myArrayEx.map(function(x) { return x * x }) // Create an array of squares of the original elements
+```
+
+### `reduce(func, initial)`
+Reduce the array to a single value.
+
+**Parameters:**
+
+* `func` (Function): The reducer function, which takes the accumulator and current item as arguments.
+* `initial` (any): The initial value of the accumulator.
+
+**Returns:**
+
+* (any): The reduced value.
+
+**Example:**
+
+```js
+local myArray = ArrayEx.FromArray([1, 2, 3, 4, 5])
+local sum = myArray.reduce(function(acc, item) {
+    return acc + item
+}, 0)
+printl(sum) // Output: 15
+```
+
+### `unique()`
+Return a new array with only unique elements.
+
+**Returns:**
+
+* (ArrayEx): The new array with unique elements.
+
+**Example:**
+
+```js
+local myArray = ArrayEx.FromArray([1, 2, 2, 3, 4, 4, 5])
+local uniqueArray = myArray.unique()
+printl(uniqueArray) // Output: ArrayEx([1, 2, 3, 4, 5])
 ```
 
 ### `pop()`
@@ -237,7 +460,7 @@ This method removes and returns the last element of the array.
 **Example:**
 
 ```js
-local lastElement = myArrayLib.pop() // Remove and return the last element of the array
+local lastElement = myArrayEx.pop() // Remove and return the last element of the array
 ```
 
 ### `push(value)`
@@ -251,7 +474,7 @@ This method appends a value to the end of the array. It is equivalent to `append
 **Example:**
 
 ```js
-myArrayLib.push(5) // Add the value 5 to the end of the array
+myArrayEx.push(5) // Add the value 5 to the end of the array
 ```
 
 ### `remove(index)`
@@ -262,10 +485,14 @@ This method removes the element at the specified index from the array, shifting 
 
 * `index` (number): The index of the element to remove.
 
+**Returns:**
+
+* (any): The value of the removed element.
+
 **Example:**
 
 ```js
-myArrayLib.remove(1) // Remove the element at index 1
+myArrayEx.remove(1) // Remove the element at index 1
 ```
 
 ### `resize(size, fill)`
@@ -280,7 +507,7 @@ This method resizes the array to the specified size. If the new size is larger t
 **Example:**
 
 ```js
-myArrayLib.resize(10, 0) // Resize the array to 10 elements, filling new elements with 0
+myArrayEx.resize(10, 0) // Resize the array to 10 elements, filling new elements with 0
 ```
 
 ### `reverse()`
@@ -289,17 +516,17 @@ This method reverses the order of elements in the array in-place.
 
 **Returns:**
 
-* (arrayLib): The `arrayLib` object itself (for method chaining).
+* (ArrayEx): The `ArrayEx` object itself (for method chaining).
 
 **Example:**
 
 ```js
-myArrayLib.reverse() // Reverse the order of elements in the array
+myArrayEx.reverse() // Reverse the order of elements in the array
 ```
 
 ### `slice(start, end)`
 
-This method returns a new `arrayLib` object containing a portion of the array.
+This method returns a new `ArrayEx` object containing a portion of the array.
 
 **Parameters:**
 
@@ -308,12 +535,12 @@ This method returns a new `arrayLib` object containing a portion of the array.
 
 **Returns:**
 
-* (arrayLib): A new `arrayLib` object containing the sliced elements.
+* (ArrayEx): A new `ArrayEx` object containing the sliced elements.
 
 **Example:**
 
 ```js
-local slicedArray = myArrayLib.slice(1, 3) // Get a new array containing elements from index 1 to 2 (exclusive)
+local slicedArray = myArrayEx.slice(1, 3) // Get a new array containing elements from index 1 to 2 (exclusive)
 ```
 
 ### `sort(func)`
@@ -330,13 +557,13 @@ If no comparison function is provided, the elements are sorted according to thei
 
 **Returns:**
 
-* (arrayLib): The `arrayLib` object itself (for method chaining).
+* (ArrayEx): The `ArrayEx` object itself (for method chaining).
 
 **Example:**
 
 ```js
-myArrayLib.sort() // Sort the array in ascending order (default behavior)
-myArrayLib.sort(function(a, b) { return b - a }) // Sort the array in descending order
+myArrayEx.sort() // Sort the array in ascending order (default behavior)
+myArrayEx.sort(function(a, b) { return b - a }) // Sort the array in descending order
 ```
 
 ### `top()`
@@ -350,7 +577,7 @@ This method returns the last element of the array.
 **Example:**
 
 ```js
-local lastElement = myArrayLib.top() // Get the last element of the array
+local lastElement = myArrayEx.top() // Get the last element of the array
 ```
 
 ### `join(separator)`
@@ -368,7 +595,7 @@ This method joins the elements of the array into a string, separated by the spec
 **Example:**
 
 ```js
-local joinedString = myArrayLib.join(", ") // Join the array elements into a string separated by commas and spaces
+local joinedString = myArrayEx.join(", ") // Join the array elements into a string separated by commas and spaces
 ```
 
 ### `get(index, default)`
@@ -387,8 +614,8 @@ This method returns the element at the specified index in the array. If the inde
 **Example:**
 
 ```js
-local element = myArrayLib.get(2) // Get the element at index 2
-local element2 = myArrayLib.get(10, 0) // Get the element at index 10, or 0 if the index is out of bounds
+local element = myArrayEx.get(2) // Get the element at index 2
+local element2 = myArrayEx.get(10, 0) // Get the element at index 10, or 0 if the index is out of bounds
 ```
 
 ### `totable(recreate)`
@@ -406,7 +633,7 @@ This method converts the array to a table, using the array elements as keys and 
 **Example:**
 
 ```js
-local tableRepr = myArrayLib.totable() // Convert the array to a table
+local tableRepr = myArrayEx.totable() // Convert the array to a table
 ```
 
 ### `tolist()`
@@ -420,12 +647,16 @@ This method converts the array to a `List` object.
 **Example:**
 
 ```js
-local listRepr = myArrayLib.tolist() // Convert the array to a list
+local listRepr = myArrayEx.tolist() // Convert the array to a list
 ```
 
 ## [IDT/list.nut](list.nut)
 
 This file defines the `List` class, which represents a doubly linked list and provides methods for adding and removing elements, accessing elements by index, reversing the list, and converting the list to an array. **A doubly linked list is a linear data structure where each element (node) contains a value and references to the previous and next nodes in the list.**
+
+#### **Warning:**
+Improper use of the List class can lead to memory leaks, as the garbage collector (GC) may not clean up the list if it is used incorrectly.
+
 
 ### `List(...)`
 **Constructor** - Creates a new `List` object with optional initial elements.
@@ -440,7 +671,7 @@ This file defines the `List` class, which represents a doubly linked list and pr
 local myList = List(1, 2, 3)
 ```
 
-### `fromArray(array)`
+### `FromArray(array)`
 Creates a new `List` object from an existing array.
 
 **Parameters:**
@@ -455,7 +686,7 @@ Creates a new `List` object from an existing array.
 
 ```js
 local myArray = [1, 2, 3]
-local myList = List.fromArray(myArray)
+local myList = List.FromArray(myArray)
 ```
 
 ### `len()`
@@ -469,6 +700,39 @@ Gets the length of the list, which is the number of elements it contains.
 
 ```js
 local listLength = myList.len()
+```
+
+### `iter()`
+Returns an iterator object for the list. This method is more efficient than using a built-in iterator.
+
+**Returns:**
+
+* (iterator): An iterator for the list.
+
+**Example:**
+
+```js
+foreach(value in myList.iter()) {
+    printl(value)
+}
+```
+
+### `rawIter()`
+Similar to `iter`, but returns the node instead of the node's value.
+
+**Returns:**
+
+* (iterator): An iterator for the nodes in the list.
+
+**Example:**
+
+```js
+foreach(node in myList.rawIter()) {
+    printl(node.next_ref.value)
+}
+// Output: 2
+//         3
+//         null
 ```
 
 ### `append(value)`
@@ -540,6 +804,10 @@ Removes the node at a specific index from the list.
 
 * `index` (number): The index of the node to remove.
 
+**Returns:**
+
+* (any): The value of the removed element.
+
 **Example:**
 
 ```js
@@ -579,6 +847,21 @@ Reverses the order of the elements in the list in-place.
 
 ```js
 myList.reverse()
+```
+
+### `unique()`
+Returns a new list with only the unique elements from the original list.
+
+**Returns:**
+
+* (List): The new list with unique elements.
+
+**Example:**
+
+```js
+local myList = List(1, 2, 2, 3, 4, 4, 5, 2, 5)
+local uniqueList = myList.unique()
+printl(uniqueList) // Output: List(1, 2, 3, 4, 5)
 ```
 
 ### `clear()`
@@ -680,6 +963,65 @@ local squaredValues = myList.map(function(x) {
 })
 ```
 
+### `filter(condition)`
+Filter the list by a predicate function.
+
+**Parameters:**
+
+* `condition` (Function): The predicate function that takes `index`, `value`, and `newList` as parameters and returns a boolean.
+
+**Returns:**
+
+* (List): The filtered list.
+
+**Example:**
+
+```js
+local myList = List(1, 2, 3, 4, 5)
+local evenList = myList.filter(function(idx, val, newList) {
+    return val % 2 == 0
+})
+printl(evenList) // Output: [2, 4]
+```
+
+### `reduce(func, initial)`
+Applies a function to an accumulator and each element in the list (from left to right) to reduce it to a single value.
+
+**Parameters:**
+
+* `func` (Function): The function to apply to each element and accumulator.
+* `initial` (any): The initial value of the accumulator.
+
+**Returns:**
+
+* (any): The final reduced value.
+
+**Example:**
+
+```js
+local myList = List(1, 2, 3, 4, 5)
+local sum = myList.reduce(function(acc, item) {
+    return acc + item
+}, 0)
+printl(sum) // Output: 15
+```
+
+### `totable()`
+Convert the list to a table.
+
+**Returns:**
+
+* (table): The table representation.
+
+**Example:**
+
+```js
+local myList = List("a", "b", "c")
+local myTable = myList.totable()
+printl("b" in myTable) // Output: true
+printl(myTable) // Output: {"a": null, "b": null, "c": null}
+```
+
 ### `toarray()`
 Converts the list to an array.
 
@@ -691,6 +1033,22 @@ Converts the list to an array.
 
 ```js
 local myArray = myList.toarray()
+```
+
+### `SwapNode(node1, node2)`
+Swaps two nodes in the list. This method updates the references of the previous and next nodes accordingly.
+
+**Parameters:**
+
+* `node1` (ListNode): The first node to swap.
+* `node2` (ListNode): The second node to swap.
+
+**Example:**
+
+```js
+local nodeA = myList.getNode(0)
+local nodeB = myList.getNode(1)
+myList.SwapNode(nodeA, nodeB)
 ```
 
 ## [IDT/tree_sort.nut](tree_sort.nut)
@@ -710,7 +1068,7 @@ This file defines the `AVLTree` class, which represents a self-balancing binary 
 local myTree = AVLTree(5, 2, 8, 1, 3)
 ```
 
-### `fromArray(array)`
+### `FromArray(array)`
 Creates a new `AVLTree` object from an existing array.
 
 **Parameters:**
@@ -725,7 +1083,7 @@ Creates a new `AVLTree` object from an existing array.
 
 ```js
 local myArray = [5, 2, 8, 1, 3]
-local myTree = AVLTree.fromArray(myArray)
+local myTree = AVLTree.FromArray(myArray)
 ```
 
 ### `len()`
@@ -741,17 +1099,17 @@ Gets the number of nodes in the tree.
 local treeSize = myTree.len()
 ```
 
-### `toArray()`
+### `toarray()`
 Converts the tree to an array using inorder traversal (ascending order).
 
 **Returns:**
 
-* (arrayLib): An array containing the tree nodes in ascending order.
+* (ArrayEx): An array containing the tree nodes in ascending order.
 
 **Example:**
 
 ```js
-local sortedArray = myTree.toArray()
+local sortedArray = myTree.toarray()
 ```
 
 ### `tolist()`
@@ -844,7 +1202,7 @@ Performs an inorder traversal of the tree and returns an array of nodes in ascen
 
 **Returns:**
 
-* (arrayLib): An array containing the tree nodes in ascending order.
+* (ArrayEx): An array containing the tree nodes in ascending order.
 
 **Example:**
 
@@ -1110,8 +1468,13 @@ Sets the absolute rotation angles of the entity using a Vector.
 myPcapEntity.SetAbsAngles(Vector(0, 180, 0)) // Set the entity to face the opposite direction
 ```
 
-### `Destroy()`
+### `Destroy(fireDelay, eventName)`
 Destroys the entity, removing it from the game world.
+
+**Parameters:**
+
+* `fireDelay` (number, optional): The delay in seconds before destroying the entity (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1119,12 +1482,13 @@ Destroys the entity, removing it from the game world.
 myPcapEntity.Destroy() // Destroy the entity
 ```
 
-### `Kill(fireDelay)`
+### `Kill(fireDelay, eventName)`
 Kills the entity, triggering its "kill" input with an optional delay.
 
 **Parameters:**
 
 * `fireDelay` (number, optional): The delay in seconds before killing the entity (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1132,8 +1496,13 @@ Kills the entity, triggering its "kill" input with an optional delay.
 myPcapEntity.Kill(2) // Kill the entity after 2 seconds
 ```
 
-### `Dissolve()`
+### `Dissolve(fireDelay, eventName)`
 Dissolves the entity using an `env_entity_dissolver` entity. This creates a visual effect of the entity dissolving away.
+
+**Parameters:**
+
+* `fireDelay` (number, optional): The delay in seconds before dissolving the entity (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1170,6 +1539,18 @@ if (myPcapEntity.IsPlayer()) {
     // The entity is the player
 }
 ```
+
+### `isEqually(other)`
+Checks if this entity is equal to another entity based on their entity indices
+
+**Parameters:**
+
+* `other` (pcapEntity|CBaseEntity): The other entity to compare.
+
+**Returns:**
+
+* (boolean): True if the entities are equal, false otherwise.
+
 
 ### `EyePosition()`
 Gets the eye position of the player entity as a Vector. This is the position from which the player's view is rendered.
@@ -1210,13 +1591,15 @@ Gets the forward vector from the player entity's eye position. This represents t
 local eyeForward = GetPlayerEx().EyeForwardVector()
 ```
 
-### `SetKeyValue(key, value)`
-Sets a key-value pair for the entity. This modifies the entity's properties and also stores the value as user data for later retrieval.
+### `SetKeyValue(key, value, fireDelay, eventName)`
+Sets a key-value pair for the entity. This modifies the entity's properties and also stores the value as user data for later retrieval using `GetKeyValue`.
 
 **Parameters:**
 
 * `key` (string): The key of the key-value pair.
 * `value` (any): The value to set for the key.
+* `fireDelay` (number, optional): The delay in seconds before setting the key-value pair (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1224,7 +1607,7 @@ Sets a key-value pair for the entity. This modifies the entity's properties and 
 myPcapEntity.SetKeyValue("health", 100) // Set the entity's health to 100
 ```
 
-### `addOutput(outputName, target, input, param, delay, fires)`
+### `AddOutput(outputName, target, input, param, delay, fires)`
 Sets an output for the entity, connecting it to a target entity and input.
 
 **Parameters:**
@@ -1239,7 +1622,7 @@ Sets an output for the entity, connecting it to a target entity and input.
 **Example:**
 
 ```js
-myPcapEntity.addOutput("OnTrigger", "targetEntity", "Kill", "", 0.5, 1)
+myPcapEntity.AddOutput("OnTrigger", "targetEntity", "Kill", "", 0.5, 1)
 // Connect the "OnTrigger" output to the "Kill" input of "targetEntity" with a 0.5-second delay and fire only once
 ```
 
@@ -1261,27 +1644,99 @@ myPcapEntity.ConnectOutputEx("OnTrigger", function() {
 })
 ```
 
-### `EmitSoundEx(soundName, timeDelay, eventName)`
-Plays a sound with an optional delay and event name for scheduling.
+### `SetInputHook(inputName, closure)`
+Sets an input hook for a specified input name, attaching a closure to be executed when the input is triggered.
 
 **Parameters:**
 
-* `soundName` (string): The name of the sound to play.
-* `timeDelay` (number, optional): The delay in seconds before playing the sound (default is 0).
-* `eventName` (any, optional): The name of the event used for scheduling (default is the entity itself).
+* `inputName` (string): The name of the input to hook.
+* `closure` (function): The function to execute when the input is triggered. This function should return `true` if the input should proceed normally, or `false` if the input should be blocked.
 
 **Example:**
 
 ```js
-myPcapEntity.EmitSoundEx("my_sound.wav", 1) // Play the sound after a 1-second delay
+local myEntity = ...
+
+myEntity.SetInputHook("Use", function() {
+    printl("Use input triggered!")
+    return true // Allow the input to proceed
+})
+
+myEntity.SetInputHook("Kill", function() {
+    printl("Kill input blocked!")
+    return false // Block the input
+})
+
 ```
 
-### `SetName(name)`
+In this example, when the `Use` input is triggered for `myEntity`, the specified closure function will be executed, printing "Use input triggered!".
+
+
+### `EmitSound(soundName, fireDelay = 0, eventName = "global")`
+This function provides more control over sound playback compared to EmitSound. It allows you to adjust the volume, loop sounds that are not inherently loopable, and stop the sound playback using StopSoundEx.
+
+**Parameters:**
+
+* `soundName` (string): The name of the sound to play.
+* `fireDelay` (number, optional): The delay in seconds before playing the sound (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
+
+**Example:**
+
+```js
+myEntity.EmitSound("ambient/machines/thumper_hit.wav") // Play the sound immediately
+myEntity.EmitSound("ambient/machines/thumper_hit.wav", 2) // Play the sound after 2 seconds
+```
+
+
+### `EmitSoundEx(soundName, volume = 10, looped = false, fireDelay = 0, eventName = "global")`
+
+Plays a sound on the entity with enhanced control over volume and looping. This method is an improved version of `EmitSound` and offers more precise control over sound playback. Unlike the standard `EmitSound`, this method allows you to adjust the volume and force looping for any sound, even those not inherently designed to loop.
+
+**How it Works:**
+
+This method achieves its functionality by creating a hidden `prop_physics` entity with the `ALWAYS_PRECACHED_MODEL` model. This entity is then attached to the calling entity and used as a dedicated sound emitter. The volume is controlled by manipulating the Z-coordinate of the hidden entity, effectively simulating distance-based attenuation. Looping is achieved by scheduling repeated calls to `EmitSound` on the hidden entity. This approach allows for dynamic volume control and looping of any sound, regardless of its original properties.
+
+**Parameters:**
+
+* `soundName` (string): The name of the sound to play.
+* `volume` (number, optional): The volume of the sound (0-10, default is 10).
+* `looped` (boolean, optional): Whether the sound should loop (default is false).
+* `fireDelay` (number, optional): The delay in seconds before playing the sound (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
+
+**Example:**
+
+```js
+myEntity.EmitSoundEx("ambient/machines/thumper_hit.wav", 5, true) // Play the sound at half volume and loop it
+myEntity.EmitSoundEx("ambient/machines/thumper_hit.wav", 10, false, 2) // Play the sound at full volume after 2 seconds
+```
+
+
+### `StopSoundEx(soundName, fireDelay = 0, eventName = "global")`
+
+Stops a sound previously started with `EmitSoundEx`. 
+
+**Parameters:**
+
+* `soundName` (string): The name of the sound to stop.
+* `fireDelay` (number, optional): The delay in seconds before stopping the sound (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
+
+**Example:**
+
+```js
+myEntity.StopSoundEx("ambient/machines/thumper_hit.wav") // Stop the specified sound
+```
+
+### `SetName(name, fireDelay, eventName)`
 Sets the targetname of the entity.
 
 **Parameters:**
 
 * `name` (string): The targetname to set.
+* `fireDelay` (number, optional): The delay in seconds before setting the name (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1289,12 +1744,14 @@ Sets the targetname of the entity.
 myPcapEntity.SetName("my_entity") // Set the entity's targetname
 ```
 
-### `SetUniqueName(prefix)`
+### `SetUniqueName(prefix, fireDelay, eventName)`
 Sets a unique targetname for the entity using the provided prefix and a generated unique identifier.
 
 **Parameters:**
 
-* `prefix` (string, optional): The prefix to use for the unique targetname (default is "u").
+* `prefix` (string, optional): The prefix to use for the unique targetname (default is "pcapEnt").
+* `fireDelay` (number, optional): The delay in seconds before setting the unique name (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1302,13 +1759,14 @@ Sets a unique targetname for the entity using the provided prefix and a generate
 myPcapEntity.SetUniqueName("my_entity") // Set a unique targetname starting with "my_entity_"
 ```
 
-### `SetParent(parentEnt, fireDelay)`
+### `SetParent(parentEnt, fireDelay, eventName)`
 Sets the parent entity for the entity, establishing a parent-child relationship.
 
 **Parameters:**
 
 * `parentEnt` (string, CBaseEntity, or pcapEntity): The parent entity to set (can be a targetname or an entity object).
 * `fireDelay` (number, optional): The delay in seconds before setting the parent (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1333,13 +1791,14 @@ if (parent) {
 }
 ```
 
-### `SetCollision(solidType, fireDelay)`
+### `SetCollision(solidType, fireDelay, eventName)`
 Sets the collision type of the entity, controlling how it interacts with other entities in the game world.
 
 **Parameters:**
 
 * `solidType` (number): The collision type to set (see the Source SDK documentation for valid values).
 * `fireDelay` (number, optional): The delay in seconds before setting the collision type (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1347,12 +1806,14 @@ Sets the collision type of the entity, controlling how it interacts with other e
 myPcapEntity.SetCollision(SOLID_NONE) // Make the entity non-solid (pass through other entities)
 ```
 
-### `SetCollisionGroup(collisionGroup)`
+### `SetCollisionGroup(collisionGroup, fireDelay, eventName)`
 Sets the collision group of the entity, determining which other entities it can collide with.
 
 **Parameters:**
 
 * `collisionGroup` (number): The collision group to set (see the Source SDK documentation for valid values).
+* `fireDelay` (number, optional): The delay in seconds before setting the collision group (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1360,13 +1821,14 @@ Sets the collision group of the entity, determining which other entities it can 
 myPcapEntity.SetCollisionGroup(COLLISION_GROUP_PLAYER) // Set the collision group to the player group
 ```
 
-### `SetAnimation(animationName, fireDelay)`
+### `SetAnimation(animationName, fireDelay, eventName)`
 Starts playing the specified animation on the entity.
 
 **Parameters:**
 
 * `animationName` (string): The name of the animation to play.
 * `fireDelay` (number, optional): The delay in seconds before starting the animation (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1374,13 +1836,14 @@ Starts playing the specified animation on the entity.
 myPcapEntity.SetAnimation("run") // Start playing the "run" animation
 ```
 
-### `SetAlpha(opacity, fireDelay)`
+### `SetAlpha(opacity, fireDelay, eventName)`
 Sets the alpha (opacity) of the entity, controlling how transparent it appears.
 
 **Parameters:**
 
 * `opacity` (number): The alpha value between 0 (fully transparent) and 255 (fully opaque).
 * `fireDelay` (number, optional): The delay in seconds before setting the alpha (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1388,13 +1851,14 @@ Sets the alpha (opacity) of the entity, controlling how transparent it appears.
 myPcapEntity.SetAlpha(128) // Set the entity to be semi-transparent
 ```
 
-### `SetColor(colorValue, fireDelay)`
+### `SetColor(colorValue, fireDelay, eventName)`
 Sets the color of the entity.
 
 **Parameters:**
 
 * `colorValue` (string or Vector): The color value as a string (e.g., "255 0 0" for red) or a Vector with components (r, g, b).
 * `fireDelay` (number, optional): The delay in seconds before setting the color (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1402,13 +1866,14 @@ Sets the color of the entity.
 myPcapEntity.SetColor("0 255 0") // Set the entity to green
 ```
 
-### `SetSkin(skin, fireDelay)`
+### `SetSkin(skin, fireDelay, eventName)`
 Sets the skin of the entity, if the entity has multiple skins available.
 
 **Parameters:**
 
 * `skin` (number): The index of the skin to set.
 * `fireDelay` (number, optional): The delay in seconds before setting the skin (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1416,18 +1881,47 @@ Sets the skin of the entity, if the entity has multiple skins available.
 myPcapEntity.SetSkin(2) // Set the entity's skin to the third available skin
 ```
 
-### `SetDrawEnabled(isEnabled, fireDelay)`
+### `SetDrawEnabled(isEnabled, fireDelay, eventName)`
 Enables or disables rendering of the entity, controlling whether it is visible in the game world.
 
 **Parameters:**
 
 * `isEnabled` (boolean): True to enable rendering (make the entity visible), false to disable rendering (make the entity invisible).
 * `fireDelay` (number, optional): The delay in seconds before setting the draw state (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
 ```js
 myPcapEntity.SetDrawEnabled(false) // Make the entity invisible
+```
+
+### `Disable(fireDelay, eventName)`
+Disables the entity, making it invisible and preventing interactions. Equivalent to calling `SetDrawEnabled(false)` and `SetTraceIgnore(true)`.
+
+**Parameters:**
+
+* `fireDelay` (number, optional): The delay in seconds before disabling the entity (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
+
+**Example:**
+
+```js
+myPcapEntity.Disable() // Disable the entity
+```
+
+### `Enable(fireDelay, eventName)`
+Enables the entity, making it visible and allowing interactions. Equivalent to calling `SetDrawEnabled(true)` and `SetTraceIgnore(false)`.
+
+**Parameters:**
+
+* `fireDelay` (number, optional): The delay in seconds before enabling the entity (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
+
+**Example:**
+
+```js
+myPcapEntity.Enable() // Enable the entity
 ```
 
 ### `IsDrawEnabled()`
@@ -1445,12 +1939,14 @@ if (myPcapEntity.IsDrawEnabled()) {
 }
 ```
 
-### `SetTraceIgnore(isEnabled)`
+### `SetTraceIgnore(isEnabled, fireDelay, eventName)`
 Sets whether the entity should be ignored during traces. This can be used to prevent the entity from blocking traces or being detected by them.
 
 **Parameters:**
 
 * `isEnabled` (boolean): True to ignore the entity during traces, false otherwise.
+* `fireDelay` (number, optional): The delay in seconds before setting the trace ignore state (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1458,12 +1954,14 @@ Sets whether the entity should be ignored during traces. This can be used to pre
 myPcapEntity.SetTraceIgnore(true) // Ignore the entity during traces
 ```
 
-### `SetSpawnflags(flag)`
+### `SetSpawnflags(flag, fireDelay, eventName)`
 Sets the spawnflags of the entity, which can affect its behavior and properties.
 
 **Parameters:**
 
 * `flag` (number): The spawnflags value to set.
+* `fireDelay` (number, optional): The delay in seconds before setting the spawnflags (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1471,13 +1969,14 @@ Sets the spawnflags of the entity, which can affect its behavior and properties.
 myPcapEntity.SetSpawnflags(128) // Set the NPC_GAG spawnflag for an NPC entity
 ```
 
-### `SetModelScale(scaleValue, fireDelay)`
+### `SetModelScale(scaleValue, fireDelay, eventName)`
 Sets the scale of the entity's model, making it larger or smaller.
 
 **Parameters:**
 
 * `scaleValue` (number): The scale value to set.
 * `fireDelay` (number, optional): The delay in seconds before setting the model scale (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1525,7 +2024,7 @@ Sets the bounding box of the entity using vectors or string representations of v
 myPcapEntity.SetBBox(Vector(-10, -10, -10), Vector(10, 10, 10)) // Set a bounding box of 20x20x20 units
 ```
 
-### `SetContext(name, value, fireDelay)`
+### `SetContext(name, value, fireDelay, eventName)`
 Sets a context value for the entity, which can be used for storing additional information or state associated with the entity.
 
 **Parameters:**
@@ -1533,6 +2032,7 @@ Sets a context value for the entity, which can be used for storing additional in
 * `name` (string): The name of the context value.
 * `value` (any): The value to set for the context.
 * `fireDelay` (number, optional): The delay in seconds before setting the context value (default is 0).
+* `eventName` (string, optional): The name of the event to schedule for (default is "global").
 
 **Example:**
 
@@ -1587,6 +2087,25 @@ printl("Bounding box min:", bbox.min)
 printl("Bounding box max:", bbox.max)
 ```
 
+### `IsSquareBbox()`
+
+This function checks if the bounding box of an entity is a cube, meaning all sides of the bounding box have equal length.
+
+**Returns:**
+
+* (boolean): True if the bounding box is a cube, false otherwise.
+
+**Example:**
+
+```js
+local isCube = entity.IsSquareBbox() 
+if (isCube) {
+    // Bounding box is a cube
+} else {
+    // Bounding box is not a cube 
+}
+```
+
 ### `GetAABB()`
 Returns the axis-aligned bounding box (AABB) of the entity, which is a box that is aligned with the world axes and tightly encloses the entity.
 
@@ -1617,7 +2136,7 @@ local entityIndex = myPcapEntity.GetIndex()
 ```
 
 ### `GetKeyValue(key)`
-Returns the value of a key-value pair for the entity, if it was set using the `SetKeyValue` method.
+Returns the value of a key-value pair for the entity, if it was set using the `SetKeyValue` method or other `pcapEntity` methods. It cannot retrieve values set directly through Hammer or the console.
 
 **Parameters:**
 
@@ -1651,7 +2170,7 @@ Returns the alpha (opacity) value of the entity, if it was set using the `SetAlp
 
 **Returns:**
 
-* (number or null): The alpha value, or `null` if the alpha was not set using `SetAlpha`.
+* (number or null): The alpha value, or 255 if the alpha was not set using `SetAlpha`.
 
 **Example:**
 
@@ -1664,7 +2183,7 @@ Returns the color of the entity as a string, if it was set using the `SetColor` 
 
 **Returns:**
 
-* (string or null): The color string, or `null` if the color was not set using `SetColor`.
+* (string or null): The color string in format "R G B", or "255 255 255" if the color was not set using `SetColor`.
 
 **Example:**
 
@@ -1677,7 +2196,7 @@ Returns the skin index of the entity, if it was set using the `SetSkin` method.
 
 **Returns:**
 
-* (number or null): The skin index, or `null` if the skin was not set using `SetSkin`.
+* (number or null): The skin index, or 0 if the skin was not set using `SetSkin`.
 
 **Example:**
 
@@ -1709,6 +2228,22 @@ Returns the postfix of the entity's name, if the name contains a "-" separator.
 
 ```js
 local postfix = myPcapEntity.GetNamePostfix()
+```
+
+### `GetPartnerInstance()`
+Retrieves the portal partner instance of the entity, prioritizing the actual partner entity if available, and falling back to user-stored partner data if necessary.
+
+**Returns:**
+
+* (Entity|null): The partner entity, or null if no partner is found.
+
+**Example:**
+
+```js
+local partner = myPortalEntity.GetPartnerInstance()
+if (partner) {
+    // ... do something with the partner entity
+}
 ```
 
 ### `CreateAABB(stat)`

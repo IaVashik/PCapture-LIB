@@ -1,44 +1,27 @@
 /*
  * Settings for ray traces.
 */
- TracePlus["Settings"] <- class {
+TracePlus["Settings"] <- class {
     // An array of entity classnames to ignore during traces. 
-    ignoreClasses = arrayLib.new("viewmodel", "weapon_", "beam",
+    ignoreClasses = ArrayEx("viewmodel", "weapon_", "beam",
         "trigger_", "phys_", "env_", "point_", "info_", "vgui_", "logic_",
-        "clone", "prop_portal", "portal_base2D", "func_clip", "func_instance"
+        "clone", "prop_portal", "portal_base2D", "func_clip", "func_instance",
+        "func_portal_detector", 
+        "worldspawn", "soundent", "player_manager", "bodyque", "ai_network"
     );
     // An array of entity classnames to prioritize during traces.  
-    priorityClasses = arrayLib.new();
+    priorityClasses = ArrayEx();
     // An array of entity model names to ignore during traces. 
-    ignoredModels = arrayLib.new();
+    ignoredModels = ArrayEx();
 
-    // The maximum allowed distance between a trace's start and hit positions. 
-    errorTolerance = 500; 
 
     // A custom function to determine if a ray should hit an entity. 
     shouldRayHitEntity = null;
     // A custom function to determine if an entity should be ignored during a trace. 
     shouldIgnoreEntity = null;
 
-
-    /*
-     * Constructor for TraceSettings.
-     *
-     * @param {arrayLib} ignoreClasses - An array of entity classnames to ignore.
-     * @param {arrayLib} priorityClasses - An array of entity classnames to prioritize. 
-     * @param {arrayLib} ignoredModels - An array of entity model names to ignore.
-     * @param {number} errorTolerance - The maximum allowed distance between trace start and hit positions.
-     * @param {function} shouldRayHitEntity - A custom function to determine if a ray should hit an entity.
-     * @param {function} shouldIgnoreEntity - A custom function to determine if an entity should be ignored. 
-    */
-    constructor(ignoreClasses, priorityClasses, ignoredModels, errorTolerance, shouldRayHitEntity, shouldIgnoreEntity) {
-        this.ignoreClasses = ignoreClasses
-        this.priorityClasses = priorityClasses
-        this.ignoredModels = ignoredModels
-        this.errorTolerance = errorTolerance
-        this.shouldRayHitEntity = shouldRayHitEntity
-        this.shouldIgnoreEntity = shouldIgnoreEntity
-    }
+    depthAccuracy = 5;
+    bynaryRefinement = false;
 
     /*
      * Creates a new TraceSettings object with default values or from a table of settings. 
@@ -47,64 +30,67 @@
      * @returns {TraceSettings} - A new TraceSettings object.
     */
     function new(settingsTable = {}) {
-        // Get the ignoreClasses setting from the settings table or use the default. 
-        local ignoreClasses = arrayLib(macros.GetFromTable(settingsTable, "ignoreClasses", clone(TracePlus.Settings.ignoreClasses)))
-        // Get the priorityClasses setting from the settings table or use the default. 
-        local priorityClasses = arrayLib(macros.GetFromTable(settingsTable, "priorityClasses", clone(TracePlus.Settings.priorityClasses)))
-        // Get the ignoredModels setting from the settings table or use the default. 
-        local ignoredModels = arrayLib(macros.GetFromTable(settingsTable, "ignoredModels", clone(TracePlus.Settings.ignoredModels)))
+        local result = TracePlus.Settings()
+
+        // Set the ignoreClasses setting from the settings table or use the default. 
+        result.SetIgnoredClasses(macros.GetFromTable(settingsTable, "ignoreClasses", TracePlus.Settings.ignoreClasses))
+        // Set the priorityClasses setting from the settings table or use the default. 
+        result.SetPriorityClasses(macros.GetFromTable(settingsTable, "priorityClasses", TracePlus.Settings.priorityClasses))
+        // Set the ignoredModels setting from the settings table or use the default. 
+        result.SetIgnoredModels(macros.GetFromTable(settingsTable, "ignoredModels", TracePlus.Settings.ignoredModels))
         
-        // Get the errorTolerance setting from the settings table or use the default. 
-        local errorTolerance = macros.GetFromTable(settingsTable, "errorTolerance", TracePlus.Settings.errorTolerance)
-        // Get the shouldRayHitEntity setting from the settings table or use the default.  
-        local shouldRayHitEntity = macros.GetFromTable(settingsTable, "shouldRayHitEntity", null)
-        // Get the shouldIgnoreEntity setting from the settings table or use the default. 
-        local shouldIgnoreEntity = macros.GetFromTable(settingsTable, "shouldIgnoreEntity", null)
+        // Set the shouldRayHitEntity setting from the settings table or use the default.  
+        result.SetCollisionFilter(macros.GetFromTable(settingsTable, "shouldRayHitEntity", null))
+        // Set the shouldIgnoreEntity setting from the settings table or use the default. 
+        result.SetIgnoreFilter(macros.GetFromTable(settingsTable, "shouldIgnoreEntity", null))
+
+        // todo comment
+        result.SetDepthAccuracy(macros.GetFromTable(settingsTable, "depthAccuracy", 5))
+        result.SetBynaryRefinement(macros.GetFromTable(settingsTable, "bynaryRefinement", false))
         
-        // Create and return a new TraceSettings object with the specified or default settings. 
-        return TracePlus.Settings(
-            ignoreClasses, priorityClasses, ignoredModels, 
-            errorTolerance, shouldRayHitEntity, shouldIgnoreEntity
-        )
+        return result
     }
 
 
     /*
      * Sets the list of entity classnames to ignore during traces.
      *
-     * @param {array|arrayLib} ignoreClassesArray - An array or arrayLib containing entity classnames to ignore. 
+     * @param {array|ArrayEx} ignoreClassesArray - An array or ArrayEx containing entity classnames to ignore. 
     */
     function SetIgnoredClasses(ignoreClassesArray) {
-        this.ignoreClasses = arrayLib(ignoreClassesArray)
+        this.ignoreClasses = ArrayEx.FromArray(ignoreClassesArray)
+        return this
     }
 
     /*
      * Sets the list of entity classnames to prioritize during traces.
      *
-     * @param {array|arrayLib} priorityClassesArray - An array or arrayLib containing entity classnames to prioritize. 
+     * @param {array|ArrayEx} priorityClassesArray - An array or ArrayEx containing entity classnames to prioritize. 
     */
     function SetPriorityClasses(priorityClassesArray) {
-        this.priorityClasses = arrayLib(priorityClassesArray)
+        this.priorityClasses = ArrayEx.FromArray(priorityClassesArray)
+        return this
     }
 
     /*
      * Sets the list of entity model names to ignore during traces.
      *
-     * @param {array|arrayLib} ignoredModelsArray - An array or arrayLib containing entity model names to ignore. 
+     * @param {array|ArrayEx} ignoredModelsArray - An array or ArrayEx containing entity model names to ignore. 
     */
     function SetIgnoredModels(ignoredModelsArray) {
-        this.ignoredModels = arrayLib(ignoredModelsArray)
+        this.ignoredModels = ArrayEx.FromArray(ignoredModelsArray)
+        return this
     }
 
-    /*
-     * Sets the maximum allowed distance between trace start and hit positions. 
-     *
-     * @param {number} tolerance - The maximum allowed distance in units. 
-    */
-    function SetErrorTolerance(tolerance) {
-        this.errorTolerance = tolerance
+    function SetDepthAccuracy(value) {
+        this.depthAccuracy = math.clamp(value, 0.3, 15)
+        return this
     }
 
+    function SetBynaryRefinement(bool) {
+        this.bynaryRefinement = bool
+        return this
+    }
 
     /*
      * Appends an entity classname to the list of ignored classes. 
@@ -112,7 +98,12 @@
      * @param {string} className - The classname to append. 
     */
     function AppendIgnoredClass(className) {
+        // CoW Mechanism
+        if(this.ignoreClasses == TracePlus.Settings.ignoreClasses)
+            this.ignoreClasses = clone this.ignoreClasses
+        
         this.ignoreClasses.append(className)
+        return this
     }
 
     /*
@@ -121,7 +112,12 @@
      * @param {string} className - The classname to append. 
     */
     function AppendPriorityClasses(className) {
+        // CoW Mechanism
+        if(this.priorityClasses == TracePlus.Settings.priorityClasses)
+            this.priorityClasses = clone this.priorityClasses
+        
         this.priorityClasses.append(className)
+        return this
     }
 
     /*
@@ -130,7 +126,12 @@
      * @param {string} modelName - The model name to append. 
     */
     function AppendIgnoredModel(modelName) {
+        // CoW Mechanism
+        if(this.ignoredModels == TracePlus.Settings.ignoredModels)
+            this.ignoredModels = clone this.ignoredModels
+
         this.ignoredModels.append(modelName)
+        return this
     }
 
 
@@ -138,7 +139,7 @@
     /* 
      * Gets the list of entity classnames to ignore during traces. 
      *
-     * @returns {arrayLib} - An arrayLib containing the ignored classnames. 
+     * @returns {ArrayEx} - An ArrayEx containing the ignored classnames. 
     */
     function GetIgnoreClasses() {
         return this.ignoreClasses
@@ -147,7 +148,7 @@
     /*
      * Gets the list of entity classnames to prioritize during traces. 
      *
-     * @returns {arrayLib} - An arrayLib containing the priority classnames. 
+     * @returns {ArrayEx} - An ArrayEx containing the priority classnames. 
     */
     function GetPriorityClasses() {
         return this.priorityClasses
@@ -156,21 +157,11 @@
     /*
      * Gets the list of entity model names to ignore during traces. 
      *
-     * @returns {arrayLib} - An arrayLib containing the ignored model names. 
+     * @returns {ArrayEx} - An ArrayEx containing the ignored model names. 
     */
     function GetIgnoredModels() {
         return this.ignoredModels
     }
-
-    /*
-     * Gets the maximum allowed distance between trace start and hit positions. 
-     *
-     * @returns {number} - The maximum allowed distance in units. 
-    */
-    function GetErrorTolerance() {
-        return this.errorTolerance
-    }
-
 
     /*
      * Sets a custom function to determine if a ray should hit an entity. 
@@ -179,6 +170,7 @@
     */
     function SetCollisionFilter(filterFunction) { // aka. SetHitFilter
         this.shouldRayHitEntity = filterFunction
+        return this
     }
 
     /*
@@ -188,6 +180,7 @@
     */
     function SetIgnoreFilter(filterFunction) {
         this.shouldIgnoreEntity = filterFunction
+        return this
     }
 
     /*
@@ -241,7 +234,7 @@
         // Check if any entities should be ignored during the trace 
         if (ignoreEntities) {
             // If ignoreEntities is an array, append the player entity to it 
-            if (typeof ignoreEntities == "array" || typeof ignoreEntities == "arrayLib") {
+            if (typeof ignoreEntities == "array" || typeof ignoreEntities == "ArrayEx") {
                 ignoreEntities.append(newEnt)
             }
             // If ignoreEntities is a single entity, create a new array with both the player and ignoreEntities 
@@ -261,7 +254,7 @@
     function _cloned() {
         return Settings(
             clone this.ignoreClasses, clone this.priorityClasses, clone this.ignoredModels, 
-            this.errorTolerance, this.shouldRayHitEntity, this.shouldIgnoreEntity
+            this.shouldRayHitEntity, this.shouldIgnoreEntity
         )
     }
 }

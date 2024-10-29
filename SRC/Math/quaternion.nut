@@ -166,28 +166,28 @@ math["Quaternion"] <- class {
     }
 
     /*
-    * Calculates the dot product of two quaternions.
-    *
-    * @param {Quaternion} other - The other quaternion.
-    * @returns {number} - The dot product.
+     * Calculates the dot product of two quaternions.
+     * 
+     * @param {Quaternion} other - The other quaternion.
+     * @returns {number} - The dot product.
     */
     function dot(other) {
         return this.x * other.x + this.y * other.y + this.z * other.z + this.w * other.w;
     }
 
     /*
-    * Calculates the length (magnitude) of the quaternion.
-    *
-    * @returns {number} - The length of the quaternion.
+     * Calculates the length (magnitude) of the quaternion.
+     * 
+     * @returns {number} - The length of the quaternion.
     */
     function length() {
         return sqrt(this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w);
     }
 
     /*
-    * Calculates the inverse of the quaternion.
-    *
-    * @returns {Quaternion} - The inverse quaternion.
+     * Calculates the inverse of the quaternion.
+     * 
+     * @returns {Quaternion} - The inverse quaternion.
     */
     function inverse() {
         local lengthSquared = this.length() * this.length();
@@ -195,11 +195,11 @@ math["Quaternion"] <- class {
     }
 
     /*
-    * Creates a quaternion from an axis and an angle.
-    *
-    * @param {Vector} axis - The axis of rotation (normalized vector).
-    * @param {number} angle - The angle of rotation in radians.
-    * @returns {Quaternion} - The quaternion.
+     * Creates a quaternion from an axis and an angle.
+     * 
+     * @param {Vector} axis - The axis of rotation (normalized vector).
+     * @param {number} angle - The angle of rotation in radians.
+     * @returns {Quaternion} - The quaternion.
     */
     function fromAxisAngle(axis, angle) {
         local halfAngle = angle * 0.5;
@@ -208,9 +208,9 @@ math["Quaternion"] <- class {
     }
 
     /*
-    * Converts the quaternion to an axis and an angle.
-    *
-    * @returns {table} - A table with keys "axis" (Vector) and "angle" (number).
+     * Converts the quaternion to an axis and an angle.
+     * 
+     * @returns {table} - A table with keys "axis" (Vector) and "angle" (number).
     */
     function toAxisAngle() {
         local scale = sqrt(this.x * this.x + this.y * this.y + this.z * this.z);

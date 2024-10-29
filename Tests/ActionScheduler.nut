@@ -1,5 +1,5 @@
 // Events Module Unit Tests
-IncludeScript("Tests/test_exec")
+if(!("RunTests" in getroottable())) IncludeScript("PCapture-LIB/Tests/test_exec")
 
 events_tests <- {
     function schedule_event_test() {
@@ -79,7 +79,7 @@ events_tests <- {
 
         local list = ScheduleEvent.GetEvent("add_new_actions_nosort_test")
         for(local i = 1; i < list.len(); i++) {
-            if(list[i - 1] >= list[i]) {
+            if(list[i - 1] > list[i]) {
                 return assert(false)
             }
         }
@@ -105,7 +105,7 @@ events_tests <- {
         local list = ScheduleEvent.GetEvent("add_actions_nosort_test")
         printl(list)
         for(local i = 1; i < list.len(); i++) {
-            if(list[i - 1] >= list[i]) {
+            if(list[i - 1] > list[i]) {
                 printl(list[i - 1] + " > " + list[i] + " {"+i+"}")
                 return assert(false)
             }

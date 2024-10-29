@@ -1,7 +1,7 @@
 /*
  * Represents a file for reading and writing.
 */
- ::File <- class {
+::File <- class {
     // The path to the file.  
     path = null;
     // The name of the file without the extension. 
@@ -13,8 +13,8 @@
      * @param {string} path - The path to the file.
     */
     constructor(path) {
-        path = split(path, "/").top() 
-        this.name = path
+        path = split(path, "/").top()
+        this.name = split(path, "/").top()
 
         if(path.find(".log") == null) {
             path += ".log"
@@ -23,7 +23,8 @@
         }
         
         this.path = path
-        this._recreateCache()
+        if(!(this.name in getroottable()))
+            getroottable()[this.name] <- []
     }
 
     /*
@@ -34,6 +35,10 @@
     function write(text) {
         local cmd = "script " + name + ".append(\\\"" + text + "\\\");"
         this._write(cmd)
+    }
+
+    function writeRawData(text) {
+        this._write(text)
     }
 
     /*
@@ -53,9 +58,6 @@
      * @returns {array} - An array of strings, where each string is a line from the file. 
     */
     function readlines() {
-        this._recreateCache()
-        this.updateInfo()
-
         if(this.name in getroottable()) 
             return getroottable()[this.name]
         return []
@@ -75,19 +77,9 @@
     }
 
     /*
-     * Recreates the cache array for the file if it doesn't exist.
-    */
-    function _recreateCache() {
-        if(this.name in getroottable()) 
-            return
-        SendToConsole("script ::" + this.name + " <- []")
-    }
-
-    /*
      * Clears the contents of the file. 
     */
     function clear() {
-        this._recreateCache()
         this._write("script " + name + ".clear()")
     }
 
@@ -95,6 +87,7 @@
      * Updates information about the file by executing it. 
     */
     function updateInfo() {
+        getroottable()[this.name].clear()
         SendToConsole("exec " + path)
     }
 }

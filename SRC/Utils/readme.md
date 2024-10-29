@@ -2,28 +2,131 @@
 
 The `Utils` module provides a collection of utility functions for script execution, debugging, file operations, and working with entities in VScripts. It aims to simplify common tasks and enhance the development experience.
 
+## Table of Contents
+
+* [`Utils/debug.nut`](#utilsdebugnut)
+	* [`LoggerLevels`](#loggerlevels)
+	* [`DrawEntityBBox(ent, color, time)`](#drawentitybboxent-color-time)
+	* [`DrawEntityAABB(ent, color, time)`](#drawentityaabbent-color-time)
+	* [`drawbox(vector, color, time)`](#drawboxvector-color-time)
+	* [`trace(msg, ...)`](#tracemsg)
+	* [`debug(msg, ...)`](#debugmsg)
+	* [`info(msg, ...)`](#infomsg)
+	* [`warning(msg, ...)`](#warningmsg)
+	* [`error(msg, ...)`](#errormsg)
+* [`Utils/file.nut`](#utilsfilenut)
+	* [`File(path)`](#filepath)
+	* [`write(text)`](#writetext)
+	* [`writeRawData(text)`](#writerawdatatext)
+	* [`readlines()`](#readlines)
+	* [`read()`](#read)
+	* [`clear()`](#clear)
+	* [`updateInfo()`](#updateinfo)
+* [`Utils/improvements.nut`](#utilsimprovementsnut)
+	* [`FrameTime()`](#frametime)
+	* [`UniqueString(prefix)`](#uniquestringprefix)
+	* [`EntFireByHandle(target, action, value, delay, activator, caller)`](#entfirebyhandletarget-action-value-delay-activator-caller)
+	* [`GetPlayerEx(index)`](#getplayerexindex)
+* [`ActionScheduler/player_hooks.nut`](#actionschedulerplayer_hooksnut)
+	* [`GetPlayers()`](#getplayers)
+	* [`TrackPlayerJoins()`](#trackplayerjoins)
+	* [`HandlePlayerEventsMP()`](#handleplayereventsmp)
+	* [`HandlePlayerEventsSP()`](#handleplayereventssp)
+	* [`AttachEyeControl(player)`](#attacheyecontrolplayer)
+	* [`Hooks List`](#hooks-customizable-functions)
+		* [`OnPlayerJoined(player)`](#onplayerjoinedplayer)
+		* [`OnPlayerLeft(player)`](#onplayerleftplayer)
+		* [`OnPlayerDeath(player)`](#onplayerdeathplayer)
+		* [`OnPlayerRespawn(player)`](#onplayerrespawnplayer)
+* [`Utils/portals.nut`](#utilsportalsnut)
+	* [`InitPortalPair(id)`](#initportalpairid)
+	* [`IsBluePortal(ent)`](#isblueportalent)
+	* [`FindPartnerForPropPortal(portal)`](#findpartnerforpropportalportal)
+	* [`SetupLinkedPortals()`](#setuplinkedportals)
+* [`Utils/macros.nut`](#utilsmacrosnut)
+	* [`Precache(soundPath)`](#macrosprecachesoundpath)
+	* [`GetSoundDuration(soundName)`](#macrosgetsounddurationsoundname)
+	* [`format(msg, ...)`](#formatmsg)
+	* [`fprint(msg, ...)`](#fprintmsg)
+	* [`GetFromTable(table, key, defaultValue)`](#macrosgetfromtabletable-key-defaultvalue)
+	* [`GetKeys`](#macrosgetkeys)
+	* [`GetValues`](#macrosgetvalues)
+	* [`InvertTable(table)`](#inverttabletable)
+	* [`PrintIter(iterable)`](#macrosprintiteriterable)
+	* [`MaskSearch(iter, match)`](#macrosmasksearchiter-match)
+	* [`GetRectangle(v1, v2, v3, v4)`](#macrosgetrectanglev1-v2-v3-v4)
+	* [`PointInBBox(point, bMin, bMax)`](#macrospointinbboxpoint-bmin-bmax)
+	* [`Range(start, end, step)`](#rangestart-end-step)
+	* [`RangeIter(start, end, step)`](#rangeiterstart-end-step)
+	* [`GetDist(vec1, vec2)`](#macrosgetdistvec1-vec2)
+	* [`StrToVec(str)`](#macrosstrtovecstr)
+	* [`VecToStr(vec)`](#macrosvectostrvec)
+	* [`isEqually(val1, val2)`](#macrosisequallyval1-val2)
+	* [`GetPrefix(name)`](#macrosgetprefixname)
+	* [`GetPostfix(name)`](#macrosgetpostfixname)
+	* [`GetEyeEndpos(player, distance)`](#macrosgeteyeendposplayer-distance)
+	* [`GetVertex(x, y, z, ang)`](#macrosgetvertexx-y-z-ang)
+	* [`GetTriangle()`](#macrosgettriangle)
+	* [`BuildAnimateFunction(name, propertySetterFunc, valueCalculator)`](#macrosbuildanimatefunctionname-propertysetterfunc-valueCalculator)
+	* [`BuildRTAnimateFunction(name, propertySetterFunc, valueCalculator)`](#macrosbuildrtanimatefunctionname-propertysetterfunc-valueCalculator)
+* [`Utils/scripts.nut`](#utilsscriptsnut)
+	* [`RunScriptCode`](#runscriptcode)
+	* [`delay(script, runDelay, activator, rgs, scope)`](#delayscript-rundelay-activator-rgs-scope)
+	* [`loopy(script, runDelay, loopCount, outputs)`](#loopyscript-rundelay-loopcount-outputs)
+	* [`fromStr(str)`](#fromstrstr)
+
 ## [Utils/debug.nut](debug.nut)
 
 This file contains functions for debugging and logging messages to the console, as well as visualizing entity bounding boxes.
 
-### `dev`
+### LoggerLevels
+The `LoggerLevels` class defines different levels of logging. The available levels are:
+- `Trace` (1)
+- `Debug` (5)
+- `Info` (10)
+- `Warning` (30)
+- `Error` (60)
+- `Off` (1000)
 
-The `dev` table contains various debugging utility functions.
+To use these levels, you need to set the `LibLogger` variable after initializing the library. For example:
+```js
+LibLogger = LoggerLevels.Trace
+```
 
-#### `DrawEntityBBox(ent, time)`
+All logging functions only work if the console command `developer` is set to a value higher than 0.
+
+### `DrawEntityBBox(ent, color, time)`
 
 This function draws the bounding box of an entity using `DebugDrawBox` for the specified duration. It is helpful for visualizing the extents of an entity and debugging collision issues.
 
 **Parameters:**
 
 * `ent` (CBaseEntity or pcapEntity): The entity to draw the bounding box for.
+* `color` (Vector): The color of the box as a Vector with components (r, g, b).
 * `time` (number): The duration in seconds to display the bounding box.
 
 **Example:**
 
 ```js
 local myEntity = entLib.FindByClassname("prop_physics")
-dev.DrawEntityBBox(myEntity, 5) // Draw the bounding box for 5 seconds
+dev.DrawEntityBBox(myEntity, Vector(125, 0, 1255), 5) // Draw the bounding box for 5 seconds
+```
+
+### `DrawEntityAABB(ent, color, time)`
+
+This function draws the AABB of an entity using `DebugDrawBox` for the specified duration.
+
+**Parameters:**
+
+* `ent` (CBaseEntity or pcapEntity): The entity to draw the bounding box for.
+* `color` (Vector): The color of the box as a Vector with components (r, g, b).
+* `time` (number): The duration in seconds to display the bounding box.
+
+**Example:**
+
+```js
+local myEntity = entLib.FindByClassname("prop_physics")
+dev.DrawEntityAABB(myEntity, Vector(125, 0, 1255), 5) // Draw the bounding box for 5 seconds
 ```
 
 #### `drawbox(vector, color, time)`
@@ -42,113 +145,102 @@ This function draws a box at the specified position with the given color and dur
 dev.drawbox(Vector(0, 0, 100), Vector(255, 0, 0), 2) // Draw a red box for 2 seconds
 ```
 
-#### `debug(msg)`
+#### `trace(msg, ...)`
 
-This function logs a debug message to the console if debug logging is enabled (controlled by the `LibDebugInfo` variable). It is useful for printing information during development and testing.
+This function logs a trace message to the console if trace logging is enabled. It is intended for internal use within the PCapture-Lib and is not recommended for use outside the library.
 
 **Parameters:**
 
-* `msg` (string): The debug message to print.
+* `msg` (string): The trace message string containing `{}` placeholders.
+* `...` (any): Additional arguments to substitute into the placeholders.
 
 **Example:**
 
 ```js
-dev.debug("This is a debug message")
+dev.trace("Trace message with value: {}", someValue)
 ```
 
-#### `log(msg)`
+#### `debug(msg, ...)`
 
-This function logs a message to the console only if developer mode is enabled (when the `developer` console command is set to 1). It is useful for printing information that should only be visible to developers.
+This function logs a debug message to the console if debug logging is enabled.
 
 **Parameters:**
 
-* `msg` (string): The message to log.
+* `msg` (string): The debug message string containing `{}` placeholders.
+* `...` (any): Additional arguments to substitute into the placeholders.
 
 **Example:**
 
 ```js
-dev.log("This message is only visible in developer mode.")
+dev.debug("This is a {} message with value: {}", "debug", someValue)
 ```
 
-#### `warning(msg)`
+#### `info(msg, ...)`
 
-This function displays a warning message in a specific format, including the function name, source file, and line number where the warning originated. It is used to indicate potential problems or issues that may not necessarily cause errors.
+This function logs an info message to the console if info logging is enabled.
 
 **Parameters:**
 
-* `msg` (string): The warning message to display.
+* `msg` (string): The info message string containing `{}` placeholders.
+* `...` (any): Additional arguments to substitute into the placeholders.
+
+**Example:**
+
+```js
+dev.info("Information message with value: {}", someValue)
+```
+
+#### `warning(msg, ...)`
+
+This function displays a warning message in a specific format, including the function name and line number where the warning originated.
+
+**Parameters:**
+
+* `msg` (string): The warning message string containing `{}` placeholders.
+* `...` (any): Additional arguments to substitute into the placeholders.
 
 **Example:**
 
 ```js
 if (someCondition) {
-    dev.warning("Unexpected condition encountered!")
+    dev.warning("Unexpected condition encountered! Value: {}", someValue)
 }
 ```
 
-#### `error(msg)`
+#### `error(msg, ...)`
 
-This function displays an error message in a specific format, including the function name, source file, and line number where the error occurred. It is used to indicate critical errors that prevent the script from functioning correctly.
+This function displays an error message in a specific format, including the function name and line number where the error occurred. It is used to indicate critical errors that prevent the script from functioning correctly.
 
 **Parameters:**
 
-* `msg` (string): The error message to display.
+* `msg` (string): The error message string containing `{}` placeholders.
+* `...` (any): Additional arguments to substitute into the placeholders.
 
 **Example:**
 
 ```js
 if (!someEntity.IsValid()) {
-    dev.error("Entity is invalid!")
+    dev.error("Entity is invalid! Entity ID: {}", someEntity.GetID())
 }
 ```
-
-#### `format(msg, ...)`
-
-This function formats a message string by replacing placeholders (`{}`) with values from the provided arguments. It is similar to the `string.format` function in other programming languages and is used for creating formatted output.
-
-**Parameters:**
-
-* `msg` (string): The message string containing placeholders (`{}`).
-* `...` (any): Additional arguments to substitute into the placeholders.
-
-**Example:**
-
-```js
-local name = "Vashik"
-local age = 20
-local message = dev.format("My name is {} and I am {} years old.", name, age)
-printl(message) // Output: "My name is Vashik and I am 20 years old."
-```
-
-#### `fprint(msg, ...)`
-
-This function combines the functionality of `dev.format` and `printl`. It formats a message string with placeholders and then prints the formatted message to the console.
-
-**Parameters:**
-
-* `msg` (string): The message string containing placeholders (`{}`).
-* `...` (any): Additional arguments to substitute into the placeholders.
-
-**Example:**
-
-```js
-local health = 100
-dev.fprint("Player health: {}", health) // Output: "Player health: 100"
-```
-
 ## [Utils/file.nut](file.nut)
 
-This file defines the `File` class for reading from and writing to files. Due to the way file operations are handled in VScripts, there is a specific requirement when reading data from a file: **a one-tick delay is needed after calling `updateInfo()` before accessing the file contents.** This ensures that the file has been properly read and the data is available in the cache array.
+This file defines the `File` class for reading from and writing to files.  This class simplifies file interactions by providing convenient methods for writing and reading data. It utilizes a global cache to store file contents, allowing for efficient data access after a one-tick delay.
 
 ### `File(path)`
 
 **Constructor**
 
-This creates a new `File` object for the specified file path. The file extension ".log" is automatically added if it is not already present in the path. A cache array is also created in the global scope to store the lines of the file.
+This creates a new `File` object for the specified file path. The file extension ".log" is automatically added if it is not already present in the path. A cache array is also created in the global scope using the file name as the key to store the lines of the file.
 
 **Parameters:**
 
-* `path` (string): The path to the file, relative to the `cfg` directory.
+* `path` (string): The path to the file, relative to the `cfg` directory. The path should only contain the file name. Folders are not supported.
+
+**Note:**
+
+*   The file name cannot contain special characters, spaces, or forward slashes (/). Using such characters might lead to unexpected behavior or errors in file operations.
+*   To include a double quote character (") within the text being written to the file using the `write` method, use double escaping (\\"). For example, to write the string `He said, "Hello!"`, use `myFile.write("He said, \\"Hello!\\"")`.
 
 **Example:**
 
@@ -158,11 +250,11 @@ local myFile = File("my_data") // Creates a File object for "cfg/my_data.log"
 
 ### `write(text)`
 
-This method appends the given text to the end of the file.
+This method appends the given text to the end of the file. The text is automatically enclosed in double quotes and escaped for proper writing to the file.
 
 **Parameters:**
 
-* `text` (string): The text to append to the file.
+* `text` (string): The text to append to the file. To include a double quote within the text, use double escaping (\\").
 
 **Example:**
 
@@ -170,10 +262,23 @@ This method appends the given text to the end of the file.
 myFile.write("This is some data to write to the file.")
 ```
 
+### `writeRawData(text)`
 
-#### `readlines()`
+This method appends the given text to the end of the file without any automatic escaping or quoting. This allows for writing raw data or commands to the file.
 
-This method reads all lines from the file and returns them as an array of strings. The cache array is updated with the contents of the file. **Remember to call `updateInfo()` followed by a one-tick delay before using this method to ensure the data is available.**
+**Parameters:**
+
+* `text` (string): The raw text to append to the file.
+
+**Example:**
+
+```js
+myFile.writeRawData("script myVariable = \"This is a string!\";")
+```
+
+### `readlines()`
+
+This method reads all lines from the file and returns them as an array of strings. The global cache array associated with the file name is updated with the contents of the file. **Call `updateInfo()` and wait for one tick using `yield` or `RunScriptCode.delay()` before using this method to ensure the data is available in the cache.**
 
 **Returns:**
 
@@ -182,20 +287,19 @@ This method reads all lines from the file and returns them as an array of string
 **Example:**
 
 ```js
+// ScheduleEvent environment
 local file = File("MyFile")
 file.updateInfo()
-// We need a 1 tick delay
-RunScriptCode.delay(function() : (file) {
+yield 0.01 // Wait for one tick
 local lines = file.readlines()
 foreach (line in lines) {
-printl(line)
+    printl(line)
 }
-}, 0.01)
 ```
 
-#### `read()`
+### `read()`
 
-This method reads the entire contents of the file and returns it as a single string. **Remember to call `updateInfo()` followed by a one-tick delay before using this method to ensure the data is available.**
+This method reads the entire contents of the file and returns it as a single string. **Call `updateInfo()` and wait for one tick using `yield` or `RunScriptCode.delay()` before using this method to ensure the data is available in the cache.**
 
 **Returns:**
 
@@ -204,18 +308,17 @@ This method reads the entire contents of the file and returns it as a single str
 **Example:**
 
 ```js
+// ScheduleEvent environment
 local file = File("MyFile")
 file.updateInfo()
-// We need a 1 tick delay
-RunScriptCode.delay(function() : (file) {
-    local content = file.read()
-    printl(content)
-}, 0.01)
+yield 0.01 // Wait for one tick
+local content = file.read()
+printl(content)
 ```
 
-#### `clear()`
+### `clear()`
 
-This method clears the contents of the file by emptying the cache array and writing an empty array to the file.
+This method clears the contents of the file by emptying the global cache array associated with the file name and writing an empty array to the file.
 
 **Example:**
 
@@ -223,15 +326,31 @@ This method clears the contents of the file by emptying the cache array and writ
 myFile.clear() // Clear the contents of the file
 ```
 
-#### `updateInfo()`
+### `updateInfo()`
 
-This method updates information about the file by executing it as a script. This is necessary to ensure that the cache array is populated with the latest contents of the file before reading from it.
+This method updates information about the file by executing it as a script. This is necessary to ensure that the global cache array is populated with the latest contents of the file before reading from it using `readlines()` or `read()`.
 
 **Example:**
 
 ```js
 local file = File("MyFile")
 file.updateInfo() // Update the file information
+```
+
+**Usage Recommendations:**
+
+Due to the asynchronous nature of file operations in VScripts, it's highly recommended to use the `File` class within a scheduled environment, such as a `ScheduleEvent` or a custom timer function, and incorporate a one-tick delay using `yield` after calling `updateInfo()`. This ensures that the file operations are performed sequentially and the data is properly synchronized. For example:
+
+```js
+function myScheduledFunction() {
+    local file = File("MyFile")
+    file.updateInfo()
+    yield 0.1 // Wait
+    local lines = file.readlines()
+    // ... process file data
+}
+
+ScheduleEvent.Add("global", myScheduledFunction, 0) // Call myScheduledFunction
 ```
 
 ## [Utils/improvements.nut](improvements.nut)
@@ -310,6 +429,10 @@ local player = GetPlayerEx()
 printl(player.EyePosition()) // Print the player's eye position
 ```
 
+## [ActionScheduler/player_hooks.nut](#actionschedulerplayer_hooksnut)
+
+This module manages player-related events and provides hooks for custom logic. It maintains a list of all players in the game and offers functions to track player joins, departures, deaths, and respawns.
+
 ### `GetPlayers()`
 
 This function returns an array of all players in the game as `pcapEntity` objects.
@@ -327,15 +450,165 @@ foreach (player in players) {
 }
 ```
 
-### `AttachEyeControlToPlayers()` (Init-func)
+### `TrackPlayerJoins()`
 
-This function attaches eye control entities to all players in the game. It creates `logic_measure_movement` and `info_target` entities for each player to track their eye position and angles. This information can then be accessed using the `EyePosition`, `EyeAngles`, and `EyeForwardVector` methods of the `pcapEntity` class. This function is called automatically during library initialization and periodically in multiplayer games to ensure that eye control entities are attached to any new players that join the game.
+Tracks players joining the game. It iterates through all player entities, initializes their eye control, creates portal pairs (if applicable), adds them to the `AllPlayers` array, and triggers the `OnPlayerJoined` hook.
+
+> [!NOTE]  
+> This function is called automatically
+
+### `HandlePlayerEventsMP()`
+
+Handles player events in multiplayer mode, including health checks and death events. It iterates through the `AllPlayers` array, checks player validity, calls `OnDeath` and schedules respawn logic for dead players, and removes disconnected players from the `AllPlayers` array.  Sets player health to -999 to prevent repeated death triggers.
+
+> [!NOTE]  
+> This function is called automatically
+
+### `HandlePlayerEventsSP()`
+
+Handles player events in single-player mode, similar to `HandlePlayerEventsMP`, but simplified for a single player.  Sets player health to -999 to prevent repeated death triggers.
+
+> [!NOTE]  
+> This function is called automatically
+
+### `_monitorRespawn(player)`
+
+Internal function to monitor a player's respawn status.  This function is called by `ScheduleEvent.Add` within `HandlePlayerEventsMP`.  It continuously checks the player's health and triggers the `OnPlayerRespawn` hook upon successful respawn.
+
+**Parameters:**
+
+* `player` (pcapEntity): The player whose respawn status is being monitored.
+
+> [!NOTE]  
+> This function is called automatically by `HandlePlayerEventsMP`
+
+
+### `AttachEyeControl(player)`
+
+Attaches eye control entities to a player. This function creates `logic_measure_movement` and `info_target` entities to track the player's eye position and angles.
+
+**Parameters:**
+
+* `player` (pcapEntity): The player to attach the eye control to.
+
+> [!NOTE]  
+> This function is called automatically
+
+## Hooks (Customizable Functions)
+
+The following functions are provided as hooks for custom logic. They are initially empty and can be overridden by the user.
+
+### `OnPlayerJoined(player)`
+
+Called when a player joins the game.
+
+**Parameters:**
+
+* `player` (pcapEntity): The player who joined.
+
+### `OnPlayerLeft(player)`
+
+Called when a player leaves the game.
+
+**Parameters:**
+
+* `player` (pcapEntity): The player who left.
+
+### `OnPlayerDeath(player)`
+
+Called when a player dies.
+
+**Parameters:**
+
+* `player` (pcapEntity): The player who died.
+
+
+### `OnPlayerRespawn(player)`
+
+Called when a player respawns.
+
+**Parameters:**
+
+* `player` (pcapEntity): The player who respawned.
+
+## [Utils/portals.nut](portals.nut)
+
+### `InitPortalPair(id)`
+Initializes a portal pair for portal casting (TracePlus Portal Casting). 
+
+By default, this function automatically initializes pair IDs in multiplayer. However, if you are using portal frames with unique pair IDs or custom logic that adds multiple different pair IDs to the game (such as multiportals), you must manually initialize `InitPortalPair` for proper operation with TracePlus Portal Casting.
+
+**Parameters:**
+
+* `id` (number): The ID of the portal pair.
 
 **Example:**
 
 ```js
-AttachEyeControlToPlayers() // Attach eye control entities to all players
+// Initialize a portal pair with ID 1
+InitPortalPair(1)
+// Initialize a portal pair with ID 2
+InitPortalPair(4)
 ```
+
+### `IsBluePortal(ent)`
+Checks if the given entity is a blue portal.
+
+**Parameters:**
+
+* `ent` (pcapEntity): The entity to check.
+
+**Returns:**
+
+* (boolean): `True` if the entity is a blue portal, `False` is a orange portal.
+
+**Example:**
+
+```js
+local portal = entLib.FindByClassname("prop_portal")
+if (IsBluePortal(portal)) {
+    printl("This is a blue portal")
+} else {
+    printl("This is a orange portal")
+}
+```
+
+### `FindPartnerForPropPortal(portal)`
+Finds the partner portal for a given `prop_portal` entity.
+
+**Parameters:**
+
+* `portal` (pcapEntity): The `prop_portal` entity to find the partner for.
+
+**Returns:**
+
+* (pcapEntity|null): The partner portal entity, or `null` if no partner is found.
+
+### `_CreatePortalDetector(extraKey, extraValue)`
+Creates a `func_portal_detector` entity with specified key-value pairs and settings for portal detection.
+
+**This function is not part of the public API.**
+
+**Parameters:**
+
+* `extraKey` (string): The key for the additional setting.
+* `extraValue` (any): The value for the additional setting.
+
+**Returns:**
+
+* (entity): The created `func_portal_detector` entity.
+
+### `SetupLinkedPortals()`
+Initializes linked portal doors for portal tracing.
+
+**This function is not part of the public API and called automatically at initialization.**
+
+This function iterates through all entities of class `linked_portal_door` and performs the following actions:
+1. Check if this entity has been processed before.
+2. Extracts bounding box dimensions from the portal's model name (assuming a specific naming convention).
+3. **Important:** For proper tracing, ensure that the `model` keyvalue of `linked_portal_door` contains `weight height`, as these values are used to calculate the bounding box.
+4. Rotates the bounding box dimensions based on the portal's angles.
+5. Sets the bounding box of the portal using the calculated dimensions.
 
 ## [Utils/macros.nut](macros.nut)
 
@@ -347,7 +620,7 @@ This macro precaches a sound script or a list of sound scripts for later use. Pr
 
 **Parameters:**
 
-* `soundPath` (string, array, or arrayLib): The path to the sound script or a list of paths to sound scripts, relative to the `sound` directory.
+* `soundPath` (string, array, or ArrayEx): The path to the sound script or a list of paths to sound scripts, relative to the `sound` directory.
 
 **Example:**
 
@@ -355,6 +628,61 @@ This macro precaches a sound script or a list of sound scripts for later use. Pr
 macros.Precache("my_sound.wav") // Precache a single sound
 macros.Precache(["sound1.wav", "sound2.wav"]) // Precache multiple sounds
 ```
+
+### `macros.GetSoundDuration(soundName)`
+
+This function retrieves the duration of a sound by its name. It is useful for determining how long a sound will play, which can be used for synchronization or timing purposes in scripts.
+
+**Parameters:**
+
+* `soundName` (string): The name of the sound.
+
+**Returns:**
+
+* `number`: The duration of the sound in seconds.
+
+**Example:**
+
+```js
+local duration = macros.GetSoundDuration("my_sound.wav")
+printl("The duration of the sound is " + duration + " seconds.")
+```
+
+
+### `macros.format(msg, ...)`
+
+This function formats a message string by replacing placeholders (`{}`) with values from the provided arguments. It is similar to the `string.format` function in other programming languages and is used for creating formatted output.
+
+**Parameters:**
+
+* `msg` (string): The message string containing placeholders (`{}`).
+* `...` (any): Additional arguments to substitute into the placeholders.
+
+**Example:**
+
+```js
+local name = "Vashik"
+local age = 20
+local message = macros.format("My name is {} and I am {} years old.", name, age)
+printl(message) // Output: "My name is Vashik and I am 20 years old."
+```
+
+### `macros.fprint(msg, ...)`
+
+This function combines the functionality of `macros.format` and `printl`. It formats a message string with placeholders and then prints the formatted message to the console.
+
+**Parameters:**
+
+* `msg` (string): The message string containing placeholders (`{}`).
+* `...` (any): Additional arguments to substitute into the placeholders.
+
+**Example:**
+
+```js
+local health = 100
+macros.fprint("Player health: {}", health) // Output: "Player health: 100"
+```
+
 
 ### `macros.GetFromTable(table, key, defaultValue)`
 
@@ -377,6 +705,66 @@ local healthValue = macros.GetFromTable(settings, "health") // Get the "health" 
 local armorValue = macros.GetFromTable(settings, "ammo", 0) // Get the "ammo" value, defaulting to 0 if not found
 ```
 
+### `macros.GetKeys`
+
+Returns a list of all keys from the provided table.
+
+**Parameters:**
+
+* `table` (object): The table from which to extract the keys.
+
+**Returns:**
+
+* `List`: A list containing all the keys from the provided table.
+
+**Example:**
+
+```js
+local myTable = {a = 1, b = 2, c = 3}
+local keys = macros.GetKeys(myTable)
+printl(keys)  // Outputs: List of keys: ["a", "b", "c"]
+```
+
+### `macros.GetValues`
+
+Returns a list of all values from the provided table.
+
+**Parameters:**
+
+* `table` (object): The table from which to extract the values.
+
+**Returns:**
+
+* `List`: A list containing all the values from the provided table.
+
+**Example:**
+
+```js
+local myTable = {a = 1, b = 2, c = 3}
+local values = macros.GetValues(myTable)
+printl(values)  // Outputs: List of values: [1, 2, 3]
+```
+
+### `macros.InvertTable(table)`
+Inverts a table, swapping keys and values.
+
+**Parameters:**
+
+* `table` (table): The table to invert.
+
+**Returns:**
+
+* (table): A new table with keys and values swapped.
+
+**Example:**
+
+```js
+local myTable = {"a": 1, "b": 2, "c": 3}
+local invertedTable = macros.InvertTable(myTable)
+printl(invertedTable) // Output: {1: "a", 2: "b", 3: "c"}
+```
+
+
 ### `macros.PrintIter(iterable)`
 
 This macro prints the keys and values of an iterable object to the console. It is useful for inspecting the contents of arrays, tables, and other iterable data structures.
@@ -393,6 +781,131 @@ local myTable = {
     age = 42
 }
 macros.PrintIter(myTable) // Output: "name: Bob", "age: 42"
+```
+
+### `macros.MaskSearch(iter, match)`
+
+This macro searches for a matching string within an array, taking into account a wildcard character '\*'.
+
+**Parameters:**
+
+* `iter` (array or ArrayEx): The array to search in.
+* `match` (string): The string to search for.
+
+**Returns:**
+
+* (int or null):
+    * The index of the first element in the array that contains the `match` string, even partially.
+    * `null` if no match is found.
+    * `0` if the first element of `iter` is "\*", indicating a wildcard match for any string.
+
+**Example:**
+
+```js
+local myArray = ["apple", "banana", "cherry"]
+local matchIndex = macros.MaskSearch(myArray, "an") // matchIndex will be 1 (index of "banana")
+
+local anotherArray = ["*", "grape", "orange"]
+local wildcardIndex = macros.MaskSearch(anotherArray, "any_string") // wildcardIndex will be 0 
+```
+
+### `macros.GetRectangle(v1, v2, v3, v4)`
+
+This macro creates a rectangle object defined by four vertices.
+
+**Parameters:**
+
+* `v1` (Vector): The first vertex.
+* `v2` (Vector): The second vertex.
+* `v3` (Vector): The third vertex.
+* `v4` (Vector): The fourth vertex.
+
+**Returns:**
+
+* (table): A table representing the rectangle, containing the following properties:
+    * `origin` (Vector): The center point of the rectangle, calculated as the average of the four vertices.
+    * `vertices` (array): An array containing the four vertices of the rectangle as Vector objects.
+
+**Example:**
+
+```js
+local v1 = Vector(0, 0, 0)
+local v2 = Vector(10, 0, 0)
+local v3 = Vector(10, 10, 0)
+local v4 = Vector(0, 10, 0)
+local rectangle = macros.GetRectangle(v1, v2, v3, v4)
+printl(rectangle.origin) // Output: Vector(5, 5, 0)
+```
+
+### `macros.PointInBBox(point, bMin, bMax)`
+
+This macro checks if a point lies within a bounding box defined by its minimum and maximum corner points.
+
+**Parameters:**
+
+* `point` (Vector): The point to check.
+* `bMin` (Vector): The minimum corner of the bounding box (smallest x, y, and z coordinates).
+* `bMax` (Vector): The maximum corner of the bounding box (largest x, y, and z coordinates).
+
+**Returns:**
+
+* (boolean): `true` if the point is inside the bounding box, `false` otherwise.
+
+**Example:**
+
+```js
+local point = Vector(5, 5, 5)
+local bMin = Vector(0, 0, 0)
+local bMax = Vector(10, 10, 10)
+local isInside = macros.PointInBBox(point, bMin, bMax) // isInside will be true
+```
+
+### `macros.Range(start, end, step)`
+Generates a list of numbers within a specified range.
+
+**Parameters:**
+
+* `start` (number): The starting value of the range.
+* `end` (number): The ending value of the range.
+* `step` (number, optional): The increment between each value in the range (default is 1).
+
+**Returns:**
+
+* (List): A list of numbers within the specified range.
+
+**Example:**
+
+```js
+local rangeList = macros.Range(1, 5)
+printl(rangeList) // Output: List[1, 2, 3, 4, 5]
+
+local rangeListWithStep = macros.Range(1, 10, 2)
+printl(rangeListWithStep) // Output: List[1, 3, 5, 7, 9]
+```
+
+### `macros.RangeIter(start, end, step)`
+Generates an iterator that yields numbers within a specified range.
+
+**Parameters:**
+
+* `start` (number): The starting value of the range.
+* `end` (number): The ending value of the range.
+* `step` (number, optional): The increment between each value in the range (default is 1).
+
+**Yields:**
+
+* (number): The next number in the range.
+
+**Example:**
+
+```js
+foreach(num in macros.RangeIter(1, 5)) {
+    printl(num) // Output: 1 2 3 4 5
+}
+
+foreach(num in macros.RangeIter(1, 10, 2)) {
+    printl(num) // Output: 1 3 5 7 9
+}
 ```
 
 ### `macros.GetDist(vec1, vec2)`
@@ -423,6 +936,7 @@ This macro converts a string representation of a vector (e.g., "x y z") to a `Ve
 **Parameters:**
 
 * `str` (string): The string representation of the vector.
+* `sep` (String): The separator string..
 
 **Returns:**
 
@@ -442,6 +956,7 @@ This macro converts a `Vector` object to a string representation (e.g., "x y z")
 **Parameters:**
 
 * `vec` (Vector): The `Vector` object to convert.
+* `sep` (String): The separator string..
 
 **Returns:**
 
@@ -451,7 +966,8 @@ This macro converts a `Vector` object to a string representation (e.g., "x y z")
 
 ```js
 local position = Vector(10, 20, 30)
-local positionString = macros.VecToStr(position) // Convert the position vector to a string
+local positionString = macros.VecToStr(position, " | ") // Convert the position vector to a string
+printl(positionString) // output: "10 | 20 | 30"
 ```
 
 ### `macros.isEqually(val1, val2)` (TODO! more examples)
@@ -589,15 +1105,50 @@ printl("Triangle vertices:", triangle.vertices)
 ```
 
 
+### `macros.BuildAnimateFunction(name, propertySetterFunc, valueCalculator)`
+
+This function creates a new animation function for animating a property of one or more entities. It simplifies the creation of animations by providing a reusable and customizable animation function.
+
+**Parameters:**
+
+*   `name` (string): The name of the property to animate (e.g., "alpha", "color", "position").
+*   `propertySetterFunc` (function): A function that sets the new value for the property on each entity. The function should take two arguments: the entity and the calculated value.
+*   `valueCalculator` (function): A custom function that calculates the animated value for each step. (optional)
+
+**Returns:**
+
+*   (function): A new animation function that can be used to animate the specified property.
+
+**Example:**
+
+```js
+animate["PitchTransition"] <- macros.BuildAnimateFunction("pitch", 
+    function(ent, newPitch) {
+        ent.SetKeyValue("pitch", newPitch)
+        EntFireByHandle(ent, "pitch", newPitch.tostring())
+    }
+)
+```
+
+### `macros.BuildRTAnimateFunction(name, propertySetterFunc, valueCalculator)`
+
+This function works identically to `macros.BuildAnimateFunction`, but creates a real-time animation function.  The generated function will use `applyRTAnimation` internally, allowing for interruptions and more dynamic behavior.  The parameters and return value are the same as `BuildAnimateFunction`.
+
+
+
+
 ## [Utils/scripts.nut](scripts.nut)
 
 This file provides functions for running scripts with delays, loops, and intervals, offering more flexibility and control over script execution compared to standard VScripts mechanisms.
+
+#### Warning:
+Outdated module!!!
 
 ### `RunScriptCode`
 
 The `RunScriptCode` table contains functions for running scripts with different timing options.
 
-### `delay(script, runDelay, activator, caller, args)`
+### `delay(script, runDelay, activator, rgs, scope)`
 
 This function schedules the execution of a script after a specified delay.
 
@@ -606,8 +1157,8 @@ This function schedules the execution of a script after a specified delay.
 * `script` (string or function): The script to execute. This can be a string containing VScripts code or a function object.
 * `runDelay` (number): The delay in seconds before executing the script.
 * `activator` (CBaseEntity or pcapEntity, optional): The activator entity (the entity that triggered the script execution).
-* `caller` (CBaseEntity or pcapEntity, optional): The caller entity (the entity that called the function).
 * `args` (array, optional): An array of arguments to pass to the script function (only used if `script` is a function).
+* `scope` (optional): Scope.
 
 **Example:**
 
@@ -636,25 +1187,6 @@ RunScriptCode.loopy(function(i) {
 }, 0.5, 5, function() {
     printl("All loops completed!")
 })
-```
-
-### `setInterval(script, interval, runDelay, eventName)`
-
-This function schedules the execution of a script recursively at a fixed interval. It is similar to the `setInterval` function in JavaScript and is useful for creating tasks that need to be executed repeatedly at regular intervals.
-
-**Parameters:**
-
-* `script` (string or function): The script to execute. This can be a string containing VScripts code or a function object.
-* `interval` (number): The time interval in seconds between consecutive executions of the script.
-* `runDelay` (number, optional): The initial delay before the first execution of the script (default is 0).
-* `eventName` (string, optional): The name of the event used for scheduling (default is "global").
-
-**Example:**
-
-```js
-RunScriptCode.setInterval(function() {
-    // Do something every second
-}, 1)
 ```
 
 ### `fromStr(str)`

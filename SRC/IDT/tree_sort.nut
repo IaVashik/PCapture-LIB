@@ -1,7 +1,7 @@
 /*
  * A node in an AVL tree.
 */
- ::treeNode <- class {
+::treeNode <- class {
     // The value stored in the node. 
     value = null;
     // The left child node. 
@@ -55,7 +55,7 @@
      * @param {array} array - The array to create the tree from.
      * @returns {AVLTree} - The new tree containing the elements from the array.
     */
-    function fromArray(array) {
+    function FromArray(array) {
         local tree = AVLTree()
         foreach(val in array) 
             tree.insert(val)
@@ -76,9 +76,9 @@
     /*
      * Converts the tree to an array using inorder traversal.
      *
-     * @returns {arrayLib} - An array containing the tree nodes in ascending order.
+     * @returns {ArrayEx} - An array containing the tree nodes in ascending order.
     */
-    function toArray() { 
+    function toarray() { 
         if(this.inorderCache == null) 
             this.inorderCache = this.inorderTraversal()
 
@@ -97,7 +97,7 @@
     }
 
     function _tostring() {
-        local values = this.toArray()
+        local values = this.toarray()
         return format("AVLTree: {%s}", values.join(", "));
     }
 
@@ -106,7 +106,7 @@
     }
 
     function _get(idx) {
-        local values = this.toArray()
+        local values = this.toarray()
         if (idx < 0 || idx >= values.len()) {
             throw Error("the index '" + idx + "' does not exist");
         }
@@ -395,10 +395,10 @@
     /*
      * Performs an inorder traversal of the tree and returns the nodes in ascending order.
      *
-     * @returns {arrayLib} - An array containing the tree nodes in ascending order.
+     * @returns {ArrayEx} - An array containing the tree nodes in ascending order.
     */
     function inorderTraversal() {
-        local result = arrayLib.new();
+        local result = ArrayEx();
         this._inorder(this.root, result);
         return result;
     }
@@ -407,7 +407,7 @@
      * Recursive helper function for inorder traversal.
      *
      * @param {treeNode|null} node - The current node being visited.
-     * @param {arrayLib} result - The array to store the traversed nodes. 
+     * @param {ArrayEx} result - The array to store the traversed nodes. 
     */
     function _inorder(node, result) {
         if (node) {

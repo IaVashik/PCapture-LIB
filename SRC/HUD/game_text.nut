@@ -1,9 +1,10 @@
 /*
  * A class for displaying on-screen text using the "game_text" entity.
 */
- HUD["ScreenText"] <- class {
+HUD["ScreenText"] <- class {
     // The underlying pcapEntity object representing the "game_text" entity. 
     CPcapEntity = null;
+    holdtime = 0;
     
     /*
      * Constructor for a ScreenText object.
@@ -14,6 +15,7 @@
      * @param {string} targetname - The targetname of the "game_text" entity. (optional) 
     */
     constructor(position, message, holdtime = 10, targetname = "") {
+        this.holdtime = holdtime
         this.CPcapEntity = entLib.CreateByClassname("game_text", {
             // Set initial properties for the text display entity
             channel = 2,
@@ -39,6 +41,7 @@
     // Updates and redisplays the on-screen text. 
     function Update() null
 
+    //* Something like builders methods
     // Changes the message of the text display 
     function SetText(message) null 
     // Sets the channel of the text display.  
@@ -63,22 +66,25 @@
 /*
  * Displays the on-screen text. 
 */
-function HUD::ScreenText::Enable() {
+function HUD::ScreenText::Enable(holdtime = null) {
+    this.CPcapEntity.SetKeyValue("holdtime", holdtime ? holdtime : this.holdtime)
     EntFireByHandle(this.CPcapEntity, "Display")
+    return this
 }
 
 /*
  * Hides the on-screen text. 
 */
 function HUD::ScreenText::Disable() {
-    EntFireByHandle(this.CPcapEntity, "Disable")
+    this.CPcapEntity.SetKeyValue("holdtime", 0.01)
+    EntFireByHandle(this.CPcapEntity, "Display")
 }
 
 /*
  * Updates and redisplays the on-screen text. 
 */
 function HUD::ScreenText::Update() {
-    this.CPcapEntity.Enable()
+    this.Enable()
 }
 
 /*
@@ -88,6 +94,7 @@ function HUD::ScreenText::Update() {
 */
 function HUD::ScreenText::SetText(message) {
     this.CPcapEntity.SetKeyValue("message", message)
+    return this
 }
 
 /*
@@ -97,6 +104,7 @@ function HUD::ScreenText::SetText(message) {
 */
 function HUD::ScreenText::SetChannel(channel) {
     this.CPcapEntity.SetKeyValue("channel", channel)
+    return this
 }
 
 /*
@@ -106,6 +114,7 @@ function HUD::ScreenText::SetChannel(channel) {
 */
 function HUD::ScreenText::SetColor(color) {
     this.CPcapEntity.SetKeyValue("color", color)
+    return this
 }
 
 /*
@@ -115,6 +124,7 @@ function HUD::ScreenText::SetColor(color) {
 */
 function HUD::ScreenText::SetColor2(color) {
     this.CPcapEntity.SetKeyValue("color2", color)
+    return this
 }
 
 /* 
@@ -124,6 +134,7 @@ function HUD::ScreenText::SetColor2(color) {
 */
 function HUD::ScreenText::SetEffect(idx) {
     this.CPcapEntity.SetKeyValue("effect", idx)
+    return this
 }
 
 /*
@@ -133,6 +144,7 @@ function HUD::ScreenText::SetEffect(idx) {
 */ 
 function HUD::ScreenText::SetFadeIn(value) {
     this.CPcapEntity.SetKeyValue("fadein", value)
+    return this
 }
 
 /*
@@ -142,6 +154,7 @@ function HUD::ScreenText::SetFadeIn(value) {
 */ 
 function HUD::ScreenText::SetFadeOut(value) {
     this.CPcapEntity.SetKeyValue("fadeout", value)
+    return this
 }
 
 /*
@@ -150,7 +163,9 @@ function HUD::ScreenText::SetFadeOut(value) {
  * @param {number} time - The hold time in seconds.  
 */
 function HUD::ScreenText::SetHoldTime(time) {
+    this.holdtime = time
     this.CPcapEntity.SetKeyValue("holdtime", time)
+    return this
 }
 
 /*
@@ -161,4 +176,5 @@ function HUD::ScreenText::SetHoldTime(time) {
 function HUD::ScreenText::SetPos(position) {
     this.CPcapEntity.SetKeyValue("x", position.x)
     this.CPcapEntity.SetKeyValue("y", position.y)
+    return this
 }

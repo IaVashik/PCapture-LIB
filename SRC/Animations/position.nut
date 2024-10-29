@@ -27,6 +27,25 @@ animate["PositionTransitionByTime"] <- function(entities, startPos, endPos, time
     return animSetting.delay
 }
 
+animate.RT["PositionTransitionByTime"] <- function(entities, startPos, endPos, time, animSetting = {}) {
+    local animSetting = AnimEvent("position", animSetting, entities, time)
+    local vars = {
+        startPos = startPos,
+        dist = endPos - startPos,
+        lerpFunc = animSetting.lerpFunc
+    }
+
+    animate.applyRTAnimation(
+        animSetting, 
+        function(step, steps, v) {return v.startPos + v.dist * v.lerpFunc(step / steps)},
+        function(ent, newPosition) {ent.SetOrigin(newPosition)},
+        vars
+    )
+    
+    animSetting.callOutputs()
+    return animSetting.delay
+}
+
 
 /*
  * Creates an animation that transitions the position of entities over time based on a specified speed. 
@@ -50,6 +69,26 @@ animate["PositionTransitionBySpeed"] <- function(entities, startPos, endPos, spe
     }
     
     animate.applyAnimation(
+        animSetting, 
+        function(step, steps, v) {return v.startPos + v.dist * v.lerpFunc(step / steps)},
+        function(ent, newPosition) {ent.SetOrigin(newPosition)},
+        vars,
+        vars.dist.Length() / speed.tofloat() // steps
+    )
+    
+    animSetting.callOutputs()
+    return animSetting.delay
+} 
+
+animate.RT["PositionTransitionBySpeed"] <- function(entities, startPos, endPos, speed, animSetting = {}) {
+    local animSetting = AnimEvent("position", animSetting, entities)
+    local vars = {
+        startPos = startPos,
+        dist = endPos - startPos,
+        lerpFunc = animSetting.lerpFunc
+    }
+    
+    animate.applyRTAnimation(
         animSetting, 
         function(step, steps, v) {return v.startPos + v.dist * v.lerpFunc(step / steps)},
         function(ent, newPosition) {ent.SetOrigin(newPosition)},

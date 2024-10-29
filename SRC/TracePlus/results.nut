@@ -84,15 +84,14 @@ results["Cheap"] <- class {
     /*
      * Gets an array of all portal entry information for the trace, including nested portals.
      * 
-     * @returns {arrayLib} - An array of CheapTraceResult objects representing portal entries.
+     * @returns {List} - An array of CheapTraceResult objects representing portal entries.
     */
     function GetAggregatedPortalEntryInfo() {
-        local arr = arrayLib([])
-        arr.append(trace)
+        local list = List(this)
         for(local trace = this; trace = trace.portalEntryInfo;) {
-            arr.append(trace)
+            list.append(trace)
         }
-        return arr
+        return list
     }
 
     /*
@@ -105,7 +104,7 @@ results["Cheap"] <- class {
         if(this.surfaceNormal)
             return this.surfaceNormal
         
-        this.surfaceNormal = CalculateImpactNormal(this.GetStartPos(), this.hitpos, this)
+        this.surfaceNormal = CalculateImpactNormal(this.GetStartPos(), this.hitpos)
         return this.surfaceNormal 
     } 
 
@@ -261,15 +260,14 @@ results["Bbox"] <- class {
     /*
      * Gets an array of all portal entry information for the trace, including nested portals.
      * 
-     * @returns {arrayLib} - An array of BboxTraceResult objects representing portal entries.
+     * @returns {List} - An array of BboxTraceResult objects representing portal entries.
     */
     function GetAggregatedPortalEntryInfo() {
-        local arr = arrayLib([])
-        arr.append(this)
+        local list = List(this)
         for(local trace = this; trace = trace.portalEntryInfo;) {
-            arr.append(trace)
+            list.append(trace)
         }
-        return arr.reverse()
+        return list.reverse()
     }
 
     /*
@@ -286,7 +284,7 @@ results["Bbox"] <- class {
         if(hitEnt) {
             this.surfaceNormal = CalculateImpactNormalFromBbox(this.GetStartPos(), this.hitpos, hitEnt)
         } else {
-            this.surfaceNormal = CalculateImpactNormal(this.GetStartPos(), this.hitpos, this)
+            this.surfaceNormal = CalculateImpactNormal(this.GetStartPos(), this.hitpos)
         }
 
         return this.surfaceNormal

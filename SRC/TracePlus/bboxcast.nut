@@ -8,7 +8,7 @@
  * @param {string|null} note - An optional note associated with the trace. 
  * @returns {BboxTraceResult} - The trace result object. 
 */
- TracePlus["Bbox"] <- function(startPos, endPos, ignoreEntities = null, settings = TracePlus.defaultSettings, note = null) {
+TracePlus["Bbox"] <- function(startPos, endPos, ignoreEntities = null, settings = TracePlus.defaultSettings, note = null) {
     local SCOPE = {} // TODO potential place for improvement
     
     SCOPE.startpos <- startPos;
@@ -16,7 +16,6 @@
     SCOPE.ignoreEntities <- ignoreEntities 
     SCOPE.settings <- settings
     SCOPE.note <- note
-    // SCOPE.type <- "BboxCast"
 
     local result = TraceLineAnalyzer(startPos, endPos, ignoreEntities, settings, note)
     

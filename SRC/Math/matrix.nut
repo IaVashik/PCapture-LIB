@@ -4,17 +4,17 @@ math["Matrix"] <- class {
     g = 0; h = 0; k = 1;
 
     /*
-    * Creates a new matrix.
-    *
-    * @param {number} a - The value at row 1, column 1.
-    * @param {number} b - The value at row 1, column 2.
-    * @param {number} c - The value at row 1, column 3.
-    * @param {number} d - The value at row 2, column 1.
-    * @param {number} e - The value at row 2, column 2.
-    * @param {number} f - The value at row 2, column 3.
-    * @param {number} g - The value at row 3, column 1.
-    * @param {number} h - The value at row 3, column 2.
-    * @param {number} k - The value at row 3, column 3.
+     * Creates a new matrix.
+     * 
+     * @param {number} a - The value at row 1, column 1.
+     * @param {number} b - The value at row 1, column 2.
+     * @param {number} c - The value at row 1, column 3.
+     * @param {number} d - The value at row 2, column 1.
+     * @param {number} e - The value at row 2, column 2.
+     * @param {number} f - The value at row 2, column 3.
+     * @param {number} g - The value at row 3, column 1.
+     * @param {number} h - The value at row 3, column 2.
+     * @param {number} k - The value at row 3, column 3.
     */
     constructor(a = 1, b = 0, c = 0,
                 d = 0, e = 1, f = 0,
@@ -25,10 +25,10 @@ math["Matrix"] <- class {
             this.g = g; this.h = h; this.k = k;
         }
     /*
-    * Creates a rotation matrix from Euler angles.
-    *
-    * @param {Vector} angles - Euler angles in degrees (pitch, yaw, roll).
-    * @returns {Matrix} - The rotation matrix.
+     * Creates a rotation matrix from Euler angles.
+     * 
+     * @param {Vector} angles - Euler angles in degrees (pitch, yaw, roll).
+     * @returns {Matrix} - The rotation matrix.
     */
     function fromEuler(angles) {
         local sinX = sin(-angles.z / 180 * PI);
@@ -45,10 +45,10 @@ math["Matrix"] <- class {
     }
 
     /*
-    * Rotates a point using the matrix.
-    *
-    * @param {Vector} point - The point to rotate.
-    * @returns {Vector} - The rotated point.
+     * Rotates a point using the matrix.
+     * 
+     * @param {Vector} point - The point to rotate.
+     * @returns {Vector} - The rotated point.
     */
     function rotateVector(point) {
         return Vector(
@@ -59,10 +59,10 @@ math["Matrix"] <- class {
     }
 
     /*
-    * Unrotates a point using the matrix.
-    *
-    * @param {Vector} point - The point to unrotate.
-    * @returns {Vector} - The unrotated point.
+     * Unrotates a point using the matrix.
+     * 
+     * @param {Vector} point - The point to unrotate.
+     * @returns {Vector} - The unrotated point.
     */
     function unrotateVector(point) {
         return Vector(
@@ -73,9 +73,9 @@ math["Matrix"] <- class {
     }
 
     /*
-    * Transposes the matrix.
-    *
-    * @returns {Matrix} - The transposed matrix.
+     * Transposes the matrix.
+     * 
+     * @returns {Matrix} - The transposed matrix.
     */
     function transpose() {
         return math.Matrix(
@@ -86,10 +86,10 @@ math["Matrix"] <- class {
     }
 
     /*
-    * Calculates the inverse of the matrix.
-    *
-    * @returns {Matrix} - The inverse matrix.
-    * @throws {Error} - If the matrix is singular (determinant is zero).
+     * Calculates the inverse of the matrix.
+     * 
+     * @returns {Matrix} - The inverse matrix.
+     * @throws {Error} - If the matrix is singular (determinant is zero).
     */
     function inverse() {
         local det = this.determinant();
@@ -111,9 +111,9 @@ math["Matrix"] <- class {
     }
 
     /*
-    * Calculates the determinant of the matrix.
-    *
-    * @returns {number} - The determinant of the matrix.
+     * Calculates the determinant of the matrix.
+     * 
+     * @returns {number} - The determinant of the matrix.
     */
     function determinant() {
         return this.a * (this.e * this.k - this.f * this.h) -
@@ -122,10 +122,10 @@ math["Matrix"] <- class {
     }
 
     /*
-    * Scales the matrix by a given factor.
-    *
-    * @param {number} factor - The scaling factor.
-    * @returns {Matrix} - The scaled matrix.
+     * Scales the matrix by a given factor.
+     * 
+     * @param {number} factor - The scaling factor.
+     * @returns {Matrix} - The scaled matrix.
     */
     function scale(factor) {
         return math.Matrix(
@@ -136,10 +136,10 @@ math["Matrix"] <- class {
     }
 
     /*
-    * Rotates the matrix around the X axis by a given angle.
-    *
-    * @param {number} angle - The angle of rotation in radians.
-    * @returns {Matrix} - The rotated matrix.
+     * Rotates the matrix around the X axis by a given angle.
+     * 
+     * @param {number} angle - The angle of rotation in radians.
+     * @returns {Matrix} - The rotated matrix.
     */
     function rotateX(angle) {
         local sinAngle = sin(angle);
@@ -152,10 +152,10 @@ math["Matrix"] <- class {
     }
 
     /*
-    * Multiplies two matrices.
-    *
-    * @param {Matrix} other - The other matrix.
-    * @returns {Matrix} - The result of the multiplication.
+     * Multiplies two matrices.
+     * 
+     * @param {Matrix} other - The other matrix.
+     * @returns {Matrix} - The result of the multiplication.
     */
     function _mul(other) {
         return math.Matrix(
@@ -172,10 +172,10 @@ math["Matrix"] <- class {
     }
 
     /*
-    * Adds two matrices.
-    *
-    * @param {Matrix} other - The other matrix.
-    * @returns {Matrix} - The result of the addition.
+     * Adds two matrices.
+     * 
+     * @param {Matrix} other - The other matrix.
+     * @returns {Matrix} - The result of the addition.
     */
     function _add(other) {
         return math.Matrix(
@@ -186,10 +186,10 @@ math["Matrix"] <- class {
     }
 
     /*
-    * Subtracts two matrices.
-    *
-    * @param {Matrix} other - The other matrix.
-    * @returns {Matrix} - The result of the subtraction.
+     * Subtracts two matrices.
+     * 
+     * @param {Matrix} other - The other matrix.
+     * @returns {Matrix} - The result of the subtraction.
     */
     function _sub(other) {
         return math.Matrix(

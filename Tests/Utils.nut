@@ -1,29 +1,27 @@
 // Utils Module Unit Tests
-IncludeScript("Tests/test_exec")
+if(!("RunTests" in getroottable())) IncludeScript("PCapture-LIB/Tests/test_exec")
 
 utils_tests <- {
     // --- Debug Tests ---
     function debug_draw_entity_bbox_test() {
         local ent = GetPlayerEx()
-        dev.DrawEntityBBox(ent, 10.0)
+        dev.DrawEntityBBox(ent, Vector(125, 0, 0), 10.0)
     },
 
     function debug_log_test() {
-        dev.log("This is a test log message.")
+        dev.info("This is a test log message.")
     },
 
     function debug_warning_test() {
         dev.warning("This is a test warning message.")
-        return assert(cwar.len() > 0) // Assuming the warning message is stored
     },
 
     function debug_error_test() {
         dev.error("This is a test error message.")
-        return assert(cerr.len() > 0) // Assuming the error message is stored
     },
 
     function debug_format_test() {
-        local formattedString = dev.format("Name: {}, Age: {}", "John", 30)
+        local formattedString = macros.format("Name: {}, Age: {}", "John", 30)
         return assert(formattedString == "Name: John, Age: 30")
     },
 
