@@ -1,7 +1,7 @@
 /* 
  * Listens for and handles custom "game events".
 */
- ::EventListener <- {
+::EventListener <- {
     /*
      * Notifies the listener of a triggered event.
      *

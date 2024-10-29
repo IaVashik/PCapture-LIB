@@ -71,8 +71,6 @@ if("GetPlayerEx" in getroottable()) {
     ScheduleEvent.Add(eventName, EntFire, delay, [target, action, value, 0, activator])
 }
 
-::AllPlayers <- []
-
 /*
 * Retrieves a player entity with extended functionality.
 *
@@ -80,54 +78,9 @@ if("GetPlayerEx" in getroottable()) {
 * @returns {pcapEntity} - An extended player entity with additional methods.
 */
 ::GetPlayerEx <- function(index = 0) {
-    if(IsMultiplayer()) {
-        if(index >= AllPlayers.len()) return
-        return AllPlayers[index]
-    }
+    if(!IsMultiplayer()) 
+        return entLib.FromEntity(GetPlayer())
 
-    return entLib.FromEntity(GetPlayer())
-}
-
-/* 
- * Gets an array of all players in the game. 
- *
- * @returns {array} - An array of pcapEntity objects representing the players. 
-*/
-::GetPlayers <- function() { // -> array
-    return AllPlayers
-}
-
-
-/* 
- * Attaches eye control entities to all players in the game. 
- *
- * This function creates logic_measure_movement and info_target entities for each player to track their eye position and angles. 
- * It is called automatically at the initialization of the library and periodically in multiplayer games. 
-*/
-::AttachEyeControlToPlayers <- function() {
-    for(local player; player = entLib.FindByClassname("player", player);) {
-        if(player.GetUserData("Eye")) continue
-
-        local controlName = UniqueString("eyeControl")
-        local eyeControlEntity = entLib.CreateByClassname("logic_measure_movement", {
-            targetname = controlName, measuretype = 1}
-        )
-
-        local eyeName = UniqueString("eyePoint")
-        local eyePointEntity = entLib.CreateByClassname("info_target", {targetname = eyeName})
-
-        local playerName = player.GetName() == "" ? "!player" : player.GetName()
-
-        EntFireByHandle(eyeControlEntity, "setmeasuretarget", playerName)
-        EntFireByHandle(eyeControlEntity, "setmeasurereference", controlName);
-        EntFireByHandle(eyeControlEntity, "SetTargetReference", controlName);
-        EntFireByHandle(eyeControlEntity, "Settarget", eyeName);
-        EntFireByHandle(eyeControlEntity, "Enable")
-
-        player.SetUserData("Eye", eyePointEntity)
-        AllPlayers.append(player)
-
-        // New portal pair:
-        InitPortalPair(AllPlayers.len())
-    }
+    if(index >= AllPlayers.len()) return null
+    return AllPlayers[index]
 }

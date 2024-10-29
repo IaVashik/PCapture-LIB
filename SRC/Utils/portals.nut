@@ -3,7 +3,7 @@
  * 
  * This function is not part of the public API.
 */
- ::_CreatePortalDetector <- function(extraKey, extraValue) {
+::_CreatePortalDetector <- function(extraKey, extraValue) {
     local detector = entLib.CreateByClassname("func_portal_detector", {solid = 3, CollisionGroup = 10})
     detector.SetKeyValue(extraKey, extraValue)
     detector.SetBBox(Vector(32000, 32000, 32000) * -1, Vector(32000, 32000, 32000))

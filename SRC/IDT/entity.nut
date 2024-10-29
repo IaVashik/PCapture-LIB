@@ -14,6 +14,7 @@
         this.CBaseEntity = entity
         this.EntityScope = {}
         entity.ValidateScriptScope()
+        // this.uniqueId = UniqueString("pcapEntity")
         // entity.GetScriptScope().self <- this // todo whoa!
     }
 
