@@ -13,5 +13,6 @@
 IncludeScript("PCapture-LIB/SRC/Math/algebraic")
 IncludeScript("PCapture-LIB/SRC/Math/utils_vector")
 IncludeScript("PCapture-LIB/SRC/Math/lerp")
+IncludeScript("PCapture-LIB/SRC/Math/easing_equation")
 IncludeScript("PCapture-LIB/SRC/Math/quaternion")
 IncludeScript("PCapture-LIB/SRC/Math/matrix")
