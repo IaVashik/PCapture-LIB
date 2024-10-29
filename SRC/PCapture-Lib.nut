@@ -43,20 +43,28 @@ IncludeScript("PCapture-LIB/SRC/HUD/init.nut")
 
 
 /*
- * This code initializes "eyes" for all players to enable retrieving their coordinates and viewing directions,
- * serving as a workaround due to the lack of the EyeForward function in Portal 2.
+ * Initializes eye tracking for all players, allowing retrieval of their coordinates and viewing directions.
+ * This serves as a workaround for the absence of the EyeForward function in Portal 2.
  *
- * If the session is multiplayer, it reinitializes the eyes after 1 second to ensure players are properly set up,
- * as players initialize with a slight delay of 1-2 seconds in multiplayer mode.
+ * In multiplayer sessions, it reinitializes eye tracking after 1 second to ensure that players are set up 
+ * correctly, as there is typically a slight delay (1-2 seconds) in player initialization.
  *
- * Additionally, if running in the Portal 2 Multiplayer Mod (P2MM), it sets up a repeated initialization every second,
- * to accommodate new players joining the session dynamically.
+ * When running in the Portal 2 Multiplayer Mod (P2MM), it schedules repeated initialization every second 
+ * to dynamically accommodate new players joining the session.
 */
-AttachEyeControlToPlayers()
-if(IsMultiplayer()) 
-    ScheduleEvent.Add("global", AttachEyeControlToPlayers, 2)
-if(IsMultiplayer() && "TEAM_SINGLEPLAYER" in getroottable()) 
-    ScheduleEvent.AddInterval("global", AttachEyeControlToPlayers, 1, 2)
+
+TrackPlayerJoins()
+if(IsMultiplayer()) {
+    ScheduleEvent.Add("global", TrackPlayerJoins, 2) // Thanks Volve for making it take so long for players to initialize
+    ScheduleEvent.AddInterval("global", HandlePlayerEventsMP, 0.3)
+    
+    if("TEAM_SINGLEPLAYER" in getroottable()) 
+        // This session is running in P2MM, actively monitoring players.
+        ScheduleEvent.AddInterval("global", TrackPlayerJoins, 1, 2)
+} 
+else {
+    ScheduleEvent.AddInterval("global", HandlePlayerEventsSP, 0.5)
+} 
 
 
 // Global settings for the portals correct working
