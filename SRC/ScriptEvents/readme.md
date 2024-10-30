@@ -4,19 +4,19 @@ This module provides a framework for creating and managing custom "game events" 
 
 ## Table of Contents
 
-* [`ScriptEvent/game_event.nut`](#scripteventgame_eventnut)
+* [`ScriptEvents/game_event.nut`](#scripteventsgame_eventnut)
 	* [`VGameEvent(eventName, triggerCount = -1, actionsList = null)`](#vgameeventeventname-triggercount---1-actionslist--null)
 	* [`AddAction(actionFunction)`](#addactionactionfunction)
 	* [`ClearActions()`](#clearactions)
 	* [`SetFilter(filterFunc)`](#setfilterfilterfunc)
 	* [`Trigger(args = null)`](#triggerargs--null)
 	* [`ForceTrigger(args = null)`](#forcetriggerargs--null)
-* [`ScriptEvent/event_listener.nut`](#scripteventevent_listenernut)
+* [`ScriptEvents/event_listener.nut`](#scripteventsevent_listenernut)
 	* [`Notify(eventName, ...)`](#notifyeventname)
 	* [`GetEvent(EventName)`](#geteventeventname)
 * [`Creating and Using VGameEvents`](#creating-and-using-vgameevents)
 
-## [ScriptEvent/game_event.nut](game_event.nut)
+## [ScriptEvents/game_event.nut](game_event.nut)
 
 ### `VGameEvent`
 
@@ -130,7 +130,7 @@ Forces the event to trigger, ignoring the filter function and trigger count.
 myEvent.ForceTrigger("This will always trigger!")
 ```
 
-## [ScriptEvent/event_listener.nut](event_listener.nut)
+## [ScriptEvents/event_listener.nut](event_listener.nut)
 
 ### `EventListener`
 
