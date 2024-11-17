@@ -374,6 +374,7 @@
      * More productive than the built-in iterator.
     */
     function iter() {
+        if(this.length == 0) return
         local current = this.first_node.next_ref;
         while (current) {
             yield current.value

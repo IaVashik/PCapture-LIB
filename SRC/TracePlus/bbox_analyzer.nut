@@ -144,7 +144,7 @@ function TraceLineAnalyzer::Trace(startPos, endPos, ignoreEntities, note = null)
 
         //* "DIRTY" Search
         local segmentCenter = startPos + dist * (segment + JumpPercent * 0.5)
-        for (local ent;ent = Entities.FindByClassnameWithin(ent, "*", segmentCenter, searchRadius);) {
+        for (local ent; ent = Entities.FindByClassnameWithin(ent, "*", segmentCenter, searchRadius);) {
             if (ent && this.shouldHitEntity(ent, ignoreEntities, note)) {
                 local idx = ent.entindex()
                 // small cache system

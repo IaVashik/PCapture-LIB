@@ -68,7 +68,8 @@
         catch(err) {throw "Invalid value for sleep. " + err}
         
         // todo Optimization: can edit this, change its time, and move in queue
-        ScheduleEvent.Add(eventName, generator, delay, null, this.scope)
+        if(eventName in ScheduleEvent.eventsList)
+            ScheduleEvent.Add(eventName, generator, delay, null, this.scope)
     }
 
     function GetInfo() return "[Scope] " + scope + "\n[Action] " + action + "\n[executionTime] " + executionTime
