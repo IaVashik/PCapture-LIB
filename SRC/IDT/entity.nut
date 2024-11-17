@@ -500,7 +500,7 @@
         if(fireDelay != 0)
             return ScheduleEvent.Add(eventName, this.SetSpawnflags, fireDelay, [flag], this)
         
-        this.SetUserData("SpawnFlags", flag)
+        this.SetKeyValue("SpawnFlags", flag)
     }
 
 
