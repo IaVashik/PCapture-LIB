@@ -45,7 +45,7 @@ The `settings` table in the `AnimEvent` constructor can contain the following op
 
 *   `eventName` (string, optional): The name of the event (default is a unique string based on the animation name).
 *   `globalDelay` (number, optional): A global delay in seconds before the animation starts (default is 0).
-*   `outputs` (string or function, optional): A script or function to execute when the animation finishes.
+*   `output` (string or function, optional): A script or function to execute when the animation finishes.
 *   `scope` (object, optional): The scope in which to execute the action (default is the `AnimEvent` object itself).
 *   `lerp` (function, optional): A custom lerp function to use for interpolation. If not provided, a linear interpolation function is used.
 *   `frameInterval` (number, optional): The time interval between frames in seconds (default is the engine's frame time).

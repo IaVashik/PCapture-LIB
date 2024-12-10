@@ -28,7 +28,6 @@ animate["AnglesTransitionByTime"] <- function(entities, startAngles, endAngles, 
         vars
     )
     
-    animSetting.callOutputs()
     return animSetting.delay
 }
 
@@ -52,6 +51,5 @@ animate.RT["AnglesTransitionByTime"] <- function(entities, startAngles, endAngle
         vars
     )
     
-    animSetting.callOutputs()
     return animSetting.delay
 }

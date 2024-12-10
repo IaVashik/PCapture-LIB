@@ -23,7 +23,6 @@ animate["AlphaTransition"] <- function(entities, startOpacity, endOpacity, time,
         vars
     )
     
-    animSetting.callOutputs()
     return animSetting.delay
 }
 
@@ -42,6 +41,5 @@ animate.RT["AlphaTransition"] <- function(entities, startOpacity, endOpacity, ti
         vars
     )
     
-    animSetting.callOutputs()
     return animSetting.delay
 }

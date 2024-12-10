@@ -23,7 +23,6 @@ animate["ColorTransition"] <- function(entities, startColor, endColor, time, ani
         vars
     )
     
-    animSetting.callOutputs()
     return animSetting.delay
 }
 
@@ -42,6 +41,5 @@ animate.RT["ColorTransition"] <- function(entities, startColor, endColor, time, 
         vars
     )
     
-    animSetting.callOutputs()
     return animSetting.delay
 }

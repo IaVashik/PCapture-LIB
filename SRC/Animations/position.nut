@@ -23,7 +23,6 @@ animate["PositionTransitionByTime"] <- function(entities, startPos, endPos, time
         vars
     )
     
-    animSetting.callOutputs()
     return animSetting.delay
 }
 
@@ -42,7 +41,6 @@ animate.RT["PositionTransitionByTime"] <- function(entities, startPos, endPos, t
         vars
     )
     
-    animSetting.callOutputs()
     return animSetting.delay
 }
 
@@ -76,7 +74,6 @@ animate["PositionTransitionBySpeed"] <- function(entities, startPos, endPos, spe
         vars.dist.Length() / speed.tofloat() // steps
     )
     
-    animSetting.callOutputs()
     return animSetting.delay
 } 
 
@@ -96,6 +93,5 @@ animate.RT["PositionTransitionBySpeed"] <- function(entities, startPos, endPos, 
         vars.dist.Length() / speed.tofloat() // steps
     )
     
-    animSetting.callOutputs()
     return animSetting.delay
 } 

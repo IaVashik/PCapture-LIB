@@ -254,7 +254,7 @@ macros["isEqually"] <- function(val1, val2) {
         case "integer": 
             return val1 == val2 
         case "float": 
-            return math.round(val1) == math.round(val2)
+            return math.round(val1, 1000) == math.round(val2, 1000)
         case "Vector": 
             return math.vector.isEqually(val1, val2)
         case "instance": 
@@ -402,7 +402,6 @@ macros["BuildAnimateFunction"] <- function(name, propertySetterFunc, valueCalcul
             varg
         ) 
 
-        animSetting.callOutputs() 
         return animSetting.delay
     }
 }
@@ -426,7 +425,6 @@ macros["BuildRTAnimateFunction"] <- function(name, propertySetterFunc, valueCalc
             varg
         ) 
 
-        animSetting.callOutputs() 
         return animSetting.delay
     }
 }

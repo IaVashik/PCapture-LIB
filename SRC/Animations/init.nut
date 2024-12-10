@@ -20,7 +20,7 @@
     frameInterval = 0
     maxFrames = 60.0
     autoOptimization = true
-    outputs = null
+    output = null
     entities = []
     lerpFunc = null;
     filterCallback = null;
@@ -41,7 +41,7 @@
         
         this.eventName = macros.GetFromTable(table, "eventName", UniqueString(name + "_anim"))
         this.globalDelay = macros.GetFromTable(table, "globalDelay", 0)
-        this.outputs = macros.GetFromTable(table, "outputs", null)
+        this.output = macros.GetFromTable(table, "output", null)
         this.scope = macros.GetFromTable(table, "scope", this)
         this.lerpFunc = macros.GetFromTable(table, "lerp", function(t) return t)
         this.filterCallback = macros.GetFromTable(table, "filterCallback", function(a,b,c,d,e) return null)
@@ -51,11 +51,11 @@
     } 
 
     /* 
-     * Calls the outputs associated with the animation event. 
+     * Calls the output associated with the animation event. 
     */
-    function callOutputs() {
-        if(this.outputs)
-            ScheduleEvent.Add(this.eventName, this.outputs, this.delay + this.globalDelay, null, this.scope)
+    function CallOutput() {
+        if(this.output)
+            ScheduleEvent.Add(this.eventName, this.output, this.delay + this.globalDelay, null, this.scope)
     }
 
     function _GetEntities(entities) { // meh :>
@@ -122,6 +122,7 @@ animate["applyAnimation"] <- function(animInfo, valueCalculator, propertySetter,
 
     ScheduleEvent.AddActions(animInfo.eventName, actionsList, true)
     animInfo.delay = animInfo.frameInterval * transitionFrames
+    animInfo.CallOutput()
 
     if(developer() > 0) dev.trace("Created {} animation ({}) for {} actions", animInfo.animName, animInfo.eventName, actionsList.len())
 }
@@ -172,6 +173,10 @@ animate["_applyRTAnimation"] <- function(animInfo, valueCalculator, propertySett
 
         yield animInfo.frameInterval
     }
+
+    animInfo.delay = 0
+    animInfo.globalDelay = 0
+    animInfo.CallOutput()
 }
 
 IncludeScript("PCapture-LIB/SRC/Animations/alpha")
