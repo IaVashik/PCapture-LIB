@@ -613,7 +613,7 @@ math_tests <- {
         local result = quat.toAxisAngle() 
         local expectedAxis = Vector(1, 0, 0) 
         local expectedAngle = 1.57082 // 90 * PI / 180 
-        return assert(math.vector.isEqually(result.axis, expectedAxis) && math.round(result.angle) == math.round(expectedAngle)) 
+        return assert(math.vector.isEqually(result.axis, expectedAxis) && math.round(result.angle, 1000) == math.round(expectedAngle, 1000)) 
     },
 
     // Matrix tests 

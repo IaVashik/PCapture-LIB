@@ -54,7 +54,7 @@ math["clamp"] <- function(number, min, max = 99999) {
  * @param {int} precision - The precision (e.g., 1000 for rounding to three decimal places).
  * @returns {number} - The rounded value.
 */
-math["round"] <- function(value, precision = 1000) {
+math["round"] <- function(value, precision = 1) {
     return floor(value * precision + 0.5) / precision
 }
 
