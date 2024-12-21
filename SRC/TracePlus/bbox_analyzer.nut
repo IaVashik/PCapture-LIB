@@ -6,12 +6,11 @@ class BufferedEntity {
     origin = null;
     bboxMax = null;
     bboxMin = null;
-    len = null
+    ignoreMe = false;
 
     constructor(entity) {
         this.entity = entLib.FromEntity(entity)
-        this.origin = entity.GetCenter()
-        this.len = ( entity.GetBoundingMaxs() - entity.GetBoundingMins() ).Length() / 2 // or we can use `this.entity.GetBoundingCenter().Length()`
+        this.origin = entity.GetCenter() // lmao, origin == center
         
         // This is needed for optimization with avoiding a lot of quaternion rotations
         local _origin = entity.GetOrigin()
@@ -128,6 +127,9 @@ const JumpPercent = 0.25
  * @returns {array} - An array containing the hit position and the hit entity (or null). 
 */
 function TraceLineAnalyzer::Trace(startPos, endPos, ignoreEntities, note = null) {
+    // Preventing VScript errors and ensuring correct results even with a broken TraceLine
+    if(macros.PointInBounds(startPos) == false) return [startPos, null]
+    
     // Get the hit position from the fast trace
     local hitPos = startPos + (endPos - startPos) * TraceLine(startPos, endPos, null)
     local dist = hitPos - startPos
@@ -136,46 +138,50 @@ function TraceLineAnalyzer::Trace(startPos, endPos, ignoreEntities, note = null)
     local halfSegment = dist * JumpPercent * 0.5
     local segmentsLenght = halfSegment * 2
     local searchRadius = halfSegment.Length()
-
-    local fastSearchSteps = searchRadius / 15
-    local deepSearchSteps = searchRadius / this.settings.depthAccuracy
+    local searchSteps = searchRadius / this.settings.depthAccuracy
    
     for(local segment = 0; segment < 1; segment += JumpPercent) {
 
         //* "DIRTY" Search
         local segmentCenter = startPos + dist * (segment + JumpPercent * 0.5)
+        // dev.drawbox(segmentCenter, Vector(255,0,0), 6)
         for (local ent; ent = Entities.FindByClassnameWithin(ent, "*", segmentCenter, searchRadius);) {
             if (ent && this.shouldHitEntity(ent, ignoreEntities, note)) {
                 local idx = ent.entindex()
+                local BEnt = null
                 // small cache system
                 if(idx in EntBufferTable && this.eqVecFunc(EntBufferTable[idx].origin, ent.GetOrigin())) {
-                    entBuffer.append(EntBufferTable[idx])
+                    BEnt = EntBufferTable[idx]
                 }
                 else {
-                    local BEnt = BufferedEntity(ent)
+                    BEnt = BufferedEntity(ent)
                     EntBufferTable[idx] <- BEnt
-                    entBuffer.append(BEnt)
                 }
+                
+                if(BEnt.ignoreMe || RayAabbIntersect(startPos, endPos, BEnt.bboxMin, BEnt.bboxMax)) 
+                    entBuffer.append(BEnt)
+                else BEnt.ignoreMe = true
             }
         }
 
         // The "dirty search" didn't turn up anything? Check the next segment
         if(entBuffer.len() == 0) continue
         
-        //* Fast Search
+        //* Deep Search
         local segmentStart = segmentCenter - halfSegment
-        local segmentEnd = segmentCenter + halfSegment
-        for (local i = 0.0; i <= fastSearchSteps; i++) {
-            local rayPart = segmentStart + segmentsLenght * (i / fastSearchSteps)
-            foreach(entInfo in entBuffer.iter()) {
-                local distanceToEntity = (rayPart - entInfo.origin).Length()
-                if(distanceToEntity <= entInfo.len) {
-                    //* Deep Search
-                    local result = this.DeepSearch(rayPart, halfSegment, deepSearchSteps, entInfo)
-                    if(result) return result
+        for (local i = 0.0; i <= searchSteps; i++) {
+            local rayPart = segmentStart + segmentsLenght * (i / searchSteps)
+            
+            foreach(ent in entBuffer) {
+                if(macros.PointInBBox(rayPart, ent.bboxMin, ent.bboxMax)) {
+                    if(this.settings.bynaryRefinement) 
+                        return [BinaryRefinementSearch(rayPart - halfSegment * 0.5, rayPart + halfSegment * 0.5, ent.bboxMin, ent.bboxMax), ent.entity]
+                    return [rayPart, ent.entity] // VSquirrel doesn't support tuples, so i use arrays
                 }
             }
+
         }
+        
 
         // Cleanup buffer
         entBuffer.clear()
@@ -185,22 +191,57 @@ function TraceLineAnalyzer::Trace(startPos, endPos, ignoreEntities, note = null)
     return [hitPos, null]
 }
 
-function TraceLineAnalyzer::DeepSearch(segmentStart, deepSegmentsLenght, searchSteps, entInfo) {
-    local bMin = entInfo.bboxMin
-    local bMax = entInfo.bboxMax
+// DEBUG for dirty search
+    // dev.drawbox(startPos, Vector(255,255,255), 6)
+    // dev.drawbox(endPos, Vector(255,255,255), 6)
+// DEBUG for "deep search"
+    // dev.drawbox(rayPart, Vector(255, 255, 0), 5)
+    // dev.drawbox(rayPart - halfSegment * 0.5, Vector(125, 255, 0), 5)
+    // dev.drawbox(rayPart + halfSegment* 0.5, Vector(125, 255, 0), 5)
 
-    for (local i = 0.0; i <= searchSteps; i++) {
-        local rayPart = segmentStart + deepSegmentsLenght * (i / searchSteps)
-        
-        if(macros.PointInBBox(rayPart, bMin, bMax)) {
-            if(this.settings.bynaryRefinement) 
-                return [this.BinaryRefinementSearch(rayPart - deepSegmentsLenght, rayPart + deepSegmentsLenght, bMin, bMax), entInfo.entity]
-            return [rayPart, entInfo.entity] // VSquirrel doesn't support tuples, so i use arrays
+
+function RayAabbIntersect(start, end, min, max) {
+    local dir = end - start;
+
+    local tEnter = -999999.0;
+    local tExit = 999999.0;
+
+    foreach(axis in ["x", "y", "z"]) {
+        local startVal = start[axis];
+        local minVal = min[axis];
+        local maxVal = max[axis];
+        local dirVal = dir[axis];
+
+        if (fabs(dirVal) < 0.000001) {
+            if (startVal < minVal || startVal > maxVal) {
+                return false;
+            }
+        } else {
+            local tMin = (minVal - startVal) / dirVal;
+            local tMax = (maxVal - startVal) / dirVal;
+
+            if (tMin > tMax) {
+                local temp = tMin;
+                tMin = tMax;
+                tMax = temp;
+            }
+
+            if (tMin > tEnter)
+                tEnter = tMin;
+            
+            if (tMax < tExit)
+                tExit = tMax;
+
+            if (tEnter > tExit)
+                return false;
         }
     }
+
+    return tExit >= 0.0 && tEnter <= 1.0;
 }
 
-function TraceLineAnalyzer::BinaryRefinementSearch(rayStart, rayEnd, bMin, bMax) {
+
+function BinaryRefinementSearch(rayStart, rayEnd, bMin, bMax) {
     // Binary search between rayStart and rayEnd
     local closestHitPoint = null
     local left = 0.0
@@ -269,7 +310,6 @@ function TraceLineAnalyzer::shouldHitEntity(ent, ignoreEntities, note) {
 
     return true
 }
-
 
 /*
 * Check if entity is a priority class.
