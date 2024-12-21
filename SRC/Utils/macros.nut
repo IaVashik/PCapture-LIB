@@ -372,6 +372,24 @@ macros["PointInBBox"] <- function(point, bMin, bMax) {
     )
 }
 
+/*
+ * Checks if a point is within the defined bounds of the map using raycasts.
+ *
+ * @param {Vector} point - The point to check.
+ * @returns {boolean} - True if the point is within the bounds, false otherwise.
+*/
+macros["PointInBounds"] <- function(point) {
+    local m = 64000
+    return (
+        TraceLine(point, point + Vector(m, 0, 0), null) == 1.0 ||
+        TraceLine(point, point - Vector(m, 0, 0), null) == 1.0 ||
+        TraceLine(point, point + Vector(0, m, 0), null) == 1.0 ||
+        TraceLine(point, point - Vector(0, m, 0), null) == 1.0 || 
+        TraceLine(point, point + Vector(0, 0, m), null) == 1.0 ||
+        TraceLine(point, point - Vector(0, 0, m), null) == 1.0
+    ) == false
+}
+
 
 /*
  * Creates a function that animates a property of one or more entities.

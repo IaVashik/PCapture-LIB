@@ -860,6 +860,27 @@ local bMax = Vector(10, 10, 10)
 local isInside = macros.PointInBBox(point, bMin, bMax) // isInside will be true
 ```
 
+### `macros.PointInBounds(point)`
+
+This macro determines if a given point lies within the game world's boundaries. It achieves this by performing `TraceLine` calls in six directions (positive and negative X, Y, and Z) from the point, extending outwards by a large distance (`m = 64000`).
+
+**Parameters:**
+
+* `point` (Vector): The point to check.
+
+**Returns:**
+
+* (boolean): `true` if the point is considered to be inside the defined bounds, `false` otherwise.
+
+**Example:**
+
+```js
+local pointInside = Vector(100, 200, 50)
+local pointOutside = Vector(100000, 200, 50)
+local isInside = macros.PointInBounds(pointInside) // isInside will be true
+local isOutside = macros.PointInBounds(pointOutside) // isOutside will be false
+```
+
 ### `macros.Range(start, end, step)`
 Generates a list of numbers within a specified range.
 

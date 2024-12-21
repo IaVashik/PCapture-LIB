@@ -347,6 +347,7 @@ Provides utility functions.
 | [`MaskSearch(iter: array\|ArrayEx, match: string) -> number`](SRC/Utils/readme.md#masksearchiter-match) | Mask search in array. |
 | [`GetRectangle(v1: Vector, v2: Vector, v3: Vector, v4: Vector) -> table`](SRC/Utils/readme.md#getrectanglev1-v2-v3-v4) | Creates rectangle object.  |
 | [`PointInBBox(point: Vector, bMin: Vector, bMax: Vector) -> bool`](SRC/Utils/readme.md#pointinbboxpoint-bmin-bmax) | Point in bbox check. |
+| [`PointInBounds(point: Vector) -> bool`](SRC/Utils/readme.md#pointinbboxpoint) | Point in world's bounds check. |
 | [`Range(start: number, end: number, step: number) -> List`](SRC/Utils/readme.md#rangestart-end-step) | Creates number range as List.  |
 | [`RangeIter(start: number, end: number, step: number) -> iterator`](SRC/Utils/readme.md#rangeiterstart-end-step) | Creates number range iterator. |
 | [`GetDist(vec1: Vector, vec2: Vector) -> number`](SRC/Utils/readme.md#getdistvec1-vec2) | Distance between vectors.  |
