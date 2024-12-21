@@ -3,11 +3,12 @@
  *
  * @param {Vector} startPos - The original start position of the trace. 
  * @param {Vector} hitPos - The hit position of the trace on the portal. 
+ * @param {int} rayDist - Distance of the new ray. 
  * @param {pcapEntity} portal - The portal entity. 
  * @param {pcapEntity} partnerPortal - The partner portal entity. 
  * @returns {table} - A table containing the new startPos and endPos for the trace after passing through the portal. 
 */ 
-::_ApplyPortal <- function(startPos, hitPos, portal, partnerPortal) {
+::_ApplyPortal <- function(startPos, hitPos, rayDist, portal, partnerPortal) {
     local portalAngles = portal.GetAngles();
     local partnerAngles = partnerPortal.GetAngles();
     local offset = math.vector.unrotate(hitPos - portal.GetOrigin(), portalAngles);
@@ -22,7 +23,7 @@
     local newStart = partnerPortal.GetOrigin() + math.vector.rotate(offset, partnerAngles)
     return {
         startPos = newStart,
-        endPos = newStart + dir * 4096
+        endPos = newStart + dir * rayDist
     }
 }
 
@@ -35,6 +36,7 @@
  * @returns {CheapTraceResult} - The trace result object, including information about portal entries.
 */
 TracePlus["PortalCheap"] <- function(startPos, endPos) {
+    local length = (endPos - startPos).Length()
     local previousTraceData 
     // Portal castings
     for (local i = 0; i < MAX_PORTAL_CAST_DEPTH; i++) {
@@ -42,6 +44,7 @@ TracePlus["PortalCheap"] <- function(startPos, endPos) {
         traceData.portalEntryInfo = previousTraceData
 
         local hitPos = traceData.GetHitpos()
+        length -= (hitPos - startPos).Length()
 
         // Find a nearby portal entity. 
         local portal = entLib.FindByClassnameWithin("prop_portal", hitPos, 1) 
@@ -60,7 +63,7 @@ TracePlus["PortalCheap"] <- function(startPos, endPos) {
         }
 
         // Calculate new start and end positions for the trace after passing through the portal. 
-        local ray = _ApplyPortal(startPos, hitPos, portal, partnerPortal);
+        local ray = _ApplyPortal(startPos, hitPos, length, portal, partnerPortal);
         // Adjust the start position slightly to prevent the trace from getting stuck.  
         startPos = ray.startPos + partnerPortal.GetForwardVector() 
         endPos = ray.endPos
@@ -96,6 +99,7 @@ TracePlus["PortalCheap"] <- function(startPos, endPos) {
  * @returns {BboxTraceResult} - The trace result object, including information about portal entries.
 */
 TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, settings = TracePlus.defaultSettings, note = null) {
+    local length = (endPos - startPos).Length()
     local previousTraceData 
     // Portal castings
     for (local i = 0; i < MAX_PORTAL_CAST_DEPTH; i++) {
@@ -104,6 +108,7 @@ TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, set
 
         local hitPos = traceData.GetHitpos()
         local portal = traceData.GetEntity()
+        length -= (hitPos - startPos).Length()
 
         if(!portal || portal.GetClassname() != "linked_portal_door")
             portal = entLib.FindByClassnameWithin("prop_portal", hitPos, 1) // todo: i should optimize it...
@@ -126,7 +131,7 @@ TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, set
         ignoreEntities = TracePlus.Settings.UpdateIgnoreEntities(ignoreEntities, partnerPortal)
 
         // Calculate new start and end positions for the trace after passing through the portal.  
-        local ray = _ApplyPortal(startPos, hitPos, portal, partnerPortal);
+        local ray = _ApplyPortal(startPos, hitPos, length, portal, partnerPortal);
         // Adjust the start position slightly to prevent the trace from getting stuck. 
         startPos = ray.startPos + partnerPortal.GetForwardVector() 
         endPos = ray.endPos
