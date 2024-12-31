@@ -9,11 +9,11 @@
 |    GitHud repo: https://github.com/IaVashik/PCapture-LIB                          |
 +----------------------------------------------------------------------------------+ */
 
-local version = "PCapture-Lib 3.0 Stable"
+local version = "PCapture-Lib 3.1 Stable"
 
 // `Self` must be in any case, even if the script is run directly by the interpreter
 if (!("self" in this)) {
-    self <- Entities.FindByClassname(null, "worldspawn")
+    self <- Entities.First()
 } else {
     getroottable()["self"] <- self
 }
@@ -96,7 +96,7 @@ math["clamp"] <- function(number, min, max = 99999) {
  * @param {int} precision - The precision (e.g., 1000 for rounding to three decimal places).
  * @returns {number} - The rounded value.
 */
-math["round"] <- function(value, precision = 1000) {
+math["round"] <- function(value, precision = 1) {
     return floor(value * precision + 0.5) / precision
 }
 
@@ -1669,7 +1669,7 @@ math["Matrix"] <- class {
         if(fireDelay != 0)
             return ScheduleEvent.Add(eventName, this.SetSpawnflags, fireDelay, [flag], this)
         
-        this.SetUserData("SpawnFlags", flag)
+        this.SetKeyValue("SpawnFlags", flag)
     }
 
 
@@ -3111,6 +3111,7 @@ function pcapEntity::SetVelocity(vector) this.CBaseEntity.SetVelocity(vector)
      * More productive than the built-in iterator.
     */
     function iter() {
+        if(this.length == 0) return
         local current = this.first_node.next_ref;
         while (current) {
             yield current.value
@@ -4476,7 +4477,7 @@ macros["isEqually"] <- function(val1, val2) {
         case "integer": 
             return val1 == val2 
         case "float": 
-            return math.round(val1) == math.round(val2)
+            return math.round(val1, 1000) == math.round(val2, 1000)
         case "Vector": 
             return math.vector.isEqually(val1, val2)
         case "instance": 
@@ -4594,6 +4595,24 @@ macros["PointInBBox"] <- function(point, bMin, bMax) {
     )
 }
 
+/*
+ * Checks if a point is within the defined bounds of the map using raycasts.
+ *
+ * @param {Vector} point - The point to check.
+ * @returns {boolean} - True if the point is within the bounds, false otherwise.
+*/
+macros["PointInBounds"] <- function(point) {
+    local m = 64000
+    return (
+        TraceLine(point, point + Vector(m, 0, 0), null) == 1.0 ||
+        TraceLine(point, point - Vector(m, 0, 0), null) == 1.0 ||
+        TraceLine(point, point + Vector(0, m, 0), null) == 1.0 ||
+        TraceLine(point, point - Vector(0, m, 0), null) == 1.0 || 
+        TraceLine(point, point + Vector(0, 0, m), null) == 1.0 ||
+        TraceLine(point, point - Vector(0, 0, m), null) == 1.0
+    ) == false
+}
+
 
 /*
  * Creates a function that animates a property of one or more entities.
@@ -4624,7 +4643,6 @@ macros["BuildAnimateFunction"] <- function(name, propertySetterFunc, valueCalcul
             varg
         ) 
 
-        animSetting.callOutputs() 
         return animSetting.delay
     }
 }
@@ -4648,7 +4666,6 @@ macros["BuildRTAnimateFunction"] <- function(name, propertySetterFunc, valueCalc
             varg
         ) 
 
-        animSetting.callOutputs() 
         return animSetting.delay
     }
 }
@@ -5465,10 +5482,14 @@ TracePlus["Settings"] <- class {
 
     function _typeof() return "TraceSettings"
     function _cloned() {
-        return Settings(
-            clone this.ignoreClasses, clone this.priorityClasses, clone this.ignoredModels, 
-            this.shouldRayHitEntity, this.shouldIgnoreEntity
-        )
+        return TracePlus.Settings()
+            .SetIgnoredClasses(clone this.ignoreClasses)
+            .SetPriorityClasses(clone this.priorityClasses)
+            .SetIgnoredModels(clone this.ignoredModels)
+            .SetCollisionFilter(this.shouldRayHitEntity)
+            .SetIgnoreFilter(this.shouldIgnoreEntity)
+            .SetBynaryRefinement(this.bynaryRefinement)
+            .SetDepthAccuracy(this.depthAccuracy)
     }
 }
 TracePlus.defaultSettings = TracePlus.Settings.new()
@@ -5557,11 +5578,12 @@ TracePlus["FromEyes"]["Bbox"] <- function(distance, player, ignoreEntities = nul
  *
  * @param {Vector} startPos - The original start position of the trace. 
  * @param {Vector} hitPos - The hit position of the trace on the portal. 
+ * @param {int} rayDist - Distance of the new ray. 
  * @param {pcapEntity} portal - The portal entity. 
  * @param {pcapEntity} partnerPortal - The partner portal entity. 
  * @returns {table} - A table containing the new startPos and endPos for the trace after passing through the portal. 
 */ 
-::_ApplyPortal <- function(startPos, hitPos, portal, partnerPortal) {
+::_ApplyPortal <- function(startPos, hitPos, rayDist, portal, partnerPortal) {
     local portalAngles = portal.GetAngles();
     local partnerAngles = partnerPortal.GetAngles();
     local offset = math.vector.unrotate(hitPos - portal.GetOrigin(), portalAngles);
@@ -5576,7 +5598,7 @@ TracePlus["FromEyes"]["Bbox"] <- function(distance, player, ignoreEntities = nul
     local newStart = partnerPortal.GetOrigin() + math.vector.rotate(offset, partnerAngles)
     return {
         startPos = newStart,
-        endPos = newStart + dir * 4096
+        endPos = newStart + dir * rayDist
     }
 }
 
@@ -5589,6 +5611,7 @@ TracePlus["FromEyes"]["Bbox"] <- function(distance, player, ignoreEntities = nul
  * @returns {CheapTraceResult} - The trace result object, including information about portal entries.
 */
 TracePlus["PortalCheap"] <- function(startPos, endPos) {
+    local length = (endPos - startPos).Length()
     local previousTraceData 
     // Portal castings
     for (local i = 0; i < MAX_PORTAL_CAST_DEPTH; i++) {
@@ -5596,6 +5619,7 @@ TracePlus["PortalCheap"] <- function(startPos, endPos) {
         traceData.portalEntryInfo = previousTraceData
 
         local hitPos = traceData.GetHitpos()
+        length -= (hitPos - startPos).Length()
 
         // Find a nearby portal entity. 
         local portal = entLib.FindByClassnameWithin("prop_portal", hitPos, 1) 
@@ -5614,7 +5638,7 @@ TracePlus["PortalCheap"] <- function(startPos, endPos) {
         }
 
         // Calculate new start and end positions for the trace after passing through the portal. 
-        local ray = _ApplyPortal(startPos, hitPos, portal, partnerPortal);
+        local ray = _ApplyPortal(startPos, hitPos, length, portal, partnerPortal);
         // Adjust the start position slightly to prevent the trace from getting stuck.  
         startPos = ray.startPos + partnerPortal.GetForwardVector() 
         endPos = ray.endPos
@@ -5646,10 +5670,11 @@ TracePlus["PortalCheap"] <- function(startPos, endPos) {
  * @param {Vector} endPos - The end position of the trace.
  * @param {array|CBaseEntity|null} ignoreEntities - A list of entities or a single entity to ignore during the trace. (optional) 
  * @param {TraceSettings} settings - The settings to use for the trace. (optional, defaults to TracePlus.defaultSettings) 
- * @param {string|null} note - An optional note associated with the trace. 
+ * @param {any|null} note - An optional note associated with the trace. 
  * @returns {BboxTraceResult} - The trace result object, including information about portal entries.
 */
 TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, settings = TracePlus.defaultSettings, note = null) {
+    local length = (endPos - startPos).Length()
     local previousTraceData 
     // Portal castings
     for (local i = 0; i < MAX_PORTAL_CAST_DEPTH; i++) {
@@ -5658,6 +5683,7 @@ TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, set
 
         local hitPos = traceData.GetHitpos()
         local portal = traceData.GetEntity()
+        length -= (hitPos - startPos).Length()
 
         if(!portal || portal.GetClassname() != "linked_portal_door")
             portal = entLib.FindByClassnameWithin("prop_portal", hitPos, 1) // todo: i should optimize it...
@@ -5680,7 +5706,7 @@ TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, set
         ignoreEntities = TracePlus.Settings.UpdateIgnoreEntities(ignoreEntities, partnerPortal)
 
         // Calculate new start and end positions for the trace after passing through the portal.  
-        local ray = _ApplyPortal(startPos, hitPos, portal, partnerPortal);
+        local ray = _ApplyPortal(startPos, hitPos, length, portal, partnerPortal);
         // Adjust the start position slightly to prevent the trace from getting stuck. 
         startPos = ray.startPos + partnerPortal.GetForwardVector() 
         endPos = ray.endPos
@@ -5696,16 +5722,17 @@ TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, set
  * @param {CBaseEntity|pcapEntity} player - The player entity.
  * @param {array|CBaseEntity|null} ignoreEntities - A list of entities or a single entity to ignore during the trace. (optional)
  * @param {TraceSettings} settings - The settings to use for the trace. (optional, defaults to TracePlus.defaultSettings) 
+ * @param {any|null} note - An optional note associated with the trace. 
  * @returns {BboxTraceResult} - The trace result object. 
 */
- TracePlus["FromEyes"]["PortalBbox"] <- function(distance, player, ignoreEntities = null, settings = TracePlus.defaultSettings) {
+ TracePlus["FromEyes"]["PortalBbox"] <- function(distance, player, ignoreEntities = null, settings = TracePlus.defaultSettings, note = null) {
     // Calculate the start and end positions of the trace
     local startPos = player.EyePosition()
     local endPos = macros.GetEyeEndpos(player, distance)
     ignoreEntities = TracePlus.Settings.UpdateIgnoreEntities(ignoreEntities, player)
 
     // Perform the bboxcast trace and return the trace result
-    return TracePlus.PortalBbox(startPos, endPos, ignoreEntities, settings)
+    return TracePlus.PortalBbox(startPos, endPos, ignoreEntities, settings, note)
 }
 
 // Expensive/Precise TraceLine logic
@@ -5716,12 +5743,11 @@ class BufferedEntity {
     origin = null;
     bboxMax = null;
     bboxMin = null;
-    len = null
+    ignoreMe = false;
 
     constructor(entity) {
         this.entity = entLib.FromEntity(entity)
-        this.origin = entity.GetCenter()
-        this.len = ( entity.GetBoundingMaxs() - entity.GetBoundingMins() ).Length() / 2 // or we can use `this.entity.GetBoundingCenter().Length()`
+        this.origin = entity.GetCenter() // lmao, origin == center
         
         // This is needed for optimization with avoiding a lot of quaternion rotations
         local _origin = entity.GetOrigin()
@@ -5838,6 +5864,9 @@ const JumpPercent = 0.25
  * @returns {array} - An array containing the hit position and the hit entity (or null). 
 */
 function TraceLineAnalyzer::Trace(startPos, endPos, ignoreEntities, note = null) {
+    // Preventing VScript errors and ensuring correct results even with a broken TraceLine
+    if(macros.PointInBounds(startPos) == false) return [startPos, null]
+    
     // Get the hit position from the fast trace
     local hitPos = startPos + (endPos - startPos) * TraceLine(startPos, endPos, null)
     local dist = hitPos - startPos
@@ -5846,46 +5875,50 @@ function TraceLineAnalyzer::Trace(startPos, endPos, ignoreEntities, note = null)
     local halfSegment = dist * JumpPercent * 0.5
     local segmentsLenght = halfSegment * 2
     local searchRadius = halfSegment.Length()
-
-    local fastSearchSteps = searchRadius / 15
-    local deepSearchSteps = searchRadius / this.settings.depthAccuracy
+    local searchSteps = searchRadius / this.settings.depthAccuracy
    
     for(local segment = 0; segment < 1; segment += JumpPercent) {
 
         //* "DIRTY" Search
         local segmentCenter = startPos + dist * (segment + JumpPercent * 0.5)
-        for (local ent;ent = Entities.FindByClassnameWithin(ent, "*", segmentCenter, searchRadius);) {
+        // dev.drawbox(segmentCenter, Vector(255,0,0), 6)
+        for (local ent; ent = Entities.FindByClassnameWithin(ent, "*", segmentCenter, searchRadius);) {
             if (ent && this.shouldHitEntity(ent, ignoreEntities, note)) {
                 local idx = ent.entindex()
+                local BEnt = null
                 // small cache system
                 if(idx in EntBufferTable && this.eqVecFunc(EntBufferTable[idx].origin, ent.GetOrigin())) {
-                    entBuffer.append(EntBufferTable[idx])
+                    BEnt = EntBufferTable[idx]
                 }
                 else {
-                    local BEnt = BufferedEntity(ent)
+                    BEnt = BufferedEntity(ent)
                     EntBufferTable[idx] <- BEnt
-                    entBuffer.append(BEnt)
                 }
+                
+                if(BEnt.ignoreMe || RayAabbIntersect(startPos, endPos, BEnt.bboxMin, BEnt.bboxMax)) 
+                    entBuffer.append(BEnt)
+                else BEnt.ignoreMe = true
             }
         }
 
         // The "dirty search" didn't turn up anything? Check the next segment
         if(entBuffer.len() == 0) continue
         
-        //* Fast Search
+        //* Deep Search
         local segmentStart = segmentCenter - halfSegment
-        local segmentEnd = segmentCenter + halfSegment
-        for (local i = 0.0; i <= fastSearchSteps; i++) {
-            local rayPart = segmentStart + segmentsLenght * (i / fastSearchSteps)
-            foreach(entInfo in entBuffer.iter()) {
-                local distanceToEntity = (rayPart - entInfo.origin).Length()
-                if(distanceToEntity <= entInfo.len) {
-                    //* Deep Search
-                    local result = this.DeepSearch(rayPart, halfSegment, deepSearchSteps, entInfo)
-                    if(result) return result
+        for (local i = 0.0; i <= searchSteps; i++) {
+            local rayPart = segmentStart + segmentsLenght * (i / searchSteps)
+            
+            foreach(ent in entBuffer) {
+                if(macros.PointInBBox(rayPart, ent.bboxMin, ent.bboxMax)) {
+                    if(this.settings.bynaryRefinement) 
+                        return [BinaryRefinementSearch(rayPart - halfSegment * 0.5, rayPart + halfSegment * 0.5, ent.bboxMin, ent.bboxMax), ent.entity]
+                    return [rayPart, ent.entity] // VSquirrel doesn't support tuples, so i use arrays
                 }
             }
+
         }
+        
 
         // Cleanup buffer
         entBuffer.clear()
@@ -5895,22 +5928,57 @@ function TraceLineAnalyzer::Trace(startPos, endPos, ignoreEntities, note = null)
     return [hitPos, null]
 }
 
-function TraceLineAnalyzer::DeepSearch(segmentStart, deepSegmentsLenght, searchSteps, entInfo) {
-    local bMin = entInfo.bboxMin
-    local bMax = entInfo.bboxMax
+// DEBUG for dirty search
+    // dev.drawbox(startPos, Vector(255,255,255), 6)
+    // dev.drawbox(endPos, Vector(255,255,255), 6)
+// DEBUG for "deep search"
+    // dev.drawbox(rayPart, Vector(255, 255, 0), 5)
+    // dev.drawbox(rayPart - halfSegment * 0.5, Vector(125, 255, 0), 5)
+    // dev.drawbox(rayPart + halfSegment* 0.5, Vector(125, 255, 0), 5)
 
-    for (local i = 0.0; i <= searchSteps; i++) {
-        local rayPart = segmentStart + deepSegmentsLenght * (i / searchSteps)
-        
-        if(macros.PointInBBox(rayPart, bMin, bMax)) {
-            if(this.settings.bynaryRefinement) 
-                return [this.BinaryRefinementSearch(rayPart - deepSegmentsLenght, rayPart + deepSegmentsLenght, bMin, bMax), entInfo.entity]
-            return [rayPart, entInfo.entity] // VSquirrel doesn't support tuples, so i use arrays
+
+function RayAabbIntersect(start, end, min, max) {
+    local dir = end - start;
+
+    local tEnter = -999999.0;
+    local tExit = 999999.0;
+
+    foreach(axis in ["x", "y", "z"]) {
+        local startVal = start[axis];
+        local minVal = min[axis];
+        local maxVal = max[axis];
+        local dirVal = dir[axis];
+
+        if (fabs(dirVal) < 0.000001) {
+            if (startVal < minVal || startVal > maxVal) {
+                return false;
+            }
+        } else {
+            local tMin = (minVal - startVal) / dirVal;
+            local tMax = (maxVal - startVal) / dirVal;
+
+            if (tMin > tMax) {
+                local temp = tMin;
+                tMin = tMax;
+                tMax = temp;
+            }
+
+            if (tMin > tEnter)
+                tEnter = tMin;
+            
+            if (tMax < tExit)
+                tExit = tMax;
+
+            if (tEnter > tExit)
+                return false;
         }
     }
+
+    return tExit >= 0.0 && tEnter <= 1.0;
 }
 
-function TraceLineAnalyzer::BinaryRefinementSearch(rayStart, rayEnd, bMin, bMax) {
+
+function BinaryRefinementSearch(rayStart, rayEnd, bMin, bMax) {
     // Binary search between rayStart and rayEnd
     local closestHitPoint = null
     local left = 0.0
@@ -5979,7 +6047,6 @@ function TraceLineAnalyzer::shouldHitEntity(ent, ignoreEntities, note) {
 
     return true
 }
-
 
 /*
 * Check if entity is a priority class.
@@ -6204,7 +6271,6 @@ function _getFaceVertices(allVertices, hitPoint, origin) {
 ::ScheduleEvent <- {
     // Object to store scheduled events 
     eventsList = {global = List()},
-    // eventsNameSorting = List(), // {}
     // Var to track if event loop is running
     executorRunning = false,
     
@@ -6298,7 +6364,8 @@ ScheduleEvent["_startThink"] <- function() {
         catch(err) {throw "Invalid value for sleep. " + err}
         
         // todo Optimization: can edit this, change its time, and move in queue
-        ScheduleEvent.Add(eventName, generator, delay, null, this.scope)
+        if(eventName in ScheduleEvent.eventsList)
+            ScheduleEvent.Add(eventName, generator, delay, null, this.scope)
     }
 
     function GetInfo() return "[Scope] " + scope + "\n[Action] " + action + "\n[executionTime] " + executionTime
@@ -6580,7 +6647,7 @@ ScheduleEvent["IsValid"] <- function(eventName) {
     frameInterval = 0
     maxFrames = 60.0
     autoOptimization = true
-    outputs = null
+    output = null
     entities = []
     lerpFunc = null;
     filterCallback = null;
@@ -6601,7 +6668,7 @@ ScheduleEvent["IsValid"] <- function(eventName) {
         
         this.eventName = macros.GetFromTable(table, "eventName", UniqueString(name + "_anim"))
         this.globalDelay = macros.GetFromTable(table, "globalDelay", 0)
-        this.outputs = macros.GetFromTable(table, "outputs", null)
+        this.output = macros.GetFromTable(table, "output", null)
         this.scope = macros.GetFromTable(table, "scope", this)
         this.lerpFunc = macros.GetFromTable(table, "lerp", function(t) return t)
         this.filterCallback = macros.GetFromTable(table, "filterCallback", function(a,b,c,d,e) return null)
@@ -6611,11 +6678,11 @@ ScheduleEvent["IsValid"] <- function(eventName) {
     } 
 
     /* 
-     * Calls the outputs associated with the animation event. 
+     * Calls the output associated with the animation event. 
     */
-    function callOutputs() {
-        if(this.outputs)
-            ScheduleEvent.Add(this.eventName, this.outputs, this.delay + this.globalDelay, null, this.scope)
+    function CallOutput() {
+        if(this.output)
+            ScheduleEvent.Add(this.eventName, this.output, this.delay + this.globalDelay, null, this.scope)
     }
 
     function _GetEntities(entities) { // meh :>
@@ -6682,6 +6749,7 @@ animate["applyAnimation"] <- function(animInfo, valueCalculator, propertySetter,
 
     ScheduleEvent.AddActions(animInfo.eventName, actionsList, true)
     animInfo.delay = animInfo.frameInterval * transitionFrames
+    animInfo.CallOutput()
 
     if(developer() > 0) dev.trace("Created {} animation ({}) for {} actions", animInfo.animName, animInfo.eventName, actionsList.len())
 }
@@ -6732,6 +6800,10 @@ animate["_applyRTAnimation"] <- function(animInfo, valueCalculator, propertySett
 
         yield animInfo.frameInterval
     }
+
+    animInfo.delay = 0
+    animInfo.globalDelay = 0
+    animInfo.CallOutput()
 }
 
 /*
@@ -6759,7 +6831,6 @@ animate["AlphaTransition"] <- function(entities, startOpacity, endOpacity, time,
         vars
     )
     
-    animSetting.callOutputs()
     return animSetting.delay
 }
 
@@ -6778,7 +6849,6 @@ animate.RT["AlphaTransition"] <- function(entities, startOpacity, endOpacity, ti
         vars
     )
     
-    animSetting.callOutputs()
     return animSetting.delay
 }
 /*
@@ -6806,7 +6876,6 @@ animate["ColorTransition"] <- function(entities, startColor, endColor, time, ani
         vars
     )
     
-    animSetting.callOutputs()
     return animSetting.delay
 }
 
@@ -6825,7 +6894,6 @@ animate.RT["ColorTransition"] <- function(entities, startColor, endColor, time, 
         vars
     )
     
-    animSetting.callOutputs()
     return animSetting.delay
 }
 /*
@@ -6853,7 +6921,6 @@ animate["PositionTransitionByTime"] <- function(entities, startPos, endPos, time
         vars
     )
     
-    animSetting.callOutputs()
     return animSetting.delay
 }
 
@@ -6872,7 +6939,6 @@ animate.RT["PositionTransitionByTime"] <- function(entities, startPos, endPos, t
         vars
     )
     
-    animSetting.callOutputs()
     return animSetting.delay
 }
 
@@ -6906,7 +6972,6 @@ animate["PositionTransitionBySpeed"] <- function(entities, startPos, endPos, spe
         vars.dist.Length() / speed.tofloat() // steps
     )
     
-    animSetting.callOutputs()
     return animSetting.delay
 } 
 
@@ -6926,7 +6991,6 @@ animate.RT["PositionTransitionBySpeed"] <- function(entities, startPos, endPos, 
         vars.dist.Length() / speed.tofloat() // steps
     )
     
-    animSetting.callOutputs()
     return animSetting.delay
 } 
 /*
@@ -6959,7 +7023,6 @@ animate["AnglesTransitionByTime"] <- function(entities, startAngles, endAngles, 
         vars
     )
     
-    animSetting.callOutputs()
     return animSetting.delay
 }
 
@@ -6983,7 +7046,6 @@ animate.RT["AnglesTransitionByTime"] <- function(entities, startAngles, endAngle
         vars
     )
     
-    animSetting.callOutputs()
     return animSetting.delay
 }
 // IncludeScript("PCapture-LIB/SRC/Animations/forward")

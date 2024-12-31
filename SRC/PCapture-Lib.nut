@@ -13,7 +13,7 @@ local version = "PCapture-Lib 3.1 Stable"
 
 // `Self` must be in any case, even if the script is run directly by the interpreter
 if (!("self" in this)) {
-    self <- Entities.FindByClassname(null, "worldspawn")
+    self <- Entities.First()
 } else {
     getroottable()["self"] <- self
 }
