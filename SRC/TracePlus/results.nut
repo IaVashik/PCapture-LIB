@@ -182,7 +182,7 @@ results["Bbox"] <- class {
      * @returns {string|null} - The classname of the hit entity, or null if no entity was hit.
     */
     function GetEntityClassname() {
-        return this.hitent ? this.GetEntity().GetClassname() : null 
+        return (this.hitent && this.hitent.IsValid()) ? this.hitent.GetClassname() : null 
     }
 
     /*

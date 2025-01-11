@@ -23,6 +23,7 @@ class BufferedEntity {
             this.bboxMin = this.entity.CreateAABB(0) + _origin
         }
     }
+    function IsValid() return this.entity.IsValid()
     function _tostring() return this.entity.tostring()
 }
 
@@ -150,7 +151,7 @@ function TraceLineAnalyzer::Trace(startPos, endPos, ignoreEntities, note = null)
                 local idx = ent.entindex()
                 local BEnt = null
                 // small cache system
-                if(idx in EntBufferTable && this.eqVecFunc(EntBufferTable[idx].origin, ent.GetOrigin())) {
+                if(idx in EntBufferTable && EntBufferTable[idx].IsValid() && this.eqVecFunc(EntBufferTable[idx].origin, ent.GetOrigin())) {
                     BEnt = EntBufferTable[idx]
                 }
                 else {
