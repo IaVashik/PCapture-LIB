@@ -69,11 +69,6 @@ The `Utils` module provides a collection of utility functions for script executi
 	* [`GetTriangle()`](#macrosgettriangle)
 	* [`BuildAnimateFunction(name, propertySetterFunc, valueCalculator)`](#macrosbuildanimatefunctionname-propertysetterfunc-valueCalculator)
 	* [`BuildRTAnimateFunction(name, propertySetterFunc, valueCalculator)`](#macrosbuildrtanimatefunctionname-propertysetterfunc-valueCalculator)
-* [`Utils/scripts.nut`](#utilsscriptsnut)
-	* [`RunScriptCode`](#runscriptcode)
-	* [`delay(script, runDelay, activator, rgs, scope)`](#delayscript-rundelay-activator-rgs-scope)
-	* [`loopy(script, runDelay, loopCount, outputs)`](#loopyscript-rundelay-loopcount-outputs)
-	* [`fromStr(str)`](#fromstrstr)
 
 ## [Utils/debug.nut](debug.nut)
 
@@ -1154,73 +1149,3 @@ animate["PitchTransition"] <- macros.BuildAnimateFunction("pitch",
 ### `macros.BuildRTAnimateFunction(name, propertySetterFunc, valueCalculator)`
 
 This function works identically to `macros.BuildAnimateFunction`, but creates a real-time animation function.  The generated function will use `applyRTAnimation` internally, allowing for interruptions and more dynamic behavior.  The parameters and return value are the same as `BuildAnimateFunction`.
-
-
-
-
-## [Utils/scripts.nut](scripts.nut)
-
-This file provides functions for running scripts with delays, loops, and intervals, offering more flexibility and control over script execution compared to standard VScripts mechanisms.
-
-#### Warning:
-Outdated module!!!
-
-### `RunScriptCode`
-
-The `RunScriptCode` table contains functions for running scripts with different timing options.
-
-### `delay(script, runDelay, activator, rgs, scope)`
-
-This function schedules the execution of a script after a specified delay.
-
-**Parameters:**
-
-* `script` (string or function): The script to execute. This can be a string containing VScripts code or a function object.
-* `runDelay` (number): The delay in seconds before executing the script.
-* `activator` (CBaseEntity or pcapEntity, optional): The activator entity (the entity that triggered the script execution).
-* `args` (array, optional): An array of arguments to pass to the script function (only used if `script` is a function).
-* `scope` (optional): Scope.
-
-**Example:**
-
-```js
-RunScriptCode.delay(function() {
-    printl("This message is printed after a 2-second delay.")
-}, 2)
-```
-
-### `loopy(script, runDelay, loopCount, outputs)`
-
-This function executes a script repeatedly with a specified delay for a given number of loops. It is useful for creating simple loops without having to manage counters or schedules manually.
-
-**Parameters:**
-
-* `script` (string or function): The script to execute. This can be a string containing VScripts code or a function object.
-* `runDelay` (number): The delay in seconds between each execution of the script.
-* `loopCount` (number): The number of times to execute the script.
-* `outputs` (string or function, optional): A script or function to execute after all loops have completed.
-
-**Example:**
-
-```js
-RunScriptCode.loopy(function(i) {
-    printl("Loop iteration:" + i)
-}, 0.5, 5, function() {
-    printl("All loops completed!")
-})
-```
-
-### `fromStr(str)`
-
-This function executes a script from a string. It is useful for dynamically executing VScripts code that is generated or retrieved at runtime.
-
-**Parameters:**
-
-* `str` (string): The string containing VScripts code to execute.
-
-**Example:**
-
-```js
-local scriptCode = "printl('Hello, world!')"
-RunScriptCode.fromStr(scriptCode)
-```

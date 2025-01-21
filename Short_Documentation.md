@@ -363,15 +363,6 @@ Provides utility functions.
 | [`BuildRTAnimateFunction(name: string, propertySetterFunc: function, valueCalculator: function) -> function`](SRC/Utils/readme.md#buildrtanimatefunctionname-propertysetterfunc-valuecalculator) | Creates a new real-time animation function. |
 
 
-
-### [`Utils/scripts.nut`](SRC/Utils/readme.md#utilsscriptsnut)
-
-| Function | Description |
-|---|---|
-| [`delay(script: function\|string, runDelay: number, activator: CBaseEntity\|pcapEntity, args: array, scope: any)`](SRC/Utils/readme.md#delayscript-rundelay-activator-args-scope) | Delayed script execution. |
-| [`loopy(script: function\|string, runDelay: number, loopCount: number, outputs: function\|string)`](SRC/Utils/readme.md#loopyscript-rundelay-loopcount-outputs) | Looped script execution.  |
-| [`fromStr(str: string)`](SRC/Utils/readme.md#fromstrstr) | Executes script from string.  |
-
 ## 4. [ActionScheduler](SRC/ActionScheduler/readme.md#actionscheduler-module)
 
 Provides enhanced event scheduling.

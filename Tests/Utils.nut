@@ -61,23 +61,6 @@ utils_tests <- {
             macros.isEqually(math.Matrix.fromEuler(Vector(0, 90, 0)), math.Matrix.fromEuler(Vector(0, 90, 0)))
         )
     }
-
-    // --- Scripts Tests ---
-    function scripts_run_script_code_delay_test() {
-        local testFunc = function() {
-            printl("I'm a pending print...")
-        }
-
-        RunScriptCode.delay(testFunc, 1.0)
-        return assert(ScheduleEvent.GetEvent("global") != null) // Assuming the event is scheduled correctly
-    },
-
-    function scripts_run_script_code_from_str_test() {
-        run_script_code_from_str_result <- 0
-        local result = RandomInt(1, 100)
-        RunScriptCode.fromStr("run_script_code_from_str_result = " + result)
-        return assert(run_script_code_from_str_result == result) 
-    },
 }
 
 // Run all tests
