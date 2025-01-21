@@ -12,7 +12,7 @@ This module provides a framework for creating and managing custom "game events" 
 	* [`Trigger(args = null)`](#triggerargs--null)
 	* [`ForceTrigger(args = null)`](#forcetriggerargs--null)
 * [`ScriptEvents/event_listener.nut`](#scripteventsevent_listenernut)
-	* [`Notify(eventName, ...)`](#notifyeventname)
+	* [`Notify(eventName, ...)`](#notifyeventname-)
 	* [`GetEvent(EventName)`](#geteventeventname)
 * [`Creating and Using VGameEvents`](#creating-and-using-vgameevents)
 

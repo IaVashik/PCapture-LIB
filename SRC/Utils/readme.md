@@ -52,25 +52,26 @@ The `Utils` module provides a collection of utility functions for script executi
 	* [`fprint(msg, ...)`](#macrosfprintmsg-)
 	* [`CompileFromStr(funcBody, ...)`](#macroscompilefromstrfuncbody-)
 	* [`GetFromTable(table, key, defaultValue)`](#macrosgetfromtabletable-key-defaultvalue)
-	* [`GetKeys`](#macrosgetkeys)
-	* [`GetValues`](#macrosgetvalues)
+	* [`GetKeys(table)`](#macrosgetkeystable)
+	* [`GetValues(table)`](#macrosgetvaluestable)
 	* [`InvertTable(table)`](#macrosinverttabletable)
 	* [`PrintIter(iterable)`](#macrosprintiteriterable)
 	* [`MaskSearch(iter, match)`](#macrosmasksearchiter-match)
 	* [`GetRectangle(v1, v2, v3, v4)`](#macrosgetrectanglev1-v2-v3-v4)
 	* [`PointInBBox(point, bMin, bMax)`](#macrospointinbboxpoint-bmin-bmax)
+	* [`PointInBounds(point)`](#macrospointinboundspoint)
 	* [`Range(start, end, step)`](#macrosrangestart-end-step)
 	* [`RangeIter(start, end, step)`](#macrosrangeiterstart-end-step)
 	* [`GetDist(vec1, vec2)`](#macrosgetdistvec1-vec2)
 	* [`StrToVec(str)`](#macrosstrtovecstr)
-	* [`VecToStr(vec)`](#macrosvectostrvec)
+	* [`VecToStr(vec, sep)`](#macrosvectostrvecsep)
 	* [`isEqually(val1, val2)`](#macrosisequallyval1-val2)
 	* [`DeepCopy(container)`](#macrosdeepcopycontainer)
 	* [`GetPrefix(name)`](#macrosgetprefixname)
 	* [`GetPostfix(name)`](#macrosgetpostfixname)
 	* [`GetEyeEndpos(player, distance)`](#macrosgeteyeendposplayer-distance)
 	* [`GetVertex(x, y, z, ang)`](#macrosgetvertexx-y-z-ang)
-	* [`GetTriangle()`](#macrosgettriangle)
+	* [`GetTriangle()`](#macrosgettrianglev1-v2-v3)
 	* [`BuildAnimateFunction(name, propertySetterFunc, valueCalculator)`](#macrosbuildanimatefunctionname-propertysetterfunc-valueCalculator)
 	* [`BuildRTAnimateFunction(name, propertySetterFunc, valueCalculator)`](#macrosbuildrtanimatefunctionname-propertysetterfunc-valueCalculator)
 
@@ -757,7 +758,7 @@ local healthValue = macros.GetFromTable(settings, "health") // Get the "health" 
 local armorValue = macros.GetFromTable(settings, "ammo", 0) // Get the "ammo" value, defaulting to 0 if not found
 ```
 
-### `macros.GetKeys`
+### `macros.GetKeys(table)`
 
 Returns a list of all keys from the provided table.
 
@@ -777,7 +778,7 @@ local keys = macros.GetKeys(myTable)
 printl(keys)  // Outputs: List of keys: ["a", "b", "c"]
 ```
 
-### `macros.GetValues`
+### `macros.GetValues(table)`
 
 Returns a list of all values from the provided table.
 
@@ -1022,7 +1023,7 @@ local colorString = "255 128 0"
 local colorVector = macros.StrToVec(colorString) // Convert the color string to a Vector
 ```
 
-### `macros.VecToStr(vec)`
+### `macros.VecToStr(vec, sep)`
 
 This macro converts a `Vector` object to a string representation (e.g., "x y z").
 
@@ -1043,7 +1044,7 @@ local positionString = macros.VecToStr(position, " | ") // Convert the position 
 printl(positionString) // output: "10 | 20 | 30"
 ```
 
-### `macros.isEqually(val1, val2)` (TODO! more examples)
+### `macros.isEqually(val1, val2)`
 
 This macro checks if two values are equal, handling different data types appropriately. It uses the appropriate equality comparison for each type, including using the `isEqually` method for `Quaternion`, `Matrix`, and `pcapEntity` objects.
 
@@ -1059,6 +1060,7 @@ This macro checks if two values are equal, handling different data types appropr
 **Example:**
 
 ```js
+// (TODO! more examples)
 local vec1 = Vector(1, 2, 3)
 local vec2 = Vector(1, 2, 3)
 if (macros.isEqually(vec1, vec2)) {
@@ -1178,7 +1180,7 @@ local vertex = macros.GetVertex(BBmin, BBmin, BBmax, angles)
 // This calculates the position of the vertex at the left-bottom-back corner of the bounding box in world coordinates.
 ```
 
-### `macros.GetTriangle()`
+### `macros.GetTriangle(v1, v2, v3)`
 
 This macro function creates a representation of a triangle from three given vertices. It calculates the centroid (center of mass) of the triangle and returns a table containing the centroid and the three vertices.
 

@@ -8,7 +8,7 @@ The `HUD` module provides functions and classes for creating and managing Heads-
 1.  [HUD/init.nut](#hudinitnut)
 2.  [HUD/ScreenText.nut](#hudscreentextnut)
     * [`HUD.ScreenText(position, message, holdtime, targetname)`](#hudscreentextposition-message-holdtime-targetname)
-        * [`Enable()`](#hudscreentextenable)
+        * [`Enable(holdTime)`](#hudscreentextenableholdtime)
         * [`Disable()`](#hudscreentextdisable)
         * [`Update()`](#hudscreentextupdate)
         * [`SetText(message)`](#hudscreentextsettextmessage)
@@ -31,7 +31,7 @@ The `HUD` module provides functions and classes for creating and managing Heads-
         * [`SetPositioning(value, ent)`](#hudhintinstructorsetpositioningvalue-ent)
         * [`SetColor(string_color)`](#hudhintinstructorsetcolorstring_color)
         * [`SetIconOnScreen(icon)`](#hudhintinstructorseticononscreenicon)
-        * [`SetIconOffScreen(bind)`](#hudhintinstructorseticonoffscreenscreenbind)
+        * [`SetIconOffScreen(screen)`](#hudhintinstructorseticonoffscreenscreen)
         * [`SetHoldTime(time)`](#hudhintinstructorsetholdtimetime)
         * [`SetDistance(value)`](#hudhintinstructorsetdistancevalue)
         * [`SetEffects(sizePulsing, alphaPulsing, shaking)`](#hudhintinstructorseteffectssizepulsing-alphapulsing-shaking)
@@ -69,9 +69,12 @@ local textPos = Vector(0.5, 0.5, 0) // Center of the screen
 local myText = HUD.ScreenText(textPos, "Hello, world!", 5, "my_text_element") // Display for 5 seconds with a target name
 ```
 
-#### `HUD.ScreenText.Enable()`
+#### `HUD.ScreenText.Enable(holdTime)`
 
 Displays the on-screen text.
+
+**Parameters:**
+*   `holdtime` (number, optional): The duration in seconds to display the text (default is 10).
 
 **Example:**
 
@@ -430,13 +433,13 @@ Sets the icon to display when the hint is on-screen.
 myHint.SetIconOnScreen("icon_interact") // Set a custom icon
 ```
 
-#### `HUD.HintInstructor.SetIconOffScreen(bind)`
+#### `HUD.HintInstructor.SetIconOffScreen(screen)`
 
 Sets the icon to display when the hint is off-screen.
 
 **Parameters:**
 
-*   `bind` (string): The icon name to display (e.g., "icon\_tip").
+*   `screen` (string): The icon name to display (e.g., "icon\_tip").
 
 **Returns:**
 

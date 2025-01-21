@@ -8,7 +8,7 @@ The `TracePlus` module enhances the ray tracing capabilities in VScripts by prov
    * [`TracePlus.Settings`](#traceplussettings)
 2. [TracePlus/results.nut](#traceplusresultsnut)
    * [`CheapTraceResult`](#cheaptraceresult)
-   * [`BboxTraceResult`](#bboxresult)
+   * [`BboxTraceResult`](#bboxtraceresult)
 3. [TracePlus/cheap\_trace.nut](#tracepluscheap_tracenut)
    * [`TracePlus.Cheap(startPos, endPos)`](#tracepluscheapstartpos-endpos)
    * [`TracePlus.FromEyes.Cheap(distance, player)`](#traceplusfromeyescheapdistance-player)
@@ -141,7 +141,7 @@ if (traceResult.DidHit()) {
 }
 ```
 
-### [`BboxTraceResult`](#bboxresult)
+### `BboxTraceResult`
 
 This class represents the result of a bbox cast (trace with a bounding box). It extends the `CheapTraceResult` class and adds information about the hit entity and trace settings.
 

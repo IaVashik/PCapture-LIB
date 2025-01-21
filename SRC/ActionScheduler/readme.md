@@ -7,18 +7,18 @@ The `ActionScheduler` module provides an enhanced system for creating and managi
 1.  [action.nut](#actionnut)
     * [`ScheduleAction(scope, action, timeDelay, args)`](#scheduleactionscope-action-timedelay-args)
     * [`run()`](#run)
-2.  [action_scheduler.nut](#action_schedulernut)
-    * [`Add`](#add)
+2.  [action_scheduler.nut](#actionscheduleraction_schedulernut)
+    * [`Add(eventName, action, timeDelay, args, scope)`](#scheduleeventaddeventname-action-timedelay-args-scope)
         *   [Using the `args` parameter](#using-the-args-parameter)
         *   [Using the `scope` parameter](#using-the-scope-parameter)
-    * [`AddInterval`](#addinterval)
-    * [`AddActions`](#addactions)
-    * [`Cancel`](#cancel)
-    * [`CancelByAction`](#cancelbyaction)
-    * [`CancelAll`](#cancelall)
-    * [`GetEvent`](#getevent)
-    * [`IsValid`](#isvalid)
-    * [`TryCancel`](#trycancel)
+    * [`AddInterval(eventName, action, interval, initialDelay, args, scope)`](#scheduleeventaddintervaleventname-action-interval-initialdelay-args-scope)
+    * [`AddActions(eventName, actions, noSort)`](#scheduleeventaddactionseventname-actions-nosort)
+    * [`Cancel(eventName, delay)`](#scheduleeventcanceleventname-delay)
+    * [`TryCancel(eventName, delay)`](#scheduleeventtrycanceleventname-delay)
+    * [`CancelByAction(action, delay)`](#scheduleeventcancelbyactionaction-delay)
+    * [`CancelAll()`](#scheduleeventcancelall)
+    * [`GetEvent(eventName)`](#scheduleeventgeteventeventname)
+    * [`IsValid(eventName)`](#scheduleeventisvalideventname)
 3.  [event_handler.nut](#event_handlernut)
     * [`ScheduledEventsLoop()`](#scheduledeventsloop)
 4.  [Enhanced Scheduling Features](#enhanced-scheduling-features)
@@ -29,7 +29,7 @@ The `ActionScheduler` module provides an enhanced system for creating and managi
 
 This file defines the `ScheduleAction` class, which represents a single action scheduled for execution at a specific time.
 
-### `ScheduleAction(scope, action, timeDelay, args)`:
+### `ScheduleAction(scope, action, timeDelay, args)`
 
 **Constructor** 
 
@@ -50,7 +50,7 @@ local myAction = ScheduleAction(myEntity, function() {
 }, 2)
 ```
 
-### `run()`:
+### `run()`
 Executes the scheduled action. If the action is a string, it is compiled into a function before execution. If arguments are provided, they are passed to the action function.
 
 **Example:**
@@ -63,7 +63,7 @@ myAction.run()
 
 This file provides functions for creating and managing scheduled events, including adding actions, creating intervals, and canceling events.
 
-### `ScheduleEvent.Add(eventName, action, timeDelay, args, scope)`:
+### `ScheduleEvent.Add(eventName, action, timeDelay, args, scope)`
 Adds a single action to a scheduled event with the specified name. If the event does not exist, it is created.
 
 **Parameters:**
@@ -127,7 +127,7 @@ class MyClass {
 }
 ```
 
-### `ScheduleEvent.AddInterval(eventName, action, interval, initialDelay, args, scope)`:
+### `ScheduleEvent.AddInterval(eventName, action, interval, initialDelay, args, scope)`
 Adds an action to a scheduled event that will be executed repeatedly at a fixed interval.
 
 **Parameters:**
@@ -147,7 +147,7 @@ ScheduleEvent.AddInterval("my_event", function() {
 }, 1)
 ```
 
-### `ScheduleEvent.AddActions(eventName, actions, noSort)`:
+### `ScheduleEvent.AddActions(eventName, actions, noSort)`
 Adds multiple actions to a scheduled event.
 
 **Parameters:**
@@ -167,7 +167,7 @@ local actions = [
 ScheduleEvent.AddActions("my_event", actions) // Actions will be sorted by execution time
 ```
 
-### `ScheduleEvent.Cancel(eventName, delay)`:
+### `ScheduleEvent.Cancel(eventName, delay)`
 Cancels all scheduled actions within an event with the given name.
 
 **Parameters:**
@@ -181,7 +181,26 @@ Cancels all scheduled actions within an event with the given name.
 ScheduleEvent.Cancel("my_event") // Cancel the "my_event" event
 ```
 
-### `ScheduleEvent.CancelByAction(action, delay)`:
+### `ScheduleEvent.TryCancel(eventName, delay)`
+The same as `ScheduleEvent.Cancel`, but does not cause an error if the event is not found.
+
+**Parameters:**
+
+* `eventName` (string): The name of the event to cancel.
+* `delay` (number, optional): An optional delay in seconds before canceling the event.
+
+**Returns:**
+
+* (boolean): True if the event was found and canceled, false otherwise.
+
+**Example:**
+
+```js
+ScheduleEvent.TryCancel("my_event") 
+```
+
+
+### `ScheduleEvent.CancelByAction(action, delay)`
 Cancels all scheduled actions that match the given action.
 
 **Parameters:**
@@ -201,7 +220,7 @@ ScheduleEvent.Add("my_test_event", test, 1)
 ScheduleEvent.CancelByAction(test)
 ```
 
-### `ScheduleEvent.CancelAll()`:
+### `ScheduleEvent.CancelAll()`
 Cancels all scheduled events and actions.
 
 **Example:**
@@ -210,7 +229,7 @@ Cancels all scheduled events and actions.
 ScheduleEvent.CancelAll() // Cancel all scheduled events and actions
 ```
 
-### `ScheduleEvent.GetEvent(eventName)`:
+### `ScheduleEvent.GetEvent(eventName)`
 Retrieves a scheduled event by name as a `List` of `ScheduleAction` objects.
 
 **Parameters:**
@@ -230,7 +249,7 @@ if (eventActions) {
 }
 ```
 
-### `ScheduleEvent.IsValid(eventName)`:
+### `ScheduleEvent.IsValid(eventName)`
 Checks if a scheduled event with the given name exists and has scheduled actions.
 
 **Parameters:**
@@ -249,23 +268,6 @@ if (ScheduleEvent.IsValid("my_event")) {
 }
 ```
 
-### `ScheduleEvent.TryCancel(eventName, delay)`:
-The same as `ScheduleEvent.Cancel`, but does not cause an error if the event is not found.
-
-**Parameters:**
-
-* `eventName` (string): The name of the event to cancel.
-* `delay` (number, optional): An optional delay in seconds before canceling the event.
-
-**Returns:**
-
-* (boolean): True if the event was found and canceled, false otherwise.
-
-**Example:**
-
-```js
-ScheduleEvent.TryCancel("my_event") 
-```
 
 ## [ActionScheduler/event_handler.nut](event_handler.nut)
 

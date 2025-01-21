@@ -5,26 +5,26 @@ The `Animations` module provides functions for creating various animations in VS
 ## Table of Contents
 
 1.  [init.nut](#initnut)
-    *   [`AnimEvent(name, settings, entities, time)`](#animeventname-settings-entities-time)
+    *   [`AnimEvent`](#animeventname-settings-entities-time0)
     *   [Animation Settings Table (propertySetter)](#animation-settings-table-propertysetter)
-    *   [`applyAnimation`](#applyanimation)
-    *   [`applyRTAnimation`](#applyrtanimation)
-2.  [alpha.nut](#alphanut)
-    *   [`AlphaTransition`](#alphatransition)
-3.  [color.nut](#colornut)
-    *   [`ColorTransition`](#colortransition)
-4.  [position.nut](#positionnut)
-    *   [`PositionTransitionByTime`](#positiontransitionbytime)
-    *   [`PositionTransitionBySpeed`](#positiontransitionbyspeed)
-5.  [angles.nut](#anglesnut)
-    *   [`AnglesTransitionByTime`](#anglestransitionbytime)
+    *   [`applyAnimation`](#animateapplyanimationaniminfo-valuecalculator-propertysetter-vars-transitionframes)
+    *   [`applyRTAnimation`](#animateapplyrtanimationaniminfo-valuecalculator-propertysetter-vars-transitionframes)
+2.  [alpha.nut](#animationsalphanut)
+    *   [`AlphaTransition`](#animatealphatransitionentities-startopacity-endopacity-time-animsetting)
+3.  [color.nut](#animationscolornut)
+    *   [`ColorTransition`](#animatecolortransitionentities-startcolor-endcolor-time-animsetting)
+4.  [position.nut](#animationspositionnut)
+    *   [`PositionTransitionByTime`](#animatepositiontransitionbytimeentities-startpos-endpos-time-animsetting)
+    *   [`PositionTransitionBySpeed`](#animatepositiontransitionbyspeedentities-startpos-endpos-speed-animsetting)
+5.  [angles.nut](#animationsanglesnut)
+    *   [`AnglesTransitionByTime`](#animateanglestransitionbytimeentities-startangles-endangles-time-animsetting)
 6. [Custom Animation Functions](#custom-animation-functions)
 
 ## [Animations/init.nut](init.nut)
 
 This file initializes the `Animations` module, defines the `AnimEvent` class for managing animation events, and includes the necessary script files for the module's functionality.
 
-### `AnimEvent(name, settings, entities, time = 0)`
+### `AnimEvent(name, settings, entities, time=0)`
 
 The `AnimEvent` class is used internally by the animation functions to store and manage information about an animation event. It is not intended for direct use in your scripts.
 
@@ -47,7 +47,7 @@ The `settings` table in the `AnimEvent` constructor can contain the following op
 *   `globalDelay` (number, optional): A global delay in seconds before the animation starts (default is 0).
 *   `output` (string or function, optional): A script or function to execute when the animation finishes.
 *   `scope` (object, optional): The scope in which to execute the action (default is the `AnimEvent` object itself).
-*   `lerp` (function, optional): A custom lerp function to use for interpolation. If not provided, a linear interpolation function is used.
+*   `ease` (function, optional): A custom ease function to use for interpolation. If not provided, a linear interpolation function is used.
 *   `frameInterval` (number, optional): The time interval between frames in seconds (default is the engine's frame time).
 *   `fps` (number, optional): The desired frames per second for the animation, used to calculate `frameInterval` if it's not explicitly set (default is 60, maximum 60).
 *   `optimization` (bool, optional): Enables or disables automatic optimization. When enabled, the animation will automatically adjust the frame interval to ensure a maximum of `maxFrames` frames are used, improving performance for longer animations. (default is true).
