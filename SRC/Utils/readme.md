@@ -9,11 +9,11 @@ The `Utils` module provides a collection of utility functions for script executi
 	* [`DrawEntityBBox(ent, color, time)`](#drawentitybboxent-color-time)
 	* [`DrawEntityAABB(ent, color, time)`](#drawentityaabbent-color-time)
 	* [`drawbox(vector, color, time)`](#drawboxvector-color-time)
-	* [`trace(msg, ...)`](#tracemsg)
-	* [`debug(msg, ...)`](#debugmsg)
-	* [`info(msg, ...)`](#infomsg)
-	* [`warning(msg, ...)`](#warningmsg)
-	* [`error(msg, ...)`](#errormsg)
+	* [`trace(msg, ...)`](#tracemsg-)
+	* [`debug(msg, ...)`](#debugmsg-)
+	* [`info(msg, ...)`](#infomsg-)
+	* [`warning(msg, ...)`](#warningmsg-)
+	* [`error(msg, ...)`](#errormsg-)
 * [`Utils/file.nut`](#utilsfilenut)
 	* [`File(path)`](#filepath)
 	* [`write(text)`](#writetext)
@@ -46,22 +46,26 @@ The `Utils` module provides a collection of utility functions for script executi
 * [`Utils/macros.nut`](#utilsmacrosnut)
 	* [`Precache(soundPath)`](#macrosprecachesoundpath)
 	* [`GetSoundDuration(soundName)`](#macrosgetsounddurationsoundname)
-	* [`format(msg, ...)`](#formatmsg)
-	* [`fprint(msg, ...)`](#fprintmsg)
+	* [`CreateAlias(key, action)`](#macroscreatealiaskey-action)
+	* [`CreateCommand(key, command)`](#macroscreatecommandkey-command)
+	* [`format(msg, ...)`](#macrosformatmsg-)
+	* [`fprint(msg, ...)`](#macrosfprintmsg-)
+	* [`CompileFromStr(funcBody, ...)`](#macroscompilefromstrfuncbody-)
 	* [`GetFromTable(table, key, defaultValue)`](#macrosgetfromtabletable-key-defaultvalue)
 	* [`GetKeys`](#macrosgetkeys)
 	* [`GetValues`](#macrosgetvalues)
-	* [`InvertTable(table)`](#inverttabletable)
+	* [`InvertTable(table)`](#macrosinverttabletable)
 	* [`PrintIter(iterable)`](#macrosprintiteriterable)
 	* [`MaskSearch(iter, match)`](#macrosmasksearchiter-match)
 	* [`GetRectangle(v1, v2, v3, v4)`](#macrosgetrectanglev1-v2-v3-v4)
 	* [`PointInBBox(point, bMin, bMax)`](#macrospointinbboxpoint-bmin-bmax)
-	* [`Range(start, end, step)`](#rangestart-end-step)
-	* [`RangeIter(start, end, step)`](#rangeiterstart-end-step)
+	* [`Range(start, end, step)`](#macrosrangestart-end-step)
+	* [`RangeIter(start, end, step)`](#macrosrangeiterstart-end-step)
 	* [`GetDist(vec1, vec2)`](#macrosgetdistvec1-vec2)
 	* [`StrToVec(str)`](#macrosstrtovecstr)
 	* [`VecToStr(vec)`](#macrosvectostrvec)
 	* [`isEqually(val1, val2)`](#macrosisequallyval1-val2)
+	* [`DeepCopy(container)`](#macrosdeepcopycontainer)
 	* [`GetPrefix(name)`](#macrosgetprefixname)
 	* [`GetPostfix(name)`](#macrosgetpostfixname)
 	* [`GetEyeEndpos(player, distance)`](#macrosgeteyeendposplayer-distance)
@@ -643,6 +647,36 @@ local duration = macros.GetSoundDuration("my_sound.wav")
 printl("The duration of the sound is " + duration + " seconds.")
 ```
 
+### `macros.CreateAlias(key, action)`
+
+This function creates a simple console alias.
+
+**Parameters:**
+
+*   `key` (string): The alias name.
+*   `action` (string): The command to be executed when the alias is called.
+
+**Example:**
+
+```js
+macros.CreateAlias("my_alias", "echo Hello!") // Creates a console alias "my_alias" that prints "Hello!"
+```
+
+### `macros.CreateCommand(key, command)`
+
+This function creates a console command using setinfo and an alias. This allows players to use the command by entering it into the console.
+
+**Parameters:**
+
+*   `key` (string): The name of the command.
+*   `command` (string): The console command to be executed.
+
+**Example:**
+
+```js
+macros.CreateCommand("my_command", "sv_cheats 1") // Creates a console command "my_command" that enables cheats
+```
+
 
 ### `macros.format(msg, ...)`
 
@@ -678,6 +712,29 @@ local health = 100
 macros.fprint("Player health: {}", health) // Output: "Player health: 100"
 ```
 
+### `macros.CompileFromStr(funcBody, ...)`
+
+This function compiles a function from a string representation. It's similar to `dev.format` but compiles the result as a function.
+
+**Parameters:**
+
+*   `funcBody` (string): The body of the function to be compiled. This string can contain placeholders `{}`.
+*   `...` (any): Additional arguments to substitute into the placeholders in `funcBody`.
+
+**Returns:**
+
+*   (function): The compiled function.
+
+**Example:**
+
+```js
+local a = 5
+local b = 10
+local result = macros.CompileFromStr("return {} + {}", a, b)() // result will be 15
+
+hello <- macros.CompileFromStr("printl('Hello, {}!')", "World") 
+hello() // Output "Hello, World!" to console
+```
 
 ### `macros.GetFromTable(table, key, defaultValue)`
 
@@ -1007,6 +1064,31 @@ local vec2 = Vector(1, 2, 3)
 if (macros.isEqually(vec1, vec2)) {
     // The vectors are equal
 }
+```
+
+### `macros.DeepCopy(container)`
+
+This function creates a deep copy of a container (table, array, `ArrayEx`, or `List`). It recursively copies nested containers, ensuring that changes to the copy do not affect the original.
+
+**Note:** The container must not have circular references.
+
+**Parameters:**
+
+*   `container` (iter): The container to be copied.
+
+**Returns:**
+
+*   (clone of iter): A deep copy of the container.
+
+**Example:**
+
+```js
+local originalTable = {a = 1, b = {c = 2}}
+local copiedTable = macros.DeepCopy(originalTable)
+copiedTable.b.c = 3 // Modifying the copied table
+
+printl(originalTable.b.c) // Output: 2 (original table is unchanged)
+printl(copiedTable.b.c) // Output: 3
 ```
 
 ### `macros.GetPrefix(name)`

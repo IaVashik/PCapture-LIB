@@ -337,8 +337,11 @@ Provides utility functions.
 |---|---|
 | [`Precache(soundPath: string\|array\|ArrayEx)`](SRC/Utils/readme.md#precachesoundpath) | Precaches sound(s). |
 | [`GetSoundDuration(soundName: string) -> number`](SRC/Utils/readme.md#getsounddurationsoundname) | Gets sound duration. |
+| [`CreateAlias(key: string, action: string)`](SRC/Utils/readme.md#macroscreatealiaskey-action) | Creates a simple console alias. |
+| [`CreateCommand(key: string, command: string)`](SRC/Utils/readme.md#macroscreatecommandkey-command) | Creates a console command. |
 | [`format(msg: string, ...) -> string`](SRC/Utils/readme.md#formatmsg----string) | Formats message string. |
 | [`fprint(msg: string, ...)`](SRC/Utils/readme.md#fprintmsg) | Formats and prints. |
+| [`CompileFromStr(funcBody: string, ...)`](SRC/Utils/readme.md#macroscompilefromstrfuncbody-) | Compiles a function from a string representation. |
 | [`GetFromTable(table: table, key: any, defaultValue: any) -> any`](SRC/Utils/readme.md#getfromtabletable-key-defaultvalue) | Gets from table with default. |
 | [`GetKeys(table: object) -> List`](SRC/Utils/readme.md#getkeystable) | Returns keys from table as List. |
 | [`GetValues(table: object) -> List`](SRC/Utils/readme.md#getvaluestable) | Returns values from table as List. |
@@ -354,6 +357,7 @@ Provides utility functions.
 | [`StrToVec(str: string) -> Vector`](SRC/Utils/readme.md#strtovecstr) | String to vector. |
 | [`VecToStr(vec: Vector, sep: String) -> string`](SRC/Utils/readme.md#vectostrvec-sep) | Vector to string.  |
 | [`isEqually(val1: any, val2: any) -> bool`](SRC/Utils/readme.md#isequallyval1-val2) | Equality check. |
+| [`DeepCopy(container: iter) -> iter`](SRC/Utils/readme.md#macrosdeepcopycontainer) | Deep copy of a container. |
 | [`GetPrefix(name: string) -> string`](SRC/Utils/readme.md#getprefixname) | Name prefix. |
 | [`GetPostfix(name: string) -> string`](SRC/Utils/readme.md#getpostfixname) | Name postfix. |
 | [`GetEyeEndpos(player: CBaseEntity\|pcapEntity, distance: number) -> Vector`](SRC/Utils/readme.md#geteyeendposplayer-distance) | Eye raycast endpoint. |

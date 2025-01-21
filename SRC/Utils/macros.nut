@@ -194,6 +194,25 @@ macros["fprint"] <- function(msg, ...) {
     printl(macros.format.acall(args))
 }
 
+/*
+ * Compiles a function from a string representation.
+ * This function is similar to dev.format.
+ *
+ * @param {string} funcBody - The body of the function to be compiled.
+ * @param {any} vargs... - Additional arguments to substitute into the placeholders.
+ * @returns {function} - The compiled function.
+*/
+macros["CompileFromStr"] <- function(funcBody, ...) {
+    local args = array(vargc + 2)
+    args[0] = this
+    args[1] = funcBody
+
+    for(local i = 0; i< vargc; i++) {
+        args[i + 2] = vargv[i]
+    }
+
+    return compilefromstr(macros.format.acall(args))
+}
 
 /* 
  * Calculates the distance between two vectors.
@@ -240,6 +259,28 @@ macros["GetSoundDuration"] <- function(soundName) {
 }
 
 /*
+ * Creates a simple console alias.
+ *
+ * @param {string} key - The alias name.
+ * @param {string} action - The command to be executed when the alias is called.
+ * @returns {void}
+*/
+macros["CreateAlias"] <- function(key, action) {
+    SendToConsole(::format("alias \"%s\" \"%s\"", key, action))
+}
+
+/*
+ * Creates a primitive console command.
+ *
+ * @param {string} key - The name of the command.
+ * @param {string} command - The command to be executed.
+*/
+ macros["CreateCommand"] <- function(key, command) {
+    SendToConsole(::format("setinfo %s \"\"", key))
+    macros.CreateAlias(key, command)
+}
+
+/*
  * Checks if two values are equal, handling different data types.
  *
  * @param {any} val1 - The first value.
@@ -265,6 +306,28 @@ macros["isEqually"] <- function(val1, val2) {
             return val1.isEqually(val2)  
     }
 }
+
+/*
+ * Creates a deep copy of a container (table, array, ArrayEx, or List).
+ * Note: The container must not have circular references.
+ *
+ * @param {table|array|ArrayEx|List} container - The container to be copied.
+ * @returns {table|array|ArrayEx|List} - A deep copy of the container.
+*/
+macros["DeepCopy"] <- function(container) { 
+    switch (typeof container) {
+        case "table": 
+            local result = clone container; 
+            foreach( k,v in container) result[k] = macros.DeepCopy(v); 
+            return result; 
+        case "array": 
+        case "ArrayEx": 
+        case "List":
+            return container.map(macros.DeepCopy); 
+        default: return container; 
+    }
+}
+
 
 /*
  * Gets the prefix of an entity name. 
