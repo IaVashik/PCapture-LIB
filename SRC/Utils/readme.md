@@ -74,6 +74,8 @@ The `Utils` module provides a collection of utility functions for script executi
 	* [`GetTriangle()`](#macrosgettrianglev1-v2-v3)
 	* [`BuildAnimateFunction(name, propertySetterFunc, valueCalculator)`](#macrosbuildanimatefunctionname-propertysetterfunc-valueCalculator)
 	* [`BuildRTAnimateFunction(name, propertySetterFunc, valueCalculator)`](#macrosbuildrtanimatefunctionname-propertysetterfunc-valueCalculator)
+* [`Utils/const.nut`](#utilsconstnut)
+
 
 ## [Utils/debug.nut](debug.nut)
 
@@ -1233,3 +1235,43 @@ animate["PitchTransition"] <- macros.BuildAnimateFunction("pitch",
 ### `macros.BuildRTAnimateFunction(name, propertySetterFunc, valueCalculator)`
 
 This function works identically to `macros.BuildAnimateFunction`, but creates a real-time animation function.  The generated function will use `applyRTAnimation` internally, allowing for interruptions and more dynamic behavior.  The parameters and return value are the same as `BuildAnimateFunction`.
+
+## [Utils/const.nut](const.nut)
+
+### Collision Groups
+
+These constants define collision groups used by entities in the game. They determine what objects an entity will collide with.
+
+* `COLLISION_GROUP_NONE` (0): Collides with nothing.
+* `COLLISION_GROUP_DEBRIS` (1): Small objects, doesn't interfere with gameplay.
+* `COLLISION_GROUP_DEBRIS_TRIGGER` (2): Like `DEBRIS`, but ignores `PUSHAWAY`.
+* `COLLISION_GROUP_INTERACTIVE_DEBRIS` (3): Like `DEBRIS`, but doesn't collide with the same group.
+* `COLLISION_GROUP_INTERACTIVE` (4): Interactive entities, ignores debris.
+* `COLLISION_GROUP_PLAYER` (5): Used by players, ignores `PASSABLE_DOOR`.
+* `COLLISION_GROUP_BREAKABLE_GLASS` (6): Breakable glass, ignores the same group and NPC line-of-sight.
+* `COLLISION_GROUP_VEHICLE` (7): Driveable vehicles, always collides with `VEHICLE_CLIP`.
+* `COLLISION_GROUP_PLAYER_MOVEMENT` (8): Player movement collision.
+* `COLLISION_GROUP_NPC` (9): Used by NPCs, always collides with `DOOR_BLOCKER`.
+* `COLLISION_GROUP_IN_VEHICLE` (10): Entities inside vehicles, no collisions.
+* `COLLISION_GROUP_WEAPON` (11): Weapons, including dropped ones.
+* `COLLISION_GROUP_VEHICLE_CLIP` (12): Only collides with `VEHICLE`.
+* `COLLISION_GROUP_PROJECTILE` (13): Projectiles, ignore other projectiles.
+* `COLLISION_GROUP_DOOR_BLOCKER` (14): Blocks NPCs, may collide with some projectiles.
+* `COLLISION_GROUP_PASSABLE_DOOR` (15): Passable doors, allows players through.
+* `COLLISION_GROUP_DISSOLVING` (16): Dissolved entities, only collide with `NONE`.
+* `COLLISION_GROUP_PUSHAWAY` (17): Pushes props away from the player.
+* `COLLISION_GROUP_NPC_ACTOR` (18): NPCs potentially stuck in a player.
+* `COLLISION_GROUP_NPC_SCRIPTED` (19): NPCs in scripted sequences with collisions disabled.
+* `COLLISION_GROUP_DEFAULT` (24): Default Portal 2 collision group.
+
+### Solid Types
+
+These constants define solid types, which determine how an entity's collision is handled.
+
+* `SOLID_NONE` (0): No collision at all.
+* `SOLID_BSP` (1): Uses the Quake physics engine.
+* `SOLID_AABB` (2): Uses an axis-aligned bounding box (AABB).
+* `SOLID_OBB` (3): Uses an oriented bounding box (OBB).
+* `SOLID_OBB_YAW` (4): Uses an OBB constrained to yaw rotation.
+* `SOLID_CUSTOM` (5): Custom/test solid type.
+* `SOLID_VPHYSICS` (6): Uses the VPhysics engine for realistic physics.

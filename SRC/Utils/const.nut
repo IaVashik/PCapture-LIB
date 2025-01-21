@@ -58,7 +58,8 @@ const COLLISION_GROUP_NPC_ACTOR = 18
 // NPCs in scripted sequences with collisions disabled. 
 const COLLISION_GROUP_NPC_SCRIPTED = 19
 
-
+// Default Portal 2 collision
+const COLLISION_GROUP_DEFAULT = 24
 
 // No collision at all.
 const SOLID_NONE = 0 
@@ -67,7 +68,7 @@ const SOLID_NONE = 0
 const SOLID_BSP = 1 
 
 // Uses an axis-aligned bounding box (AABB).
-const SOLID_VPHYSICS = 2
+const SOLID_AABB = 2
 
 // Uses an oriented bounding box (OBB).
 const SOLID_OBB = 3 
