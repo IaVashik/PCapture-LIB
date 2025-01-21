@@ -19,7 +19,7 @@ animate["PositionTransitionByTime"] <- function(entities, startPos, endPos, time
     animate.applyAnimation(
         animSetting, 
         function(step, steps, v) {return v.startPos + v.dist * v.lerpFunc(step / steps)},
-        function(ent, newPosition) {ent.SetOrigin(newPosition)},
+        function(ent, newPosition) {ent.SetAbsOrigin(newPosition)},
         vars
     )
     
@@ -37,7 +37,7 @@ animate.RT["PositionTransitionByTime"] <- function(entities, startPos, endPos, t
     animate.applyRTAnimation(
         animSetting, 
         function(step, steps, v) {return v.startPos + v.dist * v.lerpFunc(step / steps)},
-        function(ent, newPosition) {ent.SetOrigin(newPosition)},
+        function(ent, newPosition) {ent.SetAbsOrigin(newPosition)},
         vars
     )
     
@@ -69,7 +69,7 @@ animate["PositionTransitionBySpeed"] <- function(entities, startPos, endPos, spe
     animate.applyAnimation(
         animSetting, 
         function(step, steps, v) {return v.startPos + v.dist * v.lerpFunc(step / steps)},
-        function(ent, newPosition) {ent.SetOrigin(newPosition)},
+        function(ent, newPosition) {ent.SetAbsOrigin(newPosition)},
         vars,
         vars.dist.Length() / speed.tofloat() // steps
     )
@@ -88,7 +88,7 @@ animate.RT["PositionTransitionBySpeed"] <- function(entities, startPos, endPos, 
     animate.applyRTAnimation(
         animSetting, 
         function(step, steps, v) {return v.startPos + v.dist * v.lerpFunc(step / steps)},
-        function(ent, newPosition) {ent.SetOrigin(newPosition)},
+        function(ent, newPosition) {ent.SetAbsOrigin(newPosition)},
         vars,
         vars.dist.Length() / speed.tofloat() // steps
     )

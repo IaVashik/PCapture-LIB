@@ -61,6 +61,7 @@
      * @returns {any} - The result of processing the generator.
     */
     function processGenerator(generator, eventName) {
+        if(generator.getstatus() == "dead") return
         local delay = resume generator
         if(delay == null) return
         

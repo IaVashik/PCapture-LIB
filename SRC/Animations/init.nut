@@ -22,7 +22,7 @@
     autoOptimization = true
     output = null
     entities = []
-    lerpFunc = null;
+    easeFunc = null;
     filterCallback = null;
     scope = null;
 
@@ -43,7 +43,7 @@
         this.globalDelay = macros.GetFromTable(table, "globalDelay", 0)
         this.output = macros.GetFromTable(table, "output", null)
         this.scope = macros.GetFromTable(table, "scope", this)
-        this.lerpFunc = macros.GetFromTable(table, "lerp", function(t) return t)
+        this.easeFunc = macros.GetFromTable(table, "ease", function(t) return t)
         this.filterCallback = macros.GetFromTable(table, "filterCallback", function(a,b,c,d,e) return null)
         this.frameInterval = macros.GetFromTable(table, "frameInterval", FrameTime()) 
         this.maxFrames = macros.GetFromTable(table, "fps", 60.0)
