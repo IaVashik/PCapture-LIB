@@ -9,7 +9,7 @@
 |    GitHud repo: https://github.com/IaVashik/PCapture-LIB                          |
 +----------------------------------------------------------------------------------+ */
 
-local version = "PCapture-Lib 3.1 Stable"
+local version = "PCapture-Lib 3.2 Stable"
 
 // `Self` must be in any case, even if the script is run directly by the interpreter
 if (!("self" in this)) {
@@ -4417,6 +4417,25 @@ macros["fprint"] <- function(msg, ...) {
     printl(macros.format.acall(args))
 }
 
+/*
+ * Compiles a function from a string representation.
+ * This function is similar to dev.format.
+ *
+ * @param {string} funcBody - The body of the function to be compiled.
+ * @param {any} vargs... - Additional arguments to substitute into the placeholders.
+ * @returns {function} - The compiled function.
+*/
+macros["CompileFromStr"] <- function(funcBody, ...) {
+    local args = array(vargc + 2)
+    args[0] = this
+    args[1] = funcBody
+
+    for(local i = 0; i< vargc; i++) {
+        args[i + 2] = vargv[i]
+    }
+
+    return compilefromstr(macros.format.acall(args))
+}
 
 /* 
  * Calculates the distance between two vectors.
@@ -4463,6 +4482,28 @@ macros["GetSoundDuration"] <- function(soundName) {
 }
 
 /*
+ * Creates a simple console alias.
+ *
+ * @param {string} key - The alias name.
+ * @param {string} action - The command to be executed when the alias is called.
+ * @returns {void}
+*/
+macros["CreateAlias"] <- function(key, action) {
+    SendToConsole(::format("alias \"%s\" \"%s\"", key, action))
+}
+
+/*
+ * Creates a primitive console command.
+ *
+ * @param {string} key - The name of the command.
+ * @param {string} command - The command to be executed.
+*/
+ macros["CreateCommand"] <- function(key, command) {
+    SendToConsole(::format("setinfo %s \"\"", key))
+    macros.CreateAlias(key, command)
+}
+
+/*
  * Checks if two values are equal, handling different data types.
  *
  * @param {any} val1 - The first value.
@@ -4488,6 +4529,28 @@ macros["isEqually"] <- function(val1, val2) {
             return val1.isEqually(val2)  
     }
 }
+
+/*
+ * Creates a deep copy of a container (table, array, ArrayEx, or List).
+ * Note: The container must not have circular references.
+ *
+ * @param {table|array|ArrayEx|List} container - The container to be copied.
+ * @returns {table|array|ArrayEx|List} - A deep copy of the container.
+*/
+macros["DeepCopy"] <- function(container) { 
+    switch (typeof container) {
+        case "table": 
+            local result = clone container; 
+            foreach( k,v in container) result[k] = macros.DeepCopy(v); 
+            return result; 
+        case "array": 
+        case "ArrayEx": 
+        case "List":
+            return container.map(macros.DeepCopy); 
+        default: return container; 
+    }
+}
+
 
 /*
  * Gets the prefix of an entity name. 
@@ -4669,44 +4732,6 @@ macros["BuildRTAnimateFunction"] <- function(name, propertySetterFunc, valueCalc
         return animSetting.delay
     }
 }
-::RunScriptCode <- {
-    /* 
-     * Creates a delay before executing the specified script.
-     * 
-     * @param {string|function} script - The script to execute. Can be a function or a string.
-     * @param {number} runDelay - The delay in seconds.
-     * @param {array|null} args - Optional arguments to pass to the script function. 
-     * @param {object} scope - // TODO. (optional)
-    */
-    delay = function(script, runDelay = 0, args = null, scope = null) { 
-        ScheduleEvent.Add("global", script, runDelay, args, scope)
-    },  
-
-    /* 
-     * Executes a function repeatedly with a specified delay for a given number of loops.
-     * 
-     * @param {string|function} func - The function to execute.
-     * @param {number} runDelay - The delay between each execution in seconds.
-     * @param {number} loopCount - The number of loops.
-     * @param {string} outputs - The function to execute after all loops completed. (optional)
-    */
-    loopy = function(script, runDelay, loopCount, outputs = null) {
-        if (loopCount > 0) {
-            RunScriptCode.delay(script, runDelay)
-            RunScriptCode.delay(RunScriptCode.loopy, runDelay, null, [script, runDelay, --loopCount, outputs], null)
-        } else if (outputs)
-            RunScriptCode.delay(outputs, 0)
-    },
-
-    /* 
-     * Execute a script from a string.
-     * 
-     * @param {string} str - The script string.
-    */
-    fromStr = function(str) {
-        compilestring(str)()
-    }
-}
 // Collides with everything.
 const COLLISION_GROUP_NONE = 0
 
@@ -4767,7 +4792,8 @@ const COLLISION_GROUP_NPC_ACTOR = 18
 // NPCs in scripted sequences with collisions disabled. 
 const COLLISION_GROUP_NPC_SCRIPTED = 19
 
-
+// Default Portal 2 collision
+const COLLISION_GROUP_DEFAULT = 24
 
 // No collision at all.
 const SOLID_NONE = 0 
@@ -4776,7 +4802,7 @@ const SOLID_NONE = 0
 const SOLID_BSP = 1 
 
 // Uses an axis-aligned bounding box (AABB).
-const SOLID_VPHYSICS = 2
+const SOLID_AABB = 2
 
 // Uses an oriented bounding box (OBB).
 const SOLID_OBB = 3 
@@ -4901,6 +4927,29 @@ function OnPlayerJoined(player) {}
 function OnPlayerLeft(player) {}
 function OnPlayerDeath(player) {}
 function OnPlayerRespawn(player) {}
+commands_separator <- ",\n"
+
+// Basic information
+macros.CreateCommand("PCapLib_version", "script printl(::_lib_version_)")
+
+// Logger level control commands
+macros.CreateCommand("PCapLib_level_trace", "script ::LibLogger = LoggerLevels.Trace")
+macros.CreateCommand("PCapLib_level_debug", "script ::LibLogger = LoggerLevels.Debug")
+macros.CreateCommand("PCapLib_level_info", "script ::LibLogger = LoggerLevels.Info")
+macros.CreateCommand("PCapLib_level_warn", "script ::LibLogger = LoggerLevels.Warning")
+macros.CreateCommand("PCapLib_level_error", "script ::LibLogger = LoggerLevels.Error")
+macros.CreateCommand("PCapLib_level_off", "script ::LibLogger = LoggerLevels.Off")
+
+// Schedule event control commands
+macros.CreateCommand("PCapLib_schedule_list", "script printl(macros.GetKeys(ScheduleEvent.eventsList).join(commands_separator))")
+macros.CreateCommand("PCapLib_schedule_clear", "script ScheduleEvent.CancelAll()")
+
+// Information dump commands
+macros.CreateCommand("PCapLib_vscript_event_list", "script printl(macros.GetKeys(::AllScriptEvents).join(commands_separator))")
+macros.CreateCommand("PCapLib_players_list", "script printl(AllPlayers.join(commands_separator))")
+
+// Simple debug commands
+macros.CreateCommand("script_FrameTime", "script printl(FrameTime())")
 
 
 ::LibLogger <- LoggerLevels.Info
@@ -5115,7 +5164,7 @@ results["Bbox"] <- class {
      * @returns {string|null} - The classname of the hit entity, or null if no entity was hit.
     */
     function GetEntityClassname() {
-        return this.hitent ? this.GetEntity().GetClassname() : null 
+        return (this.hitent && this.hitent.IsValid()) ? this.hitent.GetClassname() : null 
     }
 
     /*
@@ -5760,6 +5809,7 @@ class BufferedEntity {
             this.bboxMin = this.entity.CreateAABB(0) + _origin
         }
     }
+    function IsValid() return this.entity.IsValid()
     function _tostring() return this.entity.tostring()
 }
 
@@ -5887,7 +5937,7 @@ function TraceLineAnalyzer::Trace(startPos, endPos, ignoreEntities, note = null)
                 local idx = ent.entindex()
                 local BEnt = null
                 // small cache system
-                if(idx in EntBufferTable && this.eqVecFunc(EntBufferTable[idx].origin, ent.GetOrigin())) {
+                if(idx in EntBufferTable && EntBufferTable[idx].IsValid() && this.eqVecFunc(EntBufferTable[idx].origin, ent.GetOrigin())) {
                     BEnt = EntBufferTable[idx]
                 }
                 else {
@@ -6357,6 +6407,7 @@ ScheduleEvent["_startThink"] <- function() {
      * @returns {any} - The result of processing the generator.
     */
     function processGenerator(generator, eventName) {
+        if(generator.getstatus() == "dead") return
         local delay = resume generator
         if(delay == null) return
         
@@ -6649,7 +6700,7 @@ ScheduleEvent["IsValid"] <- function(eventName) {
     autoOptimization = true
     output = null
     entities = []
-    lerpFunc = null;
+    easeFunc = null;
     filterCallback = null;
     scope = null;
 
@@ -6670,7 +6721,7 @@ ScheduleEvent["IsValid"] <- function(eventName) {
         this.globalDelay = macros.GetFromTable(table, "globalDelay", 0)
         this.output = macros.GetFromTable(table, "output", null)
         this.scope = macros.GetFromTable(table, "scope", this)
-        this.lerpFunc = macros.GetFromTable(table, "lerp", function(t) return t)
+        this.easeFunc = macros.GetFromTable(table, "ease", function(t) return t)
         this.filterCallback = macros.GetFromTable(table, "filterCallback", function(a,b,c,d,e) return null)
         this.frameInterval = macros.GetFromTable(table, "frameInterval", FrameTime()) 
         this.maxFrames = macros.GetFromTable(table, "fps", 60.0)
@@ -6917,7 +6968,7 @@ animate["PositionTransitionByTime"] <- function(entities, startPos, endPos, time
     animate.applyAnimation(
         animSetting, 
         function(step, steps, v) {return v.startPos + v.dist * v.lerpFunc(step / steps)},
-        function(ent, newPosition) {ent.SetOrigin(newPosition)},
+        function(ent, newPosition) {ent.SetAbsOrigin(newPosition)},
         vars
     )
     
@@ -6935,7 +6986,7 @@ animate.RT["PositionTransitionByTime"] <- function(entities, startPos, endPos, t
     animate.applyRTAnimation(
         animSetting, 
         function(step, steps, v) {return v.startPos + v.dist * v.lerpFunc(step / steps)},
-        function(ent, newPosition) {ent.SetOrigin(newPosition)},
+        function(ent, newPosition) {ent.SetAbsOrigin(newPosition)},
         vars
     )
     
@@ -6967,7 +7018,7 @@ animate["PositionTransitionBySpeed"] <- function(entities, startPos, endPos, spe
     animate.applyAnimation(
         animSetting, 
         function(step, steps, v) {return v.startPos + v.dist * v.lerpFunc(step / steps)},
-        function(ent, newPosition) {ent.SetOrigin(newPosition)},
+        function(ent, newPosition) {ent.SetAbsOrigin(newPosition)},
         vars,
         vars.dist.Length() / speed.tofloat() // steps
     )
@@ -6986,7 +7037,7 @@ animate.RT["PositionTransitionBySpeed"] <- function(entities, startPos, endPos, 
     animate.applyRTAnimation(
         animSetting, 
         function(step, steps, v) {return v.startPos + v.dist * v.lerpFunc(step / steps)},
-        function(ent, newPosition) {ent.SetOrigin(newPosition)},
+        function(ent, newPosition) {ent.SetAbsOrigin(newPosition)},
         vars,
         vars.dist.Length() / speed.tofloat() // steps
     )
