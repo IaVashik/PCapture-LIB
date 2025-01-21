@@ -13,12 +13,12 @@ animate["ColorTransition"] <- function(entities, startColor, endColor, time, ani
     local vars = {
         startColor = startColor,
         endColor = endColor,
-        lerpFunc = animSetting.lerpFunc
+        easeFunc = animSetting.easeFunc
     }
 
     animate.applyAnimation(
         animSetting, 
-        function(step, transitionFrames, v) {return math.lerp.color(v.startColor, v.endColor, v.lerpFunc(step / transitionFrames))},
+        function(step, transitionFrames, v) {return math.lerp.color(v.startColor, v.endColor, v.easeFunc(step / transitionFrames))},
         function(ent, newColor) {ent.SetColor(newColor)},
         vars
     )
@@ -31,12 +31,12 @@ animate.RT["ColorTransition"] <- function(entities, startColor, endColor, time, 
     local vars = {
         startColor = startColor,
         endColor = endColor,
-        lerpFunc = animSetting.lerpFunc
+        easeFunc = animSetting.easeFunc
     }
 
     animate.applyRTAnimation(
         animSetting, 
-        function(step, transitionFrames, v) {return math.lerp.color(v.startColor, v.endColor, v.lerpFunc(step / transitionFrames))},
+        function(step, transitionFrames, v) {return math.lerp.color(v.startColor, v.endColor, v.easeFunc(step / transitionFrames))},
         function(ent, newColor) {ent.SetColor(newColor)},
         vars
     )

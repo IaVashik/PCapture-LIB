@@ -13,12 +13,12 @@ animate["PositionTransitionByTime"] <- function(entities, startPos, endPos, time
     local vars = {
         startPos = startPos,
         dist = endPos - startPos,
-        lerpFunc = animSetting.lerpFunc
+        easeFunc = animSetting.easeFunc
     }
 
     animate.applyAnimation(
         animSetting, 
-        function(step, steps, v) {return v.startPos + v.dist * v.lerpFunc(step / steps)},
+        function(step, steps, v) {return v.startPos + v.dist * v.easeFunc(step / steps)},
         function(ent, newPosition) {ent.SetAbsOrigin(newPosition)},
         vars
     )
@@ -31,12 +31,12 @@ animate.RT["PositionTransitionByTime"] <- function(entities, startPos, endPos, t
     local vars = {
         startPos = startPos,
         dist = endPos - startPos,
-        lerpFunc = animSetting.lerpFunc
+        easeFunc = animSetting.easeFunc
     }
 
     animate.applyRTAnimation(
         animSetting, 
-        function(step, steps, v) {return v.startPos + v.dist * v.lerpFunc(step / steps)},
+        function(step, steps, v) {return v.startPos + v.dist * v.easeFunc(step / steps)},
         function(ent, newPosition) {ent.SetAbsOrigin(newPosition)},
         vars
     )
@@ -63,12 +63,12 @@ animate["PositionTransitionBySpeed"] <- function(entities, startPos, endPos, spe
     local vars = {
         startPos = startPos,
         dist = endPos - startPos,
-        lerpFunc = animSetting.lerpFunc
+        easeFunc = animSetting.easeFunc
     }
     
     animate.applyAnimation(
         animSetting, 
-        function(step, steps, v) {return v.startPos + v.dist * v.lerpFunc(step / steps)},
+        function(step, steps, v) {return v.startPos + v.dist * v.easeFunc(step / steps)},
         function(ent, newPosition) {ent.SetAbsOrigin(newPosition)},
         vars,
         vars.dist.Length() / speed.tofloat() // steps
@@ -82,12 +82,12 @@ animate.RT["PositionTransitionBySpeed"] <- function(entities, startPos, endPos, 
     local vars = {
         startPos = startPos,
         dist = endPos - startPos,
-        lerpFunc = animSetting.lerpFunc
+        easeFunc = animSetting.easeFunc
     }
     
     animate.applyRTAnimation(
         animSetting, 
-        function(step, steps, v) {return v.startPos + v.dist * v.lerpFunc(step / steps)},
+        function(step, steps, v) {return v.startPos + v.dist * v.easeFunc(step / steps)},
         function(ent, newPosition) {ent.SetAbsOrigin(newPosition)},
         vars,
         vars.dist.Length() / speed.tofloat() // steps

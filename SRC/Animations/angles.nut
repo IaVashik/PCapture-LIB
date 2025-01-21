@@ -18,12 +18,12 @@ animate["AnglesTransitionByTime"] <- function(entities, startAngles, endAngles, 
     local vars = {
         startAngles = startAngles,
         angleDelta = Vector(deltaAngleX, deltaAngleY, deltaAngleZ),
-        lerpFunc = animSetting.lerpFunc
+        easeFunc = animSetting.easeFunc
     }
 
     animate.applyAnimation(
         animSetting, 
-        function(step, steps, v){return v.startAngles + v.angleDelta * v.lerpFunc(step / steps)},
+        function(step, steps, v){return v.startAngles + v.angleDelta * v.easeFunc(step / steps)},
         function(ent, newAngle) {ent.SetAbsAngles(newAngle)},
         vars
     )
@@ -41,12 +41,12 @@ animate.RT["AnglesTransitionByTime"] <- function(entities, startAngles, endAngle
     local vars = {
         startAngles = startAngles,
         angleDelta = Vector(deltaAngleX, deltaAngleY, deltaAngleZ),
-        lerpFunc = animSetting.lerpFunc
+        easeFunc = animSetting.easeFunc
     }
 
     animate.applyRTAnimation(
         animSetting, 
-        function(step, steps, v){return v.startAngles + v.angleDelta * v.lerpFunc(step / steps)},
+        function(step, steps, v){return v.startAngles + v.angleDelta * v.easeFunc(step / steps)},
         function(ent, newAngle) {ent.SetAbsAngles(newAngle)},
         vars
     )

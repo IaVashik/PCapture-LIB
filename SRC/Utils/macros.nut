@@ -473,12 +473,12 @@ macros["BuildAnimateFunction"] <- function(name, propertySetterFunc, valueCalcul
         local varg = {
             start = startValue,
             delta = endValue - startValue,
-            lerpFunc = animSetting.lerpFunc
+            easeFunc = animSetting.easeFunc
         }
 
         animate.applyAnimation(
             animSetting,
-            valueCalculator ? valueCalculator : function(step, steps, v) {return v.start + v.delta * v.lerpFunc(step / steps)},
+            valueCalculator ? valueCalculator : function(step, steps, v) {return v.start + v.delta * v.easeFunc(step / steps)},
             propertySetterFunc
             varg
         ) 
@@ -496,12 +496,12 @@ macros["BuildRTAnimateFunction"] <- function(name, propertySetterFunc, valueCalc
         local varg = {
             start = startValue,
             delta = endValue - startValue,
-            lerpFunc = animSetting.lerpFunc
+            easeFunc = animSetting.easeFunc
         }
 
         animate.applyRTAnimation(
             animSetting,
-            valueCalculator ? valueCalculator : function(step, steps, v) {return v.start + v.delta * v.lerpFunc(step / steps)},
+            valueCalculator ? valueCalculator : function(step, steps, v) {return v.start + v.delta * v.easeFunc(step / steps)},
             propertySetterFunc
             varg
         ) 

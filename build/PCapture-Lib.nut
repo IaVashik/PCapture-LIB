@@ -4696,12 +4696,12 @@ macros["BuildAnimateFunction"] <- function(name, propertySetterFunc, valueCalcul
         local varg = {
             start = startValue,
             delta = endValue - startValue,
-            lerpFunc = animSetting.lerpFunc
+            easeFunc = animSetting.easeFunc
         }
 
         animate.applyAnimation(
             animSetting,
-            valueCalculator ? valueCalculator : function(step, steps, v) {return v.start + v.delta * v.lerpFunc(step / steps)},
+            valueCalculator ? valueCalculator : function(step, steps, v) {return v.start + v.delta * v.easeFunc(step / steps)},
             propertySetterFunc
             varg
         ) 
@@ -4719,12 +4719,12 @@ macros["BuildRTAnimateFunction"] <- function(name, propertySetterFunc, valueCalc
         local varg = {
             start = startValue,
             delta = endValue - startValue,
-            lerpFunc = animSetting.lerpFunc
+            easeFunc = animSetting.easeFunc
         }
 
         animate.applyRTAnimation(
             animSetting,
-            valueCalculator ? valueCalculator : function(step, steps, v) {return v.start + v.delta * v.lerpFunc(step / steps)},
+            valueCalculator ? valueCalculator : function(step, steps, v) {return v.start + v.delta * v.easeFunc(step / steps)},
             propertySetterFunc
             varg
         ) 
@@ -6872,12 +6872,12 @@ animate["AlphaTransition"] <- function(entities, startOpacity, endOpacity, time,
     local vars = {
         startOpacity = startOpacity,
         opacityDelta = endOpacity - startOpacity,
-        lerpFunc = animSetting.lerpFunc
+        easeFunc = animSetting.easeFunc
     }
 
     animate.applyAnimation(
         animSetting, 
-        function(step, steps, v) {return v.startOpacity + v.opacityDelta * v.lerpFunc(step / steps)},
+        function(step, steps, v) {return v.startOpacity + v.opacityDelta * v.easeFunc(step / steps)},
         function(ent, newAlpha) {ent.SetAlpha(newAlpha)},
         vars
     )
@@ -6890,12 +6890,12 @@ animate.RT["AlphaTransition"] <- function(entities, startOpacity, endOpacity, ti
     local vars = {
         startOpacity = startOpacity,
         opacityDelta = endOpacity - startOpacity,
-        lerpFunc = animSetting.lerpFunc
+        easeFunc = animSetting.easeFunc
     }
 
     animate.applyRTAnimation(
         animSetting, 
-        function(step, steps, v) {return v.startOpacity + v.opacityDelta * v.lerpFunc(step / steps)},
+        function(step, steps, v) {return v.startOpacity + v.opacityDelta * v.easeFunc(step / steps)},
         function(ent, newAlpha) {ent.SetAlpha(newAlpha)},
         vars
     )
@@ -6917,12 +6917,12 @@ animate["ColorTransition"] <- function(entities, startColor, endColor, time, ani
     local vars = {
         startColor = startColor,
         endColor = endColor,
-        lerpFunc = animSetting.lerpFunc
+        easeFunc = animSetting.easeFunc
     }
 
     animate.applyAnimation(
         animSetting, 
-        function(step, transitionFrames, v) {return math.lerp.color(v.startColor, v.endColor, v.lerpFunc(step / transitionFrames))},
+        function(step, transitionFrames, v) {return math.lerp.color(v.startColor, v.endColor, v.easeFunc(step / transitionFrames))},
         function(ent, newColor) {ent.SetColor(newColor)},
         vars
     )
@@ -6935,12 +6935,12 @@ animate.RT["ColorTransition"] <- function(entities, startColor, endColor, time, 
     local vars = {
         startColor = startColor,
         endColor = endColor,
-        lerpFunc = animSetting.lerpFunc
+        easeFunc = animSetting.easeFunc
     }
 
     animate.applyRTAnimation(
         animSetting, 
-        function(step, transitionFrames, v) {return math.lerp.color(v.startColor, v.endColor, v.lerpFunc(step / transitionFrames))},
+        function(step, transitionFrames, v) {return math.lerp.color(v.startColor, v.endColor, v.easeFunc(step / transitionFrames))},
         function(ent, newColor) {ent.SetColor(newColor)},
         vars
     )
@@ -6962,12 +6962,12 @@ animate["PositionTransitionByTime"] <- function(entities, startPos, endPos, time
     local vars = {
         startPos = startPos,
         dist = endPos - startPos,
-        lerpFunc = animSetting.lerpFunc
+        easeFunc = animSetting.easeFunc
     }
 
     animate.applyAnimation(
         animSetting, 
-        function(step, steps, v) {return v.startPos + v.dist * v.lerpFunc(step / steps)},
+        function(step, steps, v) {return v.startPos + v.dist * v.easeFunc(step / steps)},
         function(ent, newPosition) {ent.SetAbsOrigin(newPosition)},
         vars
     )
@@ -6980,12 +6980,12 @@ animate.RT["PositionTransitionByTime"] <- function(entities, startPos, endPos, t
     local vars = {
         startPos = startPos,
         dist = endPos - startPos,
-        lerpFunc = animSetting.lerpFunc
+        easeFunc = animSetting.easeFunc
     }
 
     animate.applyRTAnimation(
         animSetting, 
-        function(step, steps, v) {return v.startPos + v.dist * v.lerpFunc(step / steps)},
+        function(step, steps, v) {return v.startPos + v.dist * v.easeFunc(step / steps)},
         function(ent, newPosition) {ent.SetAbsOrigin(newPosition)},
         vars
     )
@@ -7012,12 +7012,12 @@ animate["PositionTransitionBySpeed"] <- function(entities, startPos, endPos, spe
     local vars = {
         startPos = startPos,
         dist = endPos - startPos,
-        lerpFunc = animSetting.lerpFunc
+        easeFunc = animSetting.easeFunc
     }
     
     animate.applyAnimation(
         animSetting, 
-        function(step, steps, v) {return v.startPos + v.dist * v.lerpFunc(step / steps)},
+        function(step, steps, v) {return v.startPos + v.dist * v.easeFunc(step / steps)},
         function(ent, newPosition) {ent.SetAbsOrigin(newPosition)},
         vars,
         vars.dist.Length() / speed.tofloat() // steps
@@ -7031,12 +7031,12 @@ animate.RT["PositionTransitionBySpeed"] <- function(entities, startPos, endPos, 
     local vars = {
         startPos = startPos,
         dist = endPos - startPos,
-        lerpFunc = animSetting.lerpFunc
+        easeFunc = animSetting.easeFunc
     }
     
     animate.applyRTAnimation(
         animSetting, 
-        function(step, steps, v) {return v.startPos + v.dist * v.lerpFunc(step / steps)},
+        function(step, steps, v) {return v.startPos + v.dist * v.easeFunc(step / steps)},
         function(ent, newPosition) {ent.SetAbsOrigin(newPosition)},
         vars,
         vars.dist.Length() / speed.tofloat() // steps
@@ -7064,12 +7064,12 @@ animate["AnglesTransitionByTime"] <- function(entities, startAngles, endAngles, 
     local vars = {
         startAngles = startAngles,
         angleDelta = Vector(deltaAngleX, deltaAngleY, deltaAngleZ),
-        lerpFunc = animSetting.lerpFunc
+        easeFunc = animSetting.easeFunc
     }
 
     animate.applyAnimation(
         animSetting, 
-        function(step, steps, v){return v.startAngles + v.angleDelta * v.lerpFunc(step / steps)},
+        function(step, steps, v){return v.startAngles + v.angleDelta * v.easeFunc(step / steps)},
         function(ent, newAngle) {ent.SetAbsAngles(newAngle)},
         vars
     )
@@ -7087,12 +7087,12 @@ animate.RT["AnglesTransitionByTime"] <- function(entities, startAngles, endAngle
     local vars = {
         startAngles = startAngles,
         angleDelta = Vector(deltaAngleX, deltaAngleY, deltaAngleZ),
-        lerpFunc = animSetting.lerpFunc
+        easeFunc = animSetting.easeFunc
     }
 
     animate.applyRTAnimation(
         animSetting, 
-        function(step, steps, v){return v.startAngles + v.angleDelta * v.lerpFunc(step / steps)},
+        function(step, steps, v){return v.startAngles + v.angleDelta * v.easeFunc(step / steps)},
         function(ent, newAngle) {ent.SetAbsAngles(newAngle)},
         vars
     )

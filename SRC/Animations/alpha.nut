@@ -13,12 +13,12 @@ animate["AlphaTransition"] <- function(entities, startOpacity, endOpacity, time,
     local vars = {
         startOpacity = startOpacity,
         opacityDelta = endOpacity - startOpacity,
-        lerpFunc = animSetting.lerpFunc
+        easeFunc = animSetting.easeFunc
     }
 
     animate.applyAnimation(
         animSetting, 
-        function(step, steps, v) {return v.startOpacity + v.opacityDelta * v.lerpFunc(step / steps)},
+        function(step, steps, v) {return v.startOpacity + v.opacityDelta * v.easeFunc(step / steps)},
         function(ent, newAlpha) {ent.SetAlpha(newAlpha)},
         vars
     )
@@ -31,12 +31,12 @@ animate.RT["AlphaTransition"] <- function(entities, startOpacity, endOpacity, ti
     local vars = {
         startOpacity = startOpacity,
         opacityDelta = endOpacity - startOpacity,
-        lerpFunc = animSetting.lerpFunc
+        easeFunc = animSetting.easeFunc
     }
 
     animate.applyRTAnimation(
         animSetting, 
-        function(step, steps, v) {return v.startOpacity + v.opacityDelta * v.lerpFunc(step / steps)},
+        function(step, steps, v) {return v.startOpacity + v.opacityDelta * v.easeFunc(step / steps)},
         function(ent, newAlpha) {ent.SetAlpha(newAlpha)},
         vars
     )
