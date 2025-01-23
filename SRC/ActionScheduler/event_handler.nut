@@ -6,6 +6,7 @@
  * The function then schedules itself to run again after a short delay to continue processing events.
 */
 ::ScheduledEventLoop <- function() {
+    local time = Time() + 0.0001
     // Iterate over each event name and its corresponding event list. 
     foreach(eventName, eventInfo in ScheduleEvent.eventsList) {
         local event 

@@ -137,8 +137,12 @@ animate["applyAnimation"] <- function(animInfo, valueCalculator, propertySetter,
  * The arguments are the same as those for `applyAnimation`.
 */
 animate["applyRTAnimation"] <- function(animInfo, valueCalculator, propertySetter, vars = null, transitionFrames = 0) {
-    if(transitionFrames == 0)
+    if(transitionFrames == 0) {
+        if (animInfo.autoOptimization && animInfo.delay / animInfo.frameInterval > animInfo.maxFrames)  
+            animInfo.frameInterval = animInfo.delay / animInfo.maxFrames
+        
         transitionFrames = animInfo.delay / animInfo.frameInterval;
+    }
 
     ScheduleEvent.Add(
         animInfo.eventName, 
@@ -162,6 +166,7 @@ animate["applyRTAnimation"] <- function(animInfo, valueCalculator, propertySette
 */
 animate["_applyRTAnimation"] <- function(animInfo, valueCalculator, propertySetter, vars, transitionFrames) {
     transitionFrames = ceil(transitionFrames) 
+    
     if(developer() > 0) dev.trace("Started {} realtime animation ({})", animInfo.animName, animInfo.eventName)
 
     for(local step = 0; step <= transitionFrames; step++) {
