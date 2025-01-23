@@ -62,7 +62,7 @@
         // endregion
 
         local msg = macros.format.acall(args)
-        printl("-- PCapture-Lib: " + msg)
+        printl("-- PCapture-Lib [" + Time().tostring() + "]: " + msg)
     },
 
     /*

@@ -19,7 +19,7 @@ ScheduleEvent["Add"] <- function(eventName, action, timeDelay, args = null, scop
 
     if(currentActionList.len() == 0 || currentActionList.top() <= newScheduledEvent) {
         currentActionList.append(newScheduledEvent)
-        return ScheduleEvent._startThink()
+        return
     } 
     
     //* --- A binary tree.
@@ -42,7 +42,6 @@ ScheduleEvent["Add"] <- function(eventName, action, timeDelay, args = null, scop
     }
     
     currentActionList.insert(low, newScheduledEvent)
-    ScheduleEvent._startThink()
 }
 
 /*
@@ -59,7 +58,7 @@ ScheduleEvent["AddInterval"] <- function(eventName, action, interval, initialDel
     local intervalAction = function(eventName, action, args, scope, interval) {
         local event = ScheduleAction(scope, action, 0, args)
         local delay
-        
+
         while(true) {
             local result = event.run()
 
@@ -89,7 +88,7 @@ ScheduleEvent["AddActions"] <- function(eventName, actions, noSort = false) {
         ScheduleEvent.eventsList[eventName].extend(actions)
         ScheduleEvent.eventsList[eventName].sort()
         if(developer() > 0) dev.trace("Added {} actions to Event \"{}\".", actions.len(), eventName)
-        return ScheduleEvent._startThink()
+        return 
     } 
 
     if(!noSort) actions.sort()
@@ -101,7 +100,6 @@ ScheduleEvent["AddActions"] <- function(eventName, actions, noSort = false) {
     }
 
     if(developer() > 0) dev.trace("Created new Event \"{}\" with {} actions.", eventName, actions.len())
-    ScheduleEvent._startThink()
 }
 
 

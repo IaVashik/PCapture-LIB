@@ -12,8 +12,6 @@
 ::ScheduleEvent <- {
     // Object to store scheduled events 
     eventsList = {global = List()},
-    // Var to track if event loop is running
-    executorRunning = false,
     
     Add = null,
     AddActions = null,
@@ -28,13 +26,11 @@
     IsValid = null,
 }
 
-ScheduleEvent["_startThink"] <- function() {
-    if(!ScheduleEvent.executorRunning) {
-        ScheduleEvent.executorRunning = true
-        ScheduledEventsLoop()
-    }
-}
-
 IncludeScript("PCapture-LIB/SRC/ActionScheduler/action")
 IncludeScript("PCapture-LIB/SRC/ActionScheduler/action_scheduler")
 IncludeScript("PCapture-LIB/SRC/ActionScheduler/event_handler")
+
+// Create a logic_timer to process the event loop.
+local timer = entLib.CreateByClassname("logic_timer", {RefireTime=0.001})
+timer.ConnectOutput("OnTimer", "ScheduledEventsLoop")
+EntFireByHandle(timer, "Enable");
