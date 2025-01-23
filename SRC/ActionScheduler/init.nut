@@ -32,5 +32,5 @@ IncludeScript("PCapture-LIB/SRC/ActionScheduler/event_handler")
 
 // Create a logic_timer to process the event loop.
 local timer = entLib.CreateByClassname("logic_timer", {RefireTime=0.001})
-timer.ConnectOutput("OnTimer", "ScheduledEventsLoop")
+timer.ConnectOutput("OnTimer", "ScheduledEventLoop")
 EntFireByHandle(timer, "Enable");

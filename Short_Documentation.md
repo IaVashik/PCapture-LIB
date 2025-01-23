@@ -405,10 +405,6 @@ Provides enhanced event scheduling.
 | [`GetEvent(eventName: string) -> List`](SRC/ActionScheduler/readme.md#scheduleeventgeteventeventname) | Gets event actions. |
 | [`IsValid(eventName: string) -> bool`](SRC/ActionScheduler/readme.md#scheduleeventisvalideventname) | Checks event validity. |
 
-### [`ActionScheduler/event_handler.nut`](SRC/ActionScheduler/readme.md#event_handlernut)
-
-Contains the core event loop function:  [`ScheduledEventsLoop()`](SRC/ActionScheduler/readme.md#scheduledeventsloop)
-
 
 ## 5. [Animations](SRC/Animations/readme.md#animations-module)
 

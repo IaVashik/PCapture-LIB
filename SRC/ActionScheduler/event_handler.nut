@@ -5,7 +5,7 @@
  * If so, it executes the event's action and removes it from the list of scheduled events. 
  * The function then schedules itself to run again after a short delay to continue processing events.
 */
-::ScheduledEventsLoop <- function() {
+::ScheduledEventLoop <- function() {
     // Iterate over each event name and its corresponding event list. 
     foreach(eventName, eventInfo in ScheduleEvent.eventsList) {
         local event 

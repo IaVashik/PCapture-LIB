@@ -20,7 +20,7 @@ The `ActionScheduler` module provides an enhanced system for creating and managi
     * [`GetEvent(eventName)`](#scheduleeventgeteventeventname)
     * [`IsValid(eventName)`](#scheduleeventisvalideventname)
 3.  [event_handler.nut](#event_handlernut)
-    * [`ScheduledEventsLoop()`](#scheduledeventsloop)
+    * [`ScheduledEventLoop()`](#scheduledeventloop)
 4.  [Enhanced Scheduling Features](#enhanced-scheduling-features)
     * [Asynchronous Actions](#asynchronous-actions)
     * [Error Handling](#error-handling)
@@ -271,10 +271,10 @@ if (ScheduleEvent.IsValid("my_event")) {
 
 ## [ActionScheduler/event_handler.nut](event_handler.nut)
 
-This file contains the `ScheduledEventsLoop` function, which processes scheduled events and actions.
+This file contains the `ScheduledEventLoop` function, which processes scheduled events and actions.
 
 
-### `ScheduledEventsLoop()`
+### `ScheduledEventLoop()`
 
 This function iterates over all scheduled events and checks if the execution time for the first action in each event has arrived. If so, it executes the action and removes it from the event's list of actions. If an event has no more actions remaining, it is removed from the list of scheduled events. The function then schedules itself to run again after a short delay to continue processing events. **This function is called automatically by the ActionScheduler module**
 
@@ -318,7 +318,7 @@ The `"async_loop"` event showcases how you can leverage `yield` to create asynch
 
 ### Error Handling
 
-The `ScheduledEventsLoop` now includes robust error handling for scheduled events. If an error occurs during the execution of a scheduled action, the following information will be printed to the console:
+The `ScheduledEventLoop` now includes robust error handling for scheduled events. If an error occurs during the execution of a scheduled action, the following information will be printed to the console:
 
 * **Error Message:**  The specific error message that occurred.
 * **Callstack:**  A trace of the function calls that led to the error, allowing you to pinpoint the source of the problem.
