@@ -25,7 +25,7 @@ jobs:
         run: |
           mkdir release
           cp OUTPUT/PCapture-Lib.nut release/
-          cp .github/README.md release/
+          cp .github/README_release.md release/README.md
           cd release && zip "PCapture-Lib All-in-One.zip" PCapture-Lib.nut README.md
           echo "ASSET_ALL_IN_ONE=$(pwd)/PCapture-Lib All-in-One.zip" >> $GITHUB_ENV
 
