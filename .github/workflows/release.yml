@@ -1,0 +1,35 @@
+name: Release PCapture-Lib
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Run all-in-one script
+        run: |
+          python .github/create_all_in_one.py
+
+      - name: Prepare release assets
+        run: |
+          mkdir release
+          cp OUTPUT/PCapture-Lib.nut release/
+          cp .github/README.md release/
+          cd release && zip "PCapture-Lib All-in-One.zip" PCapture-Lib.nut README.md
+          echo "ASSET_ALL_IN_ONE=$(pwd)/PCapture-Lib All-in-One.zip" >> $GITHUB_ENV
+
+      - name: Upload release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ${{ env.ASSET_ALL_IN_ONE }}
