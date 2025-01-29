@@ -6,9 +6,9 @@
 </h2>
 </div>
 
-![version](https://img.shields.io/badge/Pcapture--Lib-v3.2--Stable-informational)
+![version](https://img.shields.io/badge/Pcapture--Lib-v3.3--Stable-informational)
 
-**PCapture-Lib v3.2 is a groundbreaking VScripts library for Portal 2, empowering modders to create truly innovative and immersive gameplay experiences.**  It offers a most powerful suite of tools and enhancements, simplifying complex scripting challenges and allowing you to focus on bringing your creative vision to life. Whether you're a seasoned modder or just starting out, PCapture-Lib will elevate your mod projects to the next level.
+**PCapture-Lib v3.3 is a groundbreaking VScripts library for Portal 2, empowering modders to create truly innovative and immersive gameplay experiences.**  It offers a most powerful suite of tools and enhancements, simplifying complex scripting challenges and allowing you to focus on bringing your creative vision to life. Whether you're a seasoned modder or just starting out, PCapture-Lib will elevate your mod projects to the next level.
 
 # Killer Features
 

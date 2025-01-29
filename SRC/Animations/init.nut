@@ -138,7 +138,7 @@ animate["applyAnimation"] <- function(animInfo, valueCalculator, propertySetter,
 */
 animate["applyRTAnimation"] <- function(animInfo, valueCalculator, propertySetter, vars = null, transitionFrames = 0) {
     if(transitionFrames == 0) {
-        if (animInfo.autoOptimization && animInfo.delay / animInfo.frameInterval > animInfo.maxFrames)  
+        if (animInfo.maxFrames * 10 != 600)  
             animInfo.frameInterval = animInfo.delay / animInfo.maxFrames
         
         transitionFrames = animInfo.delay / animInfo.frameInterval;
