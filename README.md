@@ -10,7 +10,10 @@
 
 **PCapture-Lib v3.4 is a groundbreaking VScripts library for Portal 2, empowering modders to create truly innovative and immersive gameplay experiences.**  It offers a most powerful suite of tools and enhancements, simplifying complex scripting challenges and allowing you to focus on bringing your creative vision to life. Whether you're a seasoned modder or just starting out, PCapture-Lib will elevate your mod projects to the next level.
 
-# Killer Features
+---
+
+<h1 style="border-bottom: none;">Killer Features</h1>
+<details>
 
 * **Advanced Ray Tracing with Portal Support:** Seamlessly integrate portal interactions into your raycasts with `TracePlus.PortalBbox` (precise) and `TracePlus.PortalCheap` (fast). This game-changing feature opens up a world of possibilities for portal-based mechanics, previously unattainable with standard VScripts.
 
@@ -32,13 +35,38 @@
 
 ### And more! You can find the whole list [here](Short_Documentation.md)
 
+</details>
+
+---
+
 # Getting Started
 
-1. **Installation:** Copy the PCapture-Lib folder into your Portal 2 scripts directory (`portal2/scripts/vscripts`).
+There are two ways to install **PCapture-Lib**: you can download the latest release (recommended) or install directly from the source.
 
-2. **Initialization:** Include the library in your VScripts using `IncludeScript("PCapture-Lib")` or `IncludeScript("PCapture-Lib/SRC/PCapture-Lib")`.
+## Installation from Release (Recommended)
 
-3. **Documentation:** Refer to the [documentation](Short_Documentation.md) for detailed information on each module and its functions. A quick reference guide is also available [link to short-dock].
+1. **Download:** Get the latest release from the [Releases](https://github.com/IaVashik/PCapture-LIB/releases) page.
+2. **Copy:** Extract and copy the `PCapture-Lib.nut` file into your Portal 2 VScripts directory:  
+   `Portal 2/portal2/scripts/vscripts/` 
+   *Note: Although you can place the file in any subdirectory within `vscripts`, placing it directly in `vscripts` helps avoid confusion for beginner developers.*
+3. **Initialization:** In your VScripts, include the library using:
+   ```lua
+   IncludeScript("PCapture-Lib")
+   ```
+
+## Installation from Source
+
+1. **Clone:** Clone the repository into your Portal 2 scripts directory:  
+   `Portal 2/portal2/scripts/vscripts/` 
+2. **Initialization:** In your VScripts, include the library using:
+   ```lua
+   IncludeScript("PCapture-Lib/SRC/PCapture-Lib")
+   ```
+
+## Documentation
+
+[Short_Documentation.md](Short_Documentation.md) provides a quick overview of available methods for each module. For detailed explanations, including argument descriptions and code examples, refer to the `readme.md` files inside `SRC/*/readme.md`. Each module section in *Short_Documentation* contains anchors linking to its detailed documentation.
+
 
 # About
 
