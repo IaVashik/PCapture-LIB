@@ -34,6 +34,8 @@ function RunAllTests() {
     IncludeScript("PCapture-LIB/Tests/IDT")
     IncludeScript("PCapture-LIB/Tests/Utils")
     IncludeScript("PCapture-LIB/Tests/ActionScheduler")
+    IncludeScript("PCapture-LIB/Tests/ScriptEvents")
+    IncludeScript("PCapture-LIB/Tests/TracePlus")
 }
 
 if(getstackinfos(2) == null) {
