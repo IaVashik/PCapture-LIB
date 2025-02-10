@@ -1,6 +1,6 @@
 ## BBox Casting Algorithm
 
-This document describes the implementation of a highly optimized BBox (Bounding Box) Casting algorithm used for precise collision detection in a game environment. This algorithm is designed to be performant even when dealing with a large number of entities, ensuring minimal impact on frame rate.
+This document describes the implementation of a highly optimized BBox (Bounding Box) Casting algorithm used for precise collision detection in a game environment. This algorithm is designed to be performant even when dealing with a large number of entities, ensuring minimal impact on frame rate. This algorithm belongs to the class of algorithms that utilize approximation and heuristics to achieve practical performance in collision detection. :>
 
 ### Algorithm Overview
 
