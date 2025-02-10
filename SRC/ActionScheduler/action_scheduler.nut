@@ -55,23 +55,8 @@ ScheduleEvent["Add"] <- function(eventName, action, timeDelay, args = null, scop
  * @param {object} scope - The scope in which to execute the action (default is `this`). 
 */ 
 ScheduleEvent["AddInterval"] <- function(eventName, action, interval, initialDelay = 0, args = null, scope = this) {
-    local intervalAction = function(eventName, action, args, scope, interval) {
-        local event = ScheduleAction(scope, action, 0, args)
-        local delay
-
-        while(true) {
-            local result = event.run()
-
-            if(typeof result == "generator") {
-                while(delay = resume result) yield delay
-            }
-
-            yield interval
-        }
-    }
-
-    ScheduleEvent.Add(eventName, intervalAction, initialDelay, [eventName, action, args, scope, interval])
-    dev.trace("New Interval \"{}\" was created!", eventName)
+    ScheduleEvent.Add(eventName, action, initialDelay, args, this)
+    ScheduleEvent.Add(eventName, ScheduleEvent.AddInterval, initialDelay + interval, [eventName, action, interval, 0, args, scope], this)
 }
 
 /*

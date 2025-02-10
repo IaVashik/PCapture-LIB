@@ -42,12 +42,17 @@
         this.eventName = macros.GetFromTable(table, "eventName", UniqueString(name + "_anim"))
         this.globalDelay = macros.GetFromTable(table, "globalDelay", 0)
         this.output = macros.GetFromTable(table, "output", null)
-        this.scope = macros.GetFromTable(table, "scope", this)
+        this.scope = macros.GetFromTable(table, "scope", null)
         this.easeFunc = macros.GetFromTable(table, "ease", function(t) return t)
         this.filterCallback = macros.GetFromTable(table, "filterCallback", function(a,b,c,d,e) return null)
         this.frameInterval = macros.GetFromTable(table, "frameInterval", FrameTime()) 
         this.maxFrames = macros.GetFromTable(table, "fps", 60.0)
         this.autoOptimization = macros.GetFromTable(table, "optimization", true)
+
+        // If the class points to the root table, it will result in a circular reference. This fixed here
+        if(this.scope == getroottable()) {
+            this.scope = null
+        }
     } 
 
     /* 
@@ -164,25 +169,67 @@ animate["applyRTAnimation"] <- function(animInfo, valueCalculator, propertySette
  * to interrupt or alter the animation at runtime using `filterCallback`, or if the animation is too long
  * for VSquirrel to process upfront.
 */
-animate["_applyRTAnimation"] <- function(animInfo, valueCalculator, propertySetter, vars, transitionFrames) {
-    transitionFrames = ceil(transitionFrames) 
+// animate["_applyRTAnimation"] <- function(animInfo, valueCalculator, propertySetter, vars, transitionFrames) {
+//     transitionFrames = ceil(transitionFrames) 
     
-    if(developer() > 0) dev.trace("Started {} realtime animation ({})", animInfo.animName, animInfo.eventName)
+//     if(developer() > 0) dev.trace("Started {} realtime animation ({})", animInfo.animName, animInfo.eventName)
 
-    for(local step = 0; step <= transitionFrames; step++) {
-        local newValue = valueCalculator(step, transitionFrames, vars)
-        if(animInfo.filterCallback(animInfo, newValue, transitionFrames, step, vars)) break // todo fix it
+//     for(local step = 0; step <= transitionFrames; step++) {
+//         local newValue = valueCalculator(step, transitionFrames, vars)
+//         if(animInfo.filterCallback(animInfo, newValue, transitionFrames, step, vars)) break // todo fix it
 
-        foreach(ent in animInfo.entities)
-            propertySetter(ent, newValue)
+//         foreach(ent in animInfo.entities)
+//             propertySetter(ent, newValue)
 
-        yield animInfo.frameInterval
+//         yield animInfo.frameInterval
+//     }
+
+//     animInfo.delay = 0
+//     animInfo.globalDelay = 0
+//     animInfo.CallOutput()
+// }
+animate["_applyRTAnimation"] <- function(animInfo, valueCalculator, propertySetter, vars, transitionFrames) {
+    // Round up the number of transition frames
+    transitionFrames = ceil(transitionFrames);
+    if (developer() > 0) dev.trace("Started {} realtime animation ({})", animInfo.animName, animInfo.eventName);
+
+    // Helper function to process each animation step
+    function processStep(step, animInfo, valueCalculator, propertySetter, vars, transitionFrames) {
+    // Stop if all frames are processed
+    if (step > transitionFrames) {
+        animInfo.delay = 0;
+        animInfo.globalDelay = 0;
+        animInfo.CallOutput();
+        return;
     }
 
-    animInfo.delay = 0
-    animInfo.globalDelay = 0
-    animInfo.CallOutput()
+    // Calculate the new property value
+    local newValue = valueCalculator(step, transitionFrames, vars);
+
+    // Stop if the filter callback signals to cancel the animation
+    if (animInfo.filterCallback(animInfo, newValue, transitionFrames, step, vars)) {
+        return;
+    }
+
+    // Apply the new value to all entities
+    foreach(ent in animInfo.entities)
+        propertySetter(ent, newValue)
+
+    // Move to the next step
+    ScheduleEvent.Add(
+        animInfo.eventName,
+        processStep,
+        animInfo.frameInterval,
+        [++step, animInfo, valueCalculator, propertySetter, vars, transitionFrames],
+        this  
+    );
 }
+
+    // Start the animation
+    processStep(0, animInfo, valueCalculator, propertySetter, vars, transitionFrames);
+};
+
+
 
 IncludeScript("PCapture-LIB/SRC/Animations/alpha")
 IncludeScript("PCapture-LIB/SRC/Animations/color")

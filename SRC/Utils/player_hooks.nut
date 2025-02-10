@@ -52,7 +52,7 @@ if("AllPlayers" in getroottable()) return
         if(player.GetHealth() > 0 || player.GetHealth() == -999) continue
 
         OnDeath(player)
-        ScheduleEvent.Add("global", _monitorRespawn, 0, null, player)
+        ScheduleEvent.AddInterval("global", _monitorRespawn, 0.3, 0, null, player)
         player.SetHealth(-999)
     }
 }
@@ -68,11 +68,8 @@ if("AllPlayers" in getroottable()) return
  * Monitors player respawn status. 
 */
 function _monitorRespawn() {
-    while(true) {
-        if(this.GetHealth() > 0)
-            return OnPlayerRespawn(this)
-        yield 0.3
-    }
+    if(this.GetHealth() > 0)
+        return OnPlayerRespawn(this)
 }
 
 
