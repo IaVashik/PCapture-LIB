@@ -121,4 +121,5 @@ function VGameEvent::ForceTrigger(args) {
         action.acall(args)
     }
     dev.trace("VScript Event Fired - " + this.eventName)
+    return true // todo: what ._.
 }

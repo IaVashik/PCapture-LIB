@@ -10,7 +10,7 @@
      * @returns {any|null} - The result of the event's action, or null if the event is not found or the filter fails. 
     */
     function Notify(eventName, ...) {
-        if(eventName in AllScriptEvents == false)
+        if((eventName in AllScriptEvents) == false)
             return dev.warning("Unknown VGameEvent {" + eventName + "}")
 
         local varg = array(vargc)
@@ -25,10 +25,10 @@
     /* 
      * Gets a VGameEvent object by name. 
      * 
-     * @param {string} EventName - The name of the event to retrieve. 
+     * @param {string} eventName - The name of the event to retrieve. 
      * @returns {VGameEvent|null} - The VGameEvent object, or null if the event is not found. 
     */
-    function GetEvent(EventName) {
+    function GetEvent(eventName) {
         return eventName in AllScriptEvents ? AllScriptEvents[eventName] : null
     }
 }
