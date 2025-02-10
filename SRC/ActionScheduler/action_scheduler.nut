@@ -22,17 +22,18 @@ ScheduleEvent["Add"] <- function(eventName, action, timeDelay, args = null, scop
         return
     } 
     
-    //* --- A binary tree.
+    //* --- A binary search.
     local low = 0
     local high = currentActionList.len() - 1
     local mid
 
+    local tempActionArr = currentActionList.toarray()
     while (low <= high) {
         mid = (low + high) / 2
-        if (currentActionList[mid] < newScheduledEvent) {
+        if (tempActionArr[mid] < newScheduledEvent) {
             low = mid + 1
         }
-        else if (currentActionList[mid] > newScheduledEvent) {
+        else if (tempActionArr[mid] > newScheduledEvent) {
             high = mid - 1
         }
         else {
