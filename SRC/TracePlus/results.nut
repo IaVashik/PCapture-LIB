@@ -91,7 +91,7 @@ results["Cheap"] <- class {
         for(local trace = this; trace = trace.portalEntryInfo;) {
             list.append(trace)
         }
-        return list
+        return list.reverse()
     }
 
     /*

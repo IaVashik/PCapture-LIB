@@ -27,7 +27,7 @@
                 for(local i = 1; stack = getstackinfos(i); i++)
                     macros.fprint("*FUNCTION [{}()] {} line [{}]", stack.func, stack.src, stack.line)
 
-                macros.fprint("\nSCHEDULED EVENT\n[Name] {}\n{}\n[Exception]{}\n[Event Action List] {}", eventName, event.GetInfo(), exception, ScheduleEvent.eventsList[eventName])
+                macros.fprint("\nSCHEDULED EVENT\n[Name] {}\n{}\n[Exception] {}\n[Event Action List] {}", eventName, event.GetInfo(), exception, ScheduleEvent.eventsList[eventName])
 
                 if(type(event.action) == "function" || type(event.action) == "native function") {
                     printl("\nFUNCTION INFO")
