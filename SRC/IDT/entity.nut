@@ -212,8 +212,10 @@
      * This function enables the association of custom logic with specific entity inputs, facilitating communication and interaction between entities and external scripts.
     */
     function SetInputHook(inputName, closure) {
-        if(this.ValidateScriptScope())
+        if(this.ValidateScriptScope() == false) return
             this.GetScriptScope()["Input" + inputName] <- closure
+        // This is a quick hack to address a bug where the game sometimes calls `Inputname` instead of `InputName` (Valve, why?)
+        this.GetScriptScope()["Input" + inputName.tolower()] <- closure
     }
 
     /*
