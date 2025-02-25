@@ -42,14 +42,20 @@
  * This function is called automatically at the initialization.
 */
 ::SetupLinkedPortals <- function() {
+    local portalStateHandler = function(state) {
+        local p = entLib.FromEntity(self)
+        p.SetTraceIgnore(state)
+        p.GetPartnerInstance().SetTraceIgnore(state) 
+        return true
+    }
     // Iterate through all linked_portal_door entities.  
     for(local portal; portal = entLib.FindByClassname("linked_portal_door", portal);) {
         // Skip if the portal already processed
         if(portal.GetUserData("processed"))
             continue
     
-        portal.SetInputHook("Open", function() {entLib.FromEntity(self).SetTraceIgnore(false)})
-        portal.SetInputHook("Close", function() {entLib.FromEntity(self).SetTraceIgnore(true)})
+        portal.SetInputHook("Open", function():(portalStateHandler) {return portalStateHandler(false)})
+        portal.SetInputHook("Close", function():(portalStateHandler) {return portalStateHandler(false)})
 
         local partner = portal.GetPartnerInstance()
     
@@ -60,8 +66,7 @@
         // Extract bounding box dimensions from the model name (assuming a specific format). 
         local wpInfo = split(portal.GetModelName(), " ")
         // Rotate the bounding box dimensions based on the portal's angles.  
-        local wpBBox = math.vector.rotate(Vector(5, wpInfo[0].tointeger(), wpInfo[1].tointeger()), portal.GetAngles()) 
-        wpBBox = math.vector.abs(wpBBox) 
+        local wpBBox = math.vector.abs(Vector(8, wpInfo[0].tointeger(), wpInfo[1].tointeger()))
         // Set the bounding box of the portal using the calculated dimensions.  
         portal.SetBBox(wpBBox * -1, wpBBox)
         portal.SetUserData("processed", true)
