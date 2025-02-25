@@ -116,8 +116,10 @@ TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, set
             return traceData 
         
         local partnerPortal = portal.GetPartnerInstance()
-        if (partnerPortal == null) 
+        if (partnerPortal == null) {
+            dev.warning("Portal {} doesn't have a partner ;(", portal)
             return traceData 
+        }
         
         if(portal.GetUserData("TracePlusIgnore") || partnerPortal.GetUserData("TracePlusIgnore"))
             return traceData
@@ -133,7 +135,7 @@ TracePlus["PortalBbox"] <- function(startPos, endPos, ignoreEntities = null, set
         // Calculate new start and end positions for the trace after passing through the portal.  
         local ray = _ApplyPortal(startPos, hitPos, length, portal, partnerPortal);
         // Adjust the start position slightly to prevent the trace from getting stuck. 
-        startPos = ray.startPos + partnerPortal.GetForwardVector() 
+        startPos = ray.startPos + partnerPortal.GetForwardVector() * 7 // Workaround to avoid the TraceLine starting inside a wall.
         endPos = ray.endPos
         previousTraceData = traceData 
     }
