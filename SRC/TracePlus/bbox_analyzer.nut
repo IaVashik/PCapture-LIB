@@ -6,7 +6,7 @@ class BufferedEntity {
     origin = null;
     bboxMax = null;
     bboxMin = null;
-    ignoreMe = false;
+    ignoreChecksCalc = false;
 
     constructor(entity) {
         this.entity = entLib.FromEntity(entity)
@@ -159,9 +159,9 @@ function TraceLineAnalyzer::Trace(startPos, endPos, ignoreEntities, note = null)
                     EntBufferTable[idx] <- BEnt
                 }
                 
-                if(BEnt.ignoreMe || RayAabbIntersect(startPos, endPos, BEnt.bboxMin, BEnt.bboxMax)) 
+                if(BEnt.ignoreChecksCalc || RayAabbIntersect(startPos, endPos, BEnt.bboxMin, BEnt.bboxMax)) 
                     entBuffer.append(BEnt)
-                else BEnt.ignoreMe = true
+                else BEnt.ignoreChecksCalc = true
             }
         }
 
