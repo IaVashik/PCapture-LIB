@@ -56,8 +56,8 @@ ScheduleEvent["Add"] <- function(eventName, action, timeDelay, args = null, scop
  * @param {object} scope - The scope in which to execute the action (default is `this`). 
 */ 
 ScheduleEvent["AddInterval"] <- function(eventName, action, interval, initialDelay = 0, args = null, scope = this) {
-    ScheduleEvent.Add(eventName, action, initialDelay, args, this)
-    ScheduleEvent.Add(eventName, ScheduleEvent.AddInterval, initialDelay + interval, [eventName, action, interval, 0, args, scope], this)
+    ScheduleEvent.Add(eventName, action, initialDelay, args, scope)
+    ScheduleEvent.Add(eventName, ScheduleEvent.AddInterval, initialDelay + interval, [eventName, action, interval, 0, args, scope], scope)
 }
 
 /*
