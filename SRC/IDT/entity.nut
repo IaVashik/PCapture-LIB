@@ -197,8 +197,8 @@
         if(typeof script == "function") {
             local funcName = script.getinfos().name
             if(!funcName) { // If scripts is an anonymous function, assign it a unique name and add it to the root scope
-funcName = UniqueString("OutputFunc")
-            getroottable()[funcName] <- script
+                funcName = UniqueString("OutputFunc")
+                getroottable()[funcName] <- script
             }
             script = funcName + "()"
         }
@@ -216,7 +216,7 @@ funcName = UniqueString("OutputFunc")
     */
     function SetInputHook(inputName, closure) {
         if(this.ValidateScriptScope() == false) return
-            this.GetScriptScope()["Input" + inputName] <- closure
+        this.GetScriptScope()["Input" + inputName] <- closure
         // This is a quick hack to address a bug where the game sometimes calls `Inputname` instead of `InputName` (Valve, why?)
         this.GetScriptScope()["Input" + inputName.tolower()] <- closure
     }
@@ -250,7 +250,7 @@ funcName = UniqueString("OutputFunc")
      * This function provides more control over sound playback compared to EmitSound. It allows you to adjust the volume,
      * loop sounds that are not inherently loopable, and stop the sound playback using StopSoundEx.
     */
-     function EmitSoundEx(soundName, volume = 10, looped = false, fireDelay = 0, eventName = "global") { // add volume and loop flag
+    function EmitSoundEx(soundName, volume = 10, looped = false, fireDelay = 0, eventName = "global") { // add volume and loop flag
         if(fireDelay != 0)
             return ScheduleEvent.Add(eventName, this.EmitSoundEx, fireDelay, [soundName], this)
         
@@ -263,6 +263,7 @@ funcName = UniqueString("OutputFunc")
         local soundEnt = entLib.CreateProp("prop_physics", Vector(), ALWAYS_PRECACHED_MODEL)
         soundEnt.SetAbsOrigin(this.GetOrigin() + Vector(0, 0, 3000 - volume * 300))
         soundEnt.SetParent(this)
+        soundEnt.SetUserData("parent", null) // To avoid circular reference issues, we're making sure soundEnt doesn't refer to `this`
         soundEnt.SetKeyValue("rendermode", 5)
         soundEnt.SetAlpha(0)
 
