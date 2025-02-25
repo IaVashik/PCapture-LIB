@@ -314,7 +314,7 @@ macros["isEqually"] <- function(val1, val2) {
  * @param {table|array|ArrayEx|List} container - The container to be copied.
  * @returns {table|array|ArrayEx|List} - A deep copy of the container.
 */
-macros["DeepCopy"] <- function(container) { 
+macros["DeepCopy"] <- function(container, _ = null) { 
     switch (typeof container) {
         case "table": 
             local result = clone container; 

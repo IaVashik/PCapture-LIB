@@ -74,7 +74,7 @@
     */
     function apply(func) {
         foreach(idx, value in arr) {
-            arr[idx] = func(value)
+            arr[idx] = func(value, idx)
         }
         this.totable(true)
         return this
@@ -163,10 +163,12 @@
      * 
      * @param {int} idx - The index to insert at.
      * @param {any} val - The value to insert.
+     * @returns {ArrayEx} - The ArrayEx instance for chaining.
     */
     function insert(idx, val) {
         this._pushToTable(val)
-        return arr.insert(idx, val)
+        arr.insert(idx, val)
+        return this
     }
 
     /*
@@ -187,7 +189,7 @@
     function map(func) {
         local newArray = array(this.len())
         foreach(idx, value in arr) {
-            newArray[idx] = func(value)
+            newArray[idx] = func(value, idx)
         }
         return ArrayEx.FromArray(newArray)
     }
@@ -240,9 +242,11 @@
      * Append a value to the array.
      * 
      * @param {any} val - The value to append.
+     * @returns {ArrayEx} - The ArrayEx instance for chaining.
     */
     function push(val) {
         this.append(val)
+        return this
     }
 
     /*
@@ -267,6 +271,7 @@
     function resize(size, fill = null) {
         arr.resize(size, fill);
         this.totable(true)
+        return this
     }
 
     /*

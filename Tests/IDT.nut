@@ -18,7 +18,7 @@ idt_tests <- {
 
     function array_apply_test() {
         local arr = ArrayEx(1, 2, 3)
-        arr.apply(function(x) return x * 2)
+        arr.apply(function(x, _) return x * 2)
         return assert(arr[0] == 2 && arr[1] == 4 && arr[2] == 6)
     },
 
@@ -136,7 +136,7 @@ idt_tests <- {
 
     function list_apply_test() {
         local list = List(1, 2, 3)
-        list.apply(function(x) return x * 2)
+        list.apply(function(x, _) return x * 2)
         return assert(list[0] == 2 && list[1] == 4 && list[2] == 6)
     },
 
@@ -243,7 +243,7 @@ idt_tests <- {
 
     function list_map_test() {
         local list = List(1, 2, 3)
-        local mapped = list.map(function(x) return x * 2)
+        local mapped = list.map(function(x, _) return x * 2)
         return assert(mapped.len() == 3 && mapped[0] == 2 && mapped[1] == 4 && mapped[2] == 6)
     },
 

@@ -54,6 +54,7 @@
      * Appends a value to the end of the list.
      * 
      * @param {any} value - The value to append.
+     * @returns {List} - The List instance for chaining.
     */
     function append(value) {
         local next_node = ListNode(value);
@@ -64,6 +65,7 @@
 
         this.last_node = next_node;
         this.length++;
+        return this
     }
 
     /*
@@ -71,6 +73,7 @@
      * 
      * @param {number} index - The index to insert the value at.
      * @param {any} value - The value to insert.
+     * @returns {List} - The List instance for chaining.
     */
     function insert(idx, value) {
         if(this.length == 0 || idx >= this.length) 
@@ -86,6 +89,7 @@
         node.prev_ref = newNode
 
         this.length++
+        return this
     }
 
     /*
@@ -181,6 +185,7 @@
 
     /*
      * Reverses the order of the elements in the list in-place.
+     * @returns {List} - The List instance for chaining.
     */
     function reverse() {
         local prev_node = null;
@@ -199,6 +204,7 @@
         local temp = this.first_node.next_ref;
         this.first_node.next_ref = prev_node;
         this.last_node = temp;
+        return this
     }
 
     /*
@@ -224,6 +230,7 @@
      * 
      * @param {int} size - The new size.
      * @param {any} fill - The fill value for new slots.
+     * @returns {List} - The List instance for chaining.
     */
     function resize(size, fill = null) {
         local diff = size - this.len()
@@ -238,8 +245,14 @@
         // Remove elements
         for (local i = 0; i < -diff; i++)
             this.pop();
+        return this
     }
 
+    /*
+     * Sorts the list in ascending order using merge sort.
+     *
+     * @returns {List} - The List instance for chaining.
+    */
     function sort() {
         this.first_node.next_ref = _mergeSort(this.first_node.next_ref)
         
@@ -354,6 +367,7 @@
 
     /*
      * Removes all elements from the list.
+     * @returns {List} - The List instance for chaining.
     */
     function clear() {
         if(this.length == 0) return
@@ -368,6 +382,7 @@
         this.first_node.next_ref = null;
         this.last_node = this.first_node;
         this.length = 0;
+        return this
     }
 
     /*
@@ -418,7 +433,7 @@
     */
     function apply(func) {
         foreach(idx, value in this.iter()) {
-            this[idx] = func(value)
+            this[idx] = func(value, idx)
         }
         return this
     }
@@ -485,8 +500,8 @@
     */
     function map(func) {
         local newList = List()
-        foreach(value in this.iter()) {
-            newList.append(func(value))
+        foreach(idx, value in this.iter()) {
+            newList.append(func(value, idx))
         }
         return newList
     }

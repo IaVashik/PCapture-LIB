@@ -251,7 +251,7 @@ This method applies a function to each element of the array and modifies the arr
 
 **Parameters:**
 
-* `func` (function): The function to apply to each element.
+* `func` (function): The function to apply to each element. The function should take two arguments (the element value and index).
 
 **Returns:**
 
@@ -260,7 +260,8 @@ This method applies a function to each element of the array and modifies the arr
 **Example:**
 
 ```js
-myArrayEx.apply(function(x) { return x * 2 }) // Multiply each element by 2
+myArrayEx.apply(function(x, _) { return x * 2 }) // Multiply each element by 2
+myArrayEx.apply(function(val, idx) { return idx + ": " + val })
 ```
 
 ### `clear()`
@@ -372,7 +373,7 @@ This method inserts a value into the array at the specified index, shifting all 
 
 **Returns:**
 
-* (any): The inserted value.
+* (ArrayEx): The `ArrayEx` object itself (for method chaining).
 
 **Example:**
 
@@ -400,7 +401,7 @@ This method creates a new `ArrayEx` object by applying a function to each elemen
 
 **Parameters:**
 
-* `func` (function): The function to apply to each element. The function should take one argument (the element value) and return the new value for the element.
+* `func` (function): The function to apply to each element. The function should take two arguments (the element value and index) and return the new value for the element.
 
 **Returns:**
 
@@ -409,7 +410,7 @@ This method creates a new `ArrayEx` object by applying a function to each elemen
 **Example:**
 
 ```js
-local squares = myArrayEx.map(function(x) { return x * x }) // Create an array of squares of the original elements
+local squares = myArrayEx.map(function(x, _) { return x * x }) // Create an array of squares of the original elements
 ```
 
 ### `reduce(func, initial)`
@@ -471,6 +472,10 @@ This method appends a value to the end of the array. It is equivalent to `append
 
 * `value` (any): The value to append to the array.
 
+**Returns:**
+
+* (ArrayEx): The `ArrayEx` object itself (for method chaining).
+
 **Example:**
 
 ```js
@@ -503,6 +508,10 @@ This method resizes the array to the specified size. If the new size is larger t
 
 * `size` (number): The new size of the array.
 * `fill` (any, optional): The value to fill new elements with (default is `null`).
+
+**Returns:**
+
+* (ArrayEx): The `ArrayEx` object itself (for method chaining).
 
 **Example:**
 
@@ -740,7 +749,11 @@ Appends a value to the end of the list.
 
 **Parameters:**
 
-* `value` (any): The value to append.
+*   `value` (any): The value to append.
+
+**Returns:**
+
+*   (List): The `List` object itself (for method chaining).
 
 **Example:**
 
@@ -755,6 +768,10 @@ Inserts a value at a specific index in the list.
 
 * `index` (number): The index to insert the value at.
 * `value` (any): The value to insert.
+
+**Returns:**
+
+*   (List): The `List` object itself (for method chaining).
 
 **Example:**
 
@@ -843,6 +860,10 @@ local lastValue = myList.top()
 ### `reverse()`
 Reverses the order of the elements in the list in-place.
 
+**Returns:**
+
+*   (List): The `List` object itself (for method chaining).
+
 **Example:**
 
 ```js
@@ -904,9 +925,10 @@ Applies a function to each element of the list and modifies the list in-place.
 **Example:**
 
 ```js
-myList.apply(function(x) {
+myList.apply(function(x, _) {
     return x * 2 // Double each element
 })
+myList.apply(function(val, idx) { return idx + ": " + val })
 ```
 
 ### `extend(other)`
@@ -949,7 +971,7 @@ Creates a new list by applying a function to each element of this list.
 
 **Parameters:**
 
-* `func` (function): The function to apply to each element. The function should take one argument (the element value) and return the new value for the element.
+* `func` (function): The function to apply to each element. The function should take two arguments (the element value and index) and return the new value for the element.
 
 **Returns:**
 
@@ -958,7 +980,7 @@ Creates a new list by applying a function to each element of this list.
 **Example:**
 
 ```js
-local squaredValues = myList.map(function(x) {
+local squaredValues = myList.map(function(x, _) {
     return x * x // Square each element
 })
 ```
