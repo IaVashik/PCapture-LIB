@@ -46,19 +46,23 @@ The `IDT` module provides enhanced versions of standard VScripts data structures
     * [`remove(index)`](#removeindex)
     * [`pop()`](#pop)
     * [`top()`](#top)
+    * [`first()`](#first)
     * [`reverse()`](#reverse)
+    * [`slice(startIndex, endIndex)`](#slicestartindex-endindex--null)
+    * [`resize(size, fill)`](#resizesize-fill--null)
+    * [`sort()`](#sort)
     * [`unique()`](#unique)
     * [`clear()`](#clear)
     * [`join(separator)`](#joinseparator)
     * [`apply(func)`](#applyfunc)
     * [`extend(other)`](#extendother)
-    * [`search(value or func)`](#searchvalue-or-func)
+    * [`search(match)`](#searchmatch)
     * [`map(func)`](#mapfunc)
     * [`filter(condition)`](#filtercondition)
     * [`reduce(func, initial)`](#reducefunc-initial)
     * [`totable()`](#totable)
     * [`toarray()`](#toarray)
-    * [`SwapNode(node1, node2)`](#swapnodenode1-node2)
+    * [`swapNode(node1, node2)`](#swapnodenode1-node2)
 3. [IDT/tree_sort.nut](#idttree_sortnut)
     * [`AVLTree(...)`](#avltree)
     * [`FromArray(array)`](#fromarrayarray)
@@ -849,12 +853,23 @@ Gets the value of the last element in the list.
 
 **Returns:**
 
-* (any): The value of the last element.
+*   (any): The value of the last element.
 
 **Example:**
 
 ```js
 local lastValue = myList.top()
+```
+
+### `first()`
+Gets the value of the first element in the list. Throws an error if the list is empty.
+
+**Returns:**
+* (any): The value of the first element.
+
+**Example:**
+```js
+local firstValue = myList.first()
 ```
 
 ### `reverse()`
@@ -868,6 +883,59 @@ Reverses the order of the elements in the list in-place.
 
 ```js
 myList.reverse()
+```
+
+### `slice(startIndex, endIndex = null)`
+Returns a new `List` containing a portion of the original list.
+
+**Parameters:**
+
+* `startIndex` (number): The starting index of the slice (inclusive).
+* `endIndex` (number, optional): The ending index of the slice (exclusive). If not provided, the slice extends to the end of the list.
+
+**Returns:**
+
+* (List): A new `List` containing the sliced portion.
+
+**Example:**
+
+```js
+local newList = List(1, 2, 3, 4, 5)
+local slicedList = newList.slice(1, 3) // Contains elements at index 1 and 2
+printl(slicedList) // Output: List: [2, 3]
+```
+
+### `resize(size, fill = null)`
+Resizes the list to the specified size. If the new size is larger than the current size, the list is padded with the `fill` value. If the new size is smaller, elements are removed from the end of the list.
+
+**Parameters:**
+
+* `size` (number): The new size of the list.
+* `fill` (any, optional): The value to use for padding if the list is enlarged. Defaults to `null`.
+
+**Returns:**
+* (List): The `List` object itself (for method chaining).
+
+**Example:**
+```js
+local list = List(1,2,3);
+list.resize(5, 0); // list is now [1, 2, 3, 0, 0]
+list.resize(2); // list is now [1, 2]
+
+```
+
+### `sort()`
+Sorts the list in ascending order in-place, using the merge sort algorithm.
+
+**Returns:**
+
+*   (List): The `List` object itself (for method chaining).
+
+**Example:**
+```js
+local list = List(3, 1, 4, 1, 5, 9, 2, 6)
+list.sort()
+printl(list) // Output: List: [1, 1, 2, 3, 4, 5, 6, 9]
 ```
 
 ### `unique()`
@@ -949,12 +1017,14 @@ local otherList = List(4, 5, 6)
 myList.extend(otherList)
 ```
 
-### `search(value or func)`
+### `search(match)`
 Searches for a value or a matching element in the list.
 
 **Parameters:**
 
-* `value or func` (any or function): If a value, searches for the first occurrence of that value in the list. If a function, searches for the first element that satisfies the predicate function. The function should take one argument (the element value) and return `true` if the element is a match, `false` otherwise.
+*  `match` (any or function): The value to search for, or a predicate function.
+    *   If `match` is a value, the function returns the index of the *first* occurrence of that value in the list.
+    *   If `match` is a function, the function returns the index of the *first* element for which the function returns `true`.  The predicate function receives the element value as its argument.
 
 **Returns:**
 
@@ -963,7 +1033,10 @@ Searches for a value or a matching element in the list.
 **Example:**
 
 ```js
-local index = myList.search(2) // Find the index of the value 2
+local list = List(10, 20, 30, 20)
+local index1 = list.search(20)   // index1 will be 1
+local index2 = list.search(function(x) { return x > 25 })  // index2 will be 2
+local index3 = list.search(50)   // index3 will be null
 ```
 
 ### `map(func)`
@@ -986,15 +1059,15 @@ local squaredValues = myList.map(function(x, _) {
 ```
 
 ### `filter(condition)`
-Filter the list by a predicate function.
+Filters the list, creating a *new* list containing only the elements that satisfy a given condition.
 
 **Parameters:**
 
-* `condition` (Function): The predicate function that takes `index`, `value`, and `newList` as parameters and returns a boolean.
+* `condition` (function): The predicate function.  This function should accept up to three arguments: the element's index, the element's value, and the new list being built.  It should return `true` if the element should be included in the new list, and `false` otherwise.
 
 **Returns:**
 
-* (List): The filtered list.
+* (List): The new filtered list.
 
 **Example:**
 
@@ -1003,7 +1076,7 @@ local myList = List(1, 2, 3, 4, 5)
 local evenList = myList.filter(function(idx, val, newList) {
     return val % 2 == 0
 })
-printl(evenList) // Output: [2, 4]
+printl(evenList) // Output: List: [2, 4]
 ```
 
 ### `reduce(func, initial)`
@@ -1029,7 +1102,7 @@ printl(sum) // Output: 15
 ```
 
 ### `totable()`
-Convert the list to a table.
+Converts the list to a table. The keys of the table will be the *values* from the list. The values in table will be set to `null`.
 
 **Returns:**
 
@@ -1057,8 +1130,8 @@ Converts the list to an array.
 local myArray = myList.toarray()
 ```
 
-### `SwapNode(node1, node2)`
-Swaps two nodes in the list. This method updates the references of the previous and next nodes accordingly.
+### `swapNode(node1, node2)`
+**This is a global function, not the method of List class**. Swaps two nodes in the list. This method updates the references of the previous and next nodes accordingly.
 
 **Parameters:**
 
@@ -1070,7 +1143,7 @@ Swaps two nodes in the list. This method updates the references of the previous 
 ```js
 local nodeA = myList.getNode(0)
 local nodeB = myList.getNode(1)
-myList.SwapNode(nodeA, nodeB)
+List.swapNode(nodeA, nodeB)
 ```
 
 ## [IDT/tree_sort.nut](tree_sort.nut)
