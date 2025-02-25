@@ -9,7 +9,7 @@
 |    GitHud repo: https://github.com/IaVashik/PCapture-LIB                          |
 +----------------------------------------------------------------------------------+ */
 
-local version = "PCapture-Lib 3.4 Stable"
+local version = "PCapture-Lib 3.5 Stable"
 
 // `Self` must be in any case, even if the script is run directly by the interpreter
 if (!("self" in this)) {
@@ -75,6 +75,7 @@ globalDetector.ConnectOutputEx("OnEndTouchPortal", function() {entLib.FromEntity
 
 
 ::_lib_version_ <- version
+::PCaptureLibInited <- true
 
 /*
  * Prints information about the PCapture library upon initialization.
