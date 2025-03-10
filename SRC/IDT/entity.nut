@@ -1,6 +1,7 @@
+::EntitiesScopes <- {}
+
 ::pcapEntity <- class {
     CBaseEntity = null;
-    EntityScope = null;
 
     /* 
      * Constructor for the entity object.
@@ -12,7 +13,7 @@
             entity = entity.CBaseEntity
 
         this.CBaseEntity = entity
-        this.EntityScope = {}
+        EntitiesScopes[this.CBaseEntity] <- {}
         entity.ValidateScriptScope()
         // this.uniqueId = UniqueString("pcapEntity")
         // entity.GetScriptScope().self <- this // todo whoa!
@@ -263,7 +264,6 @@
         local soundEnt = entLib.CreateProp("prop_physics", Vector(), ALWAYS_PRECACHED_MODEL)
         soundEnt.SetAbsOrigin(this.GetOrigin() + Vector(0, 0, 3000 - volume * 300))
         soundEnt.SetParent(this)
-        soundEnt.SetUserData("parent", null) // To avoid circular reference issues, we're making sure soundEnt doesn't refer to `this`
         soundEnt.SetKeyValue("rendermode", 5)
         soundEnt.SetAlpha(0)
 
@@ -497,6 +497,10 @@
         TracePlusIgnoreEnts[this.CBaseEntity] <- isEnabled
     }
 
+    function IsTraceIgnored() {
+        return this.GetUserData("TracePlusIgnore")
+    }
+
     /*
      * Sets the spawnflags for the entity.
      *
@@ -588,7 +592,7 @@
      * @param {any} value - The value to store.
     */
     function SetUserData(name, value) {
-        this.EntityScope[name.tolower()] <- value
+        EntitiesScopes[this.CBaseEntity][name.tolower()] <- value
     }
 
 
@@ -600,8 +604,8 @@
     */ 
     function GetUserData(name) {
         name = name.tolower()
-        if(name in this.EntityScope)
-            return this.EntityScope[name]
+        if(name in EntitiesScopes[this.CBaseEntity])
+            return EntitiesScopes[this.CBaseEntity][name]
         return null
     }
 

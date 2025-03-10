@@ -41,6 +41,15 @@ IncludeScript("PCapture-LIB/SRC/Animations/init.nut")
 IncludeScript("PCapture-LIB/SRC/ScriptEvents/init.nut")
 IncludeScript("PCapture-LIB/SRC/HUD/init.nut")
 
+// Garbage collector for `PCapEntity::EntitiesScopes` 
+ScheduleEvent.AddInterval("global", function() {
+    foreach(ent, _ in EntitiesScopes) {
+        if(!ent || !ent.IsValid()) {
+            delete EntitiesScopes[ent]
+        }
+    }
+}, 5, 0)
+
 
 /*
  * Initializes eye tracking for all players, allowing retrieval of their coordinates and viewing directions.
