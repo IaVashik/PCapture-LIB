@@ -1,16 +1,16 @@
 // Collides with everything.
 const COLLISION_GROUP_NONE = 0
 
-// Small objects, doesn't interfere with gameplay.
+// Collides with nothing but world and static stuff.
 const COLLISION_GROUP_DEBRIS = 1
 
-// Like DEBRIS, but ignores PUSHAWAY.
+// Same as debris, but hits triggers.
 const COLLISION_GROUP_DEBRIS_TRIGGER = 2 
 
 // Like DEBRIS, but doesn't collide with same group.
 const COLLISION_GROUP_INTERACTIVE_DEBRIS = 3
 
-// Interactive entities, ignores debris.
+// Collides with everything except interactive debris or debris.
 const COLLISION_GROUP_INTERACTIVE = 4
 
 // Used by players, ignores PASSABLE_DOOR.
@@ -58,8 +58,20 @@ const COLLISION_GROUP_NPC_ACTOR = 18
 // NPCs in scripted sequences with collisions disabled. 
 const COLLISION_GROUP_NPC_SCRIPTED = 19
 
-// Default Portal 2 collision
-const COLLISION_GROUP_DEFAULT = 24
+// It doesn't seem to be used anywhere in the engine.
+const COLLISION_GROUP_PZ_CLIP = 20
+
+// Solid only to the camera's test trace (Outdated).
+const COLLISION_GROUP_CAMERA_SOLID = 21
+
+// Solid only to the placement tool's test trace (Outdated).
+const COLLISION_GROUP_PLACEMENT_SOLID = 22
+
+// Held objects that shouldn't collide with players.
+const COLLISION_GROUP_PLAYER_HELD = 23
+
+// Cubes need a collision group that acts roughly like COLLISION_GROUP_NONE but doesn't collide with debris or interactive.
+const COLLISION_GROUP_WEIGHTED_CUBE = 24
 
 // No collision at all.
 const SOLID_NONE = 0 

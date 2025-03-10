@@ -1262,7 +1262,11 @@ These constants define collision groups used by entities in the game. They deter
 * `COLLISION_GROUP_PUSHAWAY` (17): Pushes props away from the player.
 * `COLLISION_GROUP_NPC_ACTOR` (18): NPCs potentially stuck in a player.
 * `COLLISION_GROUP_NPC_SCRIPTED` (19): NPCs in scripted sequences with collisions disabled.
-* `COLLISION_GROUP_DEFAULT` (24): Default Portal 2 collision group.
+* `COLLISION_GROUP_PZ_CLIP` (20): It doesn't seem to be used anywhere in the engine.
+* `COLLISION_GROUP_CAMERA_SOLID` (21): Solid only to the camera's test trace (Outdated).
+* `COLLISION_GROUP_PLACEMENT_SOLID` (22): Solid only to the placement tool's test trace (Outdated).
+* `COLLISION_GROUP_PLAYER_HELD` (23): Held objects that shouldn't collide with players.
+* `COLLISION_GROUP_WEIGHTED_CUBE` (24): Cubes need a collision group that acts roughly like COLLISION_GROUP_NONE but doesn't collide with debris or interactive.
 
 ### Solid Types
 
