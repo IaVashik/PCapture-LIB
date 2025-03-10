@@ -169,25 +169,6 @@ animate["applyRTAnimation"] <- function(animInfo, valueCalculator, propertySette
  * to interrupt or alter the animation at runtime using `filterCallback`, or if the animation is too long
  * for VSquirrel to process upfront.
 */
-// animate["_applyRTAnimation"] <- function(animInfo, valueCalculator, propertySetter, vars, transitionFrames) {
-//     transitionFrames = ceil(transitionFrames) 
-    
-//     if(developer() > 0) dev.trace("Started {} realtime animation ({})", animInfo.animName, animInfo.eventName)
-
-//     for(local step = 0; step <= transitionFrames; step++) {
-//         local newValue = valueCalculator(step, transitionFrames, vars)
-//         if(animInfo.filterCallback(animInfo, newValue, transitionFrames, step, vars)) break // todo fix it
-
-//         foreach(ent in animInfo.entities)
-//             propertySetter(ent, newValue)
-
-//         yield animInfo.frameInterval
-//     }
-
-//     animInfo.delay = 0
-//     animInfo.globalDelay = 0
-//     animInfo.CallOutput()
-// }
 animate["_applyRTAnimation"] <- function(animInfo, valueCalculator, propertySetter, vars, transitionFrames) {
     // Round up the number of transition frames
     transitionFrames = ceil(transitionFrames);
