@@ -51,7 +51,7 @@ if("AllPlayers" in getroottable()) return
 
         if(player.GetHealth() > 0 || player.GetHealth() == -999) continue
 
-        OnDeath(player)
+        OnPlayerDeath(player)
         ScheduleEvent.AddInterval("global", _monitorRespawn, 0.3, 0, null, player)
         player.SetHealth(-999)
     }
