@@ -391,9 +391,11 @@
     function iter() {
         if(this.length == 0) return
         local current = this.first_node.next_ref;
+        local next;
         while (current) {
+            next = current.next_ref
             yield current.value
-            current = current.next_ref;
+            current = next;
         }
     }
 
