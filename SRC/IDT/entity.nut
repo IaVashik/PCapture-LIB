@@ -197,7 +197,8 @@
     function ConnectOutputEx(outputName, script, delay = 0, fires = -1) {
         if(typeof script == "function") {
             local funcName = script.getinfos().name
-            if(!funcName) { // If scripts is an anonymous function, assign it a unique name and add it to the root scope
+            local src = script.getinfos().src
+            if(!funcName || src == "unnamedbuffer") { // If scripts is an anonymous function, assign it a unique name and add it to the root scope
                 funcName = UniqueString("OutputFunc")
                 getroottable()[funcName] <- script
             }
