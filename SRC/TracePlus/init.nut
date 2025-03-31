@@ -19,9 +19,6 @@
     Cheap = null,
     Bbox = null,
 }
-::TracePlusIgnoreEnts <- {}
-
-const MAX_PORTAL_CAST_DEPTH = 4
 
 IncludeScript("PCapture-LIB/SRC/TracePlus/results")
 IncludeScript("PCapture-LIB/SRC/TracePlus/trace_settings")

@@ -1,5 +1,3 @@
-::EntitiesScopes <- {}
-
 ::pcapEntity <- class {
     CBaseEntity = null;
 

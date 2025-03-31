@@ -8,8 +8,6 @@
 |   data structures like arrays, lists, and trees for efficient data management.   |
 +----------------------------------------------------------------------------------+ */
 
-::pcapEntityCache <- {}
-
 IncludeScript("PCapture-LIB/SRC/IDT/entity")
 IncludeScript("PCapture-LIB/SRC/IDT/entity_creator")
 

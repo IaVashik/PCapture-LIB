@@ -10,6 +10,7 @@
 +----------------------------------------------------------------------------------+ */
 
 local version = "PCapture-Lib 3.5 Stable"
+local rootScope = getroottable()
 
 // `Self` must be in any case, even if the script is run directly by the interpreter
 if (!("self" in this)) {
@@ -18,28 +19,40 @@ if (!("self" in this)) {
     getroottable()["self"] <- self
 }
 
-if("_lib_version_" in getroottable() && version.find("Debug") == null) {
+if("LIB_VERSION" in getroottable() && version.find("Debug") == null) {
     printl("\n")
     dev.warning("PCapture-Lib already initialized.")
-    if(_lib_version_ != version) {
+    if(LIB_VERSION != version) {
         dev.error("Attempting to initialize different versions of the PCapture-Lib library!")
-        dev.fprint("Version \"{}\" != \"{}\"", _lib_version_, version)
+        dev.fprint("Version \"{}\" != \"{}\"", LIB_VERSION, version)
     }
     return
 }
 
-IncludeScript("PCapture-LIB/SRC/Math/init.nut")
-IncludeScript("PCapture-LIB/SRC/IDT/init.nut")
-IncludeScript("PCapture-LIB/SRC/Utils/init.nut")
+/*
+ * Global Tables Initialization:
+ *
+ * This section initializes the fundamental global tables required for the PCapture Library.
+ * These tables are essential for ensuring the correct functioning 
+ * of the library's various components during runtime.
+*/
+::pcapEntityCache <- {}
+::EntitiesScopes <- {}
+::TracePlusIgnoreEnts <- {}
+
+DoIncludeScript("PCapture-LIB/SRC/IDT/init.nut", rootScope)
+DoIncludeScript("PCapture-LIB/SRC/Math/init.nut", rootScope)
+DoIncludeScript("PCapture-LIB/SRC/ActionScheduler/init.nut", rootScope)
+DoIncludeScript("PCapture-LIB/SRC/Utils/init.nut", rootScope)
 
 ::LibLogger <- LoggerLevels.Info
+const MAX_PORTAL_CAST_DEPTH = 4
 const ALWAYS_PRECACHED_MODEL = "models/weapons/w_portalgun.mdl" // needed for pcapEntity::EmitSoundEx
 
-IncludeScript("PCapture-LIB/SRC/TracePlus/init.nut")
-IncludeScript("PCapture-LIB/SRC/ActionScheduler/init.nut")
-IncludeScript("PCapture-LIB/SRC/Animations/init.nut")
-IncludeScript("PCapture-LIB/SRC/ScriptEvents/init.nut")
-IncludeScript("PCapture-LIB/SRC/HUD/init.nut")
+DoIncludeScript("PCapture-LIB/SRC/TracePlus/init.nut", rootScope)
+DoIncludeScript("PCapture-LIB/SRC/Animations/init.nut", rootScope)
+DoIncludeScript("PCapture-LIB/SRC/ScriptEvents/init.nut", rootScope)
+DoIncludeScript("PCapture-LIB/SRC/HUD/init.nut", rootScope)
 
 // Garbage collector for `PCapEntity::EntitiesScopes` 
 ScheduleEvent.AddInterval("global", function() {
@@ -62,7 +75,7 @@ ScheduleEvent.AddInterval("global", function() {
  * to dynamically accommodate new players joining the session.
 */
 
-TrackPlayerJoins()
+ScheduleEvent.Add("global", TrackPlayerJoins, 0.4)
 if(IsMultiplayer()) {
     ScheduleEvent.Add("global", TrackPlayerJoins, 2) // Thanks Volve for making it take so long for players to initialize
     ScheduleEvent.AddInterval("global", HandlePlayerEventsMP, 0.3)
@@ -72,7 +85,7 @@ if(IsMultiplayer()) {
         ScheduleEvent.AddInterval("global", TrackPlayerJoins, 1, 2)
 } 
 else {
-    ScheduleEvent.AddInterval("global", HandlePlayerEventsSP, 0.5)
+    ScheduleEvent.AddInterval("global", HandlePlayerEventsSP, 0.5, 0.5)
 } 
 
 
@@ -83,7 +96,7 @@ globalDetector.ConnectOutputEx("OnStartTouchPortal", function() {entLib.FromEnti
 globalDetector.ConnectOutputEx("OnEndTouchPortal", function() {entLib.FromEntity(activator).SetTraceIgnore(true)})
 
 
-::_lib_version_ <- version
+::LIB_VERSION <- version
 ::PCaptureLibInited <- true
 
 /*
@@ -92,7 +105,7 @@ globalDetector.ConnectOutputEx("OnEndTouchPortal", function() {entLib.FromEntity
  * This includes the library name, version, author, and a link to the GitHub repository.
 */
 printl("\n----------------------------------------")
-printl("Welcome to " + _lib_version_)
+printl("Welcome to " + LIB_VERSION)
 printl("Author: laVashik Production") // The God of VScripts :P
 printl("GitHub: https://github.com/IaVashik/PCapture-LIB")
 printl("----------------------------------------\n")
