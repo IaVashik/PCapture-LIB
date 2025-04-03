@@ -21,8 +21,14 @@ def _process_file(file_path, outfile):
     file_path = file_path.replace("PCapture-LIB/", "")
     with open(file_path, "r", encoding="utf-8") as infile:
         for line in infile:
+            included_file_path = None
             if line.startswith("IncludeScript("):
                 included_file_path = line[len("IncludeScript("):-2].replace('"', '').strip()
+            if line.startswith("DoIncludeScript("):
+                included_file_path = line[len("DoIncludeScript("):-len('", rootScope)')].replace('"', '').strip() # bruh
+            
+            
+            if included_file_path is not None:
                 if not included_file_path.endswith(".nut"):
                     included_file_path += ".nut"
                 _process_file(included_file_path, outfile)

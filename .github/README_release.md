@@ -8,13 +8,13 @@ PCapture-Lib is a powerful VScripts library that supercharges your Portal 2 modd
 3. **Import:** Add the following line to your VScript file to import the library:
 
     ```lua
-    IncludeScript("PCapture-Lib")
+    DoIncludeScript("PCapture-Lib", getroottable())
     ```
 
     *Note:* If you placed `PCapture-Lib.nut` in a subdirectory, adjust the import path accordingly. For example:
 
     ```lua
-    IncludeScript("MyMod/PCapture-Lib")
+    DoIncludeScript("MyMod/PCapture-Lib", getroottable())
     ```
 
 That's it! You're now ready to use PCapture-Lib's features in your mod.

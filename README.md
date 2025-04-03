@@ -51,7 +51,7 @@ There are two ways to install **PCapture-Lib**: you can download the latest rele
    *Note: Although you can place the file in any subdirectory within `vscripts`, placing it directly in `vscripts` helps avoid confusion for beginner developers.*
 3. **Initialization:** In your VScripts, include the library using:
    ```lua
-   IncludeScript("PCapture-Lib")
+   DoIncludeScript("PCapture-Lib", getroottable())
    ```
 
 ## Installation from Source
