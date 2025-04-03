@@ -2,14 +2,12 @@
 |                           PCapture Vscripts Library                              |
 +----------------------------------------------------------------------------------+
 | Author:                                                                          |
-|     Game Event Guru - laVashik >_<                                               |
+|     Data Structure Maestro - laVashik ^v^                                        |
 +----------------------------------------------------------------------------------+
-|   The Script Events module, empowering you to create and handle custom           |
-|   "game events" with triggers, filters, and actions,                             |
-|   surpassing the limitations of standard VScripts game events.                   |
+|   TODO                                                                           |
+|                                                                                  |
 +----------------------------------------------------------------------------------+ */
 
-::AllScriptEvents <- {}
-
-IncludeScript("PCapture-LIB/SRC/ScriptEvents/event_listener")
-IncludeScript("PCapture-LIB/SRC/ScriptEvents/game_event")
+IncludeScript("PCapture-LIB/SRC/FEATURES/UtilsExtra/file")
+IncludeScript("PCapture-LIB/SRC/FEATURES/UtilsExtra/const")
+ScheduleEvent.Add("global", IncludeScript, 1, ["PCapture-LIB/SRC/FEATURES/UtilsExtra/console_commands"])

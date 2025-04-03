@@ -4,18 +4,23 @@
 | Author:                                                                          |
 |     Data Structure Maestro - laVashik ^v^                                        |
 +----------------------------------------------------------------------------------+
-|   The Improved Data Types module, offering enhanced versions of standard VScripts|
-|   data structures like arrays, lists, and trees for efficient data management.   |
+|   TODO                                                                           |
+|                                                                                  |
 +----------------------------------------------------------------------------------+ */
 
-IncludeScript("PCapture-LIB/SRC/IDT/entity")
-IncludeScript("PCapture-LIB/SRC/IDT/entity_creator")
+IncludeScript("PCapture-LIB/SRC/EntitiesEx/entity")
+IncludeScript("PCapture-LIB/SRC/EntitiesEx/entity_creator")
 
-IncludeScript("PCapture-LIB/SRC/IDT/array")
-IncludeScript("PCapture-LIB/SRC/IDT/list")
-IncludeScript("PCapture-LIB/SRC/IDT/tree_sort")
-
-// dissolve entity for pcapEnts
+// dissolve entity for PCapEntity
 if(("dissolver" in getroottable()) == false) {
     ::dissolver <- entLib.CreateByClassname("env_entity_dissolver", {targetname = "@dissolver"})
 } 
+
+// Garbage collector for `PCapEntity::EntitiesScopes` 
+ScheduleEvent.AddInterval("global", function() {
+    foreach(ent, _ in EntitiesScopes) {
+        if(!ent || !ent.IsValid()) {
+            delete EntitiesScopes[ent]
+        }
+    }
+}, 5, 0)

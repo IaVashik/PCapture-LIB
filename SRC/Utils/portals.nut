@@ -66,7 +66,7 @@
         // Extract bounding box dimensions from the model name (assuming a specific format). 
         local wpInfo = split(portal.GetModelName(), " ")
         // Rotate the bounding box dimensions based on the portal's angles.  
-        local wpBBox = math.vector.abs(Vector(8, wpInfo[0].tointeger(), wpInfo[1].tointeger()))
+        local wpBBox = Vector(8, abs(wpInfo[0].tointeger()), abs(wpInfo[1].tointeger()))
         // Set the bounding box of the portal using the calculated dimensions.  
         portal.SetBBox(wpBBox * -1, wpBBox)
         portal.SetUserData("processed", true)

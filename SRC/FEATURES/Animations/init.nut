@@ -212,8 +212,8 @@ animate["_applyRTAnimation"] <- function(animInfo, valueCalculator, propertySett
 
 
 
-IncludeScript("PCapture-LIB/SRC/Animations/alpha")
-IncludeScript("PCapture-LIB/SRC/Animations/color")
-IncludeScript("PCapture-LIB/SRC/Animations/position")
-IncludeScript("PCapture-LIB/SRC/Animations/angles")
-// IncludeScript("PCapture-LIB/SRC/Animations/forward")
+IncludeScript("PCapture-LIB/SRC/FEATURES/Animations/alpha")
+IncludeScript("PCapture-LIB/SRC/FEATURES/Animations/color")
+IncludeScript("PCapture-LIB/SRC/FEATURES/Animations/position")
+IncludeScript("PCapture-LIB/SRC/FEATURES/Animations/angles")
+// IncludeScript("PCapture-LIB/SRC/FEATURES/Animations/forward")

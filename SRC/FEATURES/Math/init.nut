@@ -10,9 +10,9 @@
 
 ::math <- {}
 
-IncludeScript("PCapture-LIB/SRC/Math/algebraic")
-IncludeScript("PCapture-LIB/SRC/Math/utils_vector")
-IncludeScript("PCapture-LIB/SRC/Math/lerp")
-IncludeScript("PCapture-LIB/SRC/Math/easing_equation")
-IncludeScript("PCapture-LIB/SRC/Math/quaternion")
-IncludeScript("PCapture-LIB/SRC/Math/matrix")
+IncludeScript("PCapture-LIB/SRC/FEATURES/Math/algebraic")
+IncludeScript("PCapture-LIB/SRC/FEATURES/Math/utils_vector")
+IncludeScript("PCapture-LIB/SRC/FEATURES/Math/lerp")
+IncludeScript("PCapture-LIB/SRC/FEATURES/Math/easing_equation")
+IncludeScript("PCapture-LIB/SRC/FEATURES/Math/quaternion")
+IncludeScript("PCapture-LIB/SRC/FEATURES/Math/matrix")

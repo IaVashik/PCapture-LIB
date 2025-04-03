@@ -20,13 +20,13 @@
     Bbox = null,
 }
 
-IncludeScript("PCapture-LIB/SRC/TracePlus/results")
-IncludeScript("PCapture-LIB/SRC/TracePlus/trace_settings")
+IncludeScript("PCapture-LIB/SRC/FEATURES/TracePlus/results")
+IncludeScript("PCapture-LIB/SRC/FEATURES/TracePlus/trace_settings")
 TracePlus.defaultSettings = TracePlus.Settings.new()
 
-IncludeScript("PCapture-LIB/SRC/TracePlus/cheap_trace")
-IncludeScript("PCapture-LIB/SRC/TracePlus/bboxcast")
-IncludeScript("PCapture-LIB/SRC/TracePlus/portal_casting")
+IncludeScript("PCapture-LIB/SRC/FEATURES/TracePlus/cheap_trace")
+IncludeScript("PCapture-LIB/SRC/FEATURES/TracePlus/bboxcast")
+IncludeScript("PCapture-LIB/SRC/FEATURES/TracePlus/portal_casting")
 
-IncludeScript("PCapture-LIB/SRC/TracePlus/bbox_analyzer")
-IncludeScript("PCapture-LIB/SRC/TracePlus/calculate_normal")
+IncludeScript("PCapture-LIB/SRC/FEATURES/TracePlus/bbox_analyzer")
+IncludeScript("PCapture-LIB/SRC/FEATURES/TracePlus/calculate_normal")

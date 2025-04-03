@@ -10,5 +10,5 @@
 
 ::HUD <- {}
 
-IncludeScript("PCapture-LIB/SRC/HUD/game_text")
-IncludeScript("PCapture-LIB/SRC/HUD/hint_instructor")
+IncludeScript("PCapture-LIB/SRC/FEATURES/HUD/game_text")
+IncludeScript("PCapture-LIB/SRC/FEATURES/HUD/hint_instructor")
