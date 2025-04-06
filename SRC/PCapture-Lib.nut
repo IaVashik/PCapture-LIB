@@ -75,6 +75,7 @@ ScheduleEvent.AddInterval("global", function() {
  * to dynamically accommodate new players joining the session.
 */
 
+TrackPlayerJoins()
 ScheduleEvent.Add("global", TrackPlayerJoins, 0.4)
 if(IsMultiplayer()) {
     ScheduleEvent.Add("global", TrackPlayerJoins, 2) // Thanks Volve for making it take so long for players to initialize
