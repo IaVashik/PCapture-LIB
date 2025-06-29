@@ -47,9 +47,9 @@ TracePlus["PortalCheap"] <- function(startPos, endPos) {
         length -= (hitPos - startPos).Length()
 
         // Find a nearby portal entity. 
-        local portal = entLib.FindByClassnameWithin("prop_portal", hitPos, 1) 
+        local portal = entLib.FindByClassnameWithin("prop_portal", hitPos, 5) 
         if(!portal)
-            portal = entLib.FindByClassnameWithin("linked_portal_door", hitPos, 1)
+            portal = entLib.FindByClassnameWithin("linked_portal_door", hitPos, 10)
         if(!portal)
             return traceData
 
