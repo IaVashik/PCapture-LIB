@@ -64,7 +64,8 @@
     }
 
     function _GetEntities(entities) { // meh :>
-        if (typeof entities == "string") {
+        local type_of = typeof entities;
+        if (type_of == "string") {
             if(entities.find("*") == null)
                 return [entLib.FindByName(entities)]
             else {
@@ -75,7 +76,16 @@
             }
         }
                 
-        if (typeof entities != "pcapEntity")
+        
+        if (type_of == "array" || type_of == "ArrayEx" || type_of == "List") {
+            foreach(idx, entity in entities) {
+                if(typeof entity != "pcapEntity") 
+                    entities[idx] = entLib.FromEntity(entity)
+            }
+            return entities
+        }
+
+        if (type_of != "pcapEntity")
             return [entLib.FromEntity(entities)]
         
         return [entities]
