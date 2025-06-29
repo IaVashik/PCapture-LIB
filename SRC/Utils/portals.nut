@@ -45,7 +45,8 @@
     local portalStateHandler = function(state) {
         local p = entLib.FromEntity(self)
         p.SetTraceIgnore(state)
-        p.GetPartnerInstance().SetTraceIgnore(state) 
+        local p2 = p.GetPartnerInstance()
+        if(p2) p2.SetTraceIgnore(state) 
         return true
     }
     // Iterate through all linked_portal_door entities.  
@@ -89,7 +90,7 @@
     local portalPairId = portal.GetHealth()
     for(local partner; partner = entLib.FindByModel(mdl, partner);) { 
         local partnerPairId = partner.GetHealth() 
-        if(portalPairId != partnerPairId || partner.GetUserData("TracePlusIgnore"))
+        if(portalPairId != partnerPairId || partner.GetClassname() != "prop_portal" || partner.GetUserData("TracePlusIgnore"))
             continue
         
         return partner 
