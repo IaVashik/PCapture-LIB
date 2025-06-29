@@ -250,15 +250,17 @@ TracePlus["Settings"] <- class {
         return ignoreEntities
     }
 
-    function _typeof() return "TraceSettings"
-    function _cloned() {
+    function Clone() {
         return TracePlus.Settings()
-            .SetIgnoredClasses(clone this.ignoreClasses)
-            .SetPriorityClasses(clone this.priorityClasses)
-            .SetIgnoredModels(clone this.ignoredModels)
+            .SetIgnoredClasses(this.ignoreClasses.Clone())
+            .SetPriorityClasses(this.priorityClasses.Clone())
+            .SetIgnoredModels(this.ignoredModels.Clone())
             .SetCollisionFilter(this.shouldRayHitEntity)
             .SetIgnoreFilter(this.shouldIgnoreEntity)
             .SetBynaryRefinement(this.bynaryRefinement)
             .SetDepthAccuracy(this.depthAccuracy)
     }
+
+    function _typeof() return "TraceSettings"
+    function _cloned() return this.Clone()
 }
